@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        const idle        = "1";
+        const initialized = "2";
+        const retrieved   = "3";
+        const processed   = "4";
+        const finalized   = "5";
+
+        function enrolStatus() {
+            const self = "{{self}}";
+            jQuery.get( self + 'status', function(status) {
+                switch(status) {
+                    case idle:
+                        $( "span.status-container" ).html( "idle" );
+                        alert("Enrol timeout. Please try again by refreshing this page.");
+                        break;
+                    case initialized:
+                        $( "span.status-container" ).html( "initialized" );
+                        window.setTimeout(enrolStatus, 1500);
+                        break;
+                    case retrieved:
+                        $( "span.status-container" ).html( "retrieved" );
+                        $( "img" ).hide( "slow" );
+                        window.setTimeout(enrolStatus, 1500);
+                        break;
+                    case processed:
+                        $( "span.status-container" ).html( "processed" );
+                        window.setTimeout(enrolStatus, 1500);
+                        break;
+                    case finalized:
+                        $( "span.status-container" ).html( "finalized" );
+                        jQuery.get( self + 'done', function(dummy) {
+                            ;
+                        });
+                        break;
+                    default:
+                        $( "span.status-container" ).html( status );
+                        alert(status);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<p>Status is <span class="status-container">idle</span>.</p>
+
+    <img alt="QR" src='{{qr}}'/>
+    <script type="text/javascript">
+        jQuery(document).ready(enrolStatus);
+    </script>
+
+</body>
+</html>
