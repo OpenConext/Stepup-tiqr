@@ -58,8 +58,10 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
 $app->get('/verify', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $userdata = $tiqr->getAuthenticatedUser($sid);
-        if( isset($userdata) )
+        if( isset($userdata) ) {
+            $app['session']->set('authn', array('username' => $userdata));
             $app['monolog']->addInfo(sprintf("[%s] verified authenticated user '%s'", $sid, $userdata));
+        }
         return new Response(
             $userdata,
             Response::HTTP_OK,

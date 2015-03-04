@@ -174,7 +174,7 @@ $app->get('/sso_return', function (Request $request) use ($app) {
             'SAMLResponse' => base64_encode($response),
         );
         if ($relaystate !== NULL) {
-            $params['RelayState'] = $relaystate;
+            $params['RelayState'] = $relayState;
         }
         $app['session']->set('RelayState', null);
 
