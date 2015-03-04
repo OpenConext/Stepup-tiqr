@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__.'/../../vendor/autoload.php';
+include_once './../../config.php';
+
+require_once 'saml.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,8 +102,8 @@ $app->get('/login', function (Request $request) use ($app) {
 
 $app->get('/sso', function (Request $request) use ($app) {
 // TODO verify signature
-    $relaystate = $request->get('RelayState');
-    $app['session']->set('RelayState', $relaystate);
+    $relayState = $request->get('RelayState');
+    $app['session']->set('RelayState', $relayState);
 
         # TODO: check response, etc
     $samlrequest = $request->get('SAMLRequest');
@@ -124,6 +127,7 @@ $app->get('/sso', function (Request $request) use ($app) {
 
     $authnrequest = $dom->getElementsByTagName('AuthnRequest')->item(0);
 	$sprequestid = $authnrequest->getAttribute('ID');
+        $app['session']->set('Requestor', $requestor);
         $app['session']->set('RequestID', $sprequestid);
         $url = $request->getUriForPath('/') . 'sso_return';
         return $app->redirect("/tiqr/login?return=$url"); // TODO return URL
@@ -131,7 +135,7 @@ $app->get('/sso', function (Request $request) use ($app) {
 
 });
 
-$app->get('/sso_return', function (Request $request) use ($app) {
+$app->get('/sso_return', function (Request $request) use ($config, $app) {
 
         $relayState = $app['session']->get('RelayState');
         $authn = $app['session']->get('authn');
@@ -145,12 +149,17 @@ $app->get('/sso_return', function (Request $request) use ($app) {
 
         $attrnameformat = NULL;
 	    # assume solicited responses
+        $requestor = $app['session']->get('Requestor');
     	$inResponseTo = htmlspecialchars( $app['session']->get('RequestID') );
+        $app['session']->set('Requestor', null);
         $app['session']->set('RequestID', null);
 
         $base = $request->getUriForPath('/');
         $issuer = $base . 'metadata';       // convention
-        $acs_url = $base . "acs";      # TODO config
+//        $acs_url = $base . "acs";      # TODO builtin test sp ACS URL
+        $app['monolog']->addInfo(sprintf("Requestor was '%s' .", $requestor));
+        $acs_url = $config['sp'][$requestor]['acs'];
+        $app['monolog']->addInfo(sprintf("ACS URL is '%s' .", $acs_url));
 
         $loader = new Twig_Loader_Filesystem('views');
         $twig = new Twig_Environment($loader, array(
@@ -168,21 +177,31 @@ $app->get('/sso_return', function (Request $request) use ($app) {
             'NotOnOrAfter' => gmdate("Y-m-d\TH:i:s\Z", time() + 60 * 5),
             'NameID' => $username,
         ));
+
+        # sign
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = FALSE;
+        $dom->loadXML($response);
+        $dom->formatOutput = TRUE;
+        // sign the assertion
+        // do not add certificate
+        $dom = utils_xml_sign($dom, $config['keyfile'], $config['certfile']);
+        $response = $dom->saveXML();
+
         # use POST binding
         $params = array(
             'Destination' => $acs_url,
             'SAMLResponse' => base64_encode($response),
         );
-        if ($relaystate !== NULL) {
+        if ($relayState !== NULL) {
             $params['RelayState'] = $relayState;
         }
         $app['session']->set('RelayState', null);
-
         $app['session']->set('authn', null); // disable SSO TODO re-enable
 
         return $twig->render('autosubmit.html', $params);
-        // TODO: sign
-});
+
+    });
 
 # receive SAML response (SP)
 
