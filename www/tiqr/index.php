@@ -38,7 +38,9 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
             $app['session']->set('authn', array('username' => $userdata));
             return $app->redirect($return);
         }
-        $sessionKey = $tiqr->startAuthenticationSession(null,$sid); // prepares the tiqr library for authentication
+        $id = $app['session']->get('RequestedSubject');
+        if( $id === '' ) $id = null;
+        $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
         $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
         $url = $tiqr->generateAuthURL($sessionKey);
         $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;

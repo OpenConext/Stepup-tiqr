@@ -109,7 +109,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 echo $result;
                 break;
             default:
-                error_log("ERROR: unknown operation (operation) in POST request");
+                error_log("ERROR: unknown operation ($operation) in POST request");
                 break;
         }
         break;

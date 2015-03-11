@@ -73,7 +73,7 @@ $app->get('/metadata', function (Request $request) use ($app) {
 
 # send SAML request (SP initiated SAML Web SSO)
 
-$app->get('/login', function (Request $request) use ($app) {
+$app->get('/login/{nameid}', function (Request $request, $nameid) use ($app) {
         // TODO: sign request
     $base = $request->getUriForPath('/');
     # remote IDP
@@ -89,14 +89,15 @@ $app->get('/login', function (Request $request) use ($app) {
     	'IssueInstant' => gmdate("Y-m-d\TH:i:s\Z", time()),
     	'Destination' => $sso_url,
     	'AssertionConsumerServiceURL' => $base . 'acs',
-         //   'NameID' => 'joost',
+        'NameID' => $nameid,
     ));
     # use HTTP-Redirect binding
     $query  = 'SAMLRequest=' . urlencode(base64_encode(gzdeflate($request)));
     $query .= "&RelayState=$base"."session";
     $location = "$sso_url?$query";
     return $app->redirect($location);
-});
+})->value('nameid', '');    // default nameid is empty, i.e. do not send a NameID in the request
+
 
 # receive SAML request (IDP)
 
@@ -130,9 +131,8 @@ $app->get('/sso', function (Request $request) use ($app) {
         $app['session']->set('Requestor', $requestor);
         $app['session']->set('RequestID', $sprequestid);
         $url = $request->getUriForPath('/') . 'sso_return';
-        return $app->redirect("/tiqr/login?return=$url"); // TODO return URL
-//        return $app->redirect("/authn/login?return=$url"); // TODO return URL
-
+        return $app->redirect("/tiqr/login?return=$url");
+//        return $app->redirect("/authn/login?return=$url");
 });
 
 $app->get('/sso_return', function (Request $request) use ($config, $app) {
@@ -158,6 +158,9 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
         $issuer = $base . 'metadata';       // convention
 //        $acs_url = $base . "acs";      # TODO builtin test sp ACS URL
         $app['monolog']->addInfo(sprintf("Requestor was '%s' .", $requestor));
+        if( !array_key_exists( $requestor, $config['sp']) ) {
+            throw new Exception("Unknown SP with entityID '$requestor'");
+        }
         $acs_url = $config['sp'][$requestor]['acs'];
         $app['monolog']->addInfo(sprintf("ACS URL is '%s' .", $acs_url));
 
