@@ -2,5 +2,6 @@ composer.lock
 composer.phar
 vendor
 local_config.php
+local_options.php
 .vagrant
 .idea
