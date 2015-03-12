@@ -4,7 +4,7 @@ require_once __DIR__.'/vendor/joostd/tiqr-server/libTiqr/library/tiqr/Tiqr/AutoL
 //require_once __DIR__.'/vendor/SURFnet/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
 
 $options = array(
-    "identifier"      => "pilot.stepup.coin.surf.net",
+    //"identifier"      => "pilot.stepup.coin.surf.net",
     "name"            => "Stepup Authentication Service",
     "auth.protocol"       => "tiqrauth",
     "enroll.protocol"     => "tiqrenroll",
