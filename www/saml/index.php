@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__.'/../../vendor/autoload.php';
 include_once './../../config.php';
+include_once './../../options.php';
 
 require_once 'saml.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 
 function newid($length = 42) {
     $id = '_';

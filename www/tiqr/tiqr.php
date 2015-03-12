@@ -53,7 +53,7 @@ function login( $sessionKey, $userId, $response )
     }
 }
 
-function register( $enrollmentSecret, $secret )
+function register( $enrollmentSecret, $secret, $notificationType, $notificationAddress )
 {
     global $options;
     global $userStorage;
@@ -63,6 +63,8 @@ function register( $enrollmentSecret, $secret )
     error_log("storing new entry $userid:$secret");
     $userStorage->createUser($userid,""); // TODO displayName
     $userStorage->setSecret($userid,$secret);
+    $userStorage->setNotificationType($userid, $notificationType);
+    $userStorage->setNotificationAddress($userid, $notificationAddress);
     $tiqr->finalizeEnrollment($enrollmentSecret);
     return "OK";
 }
@@ -84,11 +86,11 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         break;
     case "POST":
         error_log("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
-//        error_log("received POST request\n" . print_r($_POST,true));
+        error_log("received POST request\n" . print_r($_POST,true));
         $operation = $_POST['operation'];
         $version = $_POST['version'];
-//        $notificationType = $_POST['notificationType'];
-//        $notificationAddress = $_POST['notificationAddress'];
+        $notificationType = $_POST['notificationType'];
+        $notificationAddress = $_POST['notificationAddress'];
 //        $language = $_POST['language'];
 
         switch( $operation ) {
@@ -96,7 +98,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 $enrollmentSecret = $_GET['otp']; // enrollmentsecret relayed by tiqr app
                 error_log("enrollmentSecret is $enrollmentSecret");
                 $secret = $_POST['secret'];
-                $result = register( $enrollmentSecret, $secret );
+                $result = register( $enrollmentSecret, $secret, $notificationType, $notificationAddress );
                 echo $result;
                 break;
             case "login":

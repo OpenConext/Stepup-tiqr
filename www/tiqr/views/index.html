@@ -9,8 +9,11 @@
 
     function verifyLogin() {
         jQuery.get(myself + 'verify', function(data) {
+//            if (data == 'NO') {
             if (data == '') {
                 window.setTimeout(verifyLogin, 1500);
+//            } else if (data.substring(0, 4) == 'URL:') {
+//                document.location.href = data.substring(4);
             } else if (data.substring(0, 0) == '') {
                 document.location = "{{return_url}}";
             } else {

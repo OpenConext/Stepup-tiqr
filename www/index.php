@@ -2,14 +2,6 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$a = new X\A();
-$b = new X\Y\B();
-$c = new X\Y\Z\C();
-
-echo $a->f();
-echo $b->f();
-echo $c->f();
-
 require_once('../vendor/joostd/tiqr-server/libTiqr/library/tiqr/Tiqr/AutoLoader.php');
 
 $path = array(

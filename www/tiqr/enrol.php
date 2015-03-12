@@ -40,13 +40,10 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
         $displayName = "John";      # TODO
 //        $displayName = $uid;
         $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
-//        error_log("[$sid] uid is $uid and displayName is $displayName");
         $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
         $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
-//        error_log("[$sid] started enrollment session key $key");
         $metadataURL = base() . "/tiqr/tiqr.php?key=$key";       # TODO
         $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
-//        error_log("[$sid] generating QR code for metadata URL $metadataURL");
         $url = $tiqr->generateEnrollString($metadataURL);
         # TODO: use js qr lib
         $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
@@ -67,7 +64,6 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
 
 $app->get('/status', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
-        error_log("[$sid]");
         $status = $tiqr->getEnrollmentStatus($sid);
         error_log("[$sid] status is $status");
         return $status;
