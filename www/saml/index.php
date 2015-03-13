@@ -56,7 +56,7 @@ $app->get('/session', function (Request $request) use ($app) {
 
 # SAML 2.0 Metadata
 
-$app->get('/metadata', function (Request $request) use ($app) {
+$app->get('/metadata', function (Request $request) use ($app, $config) {
     $loader = new Twig_Loader_Filesystem('views');
     $twig = new Twig_Environment($loader, array(
     	'debug' => true,
@@ -66,7 +66,7 @@ $app->get('/metadata', function (Request $request) use ($app) {
     	'entityID' => $base . "metadata",	// convention: use metadata URL as entity ID
     	'SSO_Location' => $base . "sso",
     	'ACS_Location' => $base . "acs",
-            // TODO: certificates
+        'certificate' => XMLSecurityDSig::staticGet509XCerts(file_get_contents($config['certfile']))[0],
     ));
     $response = new Response($metadata);
     $response->headers->set('Content-Type', 'text/xml');
