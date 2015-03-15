@@ -65,7 +65,6 @@ $app->get('/metadata', function (Request $request) use ($app, $config) {
     $metadata = $twig->render('metadata.xml', array(
     	'entityID' => $base . "metadata",	// convention: use metadata URL as entity ID
     	'SSO_Location' => $base . "sso",
-    	'ACS_Location' => $base . "acs",
         'certificate' => XMLSecurityDSig::staticGet509XCerts(file_get_contents($config['certfile']))[0],
     ));
     $response = new Response($metadata);
@@ -75,7 +74,7 @@ $app->get('/metadata', function (Request $request) use ($app, $config) {
 
 # send SAML request (SP initiated SAML Web SSO)
 
-$app->get('/login/{nameid}', function (Request $request, $nameid) use ($app) {
+$app->get('/login/{nameid}', function (Request $request, $nameid) use ($config, $app) {
         // TODO: sign request
     $base = $request->getUriForPath('/');
     # remote IDP
@@ -96,19 +95,20 @@ $app->get('/login/{nameid}', function (Request $request, $nameid) use ($app) {
     # use HTTP-Redirect binding
     $query  = 'SAMLRequest=' . urlencode(base64_encode(gzdeflate($request)));
     $query .= "&RelayState=$base"."session";
-    $location = "$sso_url?$query";
+    $key = $config['keyfile']; // reuse key
+    $location = $sso_url . '?' . saml20_sign_query($query, $key);
     return $app->redirect($location);
 })->value('nameid', '');    // default nameid is empty, i.e. do not send a NameID in the request
 
 
 # receive SAML request (IDP)
 
-$app->get('/sso', function (Request $request) use ($app) {
-// TODO verify signature
+$app->get('/sso', function (Request $request) use ($config, $app) {
+
     $relayState = $request->get('RelayState');
     $app['session']->set('RelayState', $relayState);
 
-        # TODO: check response, etc
+        # TODO: check request contents, etc
     $samlrequest = $request->get('SAMLRequest');
     $samlrequest = gzinflate(base64_decode($samlrequest));
     $dom = new DOMDocument();
@@ -120,6 +120,14 @@ $app->get('/sso', function (Request $request) use ($app) {
 
 	$requestor = $dom->getElementsByTagName('Issuer')->item(0)->textContent;
     $app['monolog']->addInfo(sprintf("Requestor is '%s' .", $requestor));
+
+        $md = $config['sp'][$requestor];
+        if( !$md )
+            throw new Exception("Unknown SP with entityID $requestor");
+
+        // verify signature
+        if( ($md['certfile']))
+            saml20_verify_request($_SERVER['QUERY_STRING'], $config['certfile']); // use raw QS instead of normalized version!
 
         $xpath = new DOMXPath($dom);
         $xpath->registerNamespace('samlp', "urn:oasis:names:tc:SAML:2.0:protocol" );

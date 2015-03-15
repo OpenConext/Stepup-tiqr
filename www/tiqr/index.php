@@ -55,6 +55,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
                 'qr' => $qr,
                 'self' => $base,
                 'return_url' => $return,
+                'id' => $id,
             ));
         $response = new Response($login);
         return $response;
