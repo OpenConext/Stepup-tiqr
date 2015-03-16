@@ -35,9 +35,10 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
 //        error_log(print_r($user,true));
         // starting a new enrollment session
         $sid = $app['session']->getId();
-        $uid = 'john';
+        //$uid = 'john';
+	$uid = generate_id();
 //        $uid = $user['username'];
-        $displayName = "John";      # TODO
+        $displayName = "Stepup User";      # TODO
 //        $displayName = $uid;
         $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
         $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);

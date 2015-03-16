@@ -181,7 +181,7 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
         $response = $twig->render('Response.xml', array(
             'ResponseID' => newID(),
             'AssertionID' => newID(),
-//	    	'Audience' => $audience,
+    	    'Audience' => $requestor,
             'Destination' => $acs_url,
             'InResponseTo' => $inResponseTo,
             'Issuer' => $issuer,
