@@ -33,7 +33,7 @@
                     case finalized:
                         $( "span.status-container" ).html( "finalized" );
                         jQuery.get( self + 'done', function(dummy) {
-                            ;
+                            document.location = "{{return_url}}";
                         });
                         break;
                     default:

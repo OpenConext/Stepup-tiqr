@@ -33,6 +33,9 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
 //            return $app->redirect($base.'login');
 //        }
 //        error_log(print_r($user,true));
+        if( null === $return = $request->get('return') ) {
+            $return = $base;
+        }
         // starting a new enrollment session
         $sid = $app['session']->getId();
         //$uid = 'john';
@@ -56,6 +59,7 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
         $enrol = $twig->render('enrol.html', array(
                 'self' => $base,
                 'qr' => $qr,
+                'return_url' => $return,
             ));
         $response = new Response($enrol);
         return $response;

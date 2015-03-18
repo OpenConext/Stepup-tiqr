@@ -24,7 +24,7 @@
   </saml:Conditions>
   <saml:AuthnStatement AuthnInstant="{{IssueInstant}}" SessionIndex="1">
    <saml:AuthnContext>
-    <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password</saml:AuthnContextClassRef>
+    <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:MobileTwoFactorUnregistered</saml:AuthnContextClassRef>
    </saml:AuthnContext>
   </saml:AuthnStatement>
  </saml:Assertion>

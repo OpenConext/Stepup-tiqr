@@ -24,7 +24,7 @@ $app->before(function ($request) {
 
 $tiqr = new Tiqr_Service($options);
 
-error_log("john :".$userStorage->getNotificationType("john"));
+//error_log("john :".$userStorage->getNotificationType("john"));
 
 $app->get('/login', function (Request $request) use ($app, $tiqr) {
         $base = $request->getUriForPath('/');
@@ -42,7 +42,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
         }
         $id = $app['session']->get('RequestedSubject');
         if( $id === '' ) $id = null;
-        $tiqr->sendAuthNotification($sid);
+//        $tiqr->sendAuthNotification($sid);
         $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
         $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
         $url = $tiqr->generateAuthURL($sessionKey);
