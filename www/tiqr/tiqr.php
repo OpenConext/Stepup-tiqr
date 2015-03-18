@@ -4,8 +4,6 @@
  * handle requests from tiqr client
  */
 
-//include('Tiqr/Service.php');
-
 include('../../options.php');
 
 function metadata($key)
