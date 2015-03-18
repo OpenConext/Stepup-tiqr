@@ -42,7 +42,11 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
         }
         $id = $app['session']->get('RequestedSubject');
         if( $id === '' ) $id = null;
-        $tiqr->sendAuthNotification($sid);
+	if( !$id ) {	// when no id requested, first enrol:
+            $return = $request->getRequestUri();
+            return $app->redirect($base . "/enrol.php?return=" . urlencode($return));
+	}
+        #$tiqr->sendAuthNotification($sid);
         $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
         $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
         $url = $tiqr->generateAuthURL($sessionKey);
