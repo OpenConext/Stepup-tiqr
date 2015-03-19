@@ -30,29 +30,12 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
         'monolog.logfile' => __DIR__.'/../../saml.log',
     ));
 
-##########
+########## SAML ##########
 
 $app->get('/', function (Request $request) use ($app) {
-    $url = $request->getUriForPath('/') . 'metadata';
-    return "This is a SAML endpoint<br/>See also the SAML 2.0 <a href='$url'>Metadata</a>";
-});
-
-$app->get('/logout', function (Request $request) use ($app) {
-    $app['session']->set('user', null);
-    $base = $request->getUriForPath('/');
-    return $app->redirect($base);
-    #$app->abort(404, "not implemented.");
-});
-
-$app->get('/session', function (Request $request) use ($app) {
-    if (null === $user = $app['session']->get('user')) {
-        return "n/a";
-    }
-    $nameid = $user['username'];
-    return 'NameID: '.$app->escape($nameid);
-});
-
-########## SAML ##########
+        $url = $request->getUriForPath('/') . 'metadata';
+        return "This is a SAML endpoint<br/>See also the SAML 2.0 <a href='$url'>Metadata</a>";
+    });
 
 # SAML 2.0 Metadata
 
@@ -72,10 +55,9 @@ $app->get('/metadata', function (Request $request) use ($app, $config) {
     return $response;
 });
 
-# send SAML request (SP initiated SAML Web SSO)
+# send SAML request (SP initiated SAML Web SSO) - builtin SP for testing purposes
 
 $app->get('/login/{nameid}', function (Request $request, $nameid) use ($config, $app) {
-        // TODO: sign request
     $base = $request->getUriForPath('/');
     # remote IDP
     $sso_url = $base . "sso";   // default
@@ -141,7 +123,11 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
         $app['session']->set('Requestor', $requestor);
         $app['session']->set('RequestID', $sprequestid);
         $url = $request->getUriForPath('/') . 'sso_return';
-        return $app->redirect("/tiqr/login?return=$url");
+        if( $nameid ) {
+            return $app->redirect("/tiqr/login?return=$url");
+        } else {
+            return $app->redirect("/tiqr/enrol?return=$url");
+        }
 //        return $app->redirect("/authn/login?return=$url");
 });
 
@@ -150,6 +136,7 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
         $relayState = $app['session']->get('RelayState');
         $authn = $app['session']->get('authn');
         $username = $authn['username'];
+        $app['session']->set('authn', null);
         $expected = $app['session']->get('RequestedSubject');
         if( $expected and $username != $app['session']->get('RequestedSubject') ) {
             throw new Exception("Authentication requested for '$expected', but authenticated user is '$username'.");
@@ -166,7 +153,6 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
 
         $base = $request->getUriForPath('/');
         $issuer = $base . 'metadata';       // convention
-//        $acs_url = $base . "acs";      # TODO builtin test sp ACS URL
         $app['monolog']->addInfo(sprintf("Requestor was '%s' .", $requestor));
         if( !array_key_exists( $requestor, $config['sp']) ) {
             throw new Exception("Unknown SP with entityID '$requestor'");
@@ -220,9 +206,6 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
 
 $app->post('/acs', function (Request $request) use ($app) {
     # TODO: check signature, response, etc
-    $relayState = $request->get('RelayState');
-    if (!$relayState) $relayState = $request->getUriForPath('/') . 'session';
-
     $response = $request->get('SAMLResponse');
     $response = base64_decode($response);
     $dom = new DOMDocument();
@@ -234,8 +217,8 @@ $app->post('/acs', function (Request $request) use ($app) {
     if (!$nameid) {
         throw new Exception('Could not locate nameid element.');
     }
-    $app['session']->set('user', array('username' => $nameid));
-    return $app->redirect($relayState);
+        $location = $request->getUriForPath('/') . 'login';
+        return "<a href='$location'>$nameid</a>";
 });
 
 $app->run();
