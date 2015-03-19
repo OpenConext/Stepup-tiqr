@@ -123,11 +123,7 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
         $app['session']->set('Requestor', $requestor);
         $app['session']->set('RequestID', $sprequestid);
         $url = $request->getUriForPath('/') . 'sso_return';
-        if( $nameid ) {
-            return $app->redirect("/tiqr/login?return=$url");
-        } else {
-            return $app->redirect("/tiqr/enrol?return=$url");
-        }
+        return $app->redirect("/tiqr/login?return=$url");
 //        return $app->redirect("/authn/login?return=$url");
 });
 
