@@ -12,5 +12,5 @@ $path = array(
 $autoloader = Tiqr_AutoLoader::getInstance($path);
 $autoloader->setIncludePath();
 
-$tiqr = new Tiqr_Service($options);
+$tiqr = new Tiqr_Service($path);
 echo ':'.$tiqr->getAuthenticatedUser(session_id());
