@@ -1,7 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         const idle        = "1";
         const initialized = "2";
@@ -46,12 +49,17 @@
 </head>
 <body>
 
+<div class="container">
+    <h1>Enrol</h1>
+
 <p>Status is <span class="status-container">idle</span>.</p>
 
     <img alt="QR" src='{{qr}}'/>
     <script type="text/javascript">
         jQuery(document).ready(enrolStatus);
     </script>
+
+</div>
 
 </body>
 </html>

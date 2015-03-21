@@ -59,7 +59,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
     error_log("storing new entry $userid:$secret");
-    $userStorage->createUser($userid,""); // TODO displayName
+    $userStorage->createUser($userid,"anonymous"); // TODO displayName
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
     $userStorage->setNotificationAddress($userid, $notificationAddress);
