@@ -67,8 +67,6 @@ $app->before(function ($request) {
 
 $tiqr = new Tiqr_Service($options);
 
-//error_log("john :".$userStorage->getNotificationType("john"));
-
 $app->get('/login', function (Request $request) use ($app, $tiqr) {
         $base = $request->getUriForPath('/');
         if( null === $return = $request->get('return') ) {
@@ -84,9 +82,17 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
         }
         $id = $app['session']->get('RequestedSubject');
         if( $id === '' ) $id = null;
-//        $tiqr->sendAuthNotification($sid);
+
         $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
         $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
+
+        if( $id ) {
+            $nt = $userStorage->getNotificationType($id));
+            $na = $userStorage->getNotificationAddress($id));
+            error_log("type [$nt], address [$na]");
+            $tiqr->sendAuthNotification($sessionKey, $nt, $na);
+        }
+
         $url = $tiqr->generateAuthURL($sessionKey);
         $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
         $loader = new Twig_Loader_Filesystem('views');
