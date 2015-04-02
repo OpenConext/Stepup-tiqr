@@ -87,8 +87,8 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
         $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
 
         if( $id ) {
-            $nt = $userStorage->getNotificationType($id));
-            $na = $userStorage->getNotificationAddress($id));
+            $nt = $userStorage->getNotificationType($id);
+            $na = $userStorage->getNotificationAddress($id);
             error_log("type [$nt], address [$na]");
             $tiqr->sendAuthNotification($sessionKey, $nt, $na);
         }
