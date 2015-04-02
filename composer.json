@@ -6,7 +6,11 @@
         "joostd/tiqr-server": "dev-master",
         "SURFnet/tiqr-server-libphp": "dev-master",
         "monolog/monolog": "~1.12",
-        "fr3d/xmlseclibs": " ~1.3"
+        "fr3d/xmlseclibs": " ~1.3",
+        "symfony/translation": "~2.6",
+        "symfony/config": "~2.6",
+        "symfony/yaml": "~2.6",
+        "symfony/twig-bridge": "~2.6"
     },
     "repositories": [
         {

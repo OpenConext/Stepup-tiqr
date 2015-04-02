@@ -28,15 +28,16 @@
 </script>
 
 <div class="container">
-    <h1>Authenticate</h1>
+    <h1>Log in met tiqr</h1>
 
 {% if id %}
 You are logging on as user {{ id }}
 {% endif %}
+Scan de code met de tiqr app op uw telefoon om in te loggen.
 </br/>
 <img src='{{qr}}' />
 <br/>
-No account? Please <a href='/tiqr/enrol?return={{return_url}}'>enrol</a> first.
+Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> eerst een aan.
 <!--TODO fix URL -->
 
 </div>

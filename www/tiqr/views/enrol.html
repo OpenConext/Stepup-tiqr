@@ -12,20 +12,21 @@
         const processed   = "4";
         const finalized   = "5";
 
-        function enrolStatus() {
+        function enrolStatus() { // TODO: use translations
             const self = "{{self}}";
             jQuery.get( self + 'status', function(status) {
                 switch(status) {
                     case idle:
-                        $( "span.status-container" ).html( "idle" );
-                        alert("Enrol timeout. Please try again by refreshing this page.");
+                        $( "span.status-container" ).html( "timeout" );
+                        //alert("Timeout. Please try again by refreshing this page.");
+                        alert("Timeout. Probeer nogmaals door deze pagina te verversen.");
                         break;
                     case initialized:
-                        $( "span.status-container" ).html( "initialized" );
+                        $( "span.status-container" ).html( "Scan de code met de tiqr app op uw telefoon om een tiqr account aan te maken." );
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case retrieved:
-                        $( "span.status-container" ).html( "retrieved" );
+                        $( "span.status-container" ).html( "Activeer uw account op uw telefoon." );
                         $( "img" ).hide( "slow" );
                         window.setTimeout(enrolStatus, 1500);
                         break;
@@ -34,7 +35,7 @@
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case finalized:
-                        $( "span.status-container" ).html( "finalized" );
+                        $( "span.status-container" ).html( "Uw account is gereed voor gebruik." );
                         jQuery.get( self + 'done', function(dummy) {
                             document.location = "{{return_url}}";
                         });
@@ -50,15 +51,16 @@
 <body>
 
 <div class="container">
-    <h1>Enrol</h1>
+    <h1>Nieuw Account</h1>
 
-<p>Status is <span class="status-container">idle</span>.</p>
+<p><span class="status-container">status</span></p>
 
     <img alt="QR" src='{{qr}}'/>
     <script type="text/javascript">
         jQuery(document).ready(enrolStatus);
     </script>
 
+<hr/>
 </div>
 
 </body>

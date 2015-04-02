@@ -6,6 +6,8 @@ include('../../options.php');
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+// use Symfony\Component\Translation\Loader\YamlFileLoader;
+
 date_default_timezone_set('Europe/Amsterdam');
 
 $app = new Silex\Application();
@@ -17,6 +19,47 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
         'monolog.logfile' => __DIR__.'/../../authn.log',
     ));
+$app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    'locale_fallbacks' => array('nl'),
+));
+
+$app['translator.domains'] = array(
+    'messages' => array(
+        'en' => array(
+            'enrol' => 'New Account',
+            'idle' => 'Timeout',
+            'timeout_alert' => "Timeout. Please try again by refreshing this page.",
+            'initialized' => "Scan the code with the tiqr app on your phone to create a tiqr account.",
+            'retrieved' => "Acticate your account on your phone.",
+            'processed' => "",
+            'finalized' => "Your account is ready for use.",
+
+            'hello'     => 'Hello %name%',
+            'goodbye'   => 'Goodbye %name%',
+            'enrol'   => 'Enrol',
+            'timeout' => 'Timeout. Please try again by refreshing this page',
+
+        ),
+        'nl' => array(
+            'enrol' => 'Nieuw Account',
+            'idle' => 'Timeout',
+            'timeout_alert' => "Timeout. Probeer nogmaals door deze pagina te verversen.",
+            'initialized' => "Scan de code met de tiqr app op uw telefoon om een tiqr account aan te maken.",
+            'retrieved' => "Activeer uw account op uw telefoon.",
+            'processed' => "",
+            'finalized' => "Uw account is gereed voor gebruik.",
+            'hello'     => 'Hallo %name%',
+            'goodbye'   => 'Dag %name%',
+            'enrol'   => 'Aanmaken',
+            'timeout' => 'Timeout. Probeer nogmaals door deze pagina te verversen.',
+        ),
+    ),
+    'validators' => array(
+        'nl' => array(
+            'This value should be a valid number.' => 'Deze waarde moet numeriek zijn.',
+        ),
+    ),
+);
 
 $app->before(function ($request) {
         $request->getSession()->start();
@@ -84,6 +127,13 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
             return "n/a";
         }
     });
+
+/*
+// simple test for translations:
+$app->get('/x/{name}', function ($name) use ($app) {
+        return $app['translator']->trans('enrol', array('%name%' => $name),'messages','nl');
+    });
+*/
 
 $app->get('/logout', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
