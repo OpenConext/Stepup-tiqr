@@ -1,4 +1,6 @@
 <?php
+//set_include_path(get_include_path() . PATH_SEPARATOR . '/home/debian/ZendFramework-1.12.11-minimal/library');
+
 require_once __DIR__.'/../../vendor/autoload.php';
 
 include('../../options.php');
@@ -67,7 +69,7 @@ $app->before(function ($request) {
 
 $tiqr = new Tiqr_Service($options);
 
-$app->get('/login', function (Request $request) use ($app, $tiqr) {
+$app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         $base = $request->getUriForPath('/');
         if( null === $return = $request->get('return') ) {
             $return = $base;
@@ -86,6 +88,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr) {
         $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
         $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
 
+        $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
         if( $id ) {
             $nt = $userStorage->getNotificationType($id);
             $na = $userStorage->getNotificationAddress($id);
