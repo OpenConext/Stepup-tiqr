@@ -32,16 +32,6 @@ $autoloader->setIncludePath();
 
 $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
 
-function base() {
-    $proto = "http";
-    $hostname = $_SERVER['SERVER_NAME'];
-    $port = $_SERVER['SERVER_PORT'];
-    /** @var $baseUrl string */
-    $baseUrl = "$proto://$hostname";
-    if( is_numeric($port) ) $baseUrl .= ":$port";
-    return $baseUrl;
-}
-
 function generate_id($length = 8) {
     $chars = "0123456789";
     $count = mb_strlen($chars);

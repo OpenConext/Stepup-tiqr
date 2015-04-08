@@ -162,7 +162,8 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
         $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
         $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
         $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
-        $metadataURL = base() . "/tiqr/tiqr.php?key=$key";       # TODO
+//        $metadataURL = base() . "/tiqr/tiqr.php?key=$key";       # TODO
+        $metadataURL = $base . "/tiqr.php?key=$key";       # TODO
         $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
         $url = $tiqr->generateEnrollString($metadataURL);
         # TODO: use js qr lib

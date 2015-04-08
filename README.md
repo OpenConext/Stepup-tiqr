@@ -1,7 +1,18 @@
 Install
 ===
 
-Use composer to install dependencies:
+Install php5, apache2
+
+eg
+
+sudo apt-get install sqlite3
+sudo apt-get install php5-sqlite
+
+sudo apt-get install mysql-server
+sudo apt-get install php5-mysql
+
+
+Use composer to install php dependencies:
 
 	curl -sS https://getcomposer.org/installer | php
 	./composer.phar install

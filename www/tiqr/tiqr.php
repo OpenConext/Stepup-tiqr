@@ -6,6 +6,12 @@
 
 include('../../options.php');
 
+function base() {
+    $proto = "on" === $_SERVER['HTTPS'] ? "https://" : "http://";
+    /** @var $baseUrl string */
+    return $proto . $_SERVER['HTTP_HOST'];
+}
+
 function metadata($key)
 {
     global $options;
