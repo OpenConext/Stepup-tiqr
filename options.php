@@ -27,6 +27,12 @@ if( file_exists(dirname(__FILE__) . "/local_options.php") ) {
     error_log("no local options found");
 }
 
+set_include_path(get_include_path() . PATH_SEPARATOR . $options['zend.path']);
+
+require_once 'Zend/Loader/Autoloader.php';
+Zend_Loader_Autoloader::getInstance();
+
+
 $autoloader = Tiqr_AutoLoader::getInstance($options); // needs {tiqr,zend,phpqrcode}.path
 $autoloader->setIncludePath();
 
