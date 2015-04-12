@@ -1,5 +1,4 @@
 <?php
-//set_include_path(get_include_path() . PATH_SEPARATOR . '/home/debian/ZendFramework-1.12.11-minimal/library');
 
 require_once __DIR__.'/../../vendor/autoload.php';
 
@@ -77,8 +76,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         $sid = $app['session']->getId();
         $userdata = $tiqr->getAuthenticatedUser($sid);
         $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
-        if( !is_null($userdata) )
-        {
+        if( !is_null($userdata) ) {
             $app['session']->set('authn', array('username' => $userdata));
             return $app->redirect($return);
         }
@@ -90,10 +88,17 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
 
         $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
         if( $id ) {
-            $nt = $userStorage->getNotificationType($id);
-            $na = $userStorage->getNotificationAddress($id);
-            error_log("type [$nt], address [$na]");
-            $tiqr->sendAuthNotification($sessionKey, $nt, $na);
+            $notificationType = $userStorage->getNotificationType($id);
+            $notificationAddress = $userStorage->getNotificationAddress($id);
+            error_log("type [$notificationType], address [$notificationAddress]");
+            $translatedAddress = $tiqr->translateNotificationAddress($notificationType, $notificationAddress);
+            error_log("translated address [$translatedAddress]");
+            $msg = "A push notification was sent to your phone";
+            if ($translatedAddress) {
+                $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
+            } else {
+                $msg = "No $notificationType translated address available for [$notificationAddress]" ;
+            }
         }
 
         $url = $tiqr->generateAuthURL($sessionKey);
@@ -107,6 +112,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
                 'self' => $base,
                 'return_url' => $return,
                 'id' => $id,
+                'msg' => $msg,
             ));
         $response = new Response($login);
         return $response;

@@ -213,7 +213,7 @@ $app->post('/acs', function (Request $request) use ($app) {
     if (!$nameid) {
         throw new Exception('Could not locate nameid element.');
     }
-        $location = $request->getUriForPath('/') . 'login';
+        $location = $request->getUriForPath('/') . 'login/' . $nameid;
         return "<a href='$location'>$nameid</a>";
 });
 
