@@ -51,17 +51,41 @@
 <body>
 
 <div class="container">
-    <h1>Nieuw Account</h1>
 
-<p><span class="status-container">status</span></p>
+    <div class="content">
+        <div class="page-header clearfix">
+            <img src="/images/surfnet.jpg" class="pull-right" alt="SURFnet">
+            <h1>Step-up Self-Service</h1>
+        </div>
 
-    <img alt="QR" src='{{qr}}'/>
-    <script type="text/javascript">
-        jQuery(document).ready(enrolStatus);
-    </script>
+        <h2>Nieuw Account</h2>
 
-<hr/>
-</div>
+        <p><span class="status-container">status</span></p>
+
+        <img alt="QR" src='{{qr}}'/>
+        <script type="text/javascript">
+            jQuery(document).ready(enrolStatus);
+        </script>
+
+        <p>
+            Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> eerst een aan.
+        </p>
+        <!--TODO fix URL -->
+
+    </div><!-- /content -->
+
+    <footer>
+        <div class="row-fluid">
+            <div class="span8 offset2">
+                <hr>
+                <ul class="nav nav-pills">
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</div><!-- /container -->
 
 </body>
 </html>

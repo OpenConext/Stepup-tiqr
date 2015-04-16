@@ -1,6 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+    <meta charset="UTF-8" />
+    <title>Step-up Self-Service </title>
+    <link rel="shortcut icon" href="/images/favicon.ico" />
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
@@ -28,19 +31,42 @@
 </script>
 
 <div class="container">
-    <h1>Log in met tiqr</h1>
 
+        <div class="content">
+            <div class="page-header clearfix">
+                <img src="/images/surfnet.jpg" class="pull-right" alt="SURFnet">
+                <h1>Step-up Self-Service</h1>
+            </div>
+        
+<h2>Log in met tiqr</h2>
+
+<p>
 {% if id %}
 U logt in met tiqr account {{ id }}
 {% endif %}
 Scan de code met de tiqr app op uw telefoon om in te loggen.
+</p>
+
 </br/>
 <img src='{{qr}}' />
 <br/>
 Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> eerst een aan.
 <!--TODO fix URL -->
 
-</div>
+        </div><!-- /content -->
+
+        <footer>
+            <div class="row-fluid">
+                <div class="span8 offset2">
+                    <hr>
+                    <ul class="nav nav-pills">
+                        <li><a href="/">Home</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+
+</div><!-- /container -->    
 
 </body>
 </html>

@@ -102,6 +102,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         }
 
         $url = $tiqr->generateAuthURL($sessionKey);
+        error_log($url);
         $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
         $loader = new Twig_Loader_Filesystem('views');
         $twig = new Twig_Environment($loader, array(
@@ -112,7 +113,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
                 'self' => $base,
                 'return_url' => $return,
                 'id' => $id,
-                'msg' => $msg,
+//                'msg' => $msg,
             ));
         $response = new Response($login);
         return $response;

@@ -92,7 +92,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         error_log("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
         error_log("received POST request\n" . print_r($_POST,true));
         $operation = $_POST['operation'];
-        $version = $_POST['version'];
+//        $version = $_POST['version'];
         $notificationType = $_POST['notificationType'];
         $notificationAddress = $_POST['notificationAddress'];
 //        $language = $_POST['language'];
