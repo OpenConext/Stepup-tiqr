@@ -18,9 +18,9 @@
             jQuery.get( self + 'status', function(status) {
                 switch(status) {
                     case idle:
-                        $( "span.status-container" ).html( "timeout" );
+                        $( "span.status-container" ).html( "<ul><li>Je sessie is verlopen<</li><li>Ververs de pagina en probeer het nogmaals</li><li>Of klik op 'Annuleren' om terug te keren naar het beginscherm</li></ul>" );
+                        $( "img.qr" ).hide( "slow" );
                         //alert("Timeout. Please try again by refreshing this page.");
-                        alert("Timeout. Probeer nogmaals door deze pagina te verversen.");
                         break;
                     case initialized:
                         $( "span.status-container" ).html( "<ul><li>Open de tiqr app op je telefoon</li><li>Scan de QR code met de tiqr app</li></ul>" );
@@ -32,11 +32,11 @@
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case processed:
-                        $( "span.status-container" ).html( "processed" );
+                        $( "span.status-container" ).html( "Een ogenblik geduld a.u.b." );
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case finalized:
-                        $( "span.status-container" ).html( "Uw account is gereed voor gebruik." );
+                        $( "span.status-container" ).html( "Je account is gereed voor gebruik." );
                         jQuery.get( self + 'done', function(dummy) {
                             document.location = "{{return_url}}";
                         });
