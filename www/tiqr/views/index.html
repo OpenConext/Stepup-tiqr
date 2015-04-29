@@ -42,16 +42,32 @@
 
 <p>
 {% if id %}
-U logt in met tiqr account {{ id }}
-{% endif %}
+<!--U logt in met tiqr account {{ id }}-->
+    Je ontvangt een push notificatie op je telefoon.
+    <ul>
+            <li>Klik op 'OK' om verder te gaan</li>
+            <li>Voer je PIN in en klik op 'OK'</li>
+    </ul>
+            Je bent nu ingelogd.
+    <br/>
+    <img class="qr" src='{{qr}}' style="display: none" />
+    <br/>
+    Geen push notificatie ontvangen? Klik  <a class="scan" href="#">hier</a> en scan de QR code met je tiqr app.
+{% else %}
 Scan de code met de tiqr app op uw telefoon om in te loggen.
+    <img class="qr" src='{{qr}}' />
+{% endif %}
 </p>
+            <script>
+                $(function(){
+                    $('a.scan').click(function(){
+                        $( "img.qr" ).show( "slow" );
+                    });
+                });
+            </script>
 
-</br/>
-<img src='{{qr}}' />
-<br/>
-Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> eerst een aan.
-<!--TODO fix URL -->
+            <!-- Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> eerst een aan. -->
+            <!--TODO fix URL -->
 
         </div><!-- /content -->
 
@@ -60,7 +76,7 @@ Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> e
                 <div class="span8 offset2">
                     <hr>
                     <ul class="nav nav-pills">
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">Annuleren</a></li><!-- TODO: Send Response with status Failed -->
                     </ul>
                 </div>
             </div>
