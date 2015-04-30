@@ -168,6 +168,7 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
         // starting a new enrollment session
         $sid = $app['session']->getId();
         $uid = generate_id(); // TODO uniqueness
+        $app['session']->set('authn', array('username' => $uid)); // TODO check
         $displayName = "Stepup User";      # TODO
         $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
         $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
@@ -186,7 +187,8 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
         $enrol = $twig->render('enrol.html', array(
                 'self' => $base,
                 'qr' => $qr,
-                'return_url' => $base . 'login?return=' . $return,
+//                'return_url' => $base . 'login?return=' . $return,
+                'return_url' => $return,
             ));
         $response = new Response($enrol);
         return $response;
