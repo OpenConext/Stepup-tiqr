@@ -3,15 +3,14 @@
         "silex/silex": "~1.2",
         "fr3d/xmlseclibs": "~1.3",
         "twig/twig": "1.*",
-        "joostd/tiqr-server": "dev-master",
-        "joostd/tiqr-server-libphp": "dev-master",
         "SURFnet/tiqr-server-libphp": "dev-master",
         "monolog/monolog": "~1.12",
         "fr3d/xmlseclibs": " ~1.3",
         "symfony/translation": "~2.6",
         "symfony/config": "~2.6",
         "symfony/yaml": "~2.6",
-        "symfony/twig-bridge": "~2.6"
+        "symfony/twig-bridge": "~2.6",
+        "zendframework/zendframework1": "~1.12"
     },
     "repositories": [
         {
