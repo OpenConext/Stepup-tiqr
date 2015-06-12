@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS user (
     id integer NOT NULL PRIMARY KEY,
     userid varchar(30) NOT NULL UNIQUE,
     displayname varchar(30) NOT NULL,
