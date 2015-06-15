@@ -1,5 +1,5 @@
-composer.phar
-vendor
+/composer.phar
+/vendor/
 local_config.php
 local_options.php
 .vagrant
