@@ -17,9 +17,11 @@ $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/views',
     ));
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-        'monolog.logfile' => __DIR__.'/../../authn.log',
-    ));
+// initialize the logger
+$app['monolog'] = $app->share(function($app) {
+    return logger();
+});
+
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(
     'locale_fallbacks' => array('nl'),
 ));
@@ -90,9 +92,9 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         if( $id ) {
             $notificationType = $userStorage->getNotificationType($id);
             $notificationAddress = $userStorage->getNotificationAddress($id);
-            error_log("type [$notificationType], address [$notificationAddress]");
+            $app['monolog']->addInfo("type [$notificationType], address [$notificationAddress]");
             $translatedAddress = $tiqr->translateNotificationAddress($notificationType, $notificationAddress);
-            error_log("translated address [$translatedAddress]");
+            $app['monolog']->addInfo("translated address [$translatedAddress]");
             $msg = "A push notification was sent to your phone";
             if ($translatedAddress) {
                 $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
@@ -102,7 +104,8 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         }
 
         $url = $tiqr->generateAuthURL($sessionKey);
-        error_log($url);
+        $app['monolog']->addInfo($url);
+    // TODO: use native lib
         $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
         $loader = new Twig_Loader_Filesystem('views');
         $twig = new Twig_Environment($loader, array(
@@ -177,7 +180,7 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
         $metadataURL = $base . "/tiqr.php?key=$key";       # TODO
         $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
         $url = $tiqr->generateEnrollString($metadataURL);
-        # TODO: use js qr lib
+        # TODO: use js/native qr lib?
         $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
 
         $loader = new Twig_Loader_Filesystem('views');
@@ -199,14 +202,14 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
 $app->get('/status', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $status = $tiqr->getEnrollmentStatus($sid);
-        error_log("[$sid] status is $status");
+        $app['monolog']->addInfo("[$sid] status is $status");
         return $status;
     });
 
 $app->get('/done', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $tiqr->resetEnrollmentSession($sid);
-        error_log("[$sid] reset enrollment");
+        $app['monolog']->addInfo("[$sid] reset enrollment");
         return "done";
     });
 

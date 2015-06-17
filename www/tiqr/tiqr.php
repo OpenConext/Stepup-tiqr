@@ -18,7 +18,7 @@ function metadata($key)
     $tiqr = new Tiqr_Service($options);
     // exchange the key submitted by the phone for a new, unique enrollment secret
     $enrollmentSecret = $tiqr->getEnrollmentSecret($key);
-    error_log("enrolment secret for key $key is $enrollmentSecret");
+//    logger()->addDebug("enrolment secret for key $key is $enrollmentSecret");
     // $enrollmentSecret is a one time password that the phone is going to use later to post the shared secret of the user account on the phone.
     $enrollmentUrl     = base() . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
     $authenticationUrl = base() . "/tiqr/tiqr.php";
@@ -64,7 +64,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     $tiqr = new Tiqr_Service($options);
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
-    error_log("storing new entry $userid:$secret");
+    logger()->addDebug("storing new entry foro user '$userid'");
     $userStorage->createUser($userid,"anonymous"); // TODO displayName
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
@@ -76,21 +76,21 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
 switch( $_SERVER['REQUEST_METHOD'] ) {
     case "GET":
         // metadata request
-        //error_log("received GET request\n" . print_r($_GET,true));
+        logger()->addDebug("received GET request", $_GET);
         // retrieve the temporary reference to the user identity
         $key = $_GET['key'];
-        error_log("received metadata request (key=$key)");
+        logger()->addInfo("received metadata request (key=$key)");
         $metadata = metadata($key);
         if( $metadata == false)
-            error_log("ERROR: empty metadata - metadata was either lost or destroyed after retrieval");
+            logger()->addError("ERROR: empty metadata - metadata was either lost or destroyed after retrieval");
         else
-            error_log("sending metadata:\n" . print_r($metadata,true));
+            logger()->addInfo("sending metadata", $metadata);
         Header("Content-Type: application/json");
         echo json_encode($metadata);
         break;
     case "POST":
-        error_log("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
-        error_log("received POST request\n" . print_r($_POST,true));
+        logger()->addInfo("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
+        logger()->addInfo("received POST request", $_POST);
         $operation = $_POST['operation'];
 //        $version = $_POST['version'];
         $notificationType = $_POST['notificationType'];
@@ -100,7 +100,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         switch( $operation ) {
             case "register":
                 $enrollmentSecret = $_GET['otp']; // enrollmentsecret relayed by tiqr app
-                error_log("enrollmentSecret is $enrollmentSecret");
+//                logger()->addDebug("enrollmentSecret is $enrollmentSecret");
                 $secret = $_POST['secret'];
                 $result = register( $enrollmentSecret, $secret, $notificationType, $notificationAddress );
                 echo $result;
@@ -109,13 +109,13 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 $sessionKey = $_POST['sessionKey'];
                 $userId = $_POST['userId'];
                 $response = $_POST['response'];
-                error_log("received authentication response ($response) from user $userId for session $sessionKey");
+                logger()->addInfo("received authentication response ($response) from user $userId for session $sessionKey");
                 $result = login( $sessionKey, $userId, $response );
-                error_log("response $result");
+                logger()->addInfo("response $result");
                 echo $result;
                 break;
             default:
-                error_log("ERROR: unknown operation ($operation) in POST request");
+                logger()->addError("ERROR: unknown operation ($operation) in POST request");
                 break;
         }
         break;

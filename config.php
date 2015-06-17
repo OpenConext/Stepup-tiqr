@@ -13,6 +13,4 @@ $config['sp']['http://' . $_SERVER['HTTP_HOST'] . '/saml/metadata'] = array(
 // override config locally
 if( file_exists(dirname(__FILE__) . "/local_config.php") ) {
     include(dirname(__FILE__) . "/local_config.php");
-} else {
-    error_log("no local config found");
 }
