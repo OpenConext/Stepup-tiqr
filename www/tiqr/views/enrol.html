@@ -18,7 +18,7 @@
             jQuery.get( self + 'status', function(status) {
                 switch(status) {
                     case idle:
-                        $( "span.status-container" ).html( "<ul><li>Je sessie is verlopen<</li><li>Ververs de pagina en probeer het nogmaals</li><li>Of klik op 'Annuleren' om terug te keren naar het beginscherm</li></ul>" );
+                        $( "span.status-container" ).html( "<ul><li>Je sessie is verlopen</li><li>Ververs de pagina en probeer het nogmaals</li><li>Of klik op 'Annuleren' om terug te keren naar het beginscherm</li></ul>" );
                         $( "img.qr" ).hide( "slow" );
                         //alert("Timeout. Please try again by refreshing this page.");
                         break;
