@@ -99,9 +99,13 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
             $app['monolog']->addInfo("translated address [$translatedAddress]");
             $msg = "A push notification was sent to your phone";
             if ($translatedAddress) {
-                $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
+                $result = $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
+                if( !$result ) {
+                    $app['monolog']->addWarning("Failure sending push notification to [$translatedAddress]");
+                }
             } else {
                 $msg = "No $notificationType translated address available for [$notificationAddress]" ;
+                $app['monolog']->addWarning($msg);
             }
         }
 
