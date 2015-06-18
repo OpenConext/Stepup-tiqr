@@ -26,9 +26,9 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
 ));
 
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-        'monolog.logfile' => __DIR__.'/../../saml.log',
-    ));
+$app['monolog'] = $app->share(function($app) {
+    return logger();
+});
 
 ########## SAML ##########
 
