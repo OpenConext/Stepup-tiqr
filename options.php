@@ -16,6 +16,8 @@ $options = array(
     'statestorage'        => array("type" => "file"),
     'userstorage'         => array("type" => "file", "path" => "/tmp", "encryption" => array('type' => 'dummy')),
     "usersecretstorage" => array("type" => "file"),
+    "apns.certificate" => '',
+    "apns.environment" => 'production',
     "logger"            => new Monolog\Handler\ErrorLogHandler(),
 );
 
