@@ -78,7 +78,12 @@ $app->get('/login/{nameid}', function (Request $request, $nameid) use ($config, 
     $query  = 'SAMLRequest=' . urlencode(base64_encode(gzdeflate($request)));
     $query .= "&RelayState=$base"."session";
     $key = $config['keyfile']; // reuse key
-    $location = $sso_url . '?' . saml20_sign_query($query, $key);
+    if( !file_exists($key) ) {
+        $app['monolog']->addWarning("Cannot read key from file $key - sending unsigned SAML AuthnRequest");
+        $location = $sso_url . '?' . $query;
+    } else {
+        $location = $sso_url . '?' . saml20_sign_query($query, $key);
+    }
     return $app->redirect($location);
 })->value('nameid', '');    // default nameid is empty, i.e. do not send a NameID in the request
 
@@ -182,9 +187,13 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
         $dom->preserveWhiteSpace = FALSE;
         $dom->loadXML($response);
         $dom->formatOutput = TRUE;
-        // sign the assertion
-        // do not add certificate
-        $dom = utils_xml_sign($dom, $config['keyfile'], $config['certfile']);
+        if( !file_exists( $config['keyfile']) ) {
+            $app['monolog']->addWarning("Cannot read key from file " . $config['keyfile'] . " - sending Response unsigned");
+        } else {
+            // sign the assertion
+            // do not add certificate
+            $dom = utils_xml_sign($dom, $config['keyfile'], $config['certfile']);
+        }
         $response = $dom->saveXML();
 
         # use POST binding
