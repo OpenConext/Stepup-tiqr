@@ -12,15 +12,16 @@ use Symfony\Component\HttpFoundation\Response;
 date_default_timezone_set('Europe/Amsterdam');
 
 $app = new Silex\Application();
-$app['debug'] = true;
+$app['debug'] = $options['debug'];
+
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/views',
     ));
-// initialize the logger
-$app['monolog'] = $app->share(function($app) {
-    return logger();
-});
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.name' => 'authn',
+));
 
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(
     'locale_fallbacks' => array('nl'),
@@ -78,6 +79,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         $sid = $app['session']->getId();
         $userdata = $tiqr->getAuthenticatedUser($sid);
         $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
+
         if( !is_null($userdata) ) {
             $app['session']->set('authn', array('username' => $userdata));
             return $app->redirect($return);

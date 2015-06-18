@@ -18,7 +18,7 @@ function newid($length = 42) {
 date_default_timezone_set('Europe/Amsterdam');
 
 $app = new Silex\Application(); 
-$app['debug'] = true;
+$app['debug'] = $options['debug'];
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 
@@ -26,9 +26,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
 ));
 
-$app['monolog'] = $app->share(function($app) {
-    return logger();
-});
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.name' => 'saml',
+));
 
 ########## SAML ##########
 

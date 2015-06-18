@@ -6,6 +6,17 @@
 
 include('../../options.php');
 
+$logger = null;
+
+function logger() {
+    global $logger, $options ;
+    if( $logger )
+        return $logger;
+    $logger = new Monolog\Logger('tiqr');
+    $logger->pushHandler(new Monolog\Handler\SyslogHandler('stepup-tiqr'));
+    return $logger;
+}
+
 function base() {
     $proto = "on" === $_SERVER['HTTPS'] ? "https://" : "http://";
     /** @var $baseUrl string */
@@ -18,7 +29,6 @@ function metadata($key)
     $tiqr = new Tiqr_Service($options);
     // exchange the key submitted by the phone for a new, unique enrollment secret
     $enrollmentSecret = $tiqr->getEnrollmentSecret($key);
-//    logger()->addDebug("enrolment secret for key $key is $enrollmentSecret");
     // $enrollmentSecret is a one time password that the phone is going to use later to post the shared secret of the user account on the phone.
     $enrollmentUrl     = base() . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
     $authenticationUrl = base() . "/tiqr/tiqr.php";
@@ -64,7 +74,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     $tiqr = new Tiqr_Service($options);
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
-    logger()->addDebug("storing new entry foro user '$userid'");
+    logger()->addDebug("storing new entry for user '$userid'");
     $userStorage->createUser($userid,"anonymous"); // TODO displayName
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
@@ -76,7 +86,6 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
 switch( $_SERVER['REQUEST_METHOD'] ) {
     case "GET":
         // metadata request
-        logger()->addDebug("received GET request", $_GET);
         // retrieve the temporary reference to the user identity
         $key = $_GET['key'];
         logger()->addInfo("received metadata request (key=$key)");
@@ -100,7 +109,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         switch( $operation ) {
             case "register":
                 $enrollmentSecret = $_GET['otp']; // enrollmentsecret relayed by tiqr app
-//                logger()->addDebug("enrollmentSecret is $enrollmentSecret");
+                logger()->addDebug("received enrollmentSecret");
                 $secret = $_POST['secret'];
                 $result = register( $enrollmentSecret, $secret, $notificationType, $notificationAddress );
                 echo $result;

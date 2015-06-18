@@ -18,7 +18,7 @@ $options = array(
     "usersecretstorage" => array("type" => "file"),
     "apns.certificate" => '',
     "apns.environment" => 'production',
-    "logger"            => new Monolog\Handler\ErrorLogHandler(),
+    "debug" => false,
 );
 
 // override options locally. TODO merge with config
@@ -35,17 +35,6 @@ $autoloader = Tiqr_AutoLoader::getInstance($options); // needs {tiqr,zend,phpqrc
 $autoloader->setIncludePath();
 
 $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
-
-$logger = null;
-
-function logger() {
-    global $logger, $options ;
-    if( $logger )
-        return $logger;
-    $logger = new Monolog\Logger('tiqr');
-    $logger->pushHandler($options['logger']);
-    return $logger;
-}
 
 function generate_id($length = 8) {
     $chars = "0123456789";
