@@ -8,13 +8,13 @@ require_once 'saml.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
-function newid($length = 42) {
+function newID($length = 42) {
     $id = '_';
     for ($i = 0; $i < $length; $i++ ) $id .= dechex( rand(0,15) );
     return $id;
 }
 
+// TODO: move
 date_default_timezone_set('Europe/Amsterdam');
 
 $app = new Silex\Application(); 
@@ -38,8 +38,8 @@ $app->get('/', function (Request $request) use ($app) {
         return "This is a SAML endpoint<br/>See also the SAML 2.0 <a href='$url'>Metadata</a>";
     });
 
-# SAML 2.0 Metadata
-
+/* SAML 2.0 Metadata
+ */
 $app->get('/metadata', function (Request $request) use ($app, $config) {
     $loader = new Twig_Loader_Filesystem('views');
     $twig = new Twig_Environment($loader, array(
@@ -56,179 +56,147 @@ $app->get('/metadata', function (Request $request) use ($app, $config) {
     return $response;
 });
 
-# send SAML request (SP initiated SAML Web SSO) - builtin SP for testing purposes
-
-$app->get('/login/{nameid}', function (Request $request, $nameid) use ($config, $app) {
-    $base = $request->getUriForPath('/');
-    # remote IDP
-    $sso_url = $base . "sso";   // default
-
-    $loader = new Twig_Loader_Filesystem('views');
-    $twig = new Twig_Environment($loader, array(
-    	'debug' => true,
-    ));
-    $request = $twig->render('AuthnRequest.xml', array(
-    	'ID' => newid(),
-    	'Issuer' => $base . 'metadata',     // convention
-    	'IssueInstant' => gmdate("Y-m-d\TH:i:s\Z", time()),
-    	'Destination' => $sso_url,
-    	'AssertionConsumerServiceURL' => $base . 'acs',
-        'NameID' => $nameid,
-    ));
-    # use HTTP-Redirect binding
-    $query  = 'SAMLRequest=' . urlencode(base64_encode(gzdeflate($request)));
-    $query .= "&RelayState=$base"."session";
-    $key = $config['keyfile']; // reuse key
-    if( !file_exists($key) ) {
-        $app['monolog']->addWarning("Cannot read key from file $key - sending unsigned SAML AuthnRequest");
-        $location = $sso_url . '?' . $query;
-    } else {
-        $location = $sso_url . '?' . saml20_sign_query($query, $key);
-    }
-    return $app->redirect($location);
-})->value('nameid', '');    // default nameid is empty, i.e. do not send a NameID in the request
-
-
-# receive SAML request (IDP)
-
+/*
+ * IDP: receive SAML request
+ * Not a compliant SAML implementation: designed to work with stepup-gateway
+ */
 $app->get('/sso', function (Request $request) use ($config, $app) {
 
-    $relayState = $request->get('RelayState');
-    $app['session']->set('RelayState', $relayState);
+    SAML2_Compat_ContainerSingleton::setContainer(new Saml2Container(
+        $app['monolog']
+    ));
 
-        # TODO: check request contents, etc
-    $samlrequest = $request->get('SAMLRequest');
-    $samlrequest = gzinflate(base64_decode($samlrequest));
-    $dom = new DOMDocument();
-    $dom->loadXML($samlrequest);
+    // Make sure we're dealing with an AuthN request
+    $binding = SAML2_Binding::getCurrentBinding();
+    $samlrequest = $binding->receive();
+    if (!($samlrequest instanceof SAML2_AuthnRequest)) {
+        throw new Exception('Message received on authentication request endpoint wasn\'t an authentication request.');
+    }
 
-	if ($dom->getElementsByTagName('AuthnRequest')->length === 0) {
-	  throw new Exception('Unknown request on saml20 endpoint!');
-	}
+    $request_data = array(
+        'relaystate' => $samlrequest->getRelayState(),
+    );
 
-	$requestor = $dom->getElementsByTagName('Issuer')->item(0)->textContent;
-    $app['monolog']->addInfo(sprintf("Requestor is '%s' .", $requestor));
+    // Check for known issuer
+    $issuer = $samlrequest->getIssuer();
+    if ($issuer === NULL) {
+        throw new Exception('Received message on authentication request endpoint without issuer.');
+    }
+    if( !array_key_exists( $issuer, $config['sp']) ) {
+        throw new Exception("Unknown SP with entityID '$issuer'");
+    }
+    $md = $config['sp'][$issuer];
+    $app['monolog']->addInfo(sprintf("Issuer is '%s' .", $issuer));
+    $request_data['issuer'] = $issuer;
 
-        $md = $config['sp'][$requestor];
-        if( !$md )
-            throw new Exception("Unknown SP with entityID $requestor");
+    // verify signature
+    if( ($md['certfile']))
+    {
+        $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type'=>'public'));
+        $key->loadKey($md['certfile'], true, true);
+        $res = $samlrequest->validate($key);
+        if(!$res)
+            throw Exception( "invalid signature" );
+    } else {
+        throw new Exception("Cannot load certificate from file " . $md['certfile']);
+    }
 
-        // verify signature
-        if( ($md['certfile']))
-            saml20_verify_request($_SERVER['QUERY_STRING'], $config['certfile']); // use raw QS instead of normalized version!
+    $nameid = $samlrequest->getNameId();
+    $request_data['nameid'] = $nameid['Value'];
 
-        $xpath = new DOMXPath($dom);
-        $xpath->registerNamespace('samlp', "urn:oasis:names:tc:SAML:2.0:protocol" );
-        $xpath->registerNamespace('saml', "urn:oasis:names:tc:SAML:2.0:assertion" );
-        $query = "string(//saml:Subject/saml:NameID)";
-        $nameid = $xpath->evaluate($query, $dom);
-        $app['session']->set('RequestedSubject', $nameid);
+    $request_data['id'] = $samlrequest->getId();
 
-    $authnrequest = $dom->getElementsByTagName('AuthnRequest')->item(0);
-	$sprequestid = $authnrequest->getAttribute('ID');
-        $app['session']->set('Requestor', $requestor);
-        $app['session']->set('RequestID', $sprequestid);
-        $url = $request->getUriForPath('/') . 'sso_return';
-        if( $nameid ) { // login
-            return $app->redirect("/tiqr/login?return=$url");
-        } else {
-            return $app->redirect("/tiqr/enrol?return=$url");
-        }
-//        return $app->redirect("/authn/login?return=$url");
+    // save state for later when generating a response
+    $app['session']->set('Request', $request_data );
+
+    $url = $request->getUriForPath('/') . 'sso_return';
+//    return $app->redirect("/authn/login?return=$url");
+    if( $nameid ) { // login
+        return $app->redirect("/tiqr/login?return=$url");
+    } else {
+        return $app->redirect("/tiqr/enrol?return=$url");
+    }
 });
+
+/*
+ * IDP: Finish SSO
+ * Assumes saved request is validated
+ */
 
 $app->get('/sso_return', function (Request $request) use ($config, $app) {
 
-        $relayState = $app['session']->get('RelayState');
-        $authn = $app['session']->get('authn');
-        $username = $authn['username'];
-        $app['session']->set('authn', null);
-        $expected = $app['session']->get('RequestedSubject');
-        if( $expected and $username != $app['session']->get('RequestedSubject') ) {
-            throw new Exception("Authentication requested for '$expected', but authenticated user is '$username'.");
-        }
+    $request_data = $app['session']->get('Request');
 
-        $app['session']->set('RequestedSubject', null);
+    $rsp_params = array(
+        'ResponseID' => newID(),
+        'AssertionID' => newID(),
+        'IssueInstant' => gmdate("Y-m-d\TH:i:s\Z", time() ),
+        'NotBefore' => gmdate("Y-m-d\TH:i:s\Z", time() - 30),
+        'NotOnOrAfter' => gmdate("Y-m-d\TH:i:s\Z", time() + 60 * 5),
+    );
 
-        $attrnameformat = NULL;
-	    # assume solicited responses
-        $requestor = $app['session']->get('Requestor');
-    	$inResponseTo = htmlspecialchars( $app['session']->get('RequestID') );
-        $app['session']->set('Requestor', null);
-        $app['session']->set('RequestID', null);
+    // determine ACS URL from requestor
+    $requestor = $request_data['issuer'];
+    $app['monolog']->addInfo(sprintf("Requestor was '%s' .", $requestor));
+    $rsp_params['Audience'] = $requestor;
 
-        $base = $request->getUriForPath('/');
-        $issuer = $base . 'metadata';       // convention
-        $app['monolog']->addInfo(sprintf("Requestor was '%s' .", $requestor));
-        if( !array_key_exists( $requestor, $config['sp']) ) {
-            throw new Exception("Unknown SP with entityID '$requestor'");
-        }
-        $acs_url = $config['sp'][$requestor]['acs'];
-        $app['monolog']->addInfo(sprintf("ACS URL is '%s' .", $acs_url));
+    $acs_url = $config['sp'][$requestor]['acs'];
+    $app['monolog']->addInfo(sprintf("ACS URL is '%s' .", $acs_url));
+    $rsp_params['Destination'] = $acs_url;
 
-        $loader = new Twig_Loader_Filesystem('views');
-        $twig = new Twig_Environment($loader, array(
-            'debug' => true,
-        ));
-        $response = $twig->render('Response.xml', array(
-            'ResponseID' => newID(),
-            'AssertionID' => newID(),
-    	    'Audience' => $requestor,
-            'Destination' => $acs_url,
-            'InResponseTo' => $inResponseTo,
-            'Issuer' => $issuer,
-            'IssueInstant' => gmdate("Y-m-d\TH:i:s\Z", time() ),
-            'NotBefore' => gmdate("Y-m-d\TH:i:s\Z", time() - 30),
-            'NotOnOrAfter' => gmdate("Y-m-d\TH:i:s\Z", time() + 60 * 5),
-            'NameID' => $username,
-        ));
-
-        # sign
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = FALSE;
-        $dom->loadXML($response);
-        $dom->formatOutput = TRUE;
-        if( !file_exists( $config['keyfile']) ) {
-            $app['monolog']->addWarning("Cannot read key from file " . $config['keyfile'] . " - sending Response unsigned");
-        } else {
-            // sign the assertion
-            // do not add certificate
-            $dom = utils_xml_sign($dom, $config['keyfile'], $config['certfile']);
-        }
-        $response = $dom->saveXML();
-
-        # use POST binding
-        $params = array(
-            'Destination' => $acs_url,
-            'SAMLResponse' => base64_encode($response),
-        );
-        if ($relayState !== NULL) {
-            $params['RelayState'] = $relayState;
-        }
-        $app['session']->set('RelayState', null);
-        $app['session']->set('authn', null); // disable SSO TODO re-enable
-
-        return $twig->render('autosubmit.html', $params);
-
-    });
-
-# receive SAML response (SP)
-
-$app->post('/acs', function (Request $request) use ($app) {
-    # TODO: check signature, response, etc
-    $response = $request->get('SAMLResponse');
-    $response = base64_decode($response);
-    $dom = new DOMDocument();
-    $dom->loadXML($response);
-    $xpath = new DOMXPath($dom);
-    $xpath->registerNamespace('saml', "urn:oasis:names:tc:SAML:2.0:assertion" );
-    $query = "string(//saml:Assertion[1]/saml:Subject/saml:NameID)";
-    $nameid = $xpath->evaluate($query, $dom);
-    if (!$nameid) {
-        throw new Exception('Could not locate nameid element.');
+    // check username of authenticated user
+    $authn = $app['session']->get('authn');
+    $username = $authn['username'];
+    $nameid = $request_data['nameid'];
+    if( $nameid and $username != $nameid ) {
+        throw new Exception("Authentication requested for '$nameid', but authenticated user is '$username'.");
     }
-        $location = $request->getUriForPath('/') . 'login/' . $nameid;
-        return "<a href='$location'>$nameid</a>";
+    $rsp_params['NameID'] = $username;
+
+    # assume solicited responses
+   	$inResponseTo = htmlspecialchars( $request_data['id'] );
+    $rsp_params['InResponseTo'] = $inResponseTo;
+
+    $base = $request->getUriForPath('/');
+    $issuer = $base . 'metadata';       // by convention
+    $rsp_params['Issuer'] = $issuer;
+
+    // render SAML response message
+    $loader = new Twig_Loader_Filesystem('views');
+    $twig = new Twig_Environment($loader);
+    $response = $twig->render('Response.xml', $rsp_params);
+
+    # sign
+    $dom = new DOMDocument();
+    $dom->preserveWhiteSpace = FALSE;
+    $dom->loadXML($response);
+    $dom->formatOutput = TRUE;
+    if( !file_exists( $config['keyfile']) ) {
+        $app['monolog']->addWarning("Cannot read key from file " . $config['keyfile'] . " - sending Response unsigned");
+    } else {
+        // sign the assertion
+        // do not add certificate
+        $dom = utils_xml_sign($dom, $config['keyfile'], $config['certfile']);
+    }
+    $response = $dom->saveXML();
+
+    # use POST binding
+    $params = array(
+        'Destination' => $acs_url,
+        'SAMLResponse' => base64_encode($response),
+    );
+
+    // restore relayState
+    $relayState = $request_data['relaystate'];
+    if ($relayState !== NULL) {
+        $params['RelayState'] = $relayState;
+    }
+
+    $app['session']->set('authn', null); // no SSO
+    $app['session']->set('Request', null);
+
+    return $twig->render('autosubmit.html', $params);
+
 });
 
 $app->run();
