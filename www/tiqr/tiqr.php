@@ -89,7 +89,8 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
     case "GET":
         // metadata request
         // retrieve the temporary reference to the user identity
-        $key = $_GET['key'];
+        $key = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['key']);
+
         logger()->addInfo("received metadata request (key=$key)");
         $metadata = metadata($key);
         if( $metadata == false)
@@ -101,25 +102,23 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         break;
     case "POST":
         logger()->addInfo("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
-        logger()->addInfo("received POST request", $_POST);
-        $operation = $_POST['operation'];
-//        $version = $_POST['version'];
-        $notificationType = $_POST['notificationType'];
-        $notificationAddress = $_POST['notificationAddress'];
-//        $language = $_POST['language'];
+        $operation = preg_replace("/[^a-z]+/", "", $_POST['operation']);
+        logger()->addInfo(sprintf("received operation '%s'", $operation));
+        $notificationType = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['notificationType']);
+        $notificationAddress = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['notificationAddress']);
 
         switch( $operation ) {
             case "register":
-                $enrollmentSecret = $_GET['otp']; // enrollmentsecret relayed by tiqr app
+                $enrollmentSecret = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['otp']); // enrollmentsecret relayed by tiqr app
                 logger()->addDebug("received enrollmentSecret");
-                $secret = $_POST['secret'];
+                $secret = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['secret']);
                 $result = register( $enrollmentSecret, $secret, $notificationType, $notificationAddress );
                 echo $result;
                 break;
             case "login":
-                $sessionKey = $_POST['sessionKey'];
-                $userId = $_POST['userId'];
-                $response = $_POST['response'];
+                $sessionKey = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['sessionKey']);
+                $userId = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['userId']);
+                $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['$response']);
                 logger()->addInfo("received authentication response ($response) from user $userId for session $sessionKey");
                 $result = login( $sessionKey, $userId, $response );
                 logger()->addInfo("response $result");

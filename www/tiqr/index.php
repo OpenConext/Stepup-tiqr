@@ -82,7 +82,8 @@ $tiqr = new Tiqr_Service($options);
 
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $base = $request->getUriForPath('/');
-    if (null === $return = $request->get('return')) {
+    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
+    if( $return == false ) {
         $return = $base;
     }
     $sid = $app['session']->getId();
@@ -110,7 +111,8 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
 
 $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
     $base = $request->getUriForPath('/');
-    if( null === $return = $request->get('return') ) {
+    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
+    if( $return == false ) {
         $return = $base;
     }
     $sid = $app['session']->getId();
@@ -187,19 +189,20 @@ $app->get('/logout', function (Request $request) use ($app, $tiqr) {
 ### tiqr Enrolment ###
 
 $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
-        $base = $request->getUriForPath('/');
-        if( null === $return = $request->get('return') ) {
-            $return = $base;
-        }
-        $loader = new Twig_Loader_Filesystem('views');
-        $twig = new Twig_Environment($loader);
-        $enrol = $twig->render('enrol.html', array(
-                'self' => $base,
-                'return_url' => $return,
-            ));
-        $response = new Response($enrol);
-        return $response;
-    });
+    $base = $request->getUriForPath('/');
+    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
+    if( $return == false ) {
+        $return = $base;
+    }
+    $loader = new Twig_Loader_Filesystem('views');
+    $twig = new Twig_Environment($loader);
+    $enrol = $twig->render('enrol.html', array(
+        'self' => $base,
+        'return_url' => $return,
+    ));
+    $response = new Response($enrol);
+    return $response;
+});
 
 $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
     $base = $request->getUriForPath('/');
