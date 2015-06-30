@@ -5,9 +5,9 @@ $config = array(
     'certfile' => dirname(__FILE__) . "/cert.pem",
 ) ;
 
-$config['sp']['http://' . $_SERVER['HTTP_HOST'] . '/saml/metadata'] = array(
-        'acs' =>  'http://' . $_SERVER['HTTP_HOST'] . '/saml/acs',
-        'certfile' => '',
+$config['sp']['http://' . $_SERVER['HTTP_HOST'] . '/sp/metadata'] = array(
+        'acs' =>  'http://' . $_SERVER['HTTP_HOST'] . '/sp/acs',
+        'certfile' => dirname(__FILE__) . '/cert.pem',
 );
 
 // override config locally
