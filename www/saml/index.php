@@ -53,7 +53,8 @@ $app->get('/', function (Request $request) use ($app) {
         return "This is a SAML endpoint<br/>See also the SAML 2.0 <a href='$url'>Metadata</a>";
     });
 
-/* SAML 2.0 Metadata
+/*
+ * SAML 2.0 IDP Metadata
  */
 $app->get('/metadata', function (Request $request) use ($app, $config) {
     $loader = new Twig_Loader_Filesystem('views');
@@ -191,7 +192,7 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
 //    # sign
 
     if( !file_exists( $config['keyfile']) ) {
-        $app['monolog']->addWarning("Cannot read key from file " . $config['keyfile'] . " - sending Response unsigned");
+        $app['monolog']->addWarning(sprintf("Cannot read key from file '%s' - sending Response unsigned", $config['keyfile']));
     } else {
         $response = sign($response,  $config['keyfile'],  $config['certfile']);
     }

@@ -135,19 +135,18 @@ $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
     if( $id ) {
         $notificationType = $userStorage->getNotificationType($id);
         $notificationAddress = $userStorage->getNotificationAddress($id);
-        $app['monolog']->addInfo("client has notification type [$notificationType], address [$notificationAddress]");
+        $app['monolog']->addInfo(sprintf("client has notification type [%s], address [%s]", $notificationType, $notificationAddress));
         $translatedAddress = $tiqr->translateNotificationAddress($notificationType, $notificationAddress);
-        $app['monolog']->addInfo("client translated address is [$translatedAddress]");
+        $app['monolog']->addInfo(sprintf("client translated address is [%s]", $translatedAddress));
         if ($translatedAddress) {
             $result = $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
             if( $result ) {
-                $app['monolog']->addInfo("sent push notification to [$translatedAddress]");
+                $app['monolog']->addInfo(sprintf("sent push notification to [%s]", $translatedAddress));
             } else {
-                $app['monolog']->addWarning("Failure sending push notification to [$translatedAddress]");
+                $app['monolog']->addWarning(sprintf("Failure sending push notification to [%s]", $translatedAddress));
             }
         } else {
-            $msg = "No $notificationType translated address available for [$notificationAddress]" ;
-            $app['monolog']->addWarning($msg);
+            $app['monolog']->addWarning(sprintf("No %s translated address available for [%s]"),$notificationType,$notificationAddress);
         }
     }
     $tiqr->generateAuthQR($sessionKey);
@@ -214,7 +213,7 @@ $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
     $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
     $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
     $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
-    $metadataURL = $base . "/tiqr.php?key=$key";
+    $metadataURL = $base . "tiqr.php?key=$key";
     $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
     $tiqr->generateEnrollmentQR($metadataURL);
     return "";
@@ -225,14 +224,14 @@ $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
 $app->get('/status', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $status = $tiqr->getEnrollmentStatus($sid);
-        $app['monolog']->addInfo("[$sid] status is $status");
+        $app['monolog']->addInfo(sprintf("[%s] status is %d", $sid, $status));
         return $status;
     });
 
 $app->get('/done', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $tiqr->resetEnrollmentSession($sid);
-        $app['monolog']->addInfo("[$sid] reset enrollment");
+        $app['monolog']->addInfo(sprintf("[%s] reset enrollment", $sid));
         return "done";
     });
 

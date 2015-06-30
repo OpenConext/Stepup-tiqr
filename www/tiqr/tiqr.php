@@ -76,7 +76,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     $tiqr = new Tiqr_Service($options);
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
-    logger()->addDebug("storing new entry for user '$userid'");
+    logger()->addDebug(sprintf("storing new entry for user '%s'", $userid));
     $userStorage->createUser($userid,"anonymous"); // TODO displayName
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
@@ -91,17 +91,17 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         // retrieve the temporary reference to the user identity
         $key = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['key']);
 
-        logger()->addInfo("received metadata request (key=$key)");
+        logger()->addInfo(sprintf("received metadata request (key='%s')", $key));
         $metadata = metadata($key);
         if( $metadata == false)
             logger()->addError("ERROR: empty metadata - metadata was either lost or destroyed after retrieval");
-        else
-            logger()->addInfo("sending metadata", $metadata);
+
         Header("Content-Type: application/json");
         echo json_encode($metadata);
+        logger()->addInfo("sent metadata");
         break;
     case "POST":
-        logger()->addInfo("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
+        logger()->addDebug(sprintf("Received POST request from tiqr client version %s", $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']));
         $operation = preg_replace("/[^a-z]+/", "", $_POST['operation']);
         logger()->addInfo(sprintf("received operation '%s'", $operation));
         $notificationType = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['notificationType']);
@@ -118,14 +118,14 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
             case "login":
                 $sessionKey = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['sessionKey']);
                 $userId = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['userId']);
-                $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['$response']);
-                logger()->addInfo("received authentication response ($response) from user $userId for session $sessionKey");
+                $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['response']);
+                logger()->addInfo(sprintf("received authentication response (%s) from user '%s' for session '%s'", $response, $userId, $sessionKey));
                 $result = login( $sessionKey, $userId, $response );
-                logger()->addInfo("response $result");
+                logger()->addInfo(sprintf("Authentication response is '%d'", $result));
                 echo $result;
                 break;
             default:
-                logger()->addError("ERROR: unknown operation ($operation) in POST request");
+                logger()->addError(sprintf("ERROR: unknown operation (%s) in POST request", $operation));
                 break;
         }
         break;
