@@ -65,6 +65,13 @@ $app['translator.domains'] = array(
     ),
 );
 
+/*
+// simple test for translations:
+$app->get('/x/{name}', function ($name) use ($app) {
+        return $app['translator']->trans('enrol', array('%name%' => $name),'messages','nl');
+    });
+*/
+
 $app->before(function ($request) {
         $request->getSession()->start();
     });
@@ -72,62 +79,75 @@ $app->before(function ($request) {
 $tiqr = new Tiqr_Service($options);
 
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
-        $base = $request->getUriForPath('/');
-        if( null === $return = $request->get('return') ) {
-            $return = $base;
-        }
-        $sid = $app['session']->getId();
-        $userdata = $tiqr->getAuthenticatedUser($sid);
-        $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
+    $base = $request->getUriForPath('/');
+    if (null === $return = $request->get('return')) {
+        $return = $base;
+    }
+    $sid = $app['session']->getId();
+    $userdata = $tiqr->getAuthenticatedUser($sid);
+    $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
+    if (!is_null($userdata)) {
+        $app['session']->set('authn', array('username' => $userdata));  // logged in!
+        return $app->redirect($return);
+    }
 
-        if( !is_null($userdata) ) {
-            $app['session']->set('authn', array('username' => $userdata));
-            return $app->redirect($return);
-        }
-        $id = $app['session']->get('RequestedSubject');
-        if( $id === '' ) $id = null;
+    // not logged in...
+    $request_data = $app['session']->get('Request');
+    $id = $request_data['nameid']; // do we need to log in some specific user?
+    if ($id === '') $id = null;
 
-        $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
-        $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
+    $loader = new Twig_Loader_Filesystem('views');
+    $twig = new Twig_Environment($loader);
+    $login = $twig->render('index.html', array(
+        'self' => $base,
+        'return_url' => $return,
+        'id' => $id,
+    ));
+    return new Response($login);
+});
 
-        $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
-        if( $id ) {
-            $notificationType = $userStorage->getNotificationType($id);
-            $notificationAddress = $userStorage->getNotificationAddress($id);
-            $app['monolog']->addInfo("client has notification type [$notificationType], address [$notificationAddress]");
-            $translatedAddress = $tiqr->translateNotificationAddress($notificationType, $notificationAddress);
-            $app['monolog']->addInfo("client translated address is [$translatedAddress]");
-            $msg = "A push notification was sent to your phone";
-            if ($translatedAddress) {
-                $result = $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
-                if( $result ) {
-                    $app['monolog']->addInfo("sent push notification to [$translatedAddress]");
-                } else {
-                    $app['monolog']->addWarning("Failure sending push notification to [$translatedAddress]");
-                }
+$app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
+    $base = $request->getUriForPath('/');
+    if( null === $return = $request->get('return') ) {
+        $return = $base;
+    }
+    $sid = $app['session']->getId();
+    $userdata = $tiqr->getAuthenticatedUser($sid);
+    $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
+
+    if( !is_null($userdata) ) {
+        $app['session']->set('authn', array('username' => $userdata));
+        return $app->redirect($return);
+    }
+
+    $request_data = $app['session']->get('Request');
+    $id = $request_data['nameid']; // do we need to log in some specific user?
+    if ($id === '') $id = null;
+
+    $sessionKey = $tiqr->startAuthenticationSession($id,$sid); // prepares the tiqr library for authentication
+    $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
+
+    $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
+    if( $id ) {
+        $notificationType = $userStorage->getNotificationType($id);
+        $notificationAddress = $userStorage->getNotificationAddress($id);
+        $app['monolog']->addInfo("client has notification type [$notificationType], address [$notificationAddress]");
+        $translatedAddress = $tiqr->translateNotificationAddress($notificationType, $notificationAddress);
+        $app['monolog']->addInfo("client translated address is [$translatedAddress]");
+        if ($translatedAddress) {
+            $result = $tiqr->sendAuthNotification($sessionKey, $notificationType, $translatedAddress);
+            if( $result ) {
+                $app['monolog']->addInfo("sent push notification to [$translatedAddress]");
             } else {
-                $msg = "No $notificationType translated address available for [$notificationAddress]" ;
-                $app['monolog']->addWarning($msg);
+                $app['monolog']->addWarning("Failure sending push notification to [$translatedAddress]");
             }
+        } else {
+            $msg = "No $notificationType translated address available for [$notificationAddress]" ;
+            $app['monolog']->addWarning($msg);
         }
-
-        $url = $tiqr->generateAuthURL($sessionKey);
-        $app['monolog']->addInfo($url);
-    // TODO: use native lib
-        $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
-        $loader = new Twig_Loader_Filesystem('views');
-        $twig = new Twig_Environment($loader, array(
-            'debug' => true,
-        ));
-        $login = $twig->render('index.html', array(
-                'qr' => $qr,
-                'self' => $base,
-                'return_url' => $return,
-                'id' => $id,
-//                'msg' => $msg,
-            ));
-        $response = new Response($login);
-        return $response;
+    }
+    $tiqr->generateAuthQR($sessionKey);
+    return "";
 });
 
 $app->get('/verify', function (Request $request) use ($app, $tiqr) {
@@ -155,13 +175,6 @@ $app->get('/', function (Request $request) use ($app, $tiqr) {
         }
     });
 
-/*
-// simple test for translations:
-$app->get('/x/{name}', function ($name) use ($app) {
-        return $app['translator']->trans('enrol', array('%name%' => $name),'messages','nl');
-    });
-*/
-
 $app->get('/logout', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $tiqr->logout($sid);
@@ -176,34 +189,31 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
         if( null === $return = $request->get('return') ) {
             $return = $base;
         }
-        // starting a new enrollment session
-        $sid = $app['session']->getId();
-        $uid = generate_id(); // TODO uniqueness
-        $app['session']->set('authn', array('username' => $uid)); // TODO check
-        $displayName = "Stepup User";      # TODO
-        $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
-        $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
-        $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
-//        $metadataURL = base() . "/tiqr/tiqr.php?key=$key";       # TODO
-        $metadataURL = $base . "/tiqr.php?key=$key";       # TODO
-        $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
-        $url = $tiqr->generateEnrollString($metadataURL);
-        # TODO: use js/native qr lib?
-        $qr = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" . $url;
-
         $loader = new Twig_Loader_Filesystem('views');
-        $twig = new Twig_Environment($loader, array(
-            'debug' => true,
-        ));
+        $twig = new Twig_Environment($loader);
         $enrol = $twig->render('enrol.html', array(
                 'self' => $base,
-                'qr' => $qr,
-//                'return_url' => $base . 'login?return=' . $return,
                 'return_url' => $return,
             ));
         $response = new Response($enrol);
         return $response;
     });
+
+$app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
+    $base = $request->getUriForPath('/');
+    // starting a new enrollment session
+    $sid = $app['session']->getId();
+    $uid = generate_id(); // TODO uniqueness
+    $app['session']->set('authn', array('username' => $uid)); // TODO check
+    $displayName = "Stepup User";      # TODO
+    $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
+    $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
+    $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
+    $metadataURL = $base . "/tiqr.php?key=$key";
+    $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
+    $tiqr->generateEnrollmentQR($metadataURL);
+    return "";
+});
 
 ### status
 

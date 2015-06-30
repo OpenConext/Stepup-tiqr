@@ -18,7 +18,9 @@ function logger() {
 }
 
 function base() {
-    $proto = "on" === $_SERVER['HTTPS'] ? "https://" : "http://";
+    $proto = "http://";
+    if( array_key_exists('HTTPS', $_SERVER))
+        $proto = "on" === $_SERVER['HTTPS'] ? "https://" : "http://";
     /** @var $baseUrl string */
     return $proto . $_SERVER['HTTP_HOST'];
 }
