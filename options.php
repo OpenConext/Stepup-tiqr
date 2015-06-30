@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
-require_once __DIR__.'/vendor/SURFnet/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
+require_once __DIR__.'/vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
 
 $options = array(
     //"identifier"      => "pilot.stepup.coin.surf.net",
@@ -10,7 +10,7 @@ $options = array(
     "ocra.suite"          => "OCRA-1:HOTP-SHA1-6:QH10-S",
     "logoUrl"         => "https://demo.tiqr.org/img/tiqrRGB.png",
     "infoUrl"         => $_SERVER['HTTP_HOST'], // base(),
-    "tiqr.path"         => __DIR__ . '/vendor/SURFnet/tiqr-server-libphp/library/tiqr/',
+    "tiqr.path"         => __DIR__ . '/vendor/tiqr/tiqr-server-libphp/library/tiqr/',
     'phpqrcode.path' => '.',
     'zend.path' => __DIR__ . '/vendor/zendframework/zendframework1/library',
     'statestorage'        => array("type" => "file"),

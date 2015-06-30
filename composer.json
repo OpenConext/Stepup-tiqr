@@ -2,32 +2,13 @@
     "require": {
         "silex/silex": "~1.2",
         "twig/twig": "1.*",
-        "SURFnet/tiqr-server-libphp": "dev-master",
         "kairos/phpqrcode": "dev-master",
+        "tiqr/tiqr-server-libphp": "~1.1.1",
         "monolog/monolog": "~1.12",
         "symfony/translation": "~2.6",
         "symfony/config": "~2.6",
         "symfony/yaml": "~2.6",
         "symfony/twig-bridge": "~2.6",
-        "zendframework/zendframework1": "~1.12"
-    },
-    "repositories": [
-	{
-            "type":"package",
-            "package": {
-                "version":"dev-master",
-                "name":"SURFnet/tiqr-server-libphp",
-                "source": {
-                    "url":"https://github.com/SURFnet/tiqr-server-libphp.git",
-                    "type":"git",
-                    "reference":"master"
-                },
-                "dist": {
-                    "url":"https://github.com/SURFnet/tiqr-server-libphp/zipball/master",
-                    "type":"zip"
-                }
-            }
         "simplesamlphp/saml2": "dev-master"
     }
-    ]
 }
