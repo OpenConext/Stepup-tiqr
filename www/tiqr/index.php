@@ -78,6 +78,8 @@ $app->before(function ($request) {
 
 $tiqr = new Tiqr_Service($options);
 
+### tiqr Authentication ###
+
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $base = $request->getUriForPath('/');
     if (null === $return = $request->get('return')) {
@@ -182,7 +184,7 @@ $app->get('/logout', function (Request $request) use ($app, $tiqr) {
         return "You are logged out";
     });
 
-##########
+### tiqr Enrolment ###
 
 $app->get('/enrol', function (Request $request) use ($app, $tiqr) {
         $base = $request->getUriForPath('/');

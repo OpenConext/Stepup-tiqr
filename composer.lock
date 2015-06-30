@@ -4,78 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "988f1a207b029863db31269194568137",
+    "hash": "a8f8e53a9fa5a257dca560e0d6eb3be9",
     "packages": [
         {
-            "name": "SURFnet/tiqr-server-libphp",
+            "name": "kairos/phpqrcode",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "master"
+                "url": "https://github.com/kairosagency/phpqrcode.git",
+                "reference": "6770ecbe0e8c7d806c5779ad38b20c9acf5427d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/SURFnet/tiqr-server-libphp/zipball/master",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "library",
-            "time": "2015-04-28 18:14:37"
-        },
-        {
-            "name": "fr3d/xmlseclibs",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Maks3w/xmlseclibs.git",
-                "reference": "92dd0799145ffdbba32286148502b0f7d3c97749"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Maks3w/xmlseclibs/zipball/92dd0799145ffdbba32286148502b0f7d3c97749",
-                "reference": "92dd0799145ffdbba32286148502b0f7d3c97749",
+                "url": "https://api.github.com/repos/kairosagency/phpqrcode/zipball/6770ecbe0e8c7d806c5779ad38b20c9acf5427d9",
+                "reference": "6770ecbe0e8c7d806c5779ad38b20c9acf5427d9",
                 "shasum": ""
             },
-            "provide": {
-                "cdatazone/xmlseclibs": "1.3.0"
-            },
-            "suggest": {
-                "ext/mcrypt": "MCrypt extension",
-                "ext/openssl": "OpenSSL extension"
+            "require": {
+                "php": ">=4.3.10"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "xmlseclibs.php"
+                    "qrlib.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "LGPL"
             ],
-            "description": "Unofficial git fork of http://code.google.com/p/xmlseclibs/",
-            "homepage": "http://code.google.com/p/xmlseclibs/",
+            "authors": [
+                {
+                    "name": "Kairos Agency"
+                }
+            ],
+            "description": "A PHP class to generate QR Code",
+            "homepage": "http://github.com/kairosagency/phpqrcode",
             "keywords": [
-                "security",
-                "signature",
-                "xml",
-                "xmldsig"
+                "php",
+                "qrcode"
             ],
-            "time": "2012-12-16 16:58:51"
+            "time": "2013-03-20 17:48:23"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.13.1",
+            "version": "1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c31a2c4e8db5da8b46c74cf275d7f109c0f249ac"
+                "reference": "b287fbbe1ca27847064beff2bad7fb6920bf08cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c31a2c4e8db5da8b46c74cf275d7f109c0f249ac",
-                "reference": "c31a2c4e8db5da8b46c74cf275d7f109c0f249ac",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b287fbbe1ca27847064beff2bad7fb6920bf08cc",
+                "reference": "b287fbbe1ca27847064beff2bad7fb6920bf08cc",
                 "shasum": ""
             },
             "require": {
@@ -86,12 +68,14 @@
                 "psr/log-implementation": "1.0.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "~2.4, >2.4.8",
+                "aws/aws-sdk-php": "^2.4.9",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
-                "phpunit/phpunit": "~4.0",
-                "raven/raven": "~0.5",
-                "ruflin/elastica": "0.90.*",
+                "php-console/php-console": "^3.1.3",
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "2.3.0",
+                "raven/raven": "~0.8",
+                "ruflin/elastica": ">=0.90 <3.0",
                 "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
             },
@@ -101,6 +85,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
@@ -109,7 +94,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13.x-dev"
+                    "dev-master": "1.14.x-dev"
                 }
             },
             "autoload": {
@@ -135,7 +120,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-03-09 09:58:04"
+            "time": "2015-06-19 13:29:54"
         },
         {
             "name": "pimple/pimple",
@@ -222,6 +207,47 @@
             "time": "2012-12-21 11:40:51"
         },
         {
+            "name": "robrichards/xmlseclibs",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robrichards/xmlseclibs.git",
+                "reference": "e91b4272f43b7708020c995f3c58056e68bfddf0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/e91b4272f43b7708020c995f3c58056e68bfddf0",
+                "reference": "e91b4272f43b7708020c995f3c58056e68bfddf0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.2"
+            },
+            "suggest": {
+                "ext/mcrypt": "MCrypt extension",
+                "ext/openssl": "OpenSSL extension"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "A PHP library for XML Security",
+            "homepage": "https://github.com/robrichards/xmlseclibs",
+            "keywords": [
+                "security",
+                "signature",
+                "xml",
+                "xmldsig"
+            ],
+            "time": "2015-06-23 18:50:25"
+        },
+        {
             "name": "silex/silex",
             "version": "v1.3.0",
             "source": {
@@ -302,6 +328,56 @@
                 "microframework"
             ],
             "time": "2015-06-04 21:27:48"
+        },
+        {
+            "name": "simplesamlphp/saml2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/simplesamlphp/saml2.git",
+                "reference": "fd11ea8c7d8de2537b1b8e06033e0db2664bb373"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/fd11ea8c7d8de2537b1b8e06033e0db2664bb373",
+                "reference": "fd11ea8c7d8de2537b1b8e06033e0db2664bb373",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-mcrypt": "*",
+                "ext-openssl": "*",
+                "php": ">=5.3.3",
+                "psr/log": "~1.0",
+                "robrichards/xmlseclibs": "^1.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpmd/phpmd": "~1.5",
+                "phpunit/phpunit": "~3.7",
+                "satooshi/php-coveralls": "~0.6.1",
+                "sebastian/phpcpd": "~1.4",
+                "sensiolabs/security-checker": "~1.1",
+                "squizlabs/php_codesniffer": "~1.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SAML2_": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Åkre Solberg",
+                    "email": "andreas.solberg@uninett.no"
+                }
+            ],
+            "description": "SAML2 PHP library from SimpleSAMLphp",
+            "time": "2015-06-22 14:31:51"
         },
         {
             "name": "symfony/config",
@@ -913,6 +989,33 @@
             "time": "2015-06-10 15:30:22"
         },
         {
+            "name": "tiqr/tiqr-server-libphp",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
+                "reference": "12fdd9c89521fb75d31e557fb911c613b32e79a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/12fdd9c89521fb75d31e557fb911c613b32e79a6",
+                "reference": "12fdd9c89521fb75d31e557fb911c613b32e79a6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "kairos/phpqrcode": "dev-master",
+                "zendframework/zendframework1": "~1.12"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "php library for tiqr authentication.",
+            "time": "2015-06-30 11:22:42"
+        },
+        {
             "name": "twig/twig",
             "version": "v1.18.2",
             "source": {
@@ -1021,7 +1124,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "surfnet/tiqr-server-libphp": 20
+        "kairos/phpqrcode": 20,
+        "simplesamlphp/saml2": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

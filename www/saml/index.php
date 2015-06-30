@@ -3,7 +3,7 @@ require_once __DIR__.'/../../vendor/autoload.php';
 include_once './../../config.php';
 include_once './../../options.php';
 
-require_once 'saml.php';
+require_once 'container.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +12,21 @@ function newID($length = 42) {
     $id = '_';
     for ($i = 0; $i < $length; $i++ ) $id .= dechex( rand(0,15) );
     return $id;
+}
+
+function sign($response, $keyfile, $certfile)
+{
+    $document = new DOMDocument();
+    $document->loadXML($response);
+    $xml = $document->firstChild;
+    $r = SAML2_Message::fromXML($xml);
+    $algo = XMLSecurityKey::RSA_SHA256;
+    $privateKey = new XMLSecurityKey($algo, array('type' => 'private'));
+    $privateKey->loadKey($keyfile, true);
+    $r->setSignatureKey($privateKey);
+    $cert = file_get_contents($certfile);
+    $r->setCertificates(array($cert));
+    return $r->toSignedXML()->ownerDocument->saveXML();
 }
 
 // TODO: move
@@ -92,11 +107,14 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
     // verify signature
     if( ($md['certfile']))
     {
+        if( $request->get('Signature') == null) {
+            throw new Exception("SAML Authnrequest must be signed");
+        }
         $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type'=>'public'));
         $key->loadKey($md['certfile'], true, true);
         $res = $samlrequest->validate($key);
         if(!$res)
-            throw Exception( "invalid signature" );
+            throw new Exception( "invalid signature" );
     } else {
         throw new Exception("Cannot load certificate from file " . $md['certfile']);
     }
@@ -124,6 +142,10 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
  */
 
 $app->get('/sso_return', function (Request $request) use ($config, $app) {
+
+    SAML2_Compat_ContainerSingleton::setContainer(new Saml2Container(
+        $app['monolog']
+    ));
 
     $request_data = $app['session']->get('Request');
 
@@ -166,19 +188,13 @@ $app->get('/sso_return', function (Request $request) use ($config, $app) {
     $twig = new Twig_Environment($loader);
     $response = $twig->render('Response.xml', $rsp_params);
 
-    # sign
-    $dom = new DOMDocument();
-    $dom->preserveWhiteSpace = FALSE;
-    $dom->loadXML($response);
-    $dom->formatOutput = TRUE;
+//    # sign
+
     if( !file_exists( $config['keyfile']) ) {
         $app['monolog']->addWarning("Cannot read key from file " . $config['keyfile'] . " - sending Response unsigned");
     } else {
-        // sign the assertion
-        // do not add certificate
-        $dom = utils_xml_sign($dom, $config['keyfile'], $config['certfile']);
+        $response = sign($response,  $config['keyfile'],  $config['certfile']);
     }
-    $response = $dom->saveXML();
 
     # use POST binding
     $params = array(
