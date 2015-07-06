@@ -117,9 +117,8 @@ $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
     }
     $sid = $app['session']->getId();
     $userdata = $tiqr->getAuthenticatedUser($sid);
-    $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
-
     if( !is_null($userdata) ) {
+        $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
         $app['session']->set('authn', array('username' => $userdata));
         return $app->redirect($return);
     }
@@ -146,7 +145,7 @@ $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
                 $app['monolog']->addWarning(sprintf("Failure sending push notification to [%s]", $translatedAddress));
             }
         } else {
-            $app['monolog']->addWarning(sprintf("No %s translated address available for [%s]"),$notificationType,$notificationAddress);
+            $app['monolog']->addWarning(sprintf("No %s translated address available for [%s]", $notificationType, $notificationAddress));
         }
     }
     $tiqr->generateAuthQR($sessionKey);
