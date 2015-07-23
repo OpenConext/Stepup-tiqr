@@ -17,7 +17,9 @@ function newID($length = 42) {
 function sign($response, $keyfile, $certfile)
 {
     $document = new DOMDocument();
+    $previous = libxml_disable_entity_loader(true);
     $document->loadXML($response);
+    libxml_disable_entity_loader($previous);
     $xml = $document->firstChild;
     $r = SAML2_Message::fromXML($xml);
     $algo = XMLSecurityKey::RSA_SHA256;
@@ -82,9 +84,13 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
         $app['monolog']
     ));
 
+    // make sure external entities are disabled
+    $previous = libxml_disable_entity_loader(true);
     // Make sure we're dealing with an AuthN request
     $binding = SAML2_Binding::getCurrentBinding();
     $samlrequest = $binding->receive();
+    libxml_disable_entity_loader($previous);
+
     if (!($samlrequest instanceof SAML2_AuthnRequest)) {
         throw new Exception('Message received on authentication request endpoint wasn\'t an authentication request.');
     }
