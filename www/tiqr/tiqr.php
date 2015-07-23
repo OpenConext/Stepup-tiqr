@@ -101,7 +101,8 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
         logger()->addInfo("sent metadata");
         break;
     case "POST":
-        logger()->addDebug(sprintf("Received POST request from tiqr client version %s", $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']));
+        $version = array_key_exists('HTTP_X_TIQR_PROTOCOL_VERSION', $_SERVER) ? $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION'] : "1";
+        logger()->addDebug(sprintf("Received POST request from tiqr client version %s", $version));
         $operation = preg_replace("/[^a-z]+/", "", $_POST['operation']);
         logger()->addInfo(sprintf("received operation '%s'", $operation));
         $notificationType = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['notificationType']);
