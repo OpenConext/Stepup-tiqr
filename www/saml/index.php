@@ -37,7 +37,12 @@ date_default_timezone_set('Europe/Amsterdam');
 $app = new Silex\Application(); 
 $app['debug'] = $options['debug'];
 
-$app->register(new Silex\Provider\SessionServiceProvider());
+$app->register(new Silex\Provider\SessionServiceProvider(), array(
+    'session.storage.options' => array(
+        'cookie_secure' => isset($_SERVER['HTTPS']),
+        'cookie_httponly' => true,
+    ),
+));
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
