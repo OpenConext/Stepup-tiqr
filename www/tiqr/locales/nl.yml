@@ -2,33 +2,33 @@ en: Engels
 nl: Nederlands
 login:
     title: Inloggen met Tiqr
-    timeout: Login timeout. Please try again by refreshing this page.
+    timeout: Login timeout. Ververs de pagina om nogmaals te proberen.
     push: 
-        message: Je ontvangt een push notificatie op je telefoon.
+        message: Je ontvangt een pushnotificatie op je telefoon.
         instructions.1: Klik op 'OK' om verder te gaan
         instructions.2: Voer je PIN in en klik op 'OK'. Je wordt nu ingelogd.
-        fail: Geen push notificatie ontvangen? Klik %link_start%hier%link_end% en scan de QR code met je tiqr app.
+        fail: Geen pushnotificatie ontvangen? Klik %link_start%hier%link_end% en scan de QR-code met je Tiqr-app.
     qr:
-        message: Scan of tap de code met de tiqr app op uw telefoon om in te loggen.
+        message: Scan of tap de code met de Tiqr-app op je telefoon om in te loggen.
         manual:
-            message: If the instructions on your phone instruct you to login manually, %link_start%click here%link_end%
+            message: Krijg je een melding op je telefoon om handmatig in te loggen? Klik dan %link_start%hier%link_end%.
             userid: User ID
             otp: One time password
             button: Go
         no_account: Geen account? Maak er dan %link_start%hier%link_end% eerst een aan.
 enrol:
-    title: Registreer nieuw Tiqr account
+    title: Registreer nieuw Tiqr-account
     status:
-        idle.1: Je sessie is verlopen
-        idle.2: Ververs de pagina en probeer het nogmaals
-        idle.3: Of klik op 'Annuleren' om terug te keren naar het beginscherm
-        initialized.1: Open de tiqr app op je telefoon
-        initialized.2: Scan de QR code met de tiqr app
-        retrieved.1: Op je telefoon verschijnt het scherm 'Account Activatie'
-        retrieved.2: Klik in de app op 'OK' om je account te activeren
-        retrieved.3: Bedenk een PIN voor je tiqr account<br/>Let op! Onthoud deze PIN goed, deze PIN kun je niet meer wijzigen
-        retrieved.4: Na het invoeren van je PIN in de app ga je automatisch door naar de volgende stap.
+        idle.1: Je sessie is verlopen.
+        idle.2: Ververs de pagina om nogmaals te proberen.
+        idle.3: Of klik op 'Annuleren' om terug te keren naar het beginscherm.
+        initialized.1: Open de Tiqr-app op je telefoon.
+        initialized.2: Scan de QR code met de Tiqr-app.
+        retrieved.1: Op je telefoon verschijnt het scherm 'Account Activatie'.
+        retrieved.2: Klik in de app op 'OK' om je account te activeren.
+        retrieved.3: Bedenk een PIN voor je Tiqr-account<br/>Let op! Onthoud deze PIN goed, deze PIN kun je niet meer wijzigen.
+        retrieved.4: Na het invoeren van je PIN in de Tiqr-app ga je automatisch door naar de volgende stap.
         processed: Een ogenblik geduld a.u.b.
         finalized: Je account is gereed voor gebruik.
-    download: Download tiqr voor <a href="http://itunes.apple.com/us/app/tiqr/id430838214?mt=8&ls=1" >iOS</a>/<a href="https://play.google.com/store/apps/details?id=org.tiqr.authenticator&hl=nl">Android</a>
+    download: Download de Tiqr-app voor <a href="http://itunes.apple.com/us/app/tiqr/id430838214?mt=8&ls=1" >iOS</a>/<a href="https://play.google.com/store/apps/details?id=org.tiqr.authenticator&hl=nl">Android</a>
     cancel: Annuleren
