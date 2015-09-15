@@ -19,6 +19,11 @@ $options = array(
     "apns.certificate" => '',
     "apns.environment" => 'production',
     "debug" => false,
+    "default_locale" => 'en',
+    "translation"  =>  array(
+        "en" => true,
+        "nl" => true,
+    )
 );
 
 // override options locally. TODO merge with config

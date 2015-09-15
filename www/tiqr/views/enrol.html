@@ -2,10 +2,10 @@
 <html>
 <head>
     <title>Registreer nieuw tiqr account</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/JavaScript" src="/jquery-1.11.3.min.js"></script>
+    <script src="/bootstrap.min.js"></script>
     <script type="text/javascript">
         const idle        = "1";
         const initialized = "2";
@@ -18,28 +18,28 @@
             jQuery.get( self + 'status', function(status) {
                 switch(status) {
                     case idle:
-                        $( "span.status-container" ).html( "<ul><li>Je sessie is verlopen</li><li>Ververs de pagina en probeer het nogmaals</li><li>Of klik op 'Annuleren' om terug te keren naar het beginscherm</li></ul>" );
+                        $( "span.status-container" ).html( "<ul><li>{{ 'enrol.status.idle.1' | trans | raw }}</li><li>{{ 'enrol.status.idle.2' | trans | raw }}</li><li>{{ 'enrol.status.idle.3' | trans | raw }}</li></ul>");
                         $( "img.qr" ).hide( "slow" );
                         //alert("Timeout. Please try again by refreshing this page.");
                         break;
                     case initialized:
-                        $( "span.status-container" ).html( "<ul><li>Open de tiqr app op je telefoon</li><li>Scan de QR code met de tiqr app</li></ul>" );
+                        $( "span.status-container" ).html( "<ul><li>{{ 'enrol.status.initialized.1' | trans | raw }}</li><li>{{ 'enrol.status.initialized.2' | trans | raw }}</li></ul>" );
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case retrieved:
-                        $( "span.status-container" ).html( "<ul><li>Op je telefoon verschijnt het scherm 'Account Activatie'</li><li>Klik in de app op 'OK' om je account te activeren</li><li>Bedenk een PIN voor je tiqr account<br/>Let op! Onthoud deze PIN goed, deze PIN kun je niet meer wijzigen</li></ul>Na het invoeren van je PIN in de app ga je automatisch door naar de volgende stap." );
+                        $( "span.status-container" ).html( "<ul><li>{{ 'enrol.status.retrieved.1' | trans | raw }}</li><li>{{ 'enrol.status.retrieved.2' | trans | raw }}</li><li>{{ 'enrol.status.retrieved.3' | trans | raw }}</li><li>{{ 'enrol.status.retrieved.4' | trans | raw }}</li></ul>" );
                         $( "div.qr" ).hide();
                         $( "img.qr" ).hide( "slow" );
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case processed:
-                        $( "span.status-container" ).html( "Een ogenblik geduld a.u.b." );
+                        $( "span.status-container" ).html( "{{ 'enrol.status.processed' | trans | raw }}" );
                         window.setTimeout(enrolStatus, 1500);
                         break;
                     case finalized:
-                        $( "span.status-container" ).html( "Je account is gereed voor gebruik." );
+                        $( "span.status-container" ).html( "{{ 'enrol.status.finalized' | trans | raw }}" );
                         jQuery.get( self + 'done', function(dummy) {
-                            document.location = "{{return_url}}";
+                            document.location = "{{ return_url }}";
                         });
                         break;
                     default:
@@ -61,7 +61,8 @@
             <!--h1>Step-up Self-Service</h1-->
         </div>
 
-        <h2>Registreer nieuw tiqr account</h2>
+        {% include "localeform.html" %}
+        <h2>{{ 'enrol.title'|trans }}</h2>
 
         <p><span class="status-container">status</span></p>
 
@@ -72,8 +73,7 @@
         <!--TODO fix URL -->
 
         <div class="qr">
-            Download tiqr voor
-        <a href="http://itunes.apple.com/us/app/tiqr/id430838214?mt=8&ls=1" >iOS</a>/<a href="https://play.google.com/store/apps/details?id=org.tiqr.authenticator&hl=nl">Android</a>
+            {{ 'enrol.download' | trans | raw }}
         </div>
 
     </div><!-- /content -->
@@ -83,7 +83,7 @@
             <div class="span8 offset2">
                 <hr>
                 <ul class="nav nav-pills">
-                    <li><a href="https://selfservice.pilot.stepup.surfconext.nl/">Annuleren</a></li><!-- TODO -->
+                    <li><a href="https://selfservice.pilot.stepup.surfconext.nl/">{{ 'enrol.cancel' | trans }}</a></li><!-- TODO -->
                 </ul>
             </div>
         </div>

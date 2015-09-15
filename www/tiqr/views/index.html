@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <title>Inloggen met tiqr</title>
     <link rel="shortcut icon" href="/images/favicon.ico" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/JavaScript" src="/jquery-1.11.3.min.js"></script>
+    <script src="/bootstrap.min.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -23,7 +23,7 @@
             } else if (data.substring(0, 0) == '') {
                 document.location = "{{return_url}}";
             } else {
-                alert("Login timeout. Please try again by refreshing this page.");
+                alert("{{ 'login.timeout' | trans }}");
             }
         });
     }
@@ -37,24 +37,24 @@
                 <img src="/images/tiqr.png" class="pull-left" alt="tiqr" height="74">
                 <img src="/images/surfnet.jpg" class="pull-right" alt="SURFnet">
             </div>
-        
-<h2>Inloggen met tiqr</h2>
+
+{% include "localeform.html" %}        
+<h2>{{ 'login.title' | trans }}</h2>
 
 <p>
 {% if id %}
 <!--U logt in met tiqr account {{ id }}-->
-    Je ontvangt een push notificatie op je telefoon.
+    {{ 'login.push.message' | trans }}
     <ul>
-            <li>Klik op 'OK' om verder te gaan</li>
-            <li>Voer je PIN in en klik op 'OK'. Je wordt nu ingelogd.
-            </li>
+            <li>{{ 'login.push.instructions.1' | trans }}</li>
+            <li>{{ 'login.push.instructions.2' | trans }}</li>
     </ul>
     <br/>
     <img class="qr" src='qr' style="cursor: none; display: none" />
     <br/>
-    Geen push notificatie ontvangen? Klik  <a class="scan" href="#">hier</a> en scan de QR code met je tiqr app.
+    {{ 'login.push.fail' | trans({'%link_start%': '<a class="scan" href="#">', '%link_end%': '</a>'}) | raw  }}
 {% else %}
-Scan de code met de tiqr app op uw telefoon om in te loggen.
+    {{ 'login.qr.message' | trans }}
             <br/>
             <img class="qr" src='qr' style="cursor: none;" />
 {% endif %}
@@ -66,8 +66,7 @@ Scan de code met de tiqr app op uw telefoon om in te loggen.
                     });
                 });
             </script>
-
-             Geen account? Maak er dan <a href='/tiqr/enrol?return={{return_url}}'>hier</a> eerst een aan.
+            {{ 'login.qr.no_account' | trans({'%link_start%': '<a href=\'/tiqr/enrol?return='~return_url~'\'>', '%link_end%': '</a>'}) | raw  }}
             <!--TODO fix URL -->
 
         </div><!-- /content -->

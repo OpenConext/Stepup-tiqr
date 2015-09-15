@@ -6,6 +6,7 @@ include('../../options.php');
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
 
 // use Symfony\Component\Translation\Loader\YamlFileLoader;
 
@@ -29,54 +30,16 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.name' => 'authn',
 ));
 
+// Set locale
+if (!$locale = $app['session']->get('locale')) $locale = $options['default_locale'];
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(
     'locale_fallbacks' => array('nl'),
+    'locale' => $locale,
 ));
 
-$app['translator.domains'] = array(
-    'messages' => array(
-        'en' => array(
-            'enrol' => 'New Account',
-            'idle' => 'Timeout',
-            'timeout_alert' => "Timeout. Please try again by refreshing this page.",
-            'initialized' => "Scan the code with the tiqr app on your phone to create a tiqr account.",
-            'retrieved' => "Acticate your account on your phone.",
-            'processed' => "",
-            'finalized' => "Your account is ready for use.",
-
-            'hello'     => 'Hello %name%',
-            'goodbye'   => 'Goodbye %name%',
-            'enrol'   => 'Enrol',
-            'timeout' => 'Timeout. Please try again by refreshing this page',
-
-        ),
-        'nl' => array(
-            'enrol' => 'Nieuw Account',
-            'idle' => 'Timeout',
-            'timeout_alert' => "Timeout. Probeer nogmaals door deze pagina te verversen.",
-            'initialized' => "Scan de code met de tiqr app op uw telefoon om een tiqr account aan te maken.",
-            'retrieved' => "Activeer uw account op uw telefoon.",
-            'processed' => "",
-            'finalized' => "Uw account is gereed voor gebruik.",
-            'hello'     => 'Hallo %name%',
-            'goodbye'   => 'Dag %name%',
-            'enrol'   => 'Aanmaken',
-            'timeout' => 'Timeout. Probeer nogmaals door deze pagina te verversen.',
-        ),
-    ),
-    'validators' => array(
-        'nl' => array(
-            'This value should be a valid number.' => 'Deze waarde moet numeriek zijn.',
-        ),
-    ),
-);
-
-/*
-// simple test for translations:
-$app->get('/x/{name}', function ($name) use ($app) {
-        return $app['translator']->trans('enrol', array('%name%' => $name),'messages','nl');
-    });
-*/
+$app['translator']->addLoader('yaml', new YamlFileLoader());
+$app['translator']->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
+$app['translator']->addResource('yaml', __DIR__.'/locales/nl.yml', 'nl');
 
 $app->before(function ($request) {
         $request->getSession()->start();
@@ -87,6 +50,10 @@ $tiqr = new Tiqr_Service($options);
 ### tiqr Authentication ###
 
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
+    $locale = $app['translator']->getLocale();
+    $locales = array_keys($options['translation']);
+    $here = urlencode($app['request']->getUri()); // Is this allways correct?
+
     $base = $request->getUriForPath('/');
     $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
     if( $return == false ) {
@@ -105,14 +72,14 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $id = $request_data['nameid']; // do we need to log in some specific user?
     if ($id === '') $id = null;
 
-    $loader = new Twig_Loader_Filesystem('views');
-    $twig = new Twig_Environment($loader);
-    $login = $twig->render('index.html', array(
+    return $app['twig']->render('index.html', array(
         'self' => $base,
         'return_url' => $return,
         'id' => $id,
+        'here' => $here,
+        'locale' => $locale,
+        'locales' => $locales,
     ));
-    return new Response($login);
 });
 
 $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
@@ -192,20 +159,24 @@ $app->get('/logout', function (Request $request) use ($app, $tiqr) {
 
 ### tiqr Enrolment ###
 
-$app->get('/enrol', function (Request $request) use ($app, $tiqr) {
+$app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
+    $locale = $app['translator']->getLocale();
+    $locales = array_keys($options['translation']);
+    $here = urlencode($app['request']->getUri()); // Is this allways correct?
+
     $base = $request->getUriForPath('/');
     $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
     if( $return == false ) {
         $return = $base;
     }
-    $loader = new Twig_Loader_Filesystem('views');
-    $twig = new Twig_Environment($loader);
-    $enrol = $twig->render('enrol.html', array(
+    
+    return $app['twig']->render('enrol.html', array(
         'self' => $base,
         'return_url' => $return,
+        'here' => $here,
+        'locale' => $locale,
+        'locales' => $locales,
     ));
-    $response = new Response($enrol);
-    return $response;
 });
 
 $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
@@ -231,14 +202,29 @@ $app->get('/status', function (Request $request) use ($app, $tiqr) {
         $status = $tiqr->getEnrollmentStatus($sid);
         $app['monolog']->addInfo(sprintf("[%s] status is %d", $sid, $status));
         return $status;
-    });
+});
 
 $app->get('/done', function (Request $request) use ($app, $tiqr) {
         $sid = $app['session']->getId();
         $tiqr->resetEnrollmentSession($sid);
         $app['monolog']->addInfo(sprintf("[%s] reset enrollment", $sid));
         return "done";
-    });
+});
 
-
+### housekeeping
+$app->post('/switch-locale', function (Request $request) use ($app, $options) {
+    $return = filter_var($request->get('return_url'), FILTER_VALIDATE_URL);
+    $opt = array(
+        'options' => array(
+            'default' => 'en',
+            'regexp' => '/^[a-z]{2}$/',
+        ),
+    );
+    $locale = filter_var($request->get('tiqr_switch_locale'), FILTER_VALIDATE_REGEXP, $opt);
+    if (array_key_exists($locale, $options['translation'])) {
+        $app['session']->set('locale', $locale);
+    }
+    return $app->redirect($return);
+});
+    
 $app->run();
