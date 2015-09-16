@@ -56,7 +56,18 @@
 {% else %}
     {{ 'login.qr.message' | trans }}
             <br/>
-            <img class="qr" src='qr' style="cursor: none;" />
+            <a href="{{authUrl}}"><img class="qr" src='qr' style="cursor: none;" /></a>
+            <p>{{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}</p>
+            <div id="otpform" style="display:none">
+            <form method=POST>
+            <p>{{ 'login.qr.manual.userid' | trans }}: <input type=text name=userID>
+            {{ 'login.qr.manual.otp' | trans }}: <input type=text name=otp>
+            <input type=submit value="{{ 'login.qr.manual.button' | trans }}"></p>
+<!--             <input type=hidden name=sessionKey value={{sessionKey}}> -->
+            </form>
+            </div>
+            <p>
+
 {% endif %}
 </p>
             <script>
