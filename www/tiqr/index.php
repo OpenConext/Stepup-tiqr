@@ -248,7 +248,7 @@ $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
     $sid = $app['session']->getId();
     $uid = generate_id(); // TODO uniqueness
     $app['session']->set('authn', array('username' => $uid)); // TODO check
-    $displayName = "Stepup User";      # TODO
+    $displayName = "SURFconext SA";      # TODO: i18n
     $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));
     $key = $tiqr->startEnrollmentSession($uid, $displayName, $sid);
     $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
