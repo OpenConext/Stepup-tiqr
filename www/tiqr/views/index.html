@@ -57,7 +57,7 @@
 
     <br/>
     <a href="{{authUrl}}">
-        <img class="qr" src='qr' style="cursor: none;" />
+        <img class="qr" src='qr' style="display:none; cursor: none;" />
     </a>
 
     <p>
@@ -68,6 +68,8 @@
             <p>
                 {% if not id %}
                 {{ 'login.qr.manual.userid' | trans }}: <input type="text" tabindex="2" name="userID"/>
+                {% else %}
+                {{ 'login.qr.manual.userid' | trans }}: <input type="hidden" value="{{ id }}" name="userID"/>
                 {% endif %}
                 {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"/>
                 <input type="submit" value="{{ 'login.qr.manual.button' | trans }}"/>
