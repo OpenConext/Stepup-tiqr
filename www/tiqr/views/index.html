@@ -41,23 +41,25 @@
 {% include "localeform.html" %}
     <h2>{{ 'login.title' | trans }}</h2>
 
-    {% if id %}
-        <!-- logging in with tiqr id {{ id }}-->
-        {{ 'login.push.message' | trans }}
-        <ul>
+{% if id %}
+    <!-- logging in with tiqr id {{ id }}-->
+    {{ 'login.push.message' | trans }}
+    <ul>
             <li>{{ 'login.push.instructions.1' | trans }}</li>
             <li>{{ 'login.push.instructions.2' | trans }}</li>
         </ul>
-        <br/>
-        {{ 'login.push.fail' | trans({'%link_start%': '<a class="scan" href="#">', '%link_end%': '</a>'}) | raw  }}
-    {% else %}
-        {{ 'login.qr.message' | trans }}
-        <br/>
-    {% endif %}
+    <br/>
+    {{ 'login.push.fail' | trans({'%link_start%': '<a class="scan" href="#">', '%link_end%': '</a>'}) | raw  }}
+{% else %}
+    {{ 'login.qr.message' | trans }}
+    <br/>
+    {{ 'login.qr.no_account' | trans({'%link_start%': '<a href=\'/tiqr/enrol?return='~return_url~'\'>', '%link_end%': '</a>'}) | raw  }}
+    <!--TODO fix URL -->
+{% endif %}
 
     <br/>
     <a href="{{authUrl}}">
-        <img class="qr" src='qr' style="display:none; cursor: none;" />
+        <img class="qr" src='qr' style="{{ id ? 'display:none;' : '' }} cursor: none;" />
     </a>
 
     <p>
@@ -69,7 +71,7 @@
                 {% if not id %}
                 {{ 'login.qr.manual.userid' | trans }}: <input type="text" tabindex="2" name="userID"/>
                 {% else %}
-                {{ 'login.qr.manual.userid' | trans }}: <input type="hidden" value="{{ id }}" name="userID"/>
+                                                        <input type="hidden" value="{{ id }}" name="userID"/>
                 {% endif %}
                 {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"/>
                 <input type="submit" value="{{ 'login.qr.manual.button' | trans }}"/>
@@ -84,8 +86,6 @@
             });
         });
     </script>
-    {{ 'login.qr.no_account' | trans({'%link_start%': '<a href=\'/tiqr/enrol?return='~return_url~'\'>', '%link_end%': '</a>'}) | raw  }}
-    <!--TODO fix URL -->
 
     </div><!-- /content -->
 

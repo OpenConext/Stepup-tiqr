@@ -117,7 +117,7 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
     $request_data['issuer'] = $issuer;
 
     // verify signature
-    if( ($md['certfile']))
+    if( file_exists($md['certfile']))
     {
         if( $request->get('Signature') == null) {
             throw new Exception("SAML Authnrequest must be signed");

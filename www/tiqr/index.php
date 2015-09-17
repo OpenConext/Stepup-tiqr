@@ -75,7 +75,7 @@ $app['translator']->addLoader('yaml', new YamlFileLoader());
 $app['translator']->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
 $app['translator']->addResource('yaml', __DIR__.'/locales/nl.yml', 'nl');
 
-$app->before(function ($request) {
+$app->before(function (Request $request) {
         $request->getSession()->start();
     });
 
