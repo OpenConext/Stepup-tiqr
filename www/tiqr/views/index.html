@@ -41,34 +41,40 @@
 {% include "localeform.html" %}
     <h2>{{ 'login.title' | trans }}</h2>
 
-<p>
     {% if id %}
         <!-- logging in with tiqr id {{ id }}-->
         {{ 'login.push.message' | trans }}
         <ul>
             <li>{{ 'login.push.instructions.1' | trans }}</li>
             <li>{{ 'login.push.instructions.2' | trans }}</li>
-    </ul>
-    <br/>
-    <img class="qr" src='qr' style="cursor: none; display: none" />
-    <br/>
-    {{ 'login.push.fail' | trans({'%link_start%': '<a class="scan" href="#">', '%link_end%': '</a>'}) | raw  }}
-{% else %}
-    {{ 'login.qr.message' | trans }}
-            <br/>
-            <a href="{{authUrl}}"><img class="qr" src='qr' style="cursor: none;" /></a>
-            <p>{{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}</p>
-            <div id="otpform" style="display:none">
-            <form method=POST>
-            <p>{{ 'login.qr.manual.userid' | trans }}: <input type=text name=userID>
-            {{ 'login.qr.manual.otp' | trans }}: <input type=text name=otp>
-            <input type=submit value="{{ 'login.qr.manual.button' | trans }}"></p>
-            </form>
-            </div>
-            <p>
+        </ul>
+        <br/>
+        {{ 'login.push.fail' | trans({'%link_start%': '<a class="scan" href="#">', '%link_end%': '</a>'}) | raw  }}
+    {% else %}
+        {{ 'login.qr.message' | trans }}
+        <br/>
+    {% endif %}
 
-{% endif %}
-</p>
+    <br/>
+    <a href="{{authUrl}}">
+        <img class="qr" src='qr' style="cursor: none;" />
+    </a>
+
+    <p>
+        {{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}
+    </p>
+    <div id="otpform" style="display:none">
+        <form method=POST>
+            <p>
+                {% if not id %}
+                {{ 'login.qr.manual.userid' | trans }}: <input type="text" tabindex="2" name="userID"/>
+                {% endif %}
+                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"/>
+                <input type="submit" value="{{ 'login.qr.manual.button' | trans }}"/>
+            </p>
+        </form>
+    </div>
+
     <script>
         $(function(){
             $('a.scan').click(function(){
