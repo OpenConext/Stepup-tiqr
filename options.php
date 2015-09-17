@@ -4,12 +4,12 @@ require_once __DIR__.'/vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoad
 
 $options = array(
     //"identifier"      => "pilot.stepup.coin.surf.net",
-    "name"            => "Stepup Authentication Service",
+    "name"            => "SURFconext Strong Authentication", // todo i18n
     "auth.protocol"       => "tiqrauth",
     "enroll.protocol"     => "tiqrenroll",
     "ocra.suite"          => "OCRA-1:HOTP-SHA1-6:QH10-S",
     "logoUrl"         => "https://demo.tiqr.org/img/tiqrRGB.png",
-    "infoUrl"         => $_SERVER['HTTP_HOST'], // base(),
+    "infoUrl"         => (isset($_SERVER['HTTPS']) ? "https://" : "http://") . $_SERVER['HTTP_HOST'], // base(),
     "tiqr.path"         => __DIR__ . '/vendor/tiqr/tiqr-server-libphp/library/tiqr/',
     'phpqrcode.path' => '.',
     'zend.path' => __DIR__ . '/vendor/zendframework/zendframework1/library',
