@@ -49,7 +49,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'saml',
 ));
 

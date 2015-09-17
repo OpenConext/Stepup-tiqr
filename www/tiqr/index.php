@@ -58,8 +58,9 @@ $app->register(new Silex\Provider\SessionServiceProvider(), array(
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/views',
     ));
+
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'authn',
 ));
 

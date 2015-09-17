@@ -23,7 +23,8 @@ $options = array(
     "translation"  =>  array(
         "en" => true,
         "nl" => true,
-    )
+    ),
+    "loghandler" => new Monolog\Handler\ErrorLogHandler(),
 );
 
 // override options locally. TODO merge with config
