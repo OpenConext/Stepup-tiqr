@@ -16,6 +16,7 @@ login:
             otp: One time password
             button: Go
         no_account: No account yet? Please create a new account %link_start%here%link_end%.
+    cancel: Cancel
 enrol:
     title: Register new Tiqr account
     status:
