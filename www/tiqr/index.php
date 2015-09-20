@@ -12,39 +12,6 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 
 date_default_timezone_set('Europe/Amsterdam');
 
-function login( $sessionKey, $userId, $response )
-{
-    global $options;
-    global $userStorage;
-    $userSecret = $userStorage->getSecret($userId);
-    $tiqr = new Tiqr_Service($options);
-
-    // $tiqr->authenticate is not resilient for incorrect userId!!
-    $result = $tiqr->authenticate($userId, $userSecret, $sessionKey, $response);
-    
-    //Note that actually blocking the user and keeping track of login attempts is a responsibility of your application,
-    switch( $result ) {
-        case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
-            //echo 'AUTHENTICATED';
-            return "OK";
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
-            return 'INVALID_CHALLENGE';
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_REQUEST:
-            return 'INVALID_REQUEST';
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
-            return 'INVALID_RESPONSE';
-//        echo “INVALID_RESPONSE:3”;  // 3 attempts left
-//        echo “INVALID_RESPONSE:0”;  // blocked
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
-            return 'INVALID_USERID';
-            break;
-    }
-}
-
 $app = new Silex\Application();
 $app['debug'] = $options['debug'];
 
@@ -83,28 +50,6 @@ $tiqr = new Tiqr_Service($options);
 
 ### tiqr Authentication ###
 
-$app->post('/login', function (Request $request) use ($app, $tiqr, $options) {
-    $sessionKey = $app['session']->get('sessionKey');
-    $userId = $request->get('userID');
-    $otp = $request->get('otp');
-
-    $result = login($sessionKey, $userId, $otp);
-    
-    $sid = $app['session']->getId();
-    $userdata = $tiqr->getAuthenticatedUser($sid);
-    if( $result === "OK" ) {
-        $app['session']->set('authn', array('username' => $userdata));
-        $tiqr->logout($sid);
-        $app['session']->remove('sessionKey');
-        $app['monolog']->addInfo(sprintf("[%s] verified authenticated user '%s'", $sid, $userdata));
-        $return = $request->getUriForPath('/');
-    } else {
-        $app['session']->set('keepSessionKey', true);
-        $return = $request->getUriForPath('/login');
-    }
-    return $app->redirect($return);
-});
-
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $locale = $app['translator']->getLocale();
     $locales = array_keys($options['translation']);
@@ -133,14 +78,16 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         $app['session']->set('sessionKey', $sessionKey);
     }
     $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
-    
-    $authUrl = $tiqr->generateAuthURL($sessionKey).'?return='.urlencode($return);
+
+    $authUrl = $tiqr->generateAuthURL($sessionKey);
+//    $authUrl = $tiqr->generateAuthURL($sessionKey).'?return='.urlencode($return);
 
     return $app['twig']->render('index.html', array(
         'self' => $base,
         'return_url' => $return,
         'id' => $id,
         'authUrl' => $authUrl,
+        'sessionKey' => $sessionKey,
         'here' => $here,
         'locale' => $locale,
         'locales' => $locales,

@@ -58,23 +58,27 @@
 {% endif %}
 
     <br/>
-    <a href="{{authUrl}}">
-        <img class="qr" src='qr' style="{{ id ? 'display:none;' : '' }} cursor: none;" />
-    </a>
 
-    <p>
-        {{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}
-    </p>
+    <div class="qr" style="{{ id ? 'display:none;' : '' }}">
+        <a href="{{authUrl}}">
+            <img src='qr' style="cursor: none;" />
+        </a>
+        <p>
+            {{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}
+        </p>
+    </div>
+
     <div id="otpform" style="display:none">
-        <form method=POST>
+        <form method="POST">
             <p>
                 {% if not id %}
                 {{ 'login.qr.manual.userid' | trans }}: <input type="text" tabindex="2" name="userID"/>
                 {% else %}
                                                         <input type="hidden" value="{{ id }}" name="userID"/>
                 {% endif %}
-                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"/>
+                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3" placeholder="one time password..."/>
                 <input type="submit" value="{{ 'login.qr.manual.button' | trans }}"/>
+                <div id="result"></div>
             </p>
         </form>
     </div>
@@ -82,9 +86,34 @@
     <script>
         $(function(){
             $('a.scan').click(function(){
-                $( "img.qr" ).show( "slow" );
+                $( "div.qr" ).show( "slow" );
             });
         });
+
+        // Attach a submit handler to the OTP form
+        $( "#otpform" ).submit(function( event ) {
+            // Stop form from submitting normally
+            event.preventDefault();
+            // Get otp value from the form:
+            var $form = $( this ),
+                    otp = $form.find( "input[name='otp']" ).val(),
+                    url = '/tiqr/tiqr.php';
+            request = {
+                operation: "login",
+                notificationType: "APNS",
+                notificationAddress: "123abc",
+                userId: "{{ id }}",
+                response: otp,
+                sessionKey: "{{ sessionKey }}"
+            }
+            //var s = JSON.stringify(request);
+            $.post(url, request,
+                    function(data){
+                        if( data != "OK" )
+                            $( "#result" ).empty().append( "Error: " + data );
+                    });
+        });
+
     </script>
 
     </div><!-- /content -->
