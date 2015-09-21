@@ -49,7 +49,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'saml',
 ));
 
@@ -117,7 +117,7 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
     $request_data['issuer'] = $issuer;
 
     // verify signature
-    if( ($md['certfile']))
+    if( file_exists($md['certfile']))
     {
         if( $request->get('Signature') == null) {
             throw new Exception("SAML Authnrequest must be signed");

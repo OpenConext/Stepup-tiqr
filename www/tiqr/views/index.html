@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Inloggen met tiqr</title>
+    <title>tiqr login</title>
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <link rel="stylesheet" href="/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,56 +38,92 @@
                 <img src="/images/surfnet.jpg" class="pull-right" alt="SURFnet">
             </div>
 
-{% include "localeform.html" %}        
-<h2>{{ 'login.title' | trans }}</h2>
+{% include "localeform.html" %}
+    <h2>{{ 'login.title' | trans }}</h2>
 
-<p>
 {% if id %}
-<!--U logt in met tiqr account {{ id }}-->
+    <!-- logging in with tiqr id {{ id }}-->
     {{ 'login.push.message' | trans }}
     <ul>
             <li>{{ 'login.push.instructions.1' | trans }}</li>
             <li>{{ 'login.push.instructions.2' | trans }}</li>
-    </ul>
-    <br/>
-    <img class="qr" src='qr' style="cursor: none; display: none" />
+        </ul>
     <br/>
     {{ 'login.push.fail' | trans({'%link_start%': '<a class="scan" href="#">', '%link_end%': '</a>'}) | raw  }}
 {% else %}
     {{ 'login.qr.message' | trans }}
-            <br/>
-            <a href="{{authUrl}}"><img class="qr" src='qr' style="cursor: none;" /></a>
-            <p>{{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}</p>
-            <div id="otpform" style="display:none">
-            <form method=POST>
-            <p>{{ 'login.qr.manual.userid' | trans }}: <input type=text name=userID>
-            {{ 'login.qr.manual.otp' | trans }}: <input type=text name=otp>
-            <input type=submit value="{{ 'login.qr.manual.button' | trans }}"></p>
-            </form>
-            </div>
-            <p>
-
+    <br/>
+    {{ 'login.qr.no_account' | trans({'%link_start%': '<a href=\'/tiqr/enrol?return='~return_url~'\'>', '%link_end%': '</a>'}) | raw  }}
+    <!--TODO fix URL -->
 {% endif %}
-</p>
-            <script>
-                $(function(){
-                    $('a.scan').click(function(){
-                        $( "img.qr" ).show( "slow" );
+
+    <br/>
+
+    <div class="qr" style="{{ id ? 'display:none;' : '' }}">
+        <a href="{{authUrl}}">
+            <img src='qr' style="cursor: none;" />
+        </a>
+        <p>
+            {{ 'login.qr.manual.message' | trans({'%link_start%': '<a href="#" onClick="javascript:jQuery(\'#otpform\').slideToggle();">', '%link_end%': '</a>'}) | raw }}
+        </p>
+    </div>
+
+    <div id="otpform" style="display:none">
+        <form method="POST">
+            <p>
+                {% if not id %}
+                {{ 'login.qr.manual.userid' | trans }}: <input type="text" tabindex="2" name="userID"/>
+                {% else %}
+                                                        <input type="hidden" value="{{ id }}" name="userID"/>
+                {% endif %}
+                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3" placeholder="one time password..."/>
+                <input type="submit" value="{{ 'login.qr.manual.button' | trans }}"/>
+                <div id="result"></div>
+            </p>
+        </form>
+    </div>
+
+    <script>
+        $(function(){
+            $('a.scan').click(function(){
+                $( "div.qr" ).show( "slow" );
+            });
+        });
+
+        // Attach a submit handler to the OTP form
+        $( "#otpform" ).submit(function( event ) {
+            // Stop form from submitting normally
+            event.preventDefault();
+            // Get otp value from the form:
+            var $form = $( this ),
+                    otp = $form.find( "input[name='otp']" ).val(),
+                    url = '/tiqr/tiqr.php';
+            request = {
+                operation: "login",
+                notificationType: "APNS",
+                notificationAddress: "123abc",
+                userId: "{{ id }}",
+                response: otp,
+                sessionKey: "{{ sessionKey }}"
+            }
+            //var s = JSON.stringify(request);
+            $.post(url, request,
+                    function(data){
+                        if( data != "OK" )
+                            $( "#result" ).empty().append( "Error: " + data );
                     });
-                });
-            </script>
-            {{ 'login.qr.no_account' | trans({'%link_start%': '<a href=\'/tiqr/enrol?return='~return_url~'\'>', '%link_end%': '</a>'}) | raw  }}
-            <!--TODO fix URL -->
+        });
 
-        </div><!-- /content -->
+    </script>
 
-        <footer>
+    </div><!-- /content -->
+
+    <footer>
             <div class="row-fluid">
                 <div class="span8 offset2">
                     <hr>
                     <ul class="nav nav-pills">
-                        <li><a href="#" onclick="window.history.back();return false;">Annuleren</a></li><!-- TODO: Send Response with status Failed -->
-
+                        <li><a href="#" onclick="window.history.back();return false;">{{ 'login.cancel' | trans }}</a></li><!-- TODO Send Response with status Failed -->
                     </ul>
                 </div>
             </div>

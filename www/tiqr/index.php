@@ -12,39 +12,6 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 
 date_default_timezone_set('Europe/Amsterdam');
 
-function login( $sessionKey, $userId, $response )
-{
-    global $options;
-    global $userStorage;
-    $userSecret = $userStorage->getSecret($userId);
-    $tiqr = new Tiqr_Service($options);
-
-    // $tiqr->authenticate is not resilient for incorrect userId!!
-    $result = $tiqr->authenticate($userId, $userSecret, $sessionKey, $response);
-    
-    //Note that actually blocking the user and keeping track of login attempts is a responsibility of your application,
-    switch( $result ) {
-        case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
-            //echo 'AUTHENTICATED';
-            return "OK";
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
-            return 'INVALID_CHALLENGE';
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_REQUEST:
-            return 'INVALID_REQUEST';
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
-            return 'INVALID_RESPONSE';
-//        echo “INVALID_RESPONSE:3”;  // 3 attempts left
-//        echo “INVALID_RESPONSE:0”;  // blocked
-            break;
-        case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
-            return 'INVALID_USERID';
-            break;
-    }
-}
-
 $app = new Silex\Application();
 $app['debug'] = $options['debug'];
 
@@ -58,8 +25,9 @@ $app->register(new Silex\Provider\SessionServiceProvider(), array(
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/views',
     ));
+
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'authn',
 ));
 
@@ -74,7 +42,7 @@ $app['translator']->addLoader('yaml', new YamlFileLoader());
 $app['translator']->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
 $app['translator']->addResource('yaml', __DIR__.'/locales/nl.yml', 'nl');
 
-$app->before(function ($request) {
+$app->before(function (Request $request) {
         $request->getSession()->start();
     });
 
@@ -82,39 +50,23 @@ $tiqr = new Tiqr_Service($options);
 
 ### tiqr Authentication ###
 
-$app->post('/login', function (Request $request) use ($app, $tiqr, $options) {
-    $sessionKey = $app['session']->get('sessionKey');
-    $userId = $request->get('userID');
-    $otp = $request->get('otp');
-
-    $result = login($sessionKey, $userId, $otp);
-    
-    $sid = $app['session']->getId();
-    $userdata = $tiqr->getAuthenticatedUser($sid);
-    if( $result === "OK" ) {
-        $app['session']->set('authn', array('username' => $userdata));
-        $tiqr->logout($sid);
-        $app['session']->remove('sessionKey');
-        $app['monolog']->addInfo(sprintf("[%s] verified authenticated user '%s'", $sid, $userdata));
-        $return = $request->getUriForPath('/');
-    } else {
-        $app['session']->set('keepSessionKey', true);
-        $return = $request->getUriForPath('/login');
-    }
-    return $app->redirect($return);
-});
-
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $locale = $app['translator']->getLocale();
     $locales = array_keys($options['translation']);
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
+
+    $sid = $app['session']->getId();
 
     $base = $request->getUriForPath('/');
     $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
     if( $return == false ) {
         $return = $base;
     }
-    $sid = $app['session']->getId();
+    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+        $app['monolog']->addInfo(sprintf("[%s] illegal return URL '%s'", $sid, $return));
+        $return = $base;
+    }
+
     $userdata = $tiqr->getAuthenticatedUser($sid);
     $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
     if (!is_null($userdata)) {
@@ -132,14 +84,16 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         $app['session']->set('sessionKey', $sessionKey);
     }
     $app['monolog']->addInfo(sprintf("[%s] started new login session, session key = '%s", $sid, $sessionKey));
-    
-    $authUrl = $tiqr->generateAuthURL($sessionKey).'?return='.urlencode($return);
+
+    $authUrl = $tiqr->generateAuthURL($sessionKey);
+//    $authUrl = $tiqr->generateAuthURL($sessionKey).'?return='.urlencode($return);
 
     return $app['twig']->render('index.html', array(
         'self' => $base,
         'return_url' => $return,
         'id' => $id,
         'authUrl' => $authUrl,
+        'sessionKey' => $sessionKey,
         'here' => $here,
         'locale' => $locale,
         'locales' => $locales,
@@ -147,18 +101,8 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
 });
 
 $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
-    $base = $request->getUriForPath('/');
-    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
-    if( $return == false ) {
-        $return = $base;
-    }
+
     $sid = $app['session']->getId();
-    $userdata = $tiqr->getAuthenticatedUser($sid);
-    if( !is_null($userdata) ) {
-        $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
-        $app['session']->set('authn', array('username' => $userdata));
-        return $app->redirect($return);
-    }
 
     $request_data = $app['session']->get('Request');
     $id = $request_data['nameid']; // do we need to log in some specific user?
@@ -234,7 +178,11 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
     if( $return == false ) {
         $return = $base;
     }
-    
+    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+        $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
+        $return = $base;
+    }
+
     return $app['twig']->render('enrol.html', array(
         'self' => $base,
         'return_url' => $return,
@@ -279,6 +227,11 @@ $app->get('/done', function (Request $request) use ($app, $tiqr) {
 ### housekeeping
 $app->post('/switch-locale', function (Request $request) use ($app, $options) {
     $return = filter_var($request->get('return_url'), FILTER_VALIDATE_URL);
+    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+        $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
+        $return = $request->getBaseUrl();
+    }
+
     $opt = array(
         'options' => array(
             'default' => 'en',

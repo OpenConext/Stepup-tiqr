@@ -5,7 +5,7 @@
     "require": {
         "silex/silex": "~1.2",
         "twig/twig": "1.*",
-        "tiqr/tiqr-server-libphp": "~1.1.3",
+        "tiqr/tiqr-server-libphp": "~1.1.4",
         "monolog/monolog": "~1.12",
         "symfony/translation": "~2.6",
         "symfony/config": "~2.6",
