@@ -55,12 +55,18 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $locales = array_keys($options['translation']);
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
 
+    $sid = $app['session']->getId();
+
     $base = $request->getUriForPath('/');
     $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
     if( $return == false ) {
         $return = $base;
     }
-    $sid = $app['session']->getId();
+    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+        $app['monolog']->addInfo(sprintf("[%s] illegal return URL '%s'", $sid, $return));
+        $return = $base;
+    }
+
     $userdata = $tiqr->getAuthenticatedUser($sid);
     $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
     if (!is_null($userdata)) {
@@ -95,18 +101,8 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
 });
 
 $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
-    $base = $request->getUriForPath('/');
-    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
-    if( $return == false ) {
-        $return = $base;
-    }
+
     $sid = $app['session']->getId();
-    $userdata = $tiqr->getAuthenticatedUser($sid);
-    if( !is_null($userdata) ) {
-        $app['monolog']->addInfo(sprintf("[%s] userdata '%s'", $sid, $userdata));
-        $app['session']->set('authn', array('username' => $userdata));
-        return $app->redirect($return);
-    }
 
     $request_data = $app['session']->get('Request');
     $id = $request_data['nameid']; // do we need to log in some specific user?
@@ -182,7 +178,11 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
     if( $return == false ) {
         $return = $base;
     }
-    
+    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+        $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
+        $return = $base;
+    }
+
     return $app['twig']->render('enrol.html', array(
         'self' => $base,
         'return_url' => $return,
@@ -227,6 +227,11 @@ $app->get('/done', function (Request $request) use ($app, $tiqr) {
 ### housekeeping
 $app->post('/switch-locale', function (Request $request) use ($app, $options) {
     $return = filter_var($request->get('return_url'), FILTER_VALIDATE_URL);
+    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+        $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
+        $return = $request->getBaseUrl();
+    }
+
     $opt = array(
         'options' => array(
             'default' => 'en',
