@@ -62,7 +62,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     if( $return == false ) {
         $return = $base;
     }
-    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+    if(strpos($return, $request->getSchemeAndHttpHost() . '/') !== 0) {
         $app['monolog']->addInfo(sprintf("[%s] illegal return URL '%s'", $sid, $return));
         $return = $base;
     }
@@ -178,7 +178,7 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
     if( $return == false ) {
         $return = $base;
     }
-    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+    if(strpos($return, $request->getSchemeAndHttpHost() . '/') !== 0) {
         $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
         $return = $base;
     }
@@ -227,7 +227,7 @@ $app->get('/done', function (Request $request) use ($app, $tiqr) {
 ### housekeeping
 $app->post('/switch-locale', function (Request $request) use ($app, $options) {
     $return = stripslashes(filter_var($request->get('return_url'), FILTER_VALIDATE_URL));
-    if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
+    if(strpos($return, $request->getSchemeAndHttpHost() . '/') !== 0) {
         $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
         $return = $request->getBaseUrl();
     }
