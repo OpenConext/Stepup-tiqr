@@ -58,7 +58,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
     $sid = $app['session']->getId();
 
     $base = $request->getUriForPath('/');
-    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
+    $return = stripslashes(filter_var($request->get('return'),FILTER_VALIDATE_URL));
     if( $return == false ) {
         $return = $base;
     }
@@ -174,7 +174,7 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
 
     $base = $request->getUriForPath('/');
-    $return = filter_var($request->get('return'),FILTER_VALIDATE_URL);
+    $return = stripslashes(filter_var($request->get('return'),FILTER_VALIDATE_URL));
     if( $return == false ) {
         $return = $base;
     }
@@ -226,7 +226,7 @@ $app->get('/done', function (Request $request) use ($app, $tiqr) {
 
 ### housekeeping
 $app->post('/switch-locale', function (Request $request) use ($app, $options) {
-    $return = filter_var($request->get('return_url'), FILTER_VALIDATE_URL);
+    $return = stripslashes(filter_var($request->get('return_url'), FILTER_VALIDATE_URL));
     if(strpos($return, $request->getSchemeAndHttpHost()) !== 0) {
         $app['monolog']->addInfo(sprintf("illegal return URL '%s'", $return));
         $return = $request->getBaseUrl();
