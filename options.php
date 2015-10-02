@@ -42,12 +42,6 @@ $autoloader->setIncludePath();
 
 $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
 
-function generate_id($length = 8) {
-    $chars = "0123456789";
-    $count = mb_strlen($chars);
-    for ($i = 0, $result = ''; $i < $length; $i++) {
-        $index = rand(0, $count - 1);
-        $result .= mb_substr($chars, $index, 1);
-    }
-    return $result;
+function generate_id($length = 4) {
+    return base_convert(time(),10,36) . '-' . base_convert(rand(0, pow(36,$length)),10,36);
 }
