@@ -6,8 +6,21 @@
 
 include('../../options.php');
 
+$logger = null;
+
+function logger() {
+    global $logger, $options ;
+    if( $logger )
+        return $logger;
+    $logger = new Monolog\Logger('tiqr');
+    $logger->pushHandler(new Monolog\Handler\SyslogHandler('stepup-tiqr'));
+    return $logger;
+}
+
 function base() {
-    $proto = "on" === $_SERVER['HTTPS'] ? "https://" : "http://";
+    $proto = "http://";
+    if( array_key_exists('HTTPS', $_SERVER))
+        $proto = "on" === $_SERVER['HTTPS'] ? "https://" : "http://";
     /** @var $baseUrl string */
     return $proto . $_SERVER['HTTP_HOST'];
 }
@@ -18,7 +31,6 @@ function metadata($key)
     $tiqr = new Tiqr_Service($options);
     // exchange the key submitted by the phone for a new, unique enrollment secret
     $enrollmentSecret = $tiqr->getEnrollmentSecret($key);
-    error_log("enrolment secret for key $key is $enrollmentSecret");
     // $enrollmentSecret is a one time password that the phone is going to use later to post the shared secret of the user account on the phone.
     $enrollmentUrl     = base() . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
     $authenticationUrl = base() . "/tiqr/tiqr.php";
@@ -64,7 +76,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     $tiqr = new Tiqr_Service($options);
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
-    error_log("storing new entry $userid:$secret");
+    logger()->addDebug(sprintf("storing new entry for user '%s'", $userid));
     $userStorage->createUser($userid,"anonymous"); // TODO displayName
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
@@ -76,46 +88,45 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
 switch( $_SERVER['REQUEST_METHOD'] ) {
     case "GET":
         // metadata request
-        //error_log("received GET request\n" . print_r($_GET,true));
         // retrieve the temporary reference to the user identity
-        $key = $_GET['key'];
-        error_log("received metadata request (key=$key)");
+        $key = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['key']);
+
+        logger()->addInfo(sprintf("received metadata request (key='%s')", $key));
         $metadata = metadata($key);
         if( $metadata == false)
-            error_log("ERROR: empty metadata - metadata was either lost or destroyed after retrieval");
-        else
-            error_log("sending metadata:\n" . print_r($metadata,true));
+            logger()->addError("ERROR: empty metadata - metadata was either lost or destroyed after retrieval");
+
         Header("Content-Type: application/json");
         echo json_encode($metadata);
+        logger()->addInfo("sent metadata");
         break;
     case "POST":
-        error_log("tiqr client version is " . $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION']);
-        error_log("received POST request\n" . print_r($_POST,true));
-        $operation = $_POST['operation'];
-//        $version = $_POST['version'];
-        $notificationType = $_POST['notificationType'];
-        $notificationAddress = $_POST['notificationAddress'];
-//        $language = $_POST['language'];
+        $version = array_key_exists('HTTP_X_TIQR_PROTOCOL_VERSION', $_SERVER) ? $_SERVER['HTTP_X_TIQR_PROTOCOL_VERSION'] : "1";
+        logger()->addDebug(sprintf("Received POST request from tiqr client version %s", $version));
+        $operation = preg_replace("/[^a-z]+/", "", $_POST['operation']);
+        logger()->addInfo(sprintf("received operation '%s'", $operation));
+        $notificationType = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['notificationType']);
+        $notificationAddress = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['notificationAddress']);
 
         switch( $operation ) {
             case "register":
-                $enrollmentSecret = $_GET['otp']; // enrollmentsecret relayed by tiqr app
-                error_log("enrollmentSecret is $enrollmentSecret");
-                $secret = $_POST['secret'];
+                $enrollmentSecret = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['otp']); // enrollmentsecret relayed by tiqr app
+                logger()->addDebug("received enrollmentSecret");
+                $secret = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['secret']);
                 $result = register( $enrollmentSecret, $secret, $notificationType, $notificationAddress );
                 echo $result;
                 break;
             case "login":
-                $sessionKey = $_POST['sessionKey'];
-                $userId = $_POST['userId'];
-                $response = $_POST['response'];
-                error_log("received authentication response ($response) from user $userId for session $sessionKey");
+                $sessionKey = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['sessionKey']);
+                $userId = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['userId']);
+                $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['response']);
+                logger()->addInfo(sprintf("received authentication response (%s) from user '%s' for session '%s'", $response, $userId, $sessionKey));
                 $result = login( $sessionKey, $userId, $response );
-                error_log("response $result");
+                logger()->addInfo(sprintf("Authentication response is '%d'", $result));
                 echo $result;
                 break;
             default:
-                error_log("ERROR: unknown operation ($operation) in POST request");
+                logger()->addError(sprintf("ERROR: unknown operation (%s) in POST request", $operation));
                 break;
         }
         break;

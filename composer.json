@@ -1,66 +1,19 @@
 {
+    "name": "surfnet/stepup-tiqr",
+    "license": "Apache-2.0",
+    "description": "The SURFnet Step-up tiqr IdP performs tiqr Challenge/Response authentication for use as a second factor.",
     "require": {
         "silex/silex": "~1.2",
-        "fr3d/xmlseclibs": "~1.3",
         "twig/twig": "1.*",
-        "SURFnet/tiqr-server-libphp": "dev-master",
+        "tiqr/tiqr-server-libphp": "~1.1.4",
         "monolog/monolog": "~1.12",
-        "fr3d/xmlseclibs": " ~1.3",
         "symfony/translation": "~2.6",
         "symfony/config": "~2.6",
         "symfony/yaml": "~2.6",
         "symfony/twig-bridge": "~2.6",
-        "zendframework/zendframework1": "~1.12"
+        "simplesamlphp/saml2": "dev-master"
     },
-    "repositories": [
-        {
-            "type":"package",
-            "package": {
-                "version":"dev-master",
-                "name":"joostd/tiqr-server",
-                "source": {
-                    "url":"https://github.com/joostd/tiqr-server.git",
-                    "type":"git",
-                    "reference":"master"
-                },
-                "dist": {
-                    "url":"https://github.com/joostd/tiqr-server/zipball/master",
-                    "type":"zip"
-                }
-            }
-        },
-	{
-            "type":"package",
-            "package": {
-                "version":"dev-master",
-                "name":"SURFnet/tiqr-server-libphp",
-                "source": {
-                    "url":"https://github.com/SURFnet/tiqr-server-libphp.git",
-                    "type":"git",
-                    "reference":"master"
-                },
-                "dist": {
-                    "url":"https://github.com/SURFnet/tiqr-server-libphp/zipball/master",
-                    "type":"zip"
-                }
-            }
-        },
-	{
-            "type":"package",
-            "package": {
-                "version":"dev-master",
-                "name":"joostd/tiqr-server-libphp",
-                "source": {
-                    "url":"https://github.com/joostd/tiqr-server-libphp.git",
-                    "type":"git",
-                    "reference":"master"
-                },
-                "dist": {
-                    "url":"https://github.com/joostd/tiqr-server-libphp/zipball/master",
-                    "type":"zip"
-                }
-            }
-        }
-
-    ]
+    "require-dev": {
+        "liip/rmt": "1.*"
+    }
 }

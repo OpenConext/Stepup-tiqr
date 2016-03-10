@@ -1,5 +1,5 @@
-CREATE TABLE user (
-    id integer NOT NULL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS user (
+    id integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
     userid varchar(30) NOT NULL UNIQUE,
     displayname varchar(30) NOT NULL,
     secret varchar(128),
