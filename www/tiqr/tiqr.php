@@ -118,7 +118,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 break;
             case "login":
                 $sessionKey = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['sessionKey']);
-                $userId = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['userId']);
+                $userId = preg_replace("/[^a-zA-Z0-9_-]+/", "", $_POST['userId']);
                 $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['response']);
                 logger()->addInfo(sprintf("received authentication response (%s) from user '%s' for session '%s'", $response, $userId, $sessionKey));
                 $result = login( $sessionKey, $userId, $response );
