@@ -14,9 +14,13 @@ login:
             message: If the instructions on your phone instruct you to login manually, click %link_start%here%link_end%.
             userid: User ID
             otp: One time password
-            button: Go
+            button: Ok
         no_account: No account yet? Please create a new account %link_start%here%link_end%.
     cancel: Cancel
+    error:
+        invalid_challenge: Invalid challenge - please reload this page and try again.
+        invalid_response: Invalid response - have you entered the correct PIN?
+
 enrol:
     title: Register new Tiqr account
     status:
