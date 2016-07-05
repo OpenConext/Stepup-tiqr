@@ -28,6 +28,11 @@
         });
     }
     jQuery(document).ready(verifyLogin);
+
+    var errors = {
+	INVALID_CHALLENGE:"{{ 'error.invalid_challenge' | trans }}",
+	INVALID_RESPONSE:"{{ 'error.invalid_response' | trans }}"
+    }
 </script>
 
 <div class="container">
@@ -110,7 +115,7 @@
             $.post(url, request,
                     function(data){
                         if( data != "OK" )
-                            $( "#result" ).empty().append( "Error: " + data );
+                            $( "#result" ).empty().append( "Error: " + errors[data] );
                     });
         });
 

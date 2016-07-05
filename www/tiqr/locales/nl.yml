@@ -14,9 +14,12 @@ login:
             message: Krijg je een melding op je telefoon om handmatig in te loggen? Klik dan %link_start%hier%link_end%.
             userid: User ID
             otp: One time password
-            button: Go
+            button: Ok
         no_account: Geen account? Maak er dan %link_start%hier%link_end% eerst een aan.
     cancel: Annuleren
+    error:
+        invalid_challenge: ongeldig - herlaad deze pagina en probeer opnieuw.
+        invalid_response: ongeldig one time password - heb je de juiste PIN ingevoerd?
 enrol:
     title: Registreer nieuw Tiqr-account
     status:
