@@ -24,6 +24,7 @@ $options = array(
         "en" => true,
         "nl" => true,
     ),
+    'domain' => '', // The domain for this application, used for the 'stepup_locale' cookie
     "loghandler" => new Monolog\Handler\ErrorLogHandler(),
 );
 

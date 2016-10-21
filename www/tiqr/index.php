@@ -9,6 +9,7 @@ include('../../options.php');
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\HttpFoundation\Cookie;
 
 date_default_timezone_set('Europe/Amsterdam');
 
@@ -51,7 +52,17 @@ $tiqr = new Tiqr_Service($options);
 ### tiqr Authentication ###
 
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
-    $locale = $app['translator']->getLocale();
+    $stepup_locale = $request->cookies->get('stepup_locale');
+    switch($stepup_locale) {
+        case "en_GB":
+            $locale = "en";
+            break;
+        case "nl_NL":
+            $locale = "nl";
+            break;
+        default:
+            $locale = $app['translator']->getLocale();
+    }
     $locales = array_keys($options['translation']);
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
 
@@ -169,7 +180,17 @@ $app->get('/logout', function (Request $request) use ($app, $tiqr) {
 ### tiqr Enrolment ###
 
 $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
-    $locale = $app['translator']->getLocale();
+    $stepup_locale = $request->cookies->get('stepup_locale');
+    switch($stepup_locale) {
+        case "en_GB":
+            $locale = "en";
+            break;
+        case "nl_NL":
+            $locale = "nl";
+            break;
+        default:
+            $locale = $app['translator']->getLocale();
+    }
     $locales = array_keys($options['translation']);
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
 
@@ -224,6 +245,22 @@ $app->get('/done', function (Request $request) use ($app, $tiqr) {
         return "done";
 });
 
+$set_locale_cookie = function(Request $request, Response $response, Silex\Application $app) use ($options) {
+    $locale = $app['session']->get('locale');
+    switch($locale) {
+        case "en":
+            $locale = "en_GB";
+            break;
+        case "nl":
+            $locale = "nl_NL";
+            break;
+    }
+    $domain = $options['domain'];
+    $app['monolog']->addInfo(sprintf("set locale to [%s] for domain '%s'", $locale, $domain));
+    $cookie = new Cookie("stepup_locale", $locale, 0, '/', $domain);
+    $response->headers->setCookie($cookie);
+};
+
 ### housekeeping
 $app->post('/switch-locale', function (Request $request) use ($app, $options) {
     $return = stripslashes(filter_var($request->get('return_url'), FILTER_VALIDATE_URL));
@@ -242,7 +279,8 @@ $app->post('/switch-locale', function (Request $request) use ($app, $options) {
     if (array_key_exists($locale, $options['translation'])) {
         $app['session']->set('locale', $locale);
     }
+
     return $app->redirect($return);
-});
+})->after($set_locale_cookie);
     
 $app->run();
