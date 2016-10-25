@@ -30,40 +30,40 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'authn',
+    'monolog.level' => "WARNING",
 ));
 
-// Set locale
-if (!$locale = $app['session']->get('locale')) $locale = $options['default_locale'];
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(
-    'locale_fallbacks' => array('nl'),
-    'locale' => $locale,
+    'locale_fallbacks' => array($options['default_locale']),  // used when the current locale has no messages set
 ));
 
 $app['translator']->addLoader('yaml', new YamlFileLoader());
 $app['translator']->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
 $app['translator']->addResource('yaml', __DIR__.'/locales/nl.yml', 'nl');
 
-$app->before(function (Request $request) {
+$app->before(
+    function (Request $request) use ($app) {
         $request->getSession()->start();
-    });
+        $stepup_locale = $request->cookies->get('stepup_locale');
+        switch($stepup_locale) {
+            case "en_GB":
+                $stepup_locale = "en";
+                break;
+            case "nl_NL":
+                $stepup_locale = "nl";
+                break;
+            default:
+                $stepup_locale = $request->getPreferredLanguage(['en', 'nl']);
+        }
+        $app['translator']->setLocale($stepup_locale);
+    }
+);
 
 $tiqr = new Tiqr_Service($options);
 
 ### tiqr Authentication ###
 
 $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
-    $stepup_locale = $request->cookies->get('stepup_locale');
-    switch($stepup_locale) {
-        case "en_GB":
-            $locale = "en";
-            break;
-        case "nl_NL":
-            $locale = "nl";
-            break;
-        default:
-            $locale = $app['translator']->getLocale();
-    }
-    $locales = array_keys($options['translation']);
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
 
     $sid = $app['session']->getId();
@@ -106,8 +106,8 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         'authUrl' => $authUrl,
         'sessionKey' => $sessionKey,
         'here' => $here,
-        'locale' => $locale,
-        'locales' => $locales,
+        'locale' => $app['translator']->getLocale(),
+        'locales' => array_keys($options['translation']),
     ));
 });
 
@@ -180,18 +180,6 @@ $app->get('/logout', function (Request $request) use ($app, $tiqr) {
 ### tiqr Enrolment ###
 
 $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
-    $stepup_locale = $request->cookies->get('stepup_locale');
-    switch($stepup_locale) {
-        case "en_GB":
-            $locale = "en";
-            break;
-        case "nl_NL":
-            $locale = "nl";
-            break;
-        default:
-            $locale = $app['translator']->getLocale();
-    }
-    $locales = array_keys($options['translation']);
     $here = urlencode($app['request']->getUri()); // Is this allways correct?
 
     $base = $request->getUriForPath('/');
@@ -208,8 +196,8 @@ $app->get('/enrol', function (Request $request) use ($app, $tiqr, $options) {
         'self' => $base,
         'return_url' => $return,
         'here' => $here,
-        'locale' => $locale,
-        'locales' => $locales,
+        'locale' => $app['translator']->getLocale(),
+        'locales' => array_keys($options['translation']),
     ));
 });
 
