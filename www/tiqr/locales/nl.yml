@@ -14,7 +14,7 @@ login:
             message: Krijg je een melding op je telefoon om handmatig in te loggen? Klik dan %link_start%hier%link_end%.
             userid: User ID
             otp: One time password
-            button: Ok
+            button: OK
         no_account: Geen account? Maak er dan %link_start%hier%link_end% eerst een aan.
     cancel: Annuleren
     error:

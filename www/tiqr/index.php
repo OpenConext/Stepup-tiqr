@@ -196,7 +196,7 @@ $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
     $base = $request->getUriForPath('/');
     // starting a new enrollment session
     $sid = $app['session']->getId();
-    $uid = generate_id(); // TODO uniqueness
+    $uid = generate_id();
     $app['session']->set('authn', array('username' => $uid)); // TODO check
     $displayName = "SURFconext";
     $app['monolog']->addInfo(sprintf("[%s] enrol uid '%s' (%s).", $sid, $uid, $displayName));

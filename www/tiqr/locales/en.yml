@@ -14,7 +14,7 @@ login:
             message: If the instructions on your phone instruct you to login manually, click %link_start%here%link_end%.
             userid: User ID
             otp: One time password
-            button: Ok
+            button: OK
         no_account: No account yet? Please create a new account %link_start%here%link_end%.
     cancel: Cancel
     error:
