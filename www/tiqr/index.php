@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\HttpFoundation\Cookie;
 
-date_default_timezone_set('Europe/Amsterdam');
+date_default_timezone_set('Europe/Amsterdam'); // TODO move to config
 
 $app = new Silex\Application();
 $app['debug'] = $options['debug'];
@@ -213,6 +213,9 @@ $app->get('/qr_enrol', function (Request $request) use ($app, $tiqr) {
     $app['monolog']->addInfo(sprintf("[%s] start enrol uid '%s' with session key '%s'.", $sid, $uid, $key));
     $metadataURL = $base . "tiqr.php?key=$key";
     $app['monolog']->addInfo(sprintf("[%s] metadata URL for uid '%s' is '%s'.", $sid, $uid, $metadataURL));
+    // NOTE: this call will generate literal PNG data. This makes it harder to intercept the enrolment key
+    // This is also the reason why enrolment cannot be performed an the phone (by clicking the image, as with authN)
+    // as it would expose the enrolment key to the client in plaintext next to the "PNG-encoded" version.
     $tiqr->generateEnrollmentQR($metadataURL);
     return "";
 });

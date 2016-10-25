@@ -6,6 +6,8 @@
 
 include('../../options.php');
 
+date_default_timezone_set('Europe/Amsterdam'); // TODO
+
 $logger = null;
 
 function logger() {
@@ -43,13 +45,27 @@ function login( $sessionKey, $userId, $response )
 {
     global $options;
     global $userStorage;
+
+    $tempBlockDuration = array_key_exists('temporaryBlockDuration', $options) ? $options['temporaryBlockDuration'] : 0;
+    $maxTempBlocks = array_key_exists('maxTemporaryBlocks', $options) ? $options['maxTemporaryBlocks'] : 0;
+    $maxAttempts = array_key_exists('maxAttempts', $options) ? $options['maxAttempts'] : 3;
+    logger()->addInfo(sprintf("tempBlockDuration: %s, maxTempBlocks: %s, maxAttempts: %s, )", $tempBlockDuration, $maxTempBlocks, $maxAttempts));
+
+    if( !$userStorage->userExists( $userId ) ) {
+        return 'INVALID_USER';
+    } elseif( $userStorage->isBlocked($userId, $tempBlockDuration) ) {
+        return 'ACCOUNT_BLOCKED:'.$tempBlockDuration;
+    }
     $userSecret = $userStorage->getSecret($userId);
     $tiqr = new Tiqr_Service($options);
     $result = $tiqr->authenticate($userId,$userSecret,$sessionKey,$response);
-    //Note that actually blocking the user and keeping track of login attempts is a responsibility of your application,
     switch( $result ) {
         case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
-            //echo 'AUTHENTICATED';
+            // Reset the login attempts counter
+            $userStorage->setLoginAttempts($userId, 0);
+            // TODO update notification information if given, on successful login
+//            $userStorage->setNotificationType($userId, $notificationType);
+//            $userStorage->setNotificationAddress($userId, $notificationAddress);
             return "OK";
             break;
         case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
@@ -59,12 +75,43 @@ function login( $sessionKey, $userId, $response )
             return 'INVALID_REQUEST';
             break;
         case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
-            return 'INVALID_RESPONSE';
-//        echo “INVALID_RESPONSE:3”;  // 3 attempts left
-//        echo “INVALID_RESPONSE:0”;  // blocked
+            $attempts = $userStorage->getLoginAttempts($userId);
+            if (0 == $maxAttempts) { // unlimited
+                return  'INVALID_RESPONSE';
+            }
+            else if ($attempts < ($maxAttempts-1)) {
+                $userStorage->setLoginAttempts($userId, $attempts+1);
+            } else {
+                // Block user and destroy secret
+                $userStorage->setBlocked($userId, true);
+                $userStorage->setSecret($userId, NULL);
+                $userStorage->setLoginAttempts($userId, 0);
+
+                if ($tempBlockDuration > 0) {
+                    $tempAttempts = $userStorage->getTemporaryBlockAttempts($userId);
+                    if (0 == $maxTempBlocks) {
+                        // always a temporary block
+                        $userStorage->setTemporaryBlockTimestamp($userId, date("Y-m-d H:i:s"));
+                    }
+                    else if ($tempAttempts < ($maxTempBlocks - 1)) {
+                        // temporary block which could turn into a permanent block
+                        $userStorage->setTemporaryBlockAttempts($userId, $tempAttempts+1);
+                        $userStorage->setTemporaryBlockTimestamp($userId, date("Y-m-d H:i:s"));
+                    }
+                    else {
+                        // remove timestamp to make this a permanent block
+                        $userStorage->setTemporaryBlockTimestamp($userId, false);
+                    }
+                }
+            }
+            $attemptsLeft = ($maxAttempts-1)-$attempts;
+            return 'INVALID_RESPONSE:'.$attemptsLeft;
             break;
         case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
-            return 'INVALID_USERID';
+            return 'INVALID_USERID'; // INVALID_USER ?
+            break;
+        default:
+            return 'ERROR';
             break;
     }
 }
