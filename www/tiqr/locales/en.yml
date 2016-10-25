@@ -20,6 +20,7 @@ login:
     error:
         invalid_challenge: Invalid challenge - please reload this page and try again.
         invalid_response: Invalid response - have you entered the correct PIN?
+        invalid_user: Invalid user.
 
 enrol:
     title: Register new Tiqr account
