@@ -24,14 +24,15 @@
                 document.location = "{{return_url}}";
             } else {
                 alert("{{ 'login.timeout' | trans }}");
+                document.location.reload(true); // force reload
             }
         });
     }
     jQuery(document).ready(verifyLogin);
 
     var errors = {
-	INVALID_CHALLENGE:"{{ 'error.invalid_challenge' | trans }}",
-	INVALID_RESPONSE:"{{ 'error.invalid_response' | trans }}"
+	INVALID_CHALLENGE:"{{ 'login.error.invalid_challenge' | trans }}",
+	INVALID_RESPONSE:"{{ 'login.error.invalid_response' | trans }}"
     }
 </script>
 
@@ -74,17 +75,17 @@
     </div>
 
     <div id="otpform" style="display:none">
-        <form method="POST">
-            <p>
+        <form method="POST" class="form-inline">
+            <div class="input-group">
                 {% if not id %}
                 {{ 'login.qr.manual.userid' | trans }}: <input type="text" tabindex="2" name="userID"/>
                 {% else %}
                                                         <input type="hidden" value="{{ id }}" name="userID"/>
                 {% endif %}
-                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3" placeholder="one time password..."/>
-                <input type="submit" value="{{ 'login.qr.manual.button' | trans }}"/>
+                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3" placeholder="one time password..." autocomplete="off"/>
+                <button type="submit"  class="btn btn-primary">{{ 'login.qr.manual.button' | trans }}</button>
                 <div id="result"></div>
-            </p>
+            </div>
         </form>
     </div>
 
