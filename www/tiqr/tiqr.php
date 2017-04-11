@@ -41,7 +41,7 @@ function metadata($key)
     return $metadata;
 }
 
-function login( $sessionKey, $userId, $response )
+function login( $sessionKey, $userId, $response, $notificationType, $notificationAddress )
 {
     global $options;
     global $userStorage;
@@ -63,9 +63,13 @@ function login( $sessionKey, $userId, $response )
         case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
             // Reset the login attempts counter
             $userStorage->setLoginAttempts($userId, 0);
-            // TODO update notification information if given, on successful login
-//            $userStorage->setNotificationType($userId, $notificationType);
-//            $userStorage->setNotificationAddress($userId, $notificationAddress);
+            // update notification information if given, on successful login
+            if( isset($notificationType) ) {
+                $userStorage->setNotificationType($userId, $notificationType);
+                if( isset($notificationAddress) ) {
+                    $userStorage->setNotificationAddress($userId, $notificationAddress);
+                }
+            }
             return "OK";
             break;
         case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
@@ -168,7 +172,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 $userId = preg_replace("/[^a-zA-Z0-9_-]+/", "", $_POST['userId']);
                 $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['response']);
                 logger()->addInfo(sprintf("received authentication response (%s) from user '%s' for session '%s'", $response, $userId, $sessionKey));
-                $result = login( $sessionKey, $userId, $response );
+                $result = login( $sessionKey, $userId, $response, $notificationType, $notificationAddress );
                 logger()->addInfo(sprintf("Authentication response is '%d'", $result));
                 echo $result;
                 break;
