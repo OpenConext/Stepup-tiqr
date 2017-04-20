@@ -31,6 +31,8 @@ function sign($response, $keyfile, $certfile)
     return $r->toSignedXML()->ownerDocument->saveXML();
 }
 
+Request::setTrustedProxies(array("127.0.0.1"));
+
 // TODO: move
 date_default_timezone_set('Europe/Amsterdam');
 
@@ -140,7 +142,6 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
     $app['session']->set('Request', $request_data );
 
     $url = $request->getUriForPath('/') . 'sso_return';
-//    return $app->redirect("/authn/login?return=$url");
     if( $nameid ) { // login
         return $app->redirect("/tiqr/login?return=$url");
     } else {

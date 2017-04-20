@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 date_default_timezone_set('Europe/Amsterdam'); // TODO move to config
 
+Request::setTrustedProxies(array("127.0.0.1"));
+
 $app = new Silex\Application();
 $app['debug'] = $options['debug'];
 
@@ -30,7 +32,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'authn',
-    'monolog.level' => "WARNING",
+    'monolog.level'   => Monolog\Logger::WARNING,
 ));
 
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(

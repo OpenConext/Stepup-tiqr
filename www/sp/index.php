@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 // TODO: move
 //date_default_timezone_set('Europe/Amsterdam');
+Request::setTrustedProxies(array("127.0.0.1"));
 
 $app = new Silex\Application(); 
 $app['debug'] = $options['debug'];
@@ -17,14 +18,14 @@ $app['debug'] = $options['debug'];
 //$app->register(new Silex\Provider\SessionServiceProvider());
 
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.handler' => new Monolog\Handler\SyslogHandler('stepup-tiqr'),
+    'monolog.handler' => $options['loghandler'],
     'monolog.name' => 'saml-sp',
+
 ));
 
 ########## SAML ##########
 
 $app->get('/', function (Request $request) use ($app) {
-        $url = $request->getUriForPath('/') . 'metadata';
         return "This is a SAML endpoint<br/><a href='login'>Testing only!</a>";
     });
 

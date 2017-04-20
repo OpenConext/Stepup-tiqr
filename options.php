@@ -2,14 +2,24 @@
 require_once __DIR__.'/vendor/autoload.php';
 require_once __DIR__.'/vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
 
+//$proto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : (isset($_SERVER['HTTPS']) ? "https" : "http");
+
+function proto() {
+    if( array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER))
+        return $_SERVER['HTTP_X_FORWARDED_PROTO'];
+    if( array_key_exists('HTTPS', $_SERVER))
+        return "on" === $_SERVER['HTTPS'] ? "https" : "http";
+    return "http";
+}
+
 $options = array(
     //"identifier"      => "pilot.stepup.coin.surf.net",
     "name"            => "SURFconext Strong Authentication", // todo i18n
     "auth.protocol"       => "tiqrauth",
     "enroll.protocol"     => "tiqrenroll",
     "ocra.suite"          => "OCRA-1:HOTP-SHA1-6:QH10-S",
-    "logoUrl"         => (isset($_SERVER['HTTPS']) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . "/tiqrRGB.png",
-    "infoUrl"         => (isset($_SERVER['HTTPS']) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . "/info.html", // base(),
+    "logoUrl"         => proto() . "://" . $_SERVER['HTTP_HOST'] . "/tiqrRGB.png",
+    "infoUrl"         => proto() . "://" . $_SERVER['HTTP_HOST'] . "/info.html",
     "tiqr.path"         => __DIR__ . '/vendor/tiqr/tiqr-server-libphp/library/tiqr/',
     'phpqrcode.path' => '.',
     'zend.path' => __DIR__ . '/vendor/zendframework/zendframework1/library',
