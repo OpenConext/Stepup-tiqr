@@ -6,7 +6,8 @@
 
 include('../../options.php');
 
-date_default_timezone_set('Europe/Amsterdam'); // TODO
+if( isset($options["default_timezone"]) )
+    date_default_timezone_set($options["default_timezone"]);
 
 $logger = null;
 
@@ -48,7 +49,7 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
 
     $tempBlockDuration = array_key_exists('temporaryBlockDuration', $options) ? $options['temporaryBlockDuration'] : 0;
     $maxTempBlocks = array_key_exists('maxTemporaryBlocks', $options) ? $options['maxTemporaryBlocks'] : 0;
-    $maxAttempts = array_key_exists('maxAttempts', $options) ? $options['maxAttempts'] : 3;
+    $maxAttempts = array_key_exists('maxAttempts', $options) ? $options['maxAttempts'] : 0; //default to 0, don't destroy secrets
     logger()->addInfo(sprintf("tempBlockDuration: %s, maxTempBlocks: %s, maxAttempts: %s, )", $tempBlockDuration, $maxTempBlocks, $maxAttempts));
 
     if( !$userStorage->userExists( $userId ) ) {
@@ -83,12 +84,11 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
             if (0 == $maxAttempts) { // unlimited
                 return  'INVALID_RESPONSE';
             }
-            else if ($attempts < ($maxAttempts-1)) {
+            elseif ($attempts < ($maxAttempts-1)) {
                 $userStorage->setLoginAttempts($userId, $attempts+1);
             } else {
                 // Block user and destroy secret
                 $userStorage->setBlocked($userId, true);
-                $userStorage->setSecret($userId, NULL);
                 $userStorage->setLoginAttempts($userId, 0);
 
                 if ($tempBlockDuration > 0) {
@@ -105,6 +105,7 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
                     else {
                         // remove timestamp to make this a permanent block
                         $userStorage->setTemporaryBlockTimestamp($userId, false);
+//                        $userStorage->setSecret($userId, NULL); // TODO more testing
                     }
                 }
             }
