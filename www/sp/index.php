@@ -8,9 +8,11 @@ require_once 'container.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-Request::setTrustedProxies(array("127.0.0.1"));
 if( isset($options["default_timezone"]) )
     date_default_timezone_set($options["default_timezone"]);
+
+if( isset($options["trusted_proxies"]) )
+    Request::setTrustedProxies($options["trusted_proxies"]);
 
 $app = new Silex\Application(); 
 $app['debug'] = $options['debug'];

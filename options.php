@@ -36,6 +36,7 @@ $options = array(
     ),
     'domain' => '', // The domain for this application, used for the 'stepup_locale' cookie
     "loghandler" => new Monolog\Handler\ErrorLogHandler(),
+    "trusted_proxies" => array("127.0.0.1"),
     "default_timezone" => "Europe/Amsterdam",
 );
 
