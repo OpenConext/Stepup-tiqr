@@ -36,6 +36,7 @@ $options = array(
     ),
     'domain' => '', // The domain for this application, used for the 'stepup_locale' cookie
     "loghandler" => new Monolog\Handler\ErrorLogHandler(),
+    "default_timezone" => "Europe/Amsterdam",
 );
 
 // override options locally. TODO merge with config

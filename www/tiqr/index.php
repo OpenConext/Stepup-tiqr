@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\HttpFoundation\Cookie;
 
-date_default_timezone_set('Europe/Amsterdam'); // TODO move to config
+if( isset($options["default_timezone"]) )
+    date_default_timezone_set($options["default_timezone"]);
 
 Request::setTrustedProxies(array("127.0.0.1"));
 

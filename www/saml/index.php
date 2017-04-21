@@ -32,9 +32,9 @@ function sign($response, $keyfile, $certfile)
 }
 
 Request::setTrustedProxies(array("127.0.0.1"));
+if( isset($options["default_timezone"]) )
+    date_default_timezone_set($options["default_timezone"]);
 
-// TODO: move
-date_default_timezone_set('Europe/Amsterdam');
 
 $app = new Silex\Application(); 
 $app['debug'] = $options['debug'];
