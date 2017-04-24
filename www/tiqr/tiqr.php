@@ -17,9 +17,11 @@ function logger() {
         return $logger;
     $logger = new Monolog\Logger('tiqr');
     $logger->pushHandler(new Monolog\Handler\SyslogHandler('stepup-tiqr'));
+// todo: configure $logger->pushHandler(new Monolog\Handler\ErrorLogHandler(0,Monolog\Logger::INFO));
     return $logger;
 }
 
+// deprecated
 function base() {
     $proto = "http://";
     if( array_key_exists('HTTPS', $_SERVER))
@@ -35,8 +37,9 @@ function metadata($key)
     // exchange the key submitted by the phone for a new, unique enrollment secret
     $enrollmentSecret = $tiqr->getEnrollmentSecret($key);
     // $enrollmentSecret is a one time password that the phone is going to use later to post the shared secret of the user account on the phone.
-    $enrollmentUrl     = base() . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
-    $authenticationUrl = base() . "/tiqr/tiqr.php";
+    $base = proto() . "://" .  $_SERVER['HTTP_HOST'];
+    $enrollmentUrl     = $base . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
+    $authenticationUrl = $base . "/tiqr/tiqr.php";
     //Note that for security reasons you can only ever call getEnrollmentMetadata once in an enrollment session, the data is destroyed after your first call.
     $metadata = $tiqr->getEnrollmentMetadata($key, $authenticationUrl, $enrollmentUrl);
     return $metadata;
@@ -130,7 +133,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
     logger()->addDebug(sprintf("storing new entry for user '%s'", $userid));
-    $userStorage->createUser($userid,"anonymous"); // TODO displayName
+    $userStorage->createUser($userid,"anonymous");
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
     $userStorage->setNotificationAddress($userid, $notificationAddress);
