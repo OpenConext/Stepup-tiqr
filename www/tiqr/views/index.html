@@ -34,6 +34,7 @@
     	INVALID_CHALLENGE:"{{ 'login.error.invalid_challenge' | trans }}",
 	    INVALID_RESPONSE:"{{ 'login.error.invalid_response' | trans }}",
         INVALID_USER:"{{ 'login.error.invalid_user' | trans }}",
+        ACCOUNT_BLOCKED:"{{ 'login.error.account_blocked' | trans }}"
     }
 </script>
 
@@ -107,8 +108,8 @@
                     url = '/tiqr/tiqr.php';
             request = {
                 operation: "login",
-                notificationType: "APNS",
-                notificationAddress: "123abc",
+                notificationType: "",
+                notificationAddress: "",
                 userId: "{{ id }}",
                 response: otp,
                 sessionKey: "{{ sessionKey }}"
@@ -116,8 +117,13 @@
             //var s = JSON.stringify(request);
             $.post(url, request,
                     function(data){
-                        if( data != "OK" )
+                        if( data != "OK" ) {
+                            var res = data.split(":");
+                            data = res[0];
                             $( "#result" ).empty().append( "Error: " + errors[data] );
+                            if( res[1] )
+                                $( "#result" ).append( " ({{ 'login.error.attempts_left' | trans }}: " + res[1] + ")" );
+                        }
                     });
         });
 

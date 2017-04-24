@@ -38,6 +38,7 @@ $options = array(
     "loghandler" => new Monolog\Handler\ErrorLogHandler(),
     "trusted_proxies" => array("127.0.0.1"),
     "default_timezone" => "Europe/Amsterdam",
+    'maxAttempts' => 3,
 );
 
 // override options locally. TODO merge with config

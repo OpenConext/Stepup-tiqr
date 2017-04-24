@@ -55,7 +55,8 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
     if( !$userStorage->userExists( $userId ) ) {
         return 'INVALID_USER';
     } elseif( $userStorage->isBlocked($userId, $tempBlockDuration) ) {
-        return 'ACCOUNT_BLOCKED:'.$tempBlockDuration;
+        return 'ACCOUNT_BLOCKED';
+//        return 'ACCOUNT_BLOCKED:'.$tempBlockDuration;
     }
     $userSecret = $userStorage->getSecret($userId);
     $tiqr = new Tiqr_Service($options);
@@ -174,7 +175,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['response']);
                 logger()->addInfo(sprintf("received authentication response (%s) from user '%s' for session '%s'", $response, $userId, $sessionKey));
                 $result = login( $sessionKey, $userId, $response, $notificationType, $notificationAddress );
-                logger()->addInfo(sprintf("Authentication response is '%d'", $result));
+                logger()->addInfo(sprintf("Authentication response is '%s'", $result));
                 echo $result;
                 break;
             default:

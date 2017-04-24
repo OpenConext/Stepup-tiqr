@@ -21,6 +21,8 @@ login:
         invalid_challenge: Invalid challenge - please reload this page and try again.
         invalid_response: Invalid response - have you entered the correct PIN?
         invalid_user: Invalid user.
+        attempts_left: attempts left
+        account_blocked: Account blocked
 
 enrol:
     title: Register new Tiqr account
