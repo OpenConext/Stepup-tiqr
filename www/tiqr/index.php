@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\HttpFoundation\Cookie;
 
-date_default_timezone_set('Europe/Amsterdam'); // TODO move to config
+if( isset($options["default_timezone"]) )
+    date_default_timezone_set($options["default_timezone"]);
 
-Request::setTrustedProxies(array("127.0.0.1"));
+if( isset($options["trusted_proxies"]) )
+    Request::setTrustedProxies($options["trusted_proxies"]);
 
 $app = new Silex\Application();
 $app['debug'] = $options['debug'];
@@ -108,6 +110,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         'authUrl' => $authUrl,
         'sessionKey' => $sessionKey,
         'here' => $here,
+        'isMobile' => preg_match("/iPhone|Android|iPad|iPod|webOS/", $_SERVER['HTTP_USER_AGENT']),
         'locale' => $app['translator']->getLocale(),
         'locales' => array_keys($options['translation']),
     ));

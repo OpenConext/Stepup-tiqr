@@ -6,7 +6,8 @@
 
 include('../../options.php');
 
-date_default_timezone_set('Europe/Amsterdam'); // TODO
+if( isset($options["default_timezone"]) )
+    date_default_timezone_set($options["default_timezone"]);
 
 $logger = null;
 
@@ -16,9 +17,11 @@ function logger() {
         return $logger;
     $logger = new Monolog\Logger('tiqr');
     $logger->pushHandler(new Monolog\Handler\SyslogHandler('stepup-tiqr'));
+// todo: configure $logger->pushHandler(new Monolog\Handler\ErrorLogHandler(0,Monolog\Logger::INFO));
     return $logger;
 }
 
+// deprecated
 function base() {
     $proto = "http://";
     if( array_key_exists('HTTPS', $_SERVER))
@@ -34,8 +37,9 @@ function metadata($key)
     // exchange the key submitted by the phone for a new, unique enrollment secret
     $enrollmentSecret = $tiqr->getEnrollmentSecret($key);
     // $enrollmentSecret is a one time password that the phone is going to use later to post the shared secret of the user account on the phone.
-    $enrollmentUrl     = base() . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
-    $authenticationUrl = base() . "/tiqr/tiqr.php";
+    $base = proto() . "://" .  $_SERVER['HTTP_HOST'];
+    $enrollmentUrl     = $base . "/tiqr/tiqr.php?otp=$enrollmentSecret"; // todo
+    $authenticationUrl = $base . "/tiqr/tiqr.php";
     //Note that for security reasons you can only ever call getEnrollmentMetadata once in an enrollment session, the data is destroyed after your first call.
     $metadata = $tiqr->getEnrollmentMetadata($key, $authenticationUrl, $enrollmentUrl);
     return $metadata;
@@ -48,13 +52,14 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
 
     $tempBlockDuration = array_key_exists('temporaryBlockDuration', $options) ? $options['temporaryBlockDuration'] : 0;
     $maxTempBlocks = array_key_exists('maxTemporaryBlocks', $options) ? $options['maxTemporaryBlocks'] : 0;
-    $maxAttempts = array_key_exists('maxAttempts', $options) ? $options['maxAttempts'] : 3;
+    $maxAttempts = array_key_exists('maxAttempts', $options) ? $options['maxAttempts'] : 0; //default to 0, don't destroy secrets
     logger()->addInfo(sprintf("tempBlockDuration: %s, maxTempBlocks: %s, maxAttempts: %s, )", $tempBlockDuration, $maxTempBlocks, $maxAttempts));
 
     if( !$userStorage->userExists( $userId ) ) {
         return 'INVALID_USER';
     } elseif( $userStorage->isBlocked($userId, $tempBlockDuration) ) {
-        return 'ACCOUNT_BLOCKED:'.$tempBlockDuration;
+        return 'ACCOUNT_BLOCKED';
+//        return 'ACCOUNT_BLOCKED:'.$tempBlockDuration;
     }
     $userSecret = $userStorage->getSecret($userId);
     $tiqr = new Tiqr_Service($options);
@@ -83,12 +88,11 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
             if (0 == $maxAttempts) { // unlimited
                 return  'INVALID_RESPONSE';
             }
-            else if ($attempts < ($maxAttempts-1)) {
+            elseif ($attempts < ($maxAttempts-1)) {
                 $userStorage->setLoginAttempts($userId, $attempts+1);
             } else {
                 // Block user and destroy secret
                 $userStorage->setBlocked($userId, true);
-                $userStorage->setSecret($userId, NULL);
                 $userStorage->setLoginAttempts($userId, 0);
 
                 if ($tempBlockDuration > 0) {
@@ -105,6 +109,7 @@ function login( $sessionKey, $userId, $response, $notificationType, $notificatio
                     else {
                         // remove timestamp to make this a permanent block
                         $userStorage->setTemporaryBlockTimestamp($userId, false);
+//                        $userStorage->setSecret($userId, NULL); // TODO more testing
                     }
                 }
             }
@@ -128,7 +133,7 @@ function register( $enrollmentSecret, $secret, $notificationType, $notificationA
     // note: userid is never sent together with the secret! userid is retrieved from session
     $userid = $tiqr->validateEnrollmentSecret($enrollmentSecret); // or false if invalid
     logger()->addDebug(sprintf("storing new entry for user '%s'", $userid));
-    $userStorage->createUser($userid,"anonymous"); // TODO displayName
+    $userStorage->createUser($userid,"anonymous");
     $userStorage->setSecret($userid,$secret);
     $userStorage->setNotificationType($userid, $notificationType);
     $userStorage->setNotificationAddress($userid, $notificationAddress);
@@ -173,7 +178,7 @@ switch( $_SERVER['REQUEST_METHOD'] ) {
                 $response = preg_replace("/[^a-zA-Z0-9]+/", "", $_POST['response']);
                 logger()->addInfo(sprintf("received authentication response (%s) from user '%s' for session '%s'", $response, $userId, $sessionKey));
                 $result = login( $sessionKey, $userId, $response, $notificationType, $notificationAddress );
-                logger()->addInfo(sprintf("Authentication response is '%d'", $result));
+                logger()->addInfo(sprintf("Authentication response is '%s'", $result));
                 echo $result;
                 break;
             default:
