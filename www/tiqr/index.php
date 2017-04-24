@@ -110,6 +110,7 @@ $app->get('/login', function (Request $request) use ($app, $tiqr, $options) {
         'authUrl' => $authUrl,
         'sessionKey' => $sessionKey,
         'here' => $here,
+        'isMobile' => preg_match("/iPhone|Android|iPad|iPod|webOS/", $_SERVER['HTTP_USER_AGENT']),
         'locale' => $app['translator']->getLocale(),
         'locales' => array_keys($options['translation']),
     ));

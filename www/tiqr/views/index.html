@@ -68,7 +68,11 @@
     <br/>
 
     <div class="qr" style="{{ id ? 'display:none;' : '' }}">
+        {% if isMobile %}
         <a href="{{authUrl}}">
+        {% else %}
+        <a href="#" onClick="javascript:jQuery('#otpform').slideToggle();">
+        {% endif %}
             <img src='qr' style="cursor: none;" />
         </a>
         <p>
