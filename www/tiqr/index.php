@@ -120,7 +120,7 @@ $app->get('/qr', function (Request $request) use ($app, $tiqr, $options) {
 
     $sid = $app['session']->getId();
 
-    $request_data = $app['session']->get('Request');
+    $request_data = $app['session']->get('Request'); // from SAML request
     $id = $request_data['nameid']; // do we need to log in some specific user?
     if ($id === '') $id = null;
 

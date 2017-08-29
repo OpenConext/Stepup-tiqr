@@ -56,7 +56,7 @@ $app->get('/login/{nameid}', function (Request $request, $nameid) use ($config, 
         $key->loadKey($keyfile, true);
         $saml_request->setSignatureKey($key);
     }
-    // Use Redirect binding regardless of what the SP asked for
+    // Assume Redirect binding
     $binding = new SAML2_HTTPRedirect();
     $destination = $binding->getRedirectURL($saml_request);
     $app['monolog']->addDebug('Redirect to ' . $destination);
@@ -67,7 +67,6 @@ $app->get('/login/{nameid}', function (Request $request, $nameid) use ($config, 
 /*
  * SP: receive SAML response
  */
-
 $app->post('/acs', function (Request $request) use ($app) {
     # TODO: check signature, response, etc
     $response = $request->get('SAMLResponse');

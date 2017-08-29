@@ -94,11 +94,11 @@ $app->get('/sso', function (Request $request) use ($config, $app) {
 
     // make sure external entities are disabled
     $previous = libxml_disable_entity_loader(true);
-    // Make sure we're dealing with an AuthN request
     $binding = SAML2_Binding::getCurrentBinding();
     $samlrequest = $binding->receive();
     libxml_disable_entity_loader($previous);
 
+    // Make sure we're dealing with an AuthN request
     if (!($samlrequest instanceof SAML2_AuthnRequest)) {
         throw new Exception('Message received on authentication request endpoint wasn\'t an authentication request.');
     }
