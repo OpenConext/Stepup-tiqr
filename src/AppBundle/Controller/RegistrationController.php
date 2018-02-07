@@ -17,24 +17,32 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Tiqr\TiqrFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class RegistrationController extends Controller
 {
     private $authenticationService;
     private $registrationService;
+    private $tiqrService;
+    private $session;
 
     public function __construct(
         AuthenticationService $authenticationService,
-        RegistrationService $registrationService
+        RegistrationService $registrationService,
+        TiqrFactory $factory,
+        SessionInterface $session
     ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
+        $this->tiqrService = $factory->create();
+        $this->session = $session;
     }
 
     /**
@@ -48,11 +56,13 @@ class RegistrationController extends Controller
     {
         if ($request->get('action') === 'error') {
             $this->registrationService->reject($request->get('message'));
+
             return $this->registrationService->replyToServiceProvider();
         }
 
         if ($request->get('action') === 'register') {
             $this->registrationService->register($request->get('NameID'));
+
             return $this->registrationService->replyToServiceProvider();
         }
 
@@ -64,4 +74,22 @@ class RegistrationController extends Controller
             'NameID' => uniqid('test-prefix-', 'test-entropy'),
         ], $response);
     }
+
+    /**
+     * @Route("/registration/qr", name="app_identity_registration_qr")
+     */
+    public function qrRegistrationAction(Request $request)
+    {
+        $key = $this->tiqrService->startEnrollmentSession('SURFconext');
+        $metadataURL = htmlentities("https://tiqr.example.com/app_dev.php/tiqr.php?key=$key");
+        // NOTE: this call will generate literal PNG data. This makes it harder to intercept the enrolment key
+        // This is also the reason why enrolment cannot be performed an the phone (by clicking the image, as with authN)
+        // as it would expose the enrolment key to the client in plaintext next to the "PNG-encoded" version.
+        // $this->tiqrService->generateEnrollmentQR($metadataURL);
+        $html = <<<HTML
+<a href="$metadataURL">$metadataURL</a>
+HTML;
+        return new Response($html);
+    }
+
 }

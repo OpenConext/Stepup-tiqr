@@ -27,6 +27,12 @@
         <input id="message" name="message" size="50" type="text" value="{{ 'page.registration.random_default_error'|trans }}">
         <br>
         <br>
+
+        <img class="qr" alt="QR" src="{{ url('app_identity_registration_qr') }}" style="cursor: none;" />
+
         <button id="button_error" name="action" class="button gray" value="error">{{ 'page.registration.submit_error'|trans }}</button>
     </form>
+
+
+
 {% endblock %}
