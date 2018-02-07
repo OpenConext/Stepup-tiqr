@@ -4,6 +4,7 @@ namespace AppBundle\Tiqr;
 
 use Psr\Log\LoggerInterface;
 use Tiqr_Service;
+use Tiqr_UserStorage;
 
 class TiqrFactory
 {
@@ -25,8 +26,9 @@ class TiqrFactory
 
         $autoloader = \Tiqr_AutoLoader::getInstance($options); // needs {tiqr,zend,phpqrcode}.path
         $autoloader->setIncludePath();
+        $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
 
-        return new TiqrService(new Tiqr_Service($options));
+        return new TiqrService(new Tiqr_Service($options), $userStorage, $options);
     }
 
     private function getOptions()
@@ -45,7 +47,7 @@ class TiqrFactory
             'phpqrcode.path' => '.',
             'zend.path' => $vendorPath.'/zendframework/zendframework1/library',
             'statestorage' => ["type" => "file"],
-            'userstorage' => ["type" => "file", "path" => "/tmp", "encryption" => ['type' => 'dummy']],
+            'userstorage' => ["type" => "file", "path" => "/vagrant", "encryption" => ['type' => 'dummy']],
             "usersecretstorage" => ["type" => "file"],
             "apns.certificate" => '',
             "apns.environment" => 'production',

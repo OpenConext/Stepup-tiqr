@@ -85,9 +85,11 @@ class RegistrationController extends Controller
         // NOTE: this call will generate literal PNG data. This makes it harder to intercept the enrolment key
         // This is also the reason why enrolment cannot be performed an the phone (by clicking the image, as with authN)
         // as it would expose the enrolment key to the client in plaintext next to the "PNG-encoded" version.
-        // $this->tiqrService->generateEnrollmentQR($metadataURL);
+        $this->tiqrService->generateEnrollmentQR($metadataURL);
+        exit;
         $html = <<<HTML
-<a href="$metadataURL">$metadataURL</a>
+<a href="$metadataURL">tiqrenroll://$metadataURL</a>
+
 HTML;
         return new Response($html);
     }
