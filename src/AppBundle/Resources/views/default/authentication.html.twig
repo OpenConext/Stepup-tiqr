@@ -28,5 +28,8 @@
         <br>
         <br>
         <button id="button_error" name="action" class="button gray" value="error">{{ 'page.authentication.submit_error'|trans }}</button>
+        <img src="{{ url('app_identity_authentication_qr') }}">
+
+        <div>{{ authUrl }}</div>
     </form>
 {% endblock %}

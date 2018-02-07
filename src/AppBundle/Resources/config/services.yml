@@ -4,4 +4,11 @@ services:
         arguments:
             $hostedEntities: '@surfnet_saml.configuration.hosted_entities'
 
+    AppBundle\Tiqr\TiqrService:
+      factory: 'AppBundle\Tiqr\TiqrFactory:create'
+
+    AppBundle\Tiqr\TiqrFactory:
+      class: AppBundle\Tiqr\TiqrFactory
+      arguments:
+        - '@surfnet_gssp.logger'
 
