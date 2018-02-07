@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'page.sp.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ 'page.sp.sub_title'|trans }}</h2>
+    <form method="post">
+        <div class='alert'>
+            <h2>{{ 'page.sp.registration.title'|trans }}</h2>
+            <button class="button green" name="action" value="register">{{ 'page.sp.register_user'|trans }}</button>
+        </div>
+
+        <div class='alert'>
+            <h2>{{ 'page.sp.authentication.title'|trans }}</h2>
+
+            <label for="NameID">{{ 'saml.subject_name_id'|trans }}</label>
+            <br>
+            <input id="NameID" name="NameID" size="50" type="text">
+            <br>
+            <br>
+            <button class="button green" name="action"
+                    value="authenticate">{{ 'page.sp.authenticate_user'|trans }}</button>
+        </div>
+
+        <div class='alert'>
+            <h2>{{ 'page.sp.common_properties.title'|trans }}</h2>
+            <label for="relayState">{{ 'saml.relay_state'|trans }}</label>
+            <br>
+            <input id="relayState" name="RelayState" size="50" type="text">
+            <br>
+            <br>
+            <label for="X-Stepup-Request-Id">X-Stepup-Request-Id</label>
+            <br>
+            <input id="X-Stepup-Request-Id" name="X-Stepup-Request-Id" size="50" type="text">
+            <br>
+        </div>
+
+    </form>
+{% endblock %}

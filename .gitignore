@@ -1,0 +1,44 @@
+# IDE files #
+#############
+.idea
+
+# Web application ignores #
+###########################
+
+/.web-server-pid
+/app/config/parameters.yml
+/build/
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+/vendor/
+/web/bundles/
+/web/css/
+/web/js/
+/web/fonts/
+/web/images/
+/node_modules/
+/web/build
+
+# Vagrant files #
+#################
+vagrant.retry
+.vagrant
+ansible/roles
+
+# Code coverage reports #
+#################
+/coverage/*
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?

@@ -1,0 +1,21 @@
+saml.subject_name_id: Subject NameID
+
+page.registration.title: Register the user
+page.registration.sub_title: Registration
+page.registration.requires_registration: |
+    Warning! There is no active state for the AuthnRequest registration request,
+    user registration will fail now.
+page.registration.register_user: Register user
+page.registration.error_response: Error response
+page.registration.random_default_error: random registration error
+page.registration.submit_error: Return authentication failed
+
+page.authentication.title: Athenticate the user
+page.authentication.sub_title: Authentication
+page.authentication.requires_authentication: |
+    Warning! There is no active state for the AuthnRequest authentication request,
+    user registration will fail now.
+page.authentication.authenticate_user: Authenticate user
+page.authentication.error_response: Error response
+page.authentication.random_default_error: Random authentication error
+page.authentication.submit_error: Return authentication failed

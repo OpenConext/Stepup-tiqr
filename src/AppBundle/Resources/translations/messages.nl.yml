@@ -1,0 +1,21 @@
+saml.subject_name_id: Subject NameID
+
+page.registration.title: Registreer de gebruiker
+page.registration.sub_title: Registratie
+page.registration.requires_registration: |
+    Waarschuwing! Er is geen actieve AuthnRequest registratieaanvraag,
+    het registreren van de gebruiker gaat mislukken.
+page.registration.register_user: Gebruiker registreren
+page.registration.error_response: Foutreactie
+page.registration.random_default_error: willekeurige registratiefout
+page.registration.submit_error: Zend een registratie mislukt response
+
+page.authentication.title: Authenticeer (verifieer) de gebruiker
+page.authentication.sub_title: Verifiëren
+page.authentication.requires_authentication: |
+    Waarschuwing! Er is geen actieve AuthnRequest-verificatieaanvraag,
+    authenticatie van de gebruiker gaat mislukken.
+page.authentication.authenticate_user: Gebruiker verifiëren
+page.authentication.error_response: Foutreactie
+page.authentication.random_default_error: Willekeurige authenticatiefout
+page.authentication.submit_error: Zend een verificatie mislukt response
