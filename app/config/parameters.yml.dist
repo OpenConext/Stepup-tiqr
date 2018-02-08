@@ -14,3 +14,5 @@ parameters:
     saml_remote_sp_certificate: '%kernel.root_dir%/../vendor/surfnet/stepup-gssp-bundle/src/Resources/keys/pieter.aai.surfnet.nl.pem'
     saml_remote_sp_acs: 'https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/saml2-acs.php/default-sp'
 
+    base_url: 'https://tiqr.example.com'
+    tiqr_identity: 'tiqr.example.com'
