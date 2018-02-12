@@ -1,0 +1,75 @@
+service_provider: Service provider
+
+page.title: GSSP SDK
+
+page.header.stepup-gateway-gssp: Wiki
+page.header.stepup-gssp-bundle: GSSP-Bundle
+
+page.navigation.route.homepage: Home
+page.navigation.route.app_identity_registration: Registration
+page.navigation.route.app_identity_authentication: Authentication
+page.navigation.route.gssp_saml_sso: SSO
+page.navigation.route.gssp_saml_sso_return: SSO return
+page.navigation.route.gssp_saml_metadata: Metadata
+page.navigation.route.sp_demo: Demo SP
+
+page.footer.terms: Terms and Conditions
+
+page.index.title: Welcome to the Generic SAML Stepup Provider SDK
+page.index.body.intro: |
+  The application is ready for use. This example project can be used to develop your own implemention of a GSSP verification method.
+  It demonstrates registration and authentication of second factor tokens initiated by a dummy service provider.
+
+page.index.body.sdk_discription: |
+  This Symfony Framework application contains an AppBundle where the example registration and authentication endpoints are implemented. This is the main entry of the application. See DefaultController::registrationAction and DefaultController::authenticateAction.
+  This is the place to implement the logic of the GSSP identity provider. For more information read the README.md file of this project.
+
+page.index.external_sp: External service provider
+page.index.internal_sp: Internal service provider
+
+page.index.body.registration.title: Registration flow
+page.index.body.registration.external.step1.go_to_sp: 1) Go to
+page.index.body.registration.external.step2.select_idp: 2) Select '%idp-entity-id%' from the 'Identity Provide' list
+page.index.body.registration.external.step3.click_login: 3) Click the 'login' button
+page.index.body.registration.external.step4.click_register: 4) Click the 'Register user' button
+
+page.index.body.authentication.title: Authentication flow
+page.index.body.authentication.external.step1.go_to_sp: 1) Go to
+page.index.body.authentication.external.step2.select_idp: 2) Select '%idp-entity-id%' from the 'Identity Provide' list
+page.index.body.authentication.external.step3.fill_subject: 3) Fill in the user NameId in the 'subject' field
+page.index.body.authentication.external.step4.click_login: 4) Click the 'login' button
+page.index.body.authentication.external.step5.click_authenticate: 5) Click the 'Authenticate user' button
+
+page.index.body.registration.internal.step1.go_to_sp: 1) Go to
+page.index.body.registration.internal.step2.click_login: 2) Click the 'login' button
+page.index.body.registration.internal.step3.click_register: 3) Click the 'Register user' button
+
+page.index.body.authentication.internal.step1.go_to_sp: 1) Go to
+page.index.body.authentication.internal.step2.fill_subject: 2) Fill in the user NameId in the 'nameId' field
+page.index.body.authentication.internal.step3.click_login: 3) Click the 'login' button
+page.index.body.authentication.internal.step4.click_authenticate: 4) Click the 'Authenticate user' button
+
+page.route.description.documentation_purpose: |
+  This path is linked in the menu for demo and documentation purposes.
+
+page.route.description.app_identity_registration: |
+  The application path that handles registration, custom registration logic is implemented here.
+
+page.route.description.app_identity_authentication: |
+  The application path that handles authentication, custom authentication logic is implemented here.
+
+page.route.description.gssp_saml_sso: >
+  The user is redirected to this URL where the SAML AuthnRequest is handled by offering the user either registration or authentication.
+
+page.route.description.gssp_saml_sso_return: |
+  The user is redirected to this URL after completing authentication or registration within the GSSP application. The user is then redirected back to the service provider with a SAML response.
+
+  - If the application expects registration or authentication but the user is not yet registered or authenticated by the application, the user will be redirected back to the corresponding path.
+  - Shows a submit button when JavaScript is disabled
+
+page.route.description.sp_demo: |
+  Demo service provider to test the second factor IdP application with.
+  This is not part of the second factor IdP and can only be used in development (app_dev.php) mode.
+
+en: EN
+nl_NL: NL

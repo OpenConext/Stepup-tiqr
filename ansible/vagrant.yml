@@ -1,0 +1,38 @@
+---
+
+- name: Provision vagrant
+  hosts: all
+  become: true
+  vars:
+    app_name: stepup_gssp_example
+    app_root: "/var/www/{{ vhost_name }}"
+    app_web_root: "{{ app_root }}/web"
+    vhost_name: tiqr.example.com
+    nginx_ssl_certificate_subject: "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN={{ ansible_fqdn }}"
+    ntpd_leap_seconds_url: ''
+    nodejs_npm_global_packages:
+      - name: yarn
+
+  handlers:
+   - name: restart php-fpm
+     service: name=php-fpm state=restarted
+
+   - name: restart nginx
+     service: name=nginx state=restarted
+
+   - name: restart rsyslog
+     service: name=rsyslog state=restarted
+
+  tasks:
+  - name: Require Ansible 2
+    assert:
+      that: ansible_version.major == 2
+
+  - include: tasks/main.yml
+
+  - include: tasks/plantuml.yml
+
+  roles:
+  - reallyenglish.ntpd
+  - geerlingguy.nodejs
+  - geerlingguy.java

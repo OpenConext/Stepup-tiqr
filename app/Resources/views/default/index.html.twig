@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>{{ 'page.index.title'|trans }}</h2>
+
+    <div id="guide">
+        <p class="intro">{{ 'page.index.body.intro'|trans }}</p>
+        <br>
+
+        <p>{{ 'page.index.body.sdk_discription'|trans({'%idp-entity-id%': url('gssp_saml_metadata', {})}) }}</p>
+
+        {% if app.environment == 'dev' %}
+
+        <h2>{{ 'page.index.internal_sp'|trans }}</h2>
+        <div class='alert'>
+            <h3>{{ 'page.index.body.registration.title'|trans }}</h3>
+            <ul>
+                <li>{{ 'page.index.body.registration.internal.step1.go_to_sp'|trans }}
+                    <a target="_blank" href="{{ path('sp_demo') }}">{{ path('sp_demo') }}</a>
+                </li>
+                <li>{{ 'page.index.body.registration.internal.step2.click_login'|trans }}</li>
+                <li>{{ 'page.index.body.registration.internal.step3.click_register'|trans }}</li>
+            </ul>
+        </div>
+
+        <div class='alert'>
+            <h3>{{ 'page.index.body.authentication.title'|trans }}</h3>
+            <ul>
+                <li>{{ 'page.index.body.authentication.internal.step1.go_to_sp'|trans }}
+                    <a target="_blank" href="{{ path('sp_demo') }}">{{ path('sp_demo') }}</a>
+                </li>
+                <li>{{ 'page.index.body.authentication.internal.step2.fill_subject'|trans }}</li>
+                <li>{{ 'page.index.body.authentication.internal.step3.click_login'|trans }}</li>
+                <li>{{ 'page.index.body.authentication.internal.step4.click_authenticate'|trans }}</li>
+            </ul>
+        </div>
+
+        {% endif %}
+
+        <h2>{{ 'page.index.external_sp'|trans }}</h2>
+
+        <div class='alert'>
+            <h3>{{ 'page.index.body.registration.title'|trans }}</h3>
+            <ul>
+                <li>{{ 'page.index.body.registration.external.step1.go_to_sp'|trans }}
+                    <a target="_blank" href="{{ demoSpUrl() }}">{{ 'service_provider'|trans }}</a>
+                </li>
+                <li>{{ 'page.index.body.registration.external.step2.select_idp'|trans({'%idp-entity-id%': url('gssp_saml_metadata', {})}) }}</li>
+                <li>{{ 'page.index.body.registration.external.step3.click_login'|trans }}</li>
+                <li>{{ 'page.index.body.registration.external.step4.click_register'|trans }}</li>
+            </ul>
+        </div>
+
+        <div class='alert'>
+            <h3>{{ 'page.index.body.authentication.title'|trans }}</h3>
+            <ul>
+                <li>{{ 'page.index.body.authentication.external.step1.go_to_sp'|trans }}
+                    <a target="_blank" href="{{ demoSpUrl() }}">{{ 'service_provider'|trans }}</a>
+                </li>
+                <li>{{ 'page.index.body.authentication.external.step2.select_idp'|trans({'%idp-entity-id%': url('gssp_saml_metadata', {})}) }}</li>
+                <li>{{ 'page.index.body.authentication.external.step3.fill_subject'|trans }}</li>
+                <li>{{ 'page.index.body.authentication.external.step4.click_login'|trans }}</li>
+                <li>{{ 'page.index.body.authentication.external.step5.click_authenticate'|trans }}</li>
+            </ul>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+---
+
+# Install plantuml
+
+- name: Install graphviz
+  yum:
+    name: graphviz
+    state: present
+
+- stat:
+    path: /usr/bin/plantum1
+  register: st-plantum1
+
+- name: Download plantuml.jar
+  get_url:
+    url: https://sourceforge.net/projects/plantuml/files/plantuml.jar
+    dest: /usr/share/plantuml.jar
+    mode: u=rw,g=rw,o=rw
+  when: st-plantum1.stat.islnk is not defined
+
+- name: Create binary link
+  template:
+    src: 'plantum1.sh.j2'
+    dest: '/usr/bin/plantum1'
+    mode: 'u=xrw,g=xrw,o=rwx'
+  when: st-plantum1.stat.islnk is not defined

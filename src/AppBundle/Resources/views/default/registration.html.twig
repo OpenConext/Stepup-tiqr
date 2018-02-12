@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'page.registration.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ 'page.registration.sub_title'|trans }}</h2>
+
+    {% if not requiresRegistration %}
+        <div class="alert alert-warning">
+            {{ 'page.registration.requires_registration'|trans }}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        <label for="NameID">{{ 'saml.subject_name_id'|trans }}</label>
+        <br>
+        <input id="NameID" name="NameID" size="50" type="text" value="{{ NameID }}">
+        <br>
+        <br>
+        <button id="button_authenticate" name="action" class="button green" value="register">{{ 'page.registration.register_user'|trans }}</button>
+        <br>
+        <br>
+        <label for="message">{{ 'page.registration.error_response'|trans }}</label>
+        <br>
+        <input id="message" name="message" size="50" type="text" value="{{ 'page.registration.random_default_error'|trans }}">
+        <br>
+        <br>
+        <button id="button_error" name="action" class="button gray" value="error">{{ 'page.registration.submit_error'|trans }}</button>
+    </form>
+{% endblock %}
