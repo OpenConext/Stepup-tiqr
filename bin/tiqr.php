@@ -1,44 +1,58 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ .  '/../lib/Tiqr/OATH/OCRA.php';
+
+require_once __DIR__.'/../vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/OATH/OCRA.php';
+require '../vendor/autoload.php';
 
 ini_set("allow_url_fopen=On", true);
 
-function curl_post($url, array $post = NULL, array $options = array())
+function curl_post($url, array $post = null, array $options = array())
 {
-    $defaults = array(
-        CURLOPT_POST => 1,
-        CURLOPT_HEADER => 0,
-        CURLOPT_URL => $url,
-        #CURLOPT_FRESH_CONNECT => 1,
-        CURLOPT_RETURNTRANSFER => 1,
-        #CURLOPT_FORBID_REUSE => 1,
-        CURLOPT_TIMEOUT => 4,
-        CURLOPT_POSTFIELDS => http_build_query($post),
-        CURLOPT_HTTPHEADER => array( 'X-TIQR-Protocol-Version: 2'),
-    );
 
-    $ch = curl_init();
-    curl_setopt_array($ch, ($options + $defaults));
-    if( ! $result = curl_exec($ch))
-    {
-        trigger_error(curl_error($ch));
-    }
-    curl_close($ch);
-    return $result;
+    $client = new GuzzleHttp\Client([
+        'ssl.certificate_authority' => false,
+        'verify' => false,
+        'curl.options' => [
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ],
+    ]);
+    // $req->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+    // $req->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+    $res = $client->post($url, ['form_params' => $post]);
+
+    return $res->getBody()->__toString();
 }
 
-if( $argc < 2)
+function get($url)
+{
+    $client = new GuzzleHttp\Client([
+        'ssl.certificate_authority' => false,
+        'verify' => false,
+        'curl.options' => [
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ],
+    ]);
+    // $req->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, false);
+    // $req->getCurlOptions()->set(CURLOPT_SSL_VERIFYPEER, false);
+    $res = $client->request('GET', $url);
+
+    return $res->getBody()->__toString();
+}
+
+if ($argc < 2) {
     die("need a tiqr URL\n");
+}
 
 $notificationType = 'APNS';
 $notificationAddress = '0000000000111111111122222222223333333333';
 
-$dbfile = __DIR__ . "/userdb.json";
-if (file_exists($dbfile))
+$dbfile = __DIR__."/userdb.json";
+if (file_exists($dbfile)) {
     $userdb = json_decode(file_get_contents($dbfile), true);
-else {
+} else {
     $userdb = [];
 }
 
@@ -46,13 +60,13 @@ else {
 if (preg_match('#^tiqrenroll://#', $argv[1])) {
 
     $url = preg_replace('#^tiqrenroll://#', '', $argv[1]);
-    echo $url . "\n";
-    $metadata = file_get_contents($url);
-    if( $metadata == 'false' ) {
+    echo $url."\n";
+    $metadata = get($url);
+    if ($metadata == 'false') {
         die("metadata gone\n");
     }
     $metadata = json_decode($metadata, true);
-    print_r( $metadata);
+    print_r($metadata);
 
     /*
     (
@@ -90,10 +104,11 @@ if (preg_match('#^tiqrenroll://#', $argv[1])) {
     ));
     echo "$result\n";
 
-    if( $result != "OK") {
-	$result = json_decode($result, true); // {"responseCode":1}
-	if( $result['responseCode'] != 1 )
+    if ($result != "OK") {
+        $result = json_decode($result, true); // {"responseCode":1}
+        if ($result['responseCode'] != 1) {
             die("registration failed");
+        }
     }
 
     // store new identity
@@ -106,10 +121,8 @@ if (preg_match('#^tiqrenroll://#', $argv[1])) {
     $userdb[$serviceid]['identities'][$userid] = $identity;
     $userdb[$serviceid]['identities'][$userid]['secret'] = $secret;
 
-    file_put_contents($dbfile,json_encode($userdb));
-}
-
-# tiqrauth://[<userId>@]<serviceid>/<session>/<challenge>/<spIdentifier>/<protocolVersion>
+    file_put_contents($dbfile, json_encode($userdb));
+} # tiqrauth://[<userId>@]<serviceid>/<session>/<challenge>/<spIdentifier>/<protocolVersion>
 elseif (preg_match('#^tiqrauth://#', $argv[1])) {
 
     $authn = $argv[1];
@@ -117,20 +130,22 @@ elseif (preg_match('#^tiqrauth://#', $argv[1])) {
     list($serviceid, $session, $challenge, $sp, $version) = explode('/', $authn);
 
     $userid = null;
-    if( strpos($serviceid, '@') ) {
-        list($userid, $serviceid) = explode('@',$serviceid);
+    if (strpos($serviceid, '@')) {
+        list($userid, $serviceid) = explode('@', $serviceid);
     }
 
-    if (! $userdb)
+    if (!$userdb) {
         die("userdb not found\n");
+    }
 
     $service = $userdb[$serviceid];
-    $authenticationUrl  = $service['authenticationUrl'];
-    $ocraSuite          = $service['ocraSuite'];
-    $identities         = $service['identities'];
+    $authenticationUrl = $service['authenticationUrl'];
+    $ocraSuite = $service['ocraSuite'];
+    $identities = $service['identities'];
 
-    if( is_null($userid) )
-        $userid = array_slice(array_keys($identities),-1)[0];   // latest element
+    if (is_null($userid)) {
+        $userid = array_slice(array_keys($identities), -1)[0];
+    }   // latest element
     $user = $identities[$userid];  // TODO: match userid
     $secret = $user['secret'];
 
@@ -146,5 +161,5 @@ elseif (preg_match('#^tiqrauth://#', $argv[1])) {
         'notificationAddress' => $notificationAddress,
     ));
     echo "$result\n";
-	// {"responseCode":201,"attemptsLeft":2}
+    // {"responseCode":201,"attemptsLeft":2}
 }
