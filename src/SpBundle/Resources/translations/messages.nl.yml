@@ -1,0 +1,20 @@
+saml.request_id: RequestId
+saml.issuer: Uitgever
+saml.authenticating_authority: Authentictie autoriteit
+saml.relay_state: Relay state
+saml.status: Status
+saml.error: Foutmelding
+
+page.sp.title: Demo service provider
+page.sp.sub_title: Demo service provider
+
+page.sp.authentication.title: Verificatie
+page.sp.authenticate_user: Gebruiker verifiëren
+
+page.sp.registration.title: Registratie
+page.sp.register_user: Registreer gebruiker
+
+page.acs.title: Demo service provider ACS
+page.acs.sub_title: Demo serviceprovider ConsumerAssertionService endpoint
+
+page.sp.common_properties.title: Algemeene request parameters

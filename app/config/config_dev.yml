@@ -1,0 +1,64 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    router:
+        resource: '%kernel.project_dir%/app/config/routing_dev.yml'
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!event']
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ['!event', '!doctrine', '!console']
+        # To follow logs in real time, execute the following command:
+        # `bin/console server:log -vv`
+        server_log:
+            type: server_log
+            process_psr_3_messages: false
+            host: 127.0.0.1:9911
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type: firephp
+        #    level: info
+        #chromephp:
+        #    type: chromephp
+        #    level: info
+
+surfnet_saml:
+    hosted:
+        identity_provider:
+            enabled: true
+            service_provider_repository: surfnet_saml.remote.service_providers
+            sso_route: gssp_saml_sso
+            public_key: "%saml_idp_publickey%"
+            private_key: "%saml_idp_privatekey%"
+        service_provider:
+            enabled: true
+            assertion_consumer_route: sp_demo_acs
+            public_key: "%saml_idp_publickey%"
+            private_key: "%saml_idp_privatekey%"
+        metadata:
+            entity_id_route: gssp_saml_metadata
+            public_key: "%saml_metadata_publickey%"
+            private_key: "%saml_metadata_privatekey%"
+    remote:
+        service_providers:
+            - entity_id: "%saml_remote_sp_entity_id%"
+              certificate_file: "%saml_remote_sp_certificate%"
+              assertion_consumer_service_url: "%saml_remote_sp_acs%"
+            - entity_id: https://tiqr.example.com/app_dev.php/saml/metadata
+              certificate_file: "%saml_idp_publickey%"
+              assertion_consumer_service_url: https://tiqr.example.com/app_dev.php/demo/sp/acs

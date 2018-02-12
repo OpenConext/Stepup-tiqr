@@ -1,0 +1,7 @@
+services:
+    sp.controller:
+      class: SpBundle\Controller\SPController
+      arguments:
+        - '@surfnet_saml.hosted.service_provider'
+        - '@surfnet_saml.hosted.identity_provider'
+        - '@surfnet_saml.http.post_binding'

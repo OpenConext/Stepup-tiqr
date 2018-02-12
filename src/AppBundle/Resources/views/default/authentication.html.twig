@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'page.authentication.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ 'page.authentication.sub_title'|trans }}</h2>
+
+    {% if not requiresAuthentication %}
+        <div class="alert alert-warning">
+            {{ 'page.authentication.requires_authentication'|trans }}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        <label for="NameID">{{ 'saml.subject_name_id'|trans }}</label>
+        <br>
+        <br>
+        <p style="background: white">{{ NameID }}</p>
+        <br>
+        <button id="button_authenticate" name="action" class="button green" value="authenticate">{{ 'page.authentication.authenticate_user'|trans }}</button>
+        <br>
+        <br>
+        <label for="message">{{ 'page.authentication.error_response'|trans }}</label>
+        <br>
+        <input id="message" name="message" size="50" type="text" value="{{ 'page.authentication.random_default_error'|trans }}">
+        <br>
+        <br>
+        <button id="button_error" name="action" class="button gray" value="error">{{ 'page.authentication.submit_error'|trans }}</button>
+    </form>
+{% endblock %}

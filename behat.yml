@@ -1,0 +1,38 @@
+default:
+    formatters:
+        progress:
+            paths: false
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            base_url: https://tiqr.example.com
+            default_session: 'symfony2'
+            goutte:
+               guzzle_parameters:
+                    curl.CURLOPT_SSL_VERIFYPEER: false
+                    curl.CURLOPT_CERTINFO: false
+                    ssl.certificate_authority: false
+                    verify: false
+            sessions:
+                symfony2:
+                    symfony2: ~
+
+        Behatch\Extension: ~
+    suites:
+        app_bundle:
+            type: symfony_bundle
+            contexts:
+                - AppBundle\Features\Context\WebContext
+                - AppBundle\Features\Context\ErrorReportContext
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:context:xml
+            bundle: 'AppBundle'
+        sp_bundle:
+            type: symfony_bundle
+            contexts:
+                - AppBundle\Features\Context\WebContext
+                - AppBundle\Features\Context\ErrorReportContext
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:context:xml
+            bundle: 'SpBundle'
+
