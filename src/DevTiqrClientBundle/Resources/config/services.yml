@@ -20,6 +20,10 @@ services:
         arguments:
             $client: '@app_http_client'
 
+    DevTiqrClientBundle\Command\AuthenticationCommand:
+        arguments:
+            $client: '@app_http_client'
+
     app_http_client:
         class: GuzzleHttp\Client
         factory: ['DevTiqrClientBundle\HttpClientFactory', 'create']

@@ -35,7 +35,7 @@ interface TiqrUserRepositoryInterface
     /**
      * @param string $userId
      *
-     * @return TiqrUser
+     * @return TiqrUserInterface
      *
      * @throws \AppBundle\Tiqr\Exception\UserNotExistsException
      */

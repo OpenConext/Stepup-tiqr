@@ -15,20 +15,38 @@
  * limitations under the License.
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Tiqr\Response;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-class DefaultController extends Controller
+class ValidAuthenticationResponse implements AuthenticationResponse
 {
+    private $message;
+
     /**
-     * Replace this example code with whatever you need/
      *
-     * @Route("/", name="homepage")
+     * @param string $message
      */
-    public function indexAction()
+    public function __construct($message)
     {
-        return $this->render('default/index.html.twig');
+        $this->message = $message;
+    }
+
+    /**
+     * If the authentication is valid.
+     *
+     * @return boolean
+     */
+    public function isValid()
+    {
+        return true;
+    }
+
+    /**
+     * The success or error message for the client app.
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 }

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-namespace AppBundle\Tiqr;
+namespace AppBundle\Tiqr\Legacy;
 
 use AppBundle\Tiqr\Exception\UserNotExistsException;
+use AppBundle\Tiqr\Legacy\TiqrUser;
+use AppBundle\Tiqr\TiqrUserRepositoryInterface;
 
 /**
  * Wrapper around the legacy Tiqr user repository.

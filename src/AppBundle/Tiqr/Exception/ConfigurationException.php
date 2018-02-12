@@ -15,20 +15,22 @@
  * limitations under the License.
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Tiqr\Exception;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-class DefaultController extends Controller
+final class ConfigurationException extends \Exception
 {
-    /**
-     * Replace this example code with whatever you need/
-     *
-     * @Route("/", name="homepage")
-     */
-    public function indexAction()
+    public static function noMaximumDuration()
     {
-        return $this->render('default/index.html.twig');
+        return new self('There is no maximum duration to block an user');
+    }
+
+    public static function noMaxAttempts()
+    {
+        return new self('An user can have unlimited attempts');
+    }
+
+    public static function noMaxTemporaryAttempts()
+    {
+        return new self('An user can have unlimited temporary block attempts');
     }
 }

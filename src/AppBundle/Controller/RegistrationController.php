@@ -68,6 +68,6 @@ class RegistrationController extends Controller
         }
         $key = $this->tiqrService->generateEnrollmentKey();
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
-        $this->tiqrService->exitWithEnrollmentQR($metadataURL);
+        $this->tiqrService->exitWithRegistrationQR($metadataURL);
     }
 }

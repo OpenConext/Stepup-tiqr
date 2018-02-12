@@ -17,6 +17,8 @@
 
 namespace AppBundle\Tiqr;
 
+use AppBundle\Tiqr\Response\AuthenticationResponse;
+
 interface TiqrServiceInterface
 {
     /**
@@ -26,7 +28,7 @@ interface TiqrServiceInterface
      *
      * @param string $metadataURL
      */
-    public function exitWithEnrollmentQR($metadataURL);
+    public function exitWithRegistrationQR($metadataURL);
 
     /**
      * Get a temporary enrollment secret to be able to securely post a user
@@ -110,4 +112,34 @@ interface TiqrServiceInterface
      * @return boolean True if succesful
      */
     public function finalizeEnrollment($enrollmentSecret);
+
+    /**
+     * Generate an authentication challenge URL.
+     * This URL can be used to link directly to the authentication
+     * application, for example to create a link in a mobile website on the
+     * same device as where the application is installed
+     *
+     * @param string $nameId
+     *
+     * @return string
+     */
+    public function startAuthentication($nameId);
+
+    /**
+     * @return boolean
+     */
+    public function isAuthenticated();
+
+    public function exitWithAuthenticationQR();
+
+    public function authenticationUrl();
+
+    /**
+     * @param TiqrUserInterface $user
+     * @param string $response
+     * @param string $sessionKey
+     *
+     * @return AuthenticationResponse
+     */
+    public function authenticate(TiqrUserInterface $user, $response, $sessionKey);
 }
