@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Tiqr\TiqrService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
@@ -28,13 +29,19 @@ class DefaultController extends Controller
 {
     private $authenticationService;
     private $registrationService;
+    /**
+     * @var TiqrService
+     */
+    private $tiqrService;
 
     public function __construct(
         AuthenticationService $authenticationService,
-        RegistrationService $registrationService
+        RegistrationService $registrationService,
+        TiqrService $tiqrSerice
     ) {
         $this->authenticationService = $authenticationService;
         $this->registrationService = $registrationService;
+        $this->tiqrService = $tiqrSerice;
     }
 
     /**

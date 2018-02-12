@@ -15,18 +15,25 @@
  * limitations under the License.
  */
 
-namespace SpBundle\DependencyInjection;
+namespace AppBundle\Tiqr;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-
-class SpExtension extends Extension
+/**
+ * Wrapper around the legacy Tiqr service.
+ */
+class TiqrService
 {
-    public function load(array $configs, ContainerBuilder $container)
+    /**
+     * @var \Tiqr_Service
+     */
+    private $tiqrService;
+    /**
+     * @var \Tiqr_UserStorage_Interface
+     */
+    private $userStorage;
+
+    public function __construct($tiqrService, $userStorage)
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
+        $this->tiqrService = $tiqrService;
+        $this->userStorage = $userStorage;
     }
 }
