@@ -11,15 +11,15 @@ services:
 
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
-    DemoAppBundle\Controller\:
+    DevTiqrClientBundle\Controller\:
         resource: '../../Controller'
         public: true
         tags: ['controller.service_arguments']
 
-    DemoAppBundle\Command\AppRegistrationCommand:
+    DevTiqrClientBundle\Command\RegistrationCommand:
         arguments:
-            $client: '@demo_app_demo_http_client'
+            $client: '@app_http_client'
 
-    demo_app_demo_http_client:
+    app_http_client:
         class: GuzzleHttp\Client
-        factory: ['DemoAppBundle\DemoAppHttpClientFactory', 'create']
+        factory: ['DevTiqrClientBundle\HttpClientFactory', 'create']

@@ -16,3 +16,7 @@ _main:
 sp:
     resource: '@SpBundle/Controller/'
     type: annotation
+
+demo_app:
+    resource: '@DevTiqrClientBundle/Controller/'
+    type: annotation

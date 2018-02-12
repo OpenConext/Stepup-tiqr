@@ -18,32 +18,48 @@
 namespace AppBundle\Tiqr;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tiqr_Service;
 use Tiqr_UserStorage;
 
-class TiqrServiceFactory
+class TiqrFactory
 {
     private $configuration;
     private $container;
+    private $session;
+    private $loaded = false;
 
     public function __construct(
         TiqrConfiguration $configuration,
-        ContainerInterface $container
+        ContainerInterface $container,
+        SessionInterface $session
     ) {
         $this->configuration = $configuration;
         $this->container = $container;
+        $this->session = $session;
     }
 
-    public function create()
+    public function createService()
+    {
+        $this->loadDependencies();
+        $options = $this->configuration->getTiqrOptions();
+        return new TiqrService(new Tiqr_Service($options), $this->session);
+    }
+
+    public function createUserRepository()
     {
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
         $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
-        return new TiqrService(new Tiqr_Service($options), $userStorage);
+        return new TiqrUserRepository($userStorage);
     }
 
     private function loadDependencies()
     {
+        if ($this->loaded) {
+            return;
+        }
+        $this->loaded = true;
         $projectDirectory = $this->container->getParameter('kernel.project_dir');
         $vendorPath = $projectDirectory.'/vendor';
         require_once $vendorPath.'/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';

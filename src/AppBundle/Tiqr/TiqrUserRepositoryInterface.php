@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,29 @@
  * limitations under the License.
  */
 
-namespace DemoAppBundle\DependencyInjection;
+namespace AppBundle\Tiqr;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-
-class DemoAppExtension extends Extension
+/**
+ * Wrapper around the legacy Tiqr user repository.
+ */
+interface TiqrUserRepositoryInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
-    {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
-    }
+    /**
+     * Create new tiqr user.
+     *
+     * @param string $userId
+     * @param string $secret
+     *
+     * @return TiqrUserInterface
+     */
+    public function createUser($userId, $secret);
+
+    /**
+     * @param string $userId
+     *
+     * @return TiqrUser
+     *
+     * @throws \AppBundle\Tiqr\Exception\UserNotExistsException
+     */
+    public function getUser($userId);
 }

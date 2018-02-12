@@ -2,6 +2,8 @@ saml.subject_name_id: Subject NameID
 
 page.registration.title: Registreer de gebruiker
 page.registration.sub_title: Registratie
+page.registration.scan_qr: Scan deze code om uw telefoon aan te melden met dit nieuwe account.
+
 page.registration.requires_registration: |
     Waarschuwing! Er is geen actieve AuthnRequest registratieaanvraag,
     het registreren van de gebruiker gaat mislukken.

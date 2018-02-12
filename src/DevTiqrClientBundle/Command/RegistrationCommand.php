@@ -1,7 +1,21 @@
 <?php
+/**
+ * Copyright 2018 SURFnet B.V.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-
-namespace DemoAppBundle\Command;
+namespace DevTiqrClientBundle\Command;
 
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
@@ -9,7 +23,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AppRegistrationCommand extends Command
+class RegistrationCommand extends Command
 {
     private $client;
 
@@ -22,7 +36,7 @@ class AppRegistrationCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:demo:register')
+            ->setName('test:registration')
             ->setDescription('Register the app with registration url.')
             ->addArgument('url', InputArgument::OPTIONAL, <<<TEXT
 'The registration url if not given automatically fetched from /app_dev.php/registration/qr/link .'
@@ -86,8 +100,7 @@ TEXT
         ]);
 
         if ($resultBody !== 'OK' || $result->getStatusCode() !== 200) {
-            $output->writeln('<error>Enrollment failed "%s"</error>');
-
+            $output->writeln('<error>Enrollment failed</error>');
             return;
         }
         $output->writeln('<info>Enrollment succeeded</info>');

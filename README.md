@@ -5,10 +5,9 @@ Stepup-tiqr
     <img src="https://travis-ci.org/OpenConext/Stepup-tiqr-bundle.svg?branch=master" alt="build:">
 </a></br>
 
-GSSP implementation of Tiqr. (https://tiqr.org/documentation/)[https://tiqr.org/documentation/]
+GSSP implementation of Tiqr. [https://tiqr.org/documentation/](https://tiqr.org/documentation/)
 
-Project is based on example GSSP project (https://github.com/OpenConext/Stepup-gssp-example)[]
-
+Project is based on example GSSP project [https://github.com/OpenConext/Stepup-gssp-example]()
 
 Locale user preference
 ----------------------
@@ -28,19 +27,46 @@ regenerate docs/flow.png with `plantum1 README.md` or with http://www.plantuml.c
 @startuml docs/flow
 actor User
 participant "Service provider" as SP
-box "Stepup GSSP example"
+box "Stepup Tiqr"
 participant "GSSP Bundle" as IdP
-participant "SecondFactor implementation" as App
+participant "Tiqr implementation" as TiqrSF
 end box
 User -> SP: Register/Authenticate
 SP -> IdP: Send AuthnRequest
 activate IdP
-IdP -> App: Redirect to SecondFactor endpoint
-App -> App: <Your custom SecondFactor implementation>
-App -> IdP: Redirect to SSO Return endpoint
+IdP -> TiqrSF: Redirect to SecondFactor endpoint
+TiqrSF -> TiqrSF: <Tiqr logic>
+TiqrSF -> IdP: Redirect to SSO Return endpoint
 IdP -> SP: AuthnRequest response
 deactivate IdP
 SP -> User: User registered/Authenticated
+@enduml
+--->
+
+Tiqr registration
+-----------------
+
+![flow](docs/tiqr_registration.png)
+<!---
+regenerate docs/tiqr_registration.png with `plantum1 README.md` or with http://www.plantuml.com/plantuml
+@startuml docs/tiqr_registration
+actor User
+participant "Website" as Site
+participant "App" as App
+participant "Api" as Api
+activate Site
+Site -> User: Show QR code
+App -> Site: Scan the registration code
+deactivate Site
+activate App
+App -> Api: Request the metadata endpoint 
+App -> User: Asks for verification code
+App -> Api: Registers user with secret and OTP
+deactivate App
+activate Site
+Site -> Api: Asks the api if the user is registered
+Site -> User: Registration done
+deactivate Site
 @enduml
 --->
 
@@ -99,6 +125,17 @@ To run all required test you can run the following commands from the dev env:
 ```
 
 Every part can be run separately. Check "scripts" section of the composer.json file for the different options.
+
+Test tiqr api's
+---------------
+
+``` ./bin/console test:registration ```
+
+or with registration url:
+ 
+In development mode you can get a registration url by ```/registration/qr/link``` 
+ 
+``` ./bin/console test:registration https://tiqr.example.com/app_dev.php/tiqr.php?key=6efb4ebe4aba41529b4f2205939fc7b8b5724c1cea5b92c54cc4e9a49d075e90```  
 
 Release instructions project
 ============================

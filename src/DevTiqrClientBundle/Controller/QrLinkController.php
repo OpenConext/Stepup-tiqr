@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace DemoAppBundle\Controller;
+namespace DevTiqrClientBundle\Controller;
 
 use AppBundle\Tiqr\TiqrService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,23 +25,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Demo Tiqr app controller.
+ * Exposes the qr codes as links.
  */
-final class DemoAppController extends Controller
+final class QrLinkController extends Controller
 {
     private $tiqrService;
 
     public function __construct(TiqrService $tiqrService)
     {
         $this->tiqrService = $tiqrService;
-    }
-
-    /**
-     * @Route("/demo/app", name="demo_phone")
-     */
-    public function indexAction()
-    {
-        return $this->render('DemoAppBundle:default:index.html.twig');
     }
 
     /**
