@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tiqr_Service;
 use Tiqr_UserStorage;
 
-class TiqrFactory
+class TiqrServiceFactory
 {
     private $configuration;
     private $container;

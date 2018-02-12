@@ -32,4 +32,4 @@ services:
     AppBundle\Tiqr\TiqrService:
       public: true
       class: AppBundle\Tiqr\TiqrService
-      factory: 'AppBundle\Tiqr\TiqrFactory:create'
+      factory: 'AppBundle\Tiqr\TiqrServiceFactory:create'
