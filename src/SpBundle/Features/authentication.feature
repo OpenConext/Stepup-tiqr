@@ -1,3 +1,4 @@
+@skip
 @remote
 Feature: When an user needs to authenticate
   As a service provider

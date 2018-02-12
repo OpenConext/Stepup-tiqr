@@ -15,27 +15,12 @@
  * limitations under the License.
  */
 
-namespace DemoAppBundle;
+namespace AppBundle\Tiqr\Exception;
 
-use GuzzleHttp\Client;
-
-/**
- * !! This is not a safe http client, it ignores invalid SSL certificates. !!
- */
-class DemoAppHttpClientFactory
+final class UserNotExistsException extends \Exception
 {
-    public function create()
+    public static function createFromId($userId)
     {
-        // TODO: make the hostname configurable.
-        return new Client([
-            'base_uri' => 'https://tiqr.example.com',
-            'ssl.certificate_authority' => false,
-            'verify' => false,
-            'headers' => ['Accept' => 'application/json'],
-            'curl.options' => [
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_SSL_VERIFYHOST => 0,
-            ],
-        ]);
+        return new self(sprintf('User with id "%s"', $userId));
     }
 }

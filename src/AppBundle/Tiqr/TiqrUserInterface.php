@@ -15,10 +15,23 @@
  * limitations under the License.
  */
 
-namespace DemoAppBundle;
+namespace AppBundle\Tiqr;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-class DemoAppBundle extends Bundle
+interface TiqrUserInterface
 {
+    /**
+     * Get the display name of a user.
+     *
+     * @return String the display name of this user
+     */
+    public function getDisplayName();
+
+    /**
+     * Get the user's secret
+     *
+     * @return String The user's secret
+     */
+    public function getSecret();
+
+    public function updateNotification($notificationType, $notificationAddress);
 }

@@ -57,34 +57,6 @@ class DefaultController extends Controller
     /**
      * Replace this example code with whatever you need.
      *
-     * See @see RegistrationService for a more clean example.
-     *
-     * @Route("/registration", name="app_identity_registration")
-     */
-    public function registrationAction(Request $request)
-    {
-        if ($request->get('action') === 'error') {
-            $this->registrationService->reject($request->get('message'));
-            return $this->registrationService->replyToServiceProvider();
-        }
-
-        if ($request->get('action') === 'register') {
-            $this->registrationService->register($request->get('NameID'));
-            return $this->registrationService->replyToServiceProvider();
-        }
-
-        $requiresRegistration = $this->registrationService->registrationRequired();
-        $response = new Response(null, $requiresRegistration ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
-
-        return $this->render('AppBundle:default:registration.html.twig', [
-            'requiresRegistration' => $requiresRegistration,
-            'NameID' => uniqid('test-prefix-', 'test-entropy'),
-        ], $response);
-    }
-
-    /**
-     * Replace this example code with whatever you need.
-     *
      * See @see AuthenticationService for a more clean example.
      *
      * @Route("/authentication", name="app_identity_authentication")

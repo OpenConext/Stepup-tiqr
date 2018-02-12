@@ -17,23 +17,73 @@
 
 namespace AppBundle\Tiqr;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 /**
  * Wrapper around the legacy Tiqr service.
  */
-class TiqrService
+final class TiqrService implements TiqrServiceInterface
 {
     /**
      * @var \Tiqr_Service
      */
     private $tiqrService;
-    /**
-     * @var \Tiqr_UserStorage_Interface
-     */
-    private $userStorage;
+    private $session;
 
-    public function __construct($tiqrService, $userStorage)
+    public function __construct($tiqrService, SessionInterface $session)
     {
         $this->tiqrService = $tiqrService;
-        $this->userStorage = $userStorage;
+        $this->session = $session;
+    }
+
+    public function exitWithEnrollmentQR($metadataURL)
+    {
+        $this->tiqrService->generateEnrollmentQR($metadataURL);
+        exit(200);
+    }
+
+    public function getEnrollmentSecret($key)
+    {
+        return $this->tiqrService->getEnrollmentSecret($key);
+    }
+
+    /**
+     * Starts and generates an enrollment key.
+     *
+     * @return string
+     */
+    public function generateEnrollmentKey()
+    {
+        $id = $this->generateId();
+        return $this->tiqrService->startEnrollmentSession($id, 'SURFconext', $this->session->getId());
+    }
+
+    public function getEnrollmentMetadata($key, $loginUri, $enrollmentUrl)
+    {
+        return $this->tiqrService->getEnrollmentMetadata($key, $loginUri, $enrollmentUrl);
+    }
+
+    public function validateEnrollmentSecret($enrollmentSecret)
+    {
+        return $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
+    }
+
+    public function finalizeEnrollment($enrollmentSecret)
+    {
+        $this->tiqrService->finalizeEnrollment($enrollmentSecret);
+    }
+
+    /**
+     * Currently the legacy way to generate the user Tiqr id.
+     *
+     * TODO:maybe use something like UUID?
+     *
+     * @param int $length
+     *
+     * @return string
+     */
+    private function generateId($length = 4)
+    {
+        return base_convert(time(), 10, 36).'-'.base_convert(mt_rand(0, pow(36, $length)), 10, 36);
     }
 }

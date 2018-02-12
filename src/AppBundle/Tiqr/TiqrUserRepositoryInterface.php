@@ -15,27 +15,29 @@
  * limitations under the License.
  */
 
-namespace DemoAppBundle;
-
-use GuzzleHttp\Client;
+namespace AppBundle\Tiqr;
 
 /**
- * !! This is not a safe http client, it ignores invalid SSL certificates. !!
+ * Wrapper around the legacy Tiqr user repository.
  */
-class DemoAppHttpClientFactory
+interface TiqrUserRepositoryInterface
 {
-    public function create()
-    {
-        // TODO: make the hostname configurable.
-        return new Client([
-            'base_uri' => 'https://tiqr.example.com',
-            'ssl.certificate_authority' => false,
-            'verify' => false,
-            'headers' => ['Accept' => 'application/json'],
-            'curl.options' => [
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_SSL_VERIFYHOST => 0,
-            ],
-        ]);
-    }
+    /**
+     * Create new tiqr user.
+     *
+     * @param string $userId
+     * @param string $secret
+     *
+     * @return TiqrUserInterface
+     */
+    public function createUser($userId, $secret);
+
+    /**
+     * @param string $userId
+     *
+     * @return TiqrUser
+     *
+     * @throws \AppBundle\Tiqr\Exception\UserNotExistsException
+     */
+    public function getUser($userId);
 }
