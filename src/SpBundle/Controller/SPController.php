@@ -18,10 +18,13 @@
 namespace SpBundle\Controller;
 
 use DOMDocument;
-use SAML2_Certificate_PrivateKeyLoader;
-use SAML2_Configuration_PrivateKey;
-use SAML2_DOMDocumentFactory;
-use SAML2_Response;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
+use SAML2\Assertion;
+use SAML2\Certificate\PrivateKeyLoader;
+use SAML2\Configuration\PrivateKey;
+use SAML2\DOMDocumentFactory;
+use SAML2\Message;
+use SAML2\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
@@ -33,7 +36,6 @@ use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use XMLSecurityKey;
 
 /**
  * Demo SP.
@@ -60,6 +62,8 @@ final class SPController extends Controller
      * @Route("/demo/sp", name="sp_demo")
      *
      * See @see RegistrationService for a more clean example.
+     *
+     * @throws \Exception
      */
     public function demoSpAction(Request $request)
     {
@@ -106,11 +110,17 @@ final class SPController extends Controller
         $xmlResponse = $request->request->get('SAMLResponse');
         $xml = base64_decode($xmlResponse);
         try {
+            /** @var Assertion $response */
             $response = $this->postBinding->processResponse($request, $this->identityProvider, $this->serviceProvider);
+
+            $nameID = $response->getNameId();
 
             return $this->render('SpBundle:default:acs.html.twig', [
                 'requestId' => $response->getId(),
-                'nameId' => $response->getNameId(),
+                'nameId' => $nameID ? [
+                    'value' => $nameID->value,
+                    'format' => $nameID->Format,
+                ] : [],
                 'issuer' => $response->getIssuer(),
                 'relayState' => $request->get(AuthnRequest::PARAMETER_RELAY_STATE, ''),
                 'authenticatingAuthority' => $response->getAuthenticatingAuthority(),
@@ -152,10 +162,12 @@ final class SPController extends Controller
      *
      * @param array $queryParams
      * @return string
+     *
+     * @throws \Exception
      */
     private function signRequestQuery(array $queryParams)
     {
-        /** @var \XMLSecurityKey $securityKey */
+        /** @var  $securityKey */
         $securityKey = $this->loadServiceProviderPrivateKey();
         $queryParams[AuthnRequest::PARAMETER_SIGNATURE_ALGORITHM] = $securityKey->type;
         $toSign = http_build_query($queryParams);
@@ -168,12 +180,14 @@ final class SPController extends Controller
      * Loads the private key from the service provider.
      *
      * @return XMLSecurityKey
+     *
+     * @throws \Exception
      */
     private function loadServiceProviderPrivateKey()
     {
-        $keyLoader = new SAML2_Certificate_PrivateKeyLoader();
+        $keyLoader = new PrivateKeyLoader();
         $privateKey = $keyLoader->loadPrivateKey(
-            $this->serviceProvider->getPrivateKey(SAML2_Configuration_PrivateKey::NAME_DEFAULT)
+            $this->serviceProvider->getPrivateKey(PrivateKey::NAME_DEFAULT)
         );
         $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
         $key->loadKey($privateKey->getKeyAsString());
@@ -184,14 +198,16 @@ final class SPController extends Controller
     /**
      * @param string $xml
      *
-     * @return SAML2_Response
+     * @return Message
+     *
+     * @throws \Exception
      */
     private function toUnsignedErrorResponse($xml)
     {
         $previous = libxml_disable_entity_loader(true);
-        $asXml = SAML2_DOMDocumentFactory::fromString($xml);
+        $asXml = DOMDocumentFactory::fromString($xml);
         libxml_disable_entity_loader($previous);
 
-        return SAML2_Response::fromXML($asXml->documentElement);
+        return Response::fromXML($asXml->documentElement);
     }
 }

@@ -17,7 +17,7 @@
 
 namespace DevTiqrClientBundle\Controller;
 
-use AppBundle\Tiqr\TiqrService;
+use AppBundle\Tiqr\TiqrServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,7 +31,7 @@ final class QrLinkController extends Controller
 {
     private $tiqrService;
 
-    public function __construct(TiqrService $tiqrService)
+    public function __construct(TiqrServiceInterface $tiqrService)
     {
         $this->tiqrService = $tiqrService;
     }

@@ -17,10 +17,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Tiqr\TiqrService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
-use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,20 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     private $authenticationService;
-    private $registrationService;
-    /**
-     * @var TiqrService
-     */
-    private $tiqrService;
 
     public function __construct(
-        AuthenticationService $authenticationService,
-        RegistrationService $registrationService,
-        TiqrService $tiqrSerice
+        AuthenticationService $authenticationService
     ) {
         $this->authenticationService = $authenticationService;
-        $this->registrationService = $registrationService;
-        $this->tiqrService = $tiqrSerice;
     }
 
     /**

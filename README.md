@@ -64,7 +64,7 @@ App -> User: Asks for verification code
 App -> Api: Registers user with secret and OTP
 deactivate App
 activate Site
-Site -> Api: Asks the api if the user is registered
+Site -> Api: Asks the Api if the user is registered
 Site -> User: Registration done
 deactivate Site
 @enduml
@@ -126,7 +126,7 @@ To run all required test you can run the following commands from the dev env:
 
 Every part can be run separately. Check "scripts" section of the composer.json file for the different options.
 
-Test tiqr api's
+Test Tiqr Api's
 ---------------
 
 ``` ./bin/console test:registration ```

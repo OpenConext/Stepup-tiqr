@@ -1,8 +1,12 @@
 services:
+services:
     AppBundle\Twig\GsspExtension:
         tags: [twig.extension]
         arguments:
-            $hostedEntities: '@surfnet_saml.configuration.hosted_entities'
+            $hostedEntities: '@Surfnet\SamlBundle\Entity\HostedEntities'
+
+    Surfnet\SamlBundle\Entity\HostedEntities:
+      alias: surfnet_saml.configuration.hosted_entities
 
     # default configuration for services in *this* file
     _defaults:
@@ -29,7 +33,7 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    AppBundle\Tiqr\TiqrService:
+    AppBundle\Tiqr\TiqrServiceInterface:
       public: true
       class: AppBundle\Tiqr\TiqrService
       factory: 'AppBundle\Tiqr\TiqrFactory:createService'
