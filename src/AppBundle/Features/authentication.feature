@@ -1,3 +1,4 @@
+@skip
 Feature: When an user needs to authenticate
   As a service provider
   I need to send an AuthnRequest with a nameID to the identity provider

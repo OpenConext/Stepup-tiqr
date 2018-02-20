@@ -17,10 +17,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Tiqr\TiqrService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
-use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,20 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     private $authenticationService;
-    private $registrationService;
-    /**
-     * @var TiqrService
-     */
-    private $tiqrService;
 
     public function __construct(
-        AuthenticationService $authenticationService,
-        RegistrationService $registrationService,
-        TiqrService $tiqrSerice
+        AuthenticationService $authenticationService
     ) {
         $this->authenticationService = $authenticationService;
-        $this->registrationService = $registrationService;
-        $this->tiqrService = $tiqrSerice;
     }
 
     /**
@@ -52,34 +41,6 @@ class DefaultController extends Controller
     public function indexAction()
     {
         return $this->render('default/index.html.twig');
-    }
-
-    /**
-     * Replace this example code with whatever you need.
-     *
-     * See @see RegistrationService for a more clean example.
-     *
-     * @Route("/registration", name="app_identity_registration")
-     */
-    public function registrationAction(Request $request)
-    {
-        if ($request->get('action') === 'error') {
-            $this->registrationService->reject($request->get('message'));
-            return $this->registrationService->replyToServiceProvider();
-        }
-
-        if ($request->get('action') === 'register') {
-            $this->registrationService->register($request->get('NameID'));
-            return $this->registrationService->replyToServiceProvider();
-        }
-
-        $requiresRegistration = $this->registrationService->registrationRequired();
-        $response = new Response(null, $requiresRegistration ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST);
-
-        return $this->render('AppBundle:default:registration.html.twig', [
-            'requiresRegistration' => $requiresRegistration,
-            'NameID' => uniqid('test-prefix-', 'test-entropy'),
-        ], $response);
     }
 
     /**

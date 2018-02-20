@@ -2,6 +2,8 @@ saml.subject_name_id: Subject NameID
 
 page.registration.title: Register the user
 page.registration.sub_title: Registration
+page.registration.scan_qr: Scan this code to enroll your phone with this new account.
+
 page.registration.requires_registration: |
     Warning! There is no active state for the AuthnRequest registration request,
     user registration will fail now.
