@@ -21,6 +21,7 @@ use AppBundle\Tiqr\TiqrServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
@@ -51,20 +52,31 @@ class AuthenticationController extends Controller
         // Are we already logged in with tiqr?
         if ($this->tiqrService->isAuthenticated()) {
             $this->authenticationService->authenticate();
+
             return $this->authenticationService->replyToServiceProvider();
         }
 
         // Start authentication process.
         try {
-            $authUrl = $this->tiqrService->startAuthentication($nameId);
+            $this->tiqrService->startAuthentication($nameId);
         } catch (\Exception $e) {
             $this->authenticationService->reject($e->getMessage());
+
             return $this->authenticationService->replyToServiceProvider();
         }
 
-        return $this->render('AppBundle:default:authentication.html.twig', [
-            'authUrl' => $authUrl,
-        ]);
+        return $this->render('AppBundle:default:authentication.html.twig', []);
+    }
+
+    /**
+     * @Route("/authentication/status", name="app_identity_authentication_status")
+     */
+    public function authenticationStatusAction()
+    {
+        if (!$this->authenticationService->authenticationRequired()) {
+            return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
+        }
+        return new JsonResponse($this->tiqrService->isAuthenticated());
     }
 
     /**

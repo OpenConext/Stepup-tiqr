@@ -73,7 +73,9 @@ TEXT
     {
         // Fetching the metadata from the Tiqr IDP.
         $url = $input->getArgument('url');
-        if (!$url) {
+        if (is_file($url)) {
+            $url = $this->readAuthenticationLinkFromFile($url, $output);
+        } elseif (!$url) {
             $nameId = $input->getOption('nameId');
             if ($nameId === null) {
                 $service = $this->getService('tiqr.example.com');
@@ -179,6 +181,25 @@ TEXT
             ->getContents();
 
         $qrcode = new \QrReader($blob, \QrReader::SOURCE_TYPE_BLOB);
+        $link = $qrcode->text();
+
+        $output->writeln([
+            'Registration link result: ',
+            $this->decorateResult($link),
+        ]);
+
+        return $link;
+    }
+
+    /**
+     * @param string $file
+     * @param OutputInterface $output
+     *
+     * @return string
+     */
+    protected function readAuthenticationLinkFromFile($file, OutputInterface $output)
+    {
+        $qrcode = new \QrReader(file_get_contents($file), \QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
 
         $output->writeln([

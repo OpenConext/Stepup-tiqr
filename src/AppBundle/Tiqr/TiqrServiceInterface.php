@@ -142,4 +142,24 @@ interface TiqrServiceInterface
      * @return AuthenticationResponse
      */
     public function authenticate(TiqrUserInterface $user, $response, $sessionKey);
+
+    /**
+     * Returns the current enrollment status.
+     *
+     * @return string
+     */
+    public function getEnrollmentStatus();
+
+    /**
+     * If the user is enrolled
+     *
+     * @return boolean
+     */
+    public function enrollmentFinalized();
+
+    /**
+     * Returns the current id of the enrolled user.
+     * @return string
+     */
+    public function getUserId();
 }

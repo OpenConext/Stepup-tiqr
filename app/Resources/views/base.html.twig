@@ -8,43 +8,15 @@
         <link rel="stylesheet" href="{{ asset('build/global.css') }}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
-    <script>
-        // Write js errors to the body.
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-            var message = [
-                'Message: ' + msg,
-                'URL: ' + url,
-                'Line: ' + lineNo,
-                'Column: ' + columnNo,
-                'Error object: ' + JSON.stringify(error)
-            ].join(' - ');
-            var span = document.createElement('span');
-            span.style.display = 'none';
-            span.classList.add('js-error');
-            span.innerText = message;
-            document.body.appendChild(span);
-        };
-    </script>
+    <script src="{{ asset('js/jquery-3.3.1.min.js') }}" ></script>
 </head>
 <body>
 <div class="header-container">
     <div class="header">
-        <a class="logo" href="{{ url('homepage') }}">
-            <img src="{{ asset('images/surfconext-logo.png') }}" alt="SURFconext"/>
-        </a>
+        <img class="logo" src="{{ asset('images/tiqr_logo.png') }}" alt="Tiqr"/>
         <ul class="links">
-            <li class="title">
-                <span>{{ 'page.title'|trans }}</span>
-            </li>
-            <li class="border-left">
-                <a href="https://github.com/OpenConext/Stepup-Gateway/blob/develop/docs/GSSP.md"
-                   target="_blank">{{ 'page.header.stepup-gateway-gssp'|trans }}</a>
-            </li>
-            <li class="border-left">
-                <a href="https://github.com/OpenConext/Stepup-gssp-bundle"
-                   target="_blank">{{ 'page.header.stepup-gssp-bundle'|trans }}</a>
-            </li>
             <li class="push-right">
+                {#<img src="{{ asset('images/surfconext-logo.png') }}" alt="SURFconext"/>#}
                 <ul class="language-selector">
                     {% for lang in ['en', 'nl_NL'] %}
                         <li {{ app.request.getLocale() == lang ? 'class="active"' :'' }}>
@@ -56,53 +28,17 @@
         </ul>
     </div>
 </div>
-<div class="navigation-container">
-    <div class="navigation">
-        {% for route in ['homepage', 'app_identity_registration', 'app_identity_authentication', 'gssp_saml_sso', 'gssp_saml_sso_return', 'gssp_saml_metadata'] %}
-            {% set translatekey = "page.navigation.route." ~ route %}
-            <a href="{{ path(route) }}" {% if current_route == route %} class='active'{% endif %}>{{ translatekey|trans }}</a>
-        {% endfor %}
-        {% if app.environment == 'dev' %}
-            <a href="{{ path('sp_demo') }}" {% if current_route == 'sp_demo' %} class='active'{% endif %}>{{ 'page.navigation.route.sp_demo'|trans }}</a>
-        {% endif %}
-    </div>
-</div>
 <div class="page-container">
-
-    {% if current_route == 'app_identity_registration' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.app_identity_registration'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'app_identity_authentication' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.app_identity_authentication'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'gssp_saml_sso' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.gssp_saml_sso'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'gssp_saml_sso_return' %}
-        <div class='alert'>
-            <div><i class="fa fa-info-circle" aria-hidden="true"></i>{{ 'page.route.description.documentation_purpose'|trans }}</div>
-            <pre>{{ 'page.route.description.gssp_saml_sso_return'|trans }}</pre>
-        </div>
-    {% endif %}
-    {% if current_route == 'sp_demo' %}
-        <div class='alert'>
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-            <pre style="display: inline">{{ 'page.route.description.sp_demo'|trans }}</pre>
-        </div>
-    {% endif %}
-
     {% block body_container %}
         <h1>{% block page_heading %}{% endblock %}</h1>
         <div class="card">
+            {% if current_route == 'sp_demo' %}
+                <div class='alert'>
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <pre style="display: inline">{{ 'page.route.description.sp_demo'|trans }}</pre>
+                </div>
+            {% endif %}
+
             {% block body %}{% endblock %}
         </div>
     {% endblock %}

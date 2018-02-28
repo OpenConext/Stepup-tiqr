@@ -1,23 +1,25 @@
-saml.subject_name_id: Subject NameID
-
 page.registration.title: Registreer de gebruiker
 page.registration.sub_title: Registratie
-page.registration.scan_qr: Scan deze code om uw telefoon aan te melden met dit nieuwe account.
+page.registration.scan_qr: Scan deze code om uw telefoon te registreren.
 
-page.registration.requires_registration: |
-    Waarschuwing! Er is geen actieve AuthnRequest registratieaanvraag,
-    het registreren van de gebruiker gaat mislukken.
+page.registration.status.initialized: Scan deze code om uw telefoon te registreren.
+page.registration.status.retrieved: Vul het wachtwoord in op uw telefoon.
+page.registration.status.processed: Vul het wachtwoord in op uw telefoon.
+page.registration.status.finalized: Telefoon is geregistreerd, vernieuw de browser als er niets gebeurt
+page.registration.unknown: Er is een onbekende fout opgetreden. Probeer het opnieuw door uw browser te vernieuwen.
+
 page.registration.register_user: Gebruiker registreren
 page.registration.error_response: Foutreactie
-page.registration.random_default_error: willekeurige registratiefout
-page.registration.submit_error: Zend een registratie mislukt response
+page.registration.random_default_error: Willekeurige registratiefout
+page.registration.submit_error: Return-verificatie mislukt
 
-page.authentication.title: Authenticeer (verifieer) de gebruiker
-page.authentication.sub_title: Verifiëren
-page.authentication.requires_authentication: |
-    Waarschuwing! Er is geen actieve AuthnRequest-verificatieaanvraag,
-    authenticatie van de gebruiker gaat mislukken.
+page.authentication.title: Authenticeer de gebruiker
+page.authentication.sub_title: Verificatie
+
+page.authentication.authentication_description: |
+    Een serviceprovider vraagt ​​om verificatie.
+
 page.authentication.authenticate_user: Gebruiker verifiëren
 page.authentication.error_response: Foutreactie
-page.authentication.random_default_error: Willekeurige authenticatiefout
-page.authentication.submit_error: Zend een verificatie mislukt response
+page.authentication.random_default_error: willekeurige authenticatiefout
+page.authentication.submit_error: Return-verificatie mislukt

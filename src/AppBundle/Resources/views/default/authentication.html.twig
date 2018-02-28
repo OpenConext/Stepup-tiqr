@@ -4,10 +4,29 @@
     {{ 'page.authentication.title'|trans }}
 {% endblock %}
 
+{% block page_heading %}
+    {{ 'page.authentication.sub_title'|trans }}
+{% endblock %}
+
 {% block body %}
-    <h2>{{ 'page.authentication.sub_title'|trans }}</h2>
+    <div class="content-container">
+        {{ 'page.authentication.authentication_description'|trans }}
+    </div>
+    <div class="content-container">
+        <img src="{{ url('app_identity_authentication_qr') }}">
+    </div>
 
-    <img src="{{ url('app_identity_authentication_qr') }}">
-
-    <div>{{ authUrl }}</div>
+    <script>
+        function updateStatus(status) {
+            if (status === true) {
+                clearInterval(handle);
+                document.location.reload(true);
+            }
+        }
+        function requestStatus() {
+            var statusUrl = "{{ path('app_identity_authentication_status') | escape('js') }}";
+            jQuery.get(statusUrl, updateStatus);
+        }
+        var handle = setInterval(requestStatus, 1500);
+    </script>
 {% endblock %}

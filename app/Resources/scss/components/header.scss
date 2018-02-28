@@ -7,8 +7,6 @@
 
 .header-container {
 
-  background-color: white;
-
   .header {
     max-width: $medium;
     margin: 40px auto 0 auto;
@@ -23,22 +21,18 @@
 
 
     a {
-      color: $blue;
+      color: $tiqr-green;
       font-weight: bold;
       @include no-text-decoration;
     }
 
 
-    a.logo {
+    img.logo {
       position: absolute;
       top: 13px;
-
+      height: 60px;
       @include phone {
         position: initial;
-      }
-
-      img {
-        height: 60px;
       }
     }
 
@@ -68,7 +62,7 @@
           font-weight: bold;
           text-transform: uppercase;
           font-size: 22px;
-          color: $blue;
+          color: $tiqr-green;
 
           @include phone {
             margin-left: 0;
@@ -80,7 +74,7 @@
         }
 
         &.border-left {
-          border-left: 1px solid $blue;
+          border-left: 1px solid $tiqr-green;
           padding-left: 15px;
           @include phone {
             display: none;
@@ -90,7 +84,7 @@
         ul.language-selector {
           margin-left: 25px;
           list-style: none;
-          border: 1px solid $blue;
+          border: 1px solid $tiqr-green;
           border-radius: $br;
           font-size: medium;
 
@@ -110,7 +104,7 @@
               font-weight: normal;
             }
             &.active {
-              background-color: $blue;
+              background-color: $tiqr-green;
               a {
                 color: white;
               }
@@ -121,39 +115,7 @@
         }
 
       }
-      a.welcome-link {
-        position: relative;
-      }
 
-      ul.user-profile {
-        position: absolute;
-        z-index: 2;
-        padding: 10px;
-        list-style: none;
-        min-width: 300px;
-        top: 50px;
-        background: #fff;
-        border-radius: $br;
-        box-shadow: 1px 1px $br rgba(black, .3);
-        @include phone {
-          display: none;
-        }
-
-        li {
-          font-style: italic;
-          font-size: 13px;
-          margin-bottom: 5px;
-          display: block;
-
-          span {
-            &.value {
-              font-style: normal;
-              float: right;
-            }
-          }
-
-        }
-      }
 
     }
 

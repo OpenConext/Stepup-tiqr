@@ -61,9 +61,14 @@ final class TiqrService implements TiqrServiceInterface
      */
     public function generateEnrollmentKey()
     {
-        $id = $this->generateId();
+        $userId = $this->generateId();
+        $this->session->set('userId', $userId);
+        return $this->tiqrService->startEnrollmentSession($userId, 'SURFconext', $this->session->getId());
+    }
 
-        return $this->tiqrService->startEnrollmentSession($id, 'SURFconext', $this->session->getId());
+    public function getUserId()
+    {
+        return $this->session->get('userId');
     }
 
     public function getEnrollmentMetadata($key, $loginUri, $enrollmentUrl)
@@ -162,5 +167,25 @@ final class TiqrService implements TiqrServiceInterface
     private function generateId($length = 4)
     {
         return base_convert(time(), 10, 36).'-'.base_convert(mt_rand(0, pow(36, $length)), 10, 36);
+    }
+
+    /**
+     * Returns the current enrollment status.
+     *
+     * @return string
+     */
+    public function getEnrollmentStatus()
+    {
+        return $this->tiqrService->getEnrollmentStatus($this->session->getId());
+    }
+
+    /**
+     * If the user is enrolled
+     *
+     * @return boolean
+     */
+    public function enrollmentFinalized()
+    {
+        return $this->getEnrollmentStatus() === Tiqr_Service::ENROLLMENT_STATUS_FINALIZED;
     }
 }

@@ -1,12 +1,13 @@
-saml.subject_name_id: Subject NameID
-
 page.registration.title: Register the user
 page.registration.sub_title: Registration
 page.registration.scan_qr: Scan this code to enroll your phone with this new account.
 
-page.registration.requires_registration: |
-    Warning! There is no active state for the AuthnRequest registration request,
-    user registration will fail now.
+page.registration.status.initialized: Scan this code to enroll your phone with this new account.
+page.registration.status.retrieved: Fill in password on your phone.
+page.registration.status.processed: Fill in password on your phone.
+page.registration.status.finalized: Phone is registered, refresh the browser if nothing happens
+page.registration.unknown: Unknown error happened. Please try again by refreshing your browser.
+
 page.registration.register_user: Register user
 page.registration.error_response: Error response
 page.registration.random_default_error: random registration error
@@ -14,9 +15,10 @@ page.registration.submit_error: Return authentication failed
 
 page.authentication.title: Athenticate the user
 page.authentication.sub_title: Authentication
-page.authentication.requires_authentication: |
-    Warning! There is no active state for the AuthnRequest authentication request,
-    user registration will fail now.
+
+page.authentication.authentication_description: |
+    A service provider requests authentication.
+
 page.authentication.authenticate_user: Authenticate user
 page.authentication.error_response: Error response
 page.authentication.random_default_error: Random authentication error

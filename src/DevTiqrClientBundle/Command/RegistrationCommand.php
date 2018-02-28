@@ -66,6 +66,8 @@ TEXT
         $url = $input->getArgument('url');
         if (!$url) {
             $url = $this->fetchRegistrationUrlFromRemote($output);
+        } elseif (is_file($url)) {
+            $url = $this->readRegistrationUrlFromFile($url, $output);
         }
         if (preg_match('/^tiqrenroll:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
             throw new \RuntimeException(sprintf('Expected url with tiqrenroll://'));
@@ -147,6 +149,25 @@ TEXT
 
         return $link;
     }
+
+    /**
+     * @param OutputInterface $output
+     *
+     * @return string
+     */
+    protected function readRegistrationUrlFromFile($file, OutputInterface $output)
+    {
+        $qrcode = new \QrReader(file_get_contents($file), \QrReader::SOURCE_TYPE_BLOB);
+        $link = $qrcode->text();
+
+        $output->writeln([
+            'Registration link result: ',
+            $this->decorateResult($link),
+        ]);
+
+        return $link;
+    }
+
 
     /**
      *

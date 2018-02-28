@@ -2,8 +2,10 @@ div.alert {
 
   border: 1px solid transparent;
   padding: .75rem 1.25rem;
-  margin: 0.75rem 0;
   border-radius: .25rem;
+
+  margin: 15px 15px 15px 15px;
+
 
   background-color: $light-grey;
 
@@ -24,5 +26,9 @@ div.alert {
   i.fa {
     padding-bottom: 1.25em;
     padding-right: 0.25em;
+  }
+
+  a {
+    color: $tiqr-green;
   }
 }

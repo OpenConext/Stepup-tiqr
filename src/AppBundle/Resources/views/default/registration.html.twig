@@ -4,10 +4,69 @@
     {{ 'page.registration.title'|trans }}
 {% endblock %}
 
-{% block body %}
-    <h2>{{ 'page.registration.sub_title'|trans }}</h2>
+{% block page_heading %}
+    {{ 'page.registration.sub_title'|trans }}
+{% endblock %}
 
-    <div>{{ 'page.registration.scan_qr'|trans }}</div>
-    <br/>
-    <img src="{{ url('app_identity_registration_qr') }}">
+{% block body %}
+    <div class="content-container status-container">
+        {{ 'page.registration.scan_qr'|trans }}
+    </div>
+    <div class="content-container qr">
+        <img src="{{ url('app_identity_registration_qr') }}">
+    </div>
+    <script>
+        const idle = "1";
+        const initialized = "2";
+        const retrieved = "3";
+        const processed = "4";
+        const finalized = "5";
+
+        function fadeoutQr() {
+            jQuery(".qr").hide("slow");
+        }
+
+        function showQr() {
+            jQuery(".qr").show();
+        }
+
+        function updateStatusText(text) {
+            jQuery('div.status-container').text(text);
+        }
+
+        function updateStatus(status) {
+            switch (status) {
+                case idle:
+                    updateStatusText("{{ 'page.registration.scan_qr' | trans | escape('js') }}");
+                    showQr();
+                    break;
+                case initialized:
+                    updateStatusText("{{ 'page.registration.status.initialized' | trans | escape('js') }}");
+                    break;
+                case retrieved:
+                    updateStatusText("{{ 'page.registration.status.retrieved' | trans | escape('js') }}");
+                    fadeoutQr();
+                    break;
+                case processed:
+                    updateStatusText("{{ 'page.registration.status.processed' | trans | escape('js') }}");
+                    break;
+                case finalized:
+                    updateStatusText("{{ 'page.registration.status.finalized' | trans | escape('js') }}");
+                    document.location = "{{ path('app_identity_registration') | escape('js') }}";
+                    clearInterval(handle);
+                    break;
+                default:
+                    updateStatusText("{{ 'page.registration.unknown'|trans | escape('js') }}");
+            }
+        }
+
+        function requestStatus() {
+            var statusUrl = "{{ path('app_identity_registration_status') | escape('js') }}";
+            jQuery.get(statusUrl, updateStatus);
+        }
+
+        var handle = setInterval(requestStatus, 1500);
+
+    </script>
+
 {% endblock %}
