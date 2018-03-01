@@ -11,7 +11,7 @@
         "symfony/config": "~2.6",
         "symfony/yaml": "~2.6",
         "symfony/twig-bridge": "~2.6",
-        "simplesamlphp/saml2": "dev-master"
+        "simplesamlphp/saml2": "^1.10"
     },
     "require-dev": {
         "liip/rmt": "1.*"
