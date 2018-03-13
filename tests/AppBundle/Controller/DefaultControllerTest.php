@@ -21,13 +21,13 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    public function testDemoSp()
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/');
+        $crawler = $client->request('GET', '/demo/sp');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to the Generic SAML Stepup Provider SDK', $crawler->filter('h2')->text());
+        $this->assertContains('Demo service provider', $crawler->text());
     }
 }

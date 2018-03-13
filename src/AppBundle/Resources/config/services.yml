@@ -42,3 +42,9 @@ services:
       public: true
       class: AppBundle\Tiqr\Legacy\TiqrUserRepository
       factory: 'AppBundle\Tiqr\TiqrFactory:createUserRepository'
+
+    surfnet_saml.saml2.bridge_container:
+      public: true
+      class: Surfnet\SamlBundle\SAML2\BridgeContainer
+      arguments:
+          - '@logger'

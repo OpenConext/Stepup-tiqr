@@ -115,6 +115,8 @@ Debugging
 Xdebug is configured when provisioning your development Vagrant box. 
 It's configured with auto connect IDE_KEY=phpstorm.
 
+Demo sp is available on  [https://tiqr.example.com/app_dev.php/demo/sp]()
+
 Tests and metrics
 ======================
 
@@ -129,13 +131,21 @@ Every part can be run separately. Check "scripts" section of the composer.json f
 Test Tiqr Api's
 ---------------
 
-``` ./bin/console test:registration ```
+Demo sp is available on  [https://tiqr.example.com/app_dev.php/demo/sp]()
 
-or with registration url:
- 
-In development mode you can get a registration url by ```/registration/qr/link``` 
- 
-``` ./bin/console test:registration https://tiqr.example.com/app_dev.php/tiqr.php?key=6efb4ebe4aba41529b4f2205939fc7b8b5724c1cea5b92c54cc4e9a49d075e90```  
+Fetch registration link automatically from /app_dev.php/registration/qr/dev
+
+``` ./bin/console test:registration```
+
+``` ./bin/console test:registration <registration url>``` 
+
+``` ./bin/console test:registration <./<qr_file.png>```  
+
+``` ./bin/console test:authentication```
+
+``` ./bin/console test:authentication <authentication url>``` 
+
+``` ./bin/console test:authentication <./<qr_file.png>```  
 
 Release instructions project
 ============================
