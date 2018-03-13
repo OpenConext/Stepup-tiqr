@@ -8,48 +8,45 @@
         <link rel="stylesheet" href="{{ asset('build/global.css') }}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
-    <script src="{{ asset('js/jquery-3.3.1.min.js') }}" ></script>
+    <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
 </head>
 <body>
-<div class="header-container">
-    <div class="header">
-        <img class="logo" src="{{ asset('images/tiqr_logo.png') }}" alt="Tiqr"/>
-        <ul class="links">
-            <li class="push-right">
-                {#<img src="{{ asset('images/surfconext-logo.png') }}" alt="SURFconext"/>#}
-                <ul class="language-selector">
-                    {% for lang in ['en', 'nl_NL'] %}
-                        <li {{ app.request.getLocale() == lang ? 'class="active"' :'' }}>
-                            <a href="{{ path('local', {lang: lang}) }}">{{ lang|trans }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-<div class="page-container">
-    {% block body_container %}
-        <h1>{% block page_heading %}{% endblock %}</h1>
-        <div class="card">
-            {% if current_route == 'sp_demo' %}
-                <div class='alert'>
-                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                    <pre style="display: inline">{{ 'page.route.description.sp_demo'|trans }}</pre>
-                </div>
-            {% endif %}
 
-            {% block body %}{% endblock %}
+<div class="container">
+
+    <div class="content">
+        <div class="page-header clearfix">
+            <img src="/images/tiqr.png" class="pull-left" alt="tiqr" height="74">
+            <img src="/images/surfnet.jpg" class="pull-right" alt="SURFnet">
         </div>
-    {% endblock %}
+
+        <div class="pull-right">
+            <select class="tiqr_switch_locale">
+                {% for lang in ['en', 'nl_NL'] %}
+                    <option value="{{ path('local', {lang: lang}) }}" {{ app.request.getLocale() == lang ? 'selected' :'' }}>{{ lang|trans }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    {% block body %}{% endblock %}
+
+    <footer>
+        <div class="row-fluid">
+            <div class="span8 offset2">
+                <hr>
+                <ul class="nav nav-pills">
+                    <li><a href="{{ path('app_cancel') }}">Cancel</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
 </div>
-<div class="footer">
-    <div class="footer-inner">
-        <span><a href="https://wiki.surfnet.nl/display/conextsupport/Terms+of+Service+%28NL%29"
-                 target="_blank">{{ 'page.footer.terms'|trans }}</a></span>
-        <span><a href="mailto:help@surfconext.nl"
-                 target="_blank">help@surfconext.nl</a></span></div>
-</div>
+<script>
+    document.querySelector('.tiqr_switch_locale').onchange = function (e) {
+        window.location.href = e.target.value;
+    };
+</script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

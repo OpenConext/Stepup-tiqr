@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
@@ -40,13 +41,19 @@ class AuthenticationController extends Controller
     /**
      * @Route("/authentication", name="app_identity_authentication")
      */
-    public function authenticationAction()
+    public function authenticationAction(Request $request)
     {
         $nameId = $this->authenticationService->getNameId();
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->authenticationService->authenticationRequired()) {
             return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
+        }
+
+        // Handle one time password
+        if ($request->get('otp') !== null) {
+            // Implement otp
+            return new Response('One time passord: '. $request->get('otp'), Response::HTTP_I_AM_A_TEAPOT);
         }
 
         // Are we already logged in with tiqr?
@@ -76,6 +83,7 @@ class AuthenticationController extends Controller
         if (!$this->authenticationService->authenticationRequired()) {
             return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
         }
+
         return new JsonResponse($this->tiqrService->isAuthenticated());
     }
 

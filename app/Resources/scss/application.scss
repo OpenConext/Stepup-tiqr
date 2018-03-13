@@ -1,13 +1,43 @@
-@import "~compass-mixins";
-@include global-reset ;
+@charset "utf-8";
 
-$fa-font-path: "../fonts";
-@import "fonts/font-awesome";
-@import "fonts/roboto";
+@import "bootstrap-sprockets";
+@import "bootstrap";
 
-@import "vars";
-@import "utilities/*";
+.status-container {
+  .status:not(.initialized) {
+    display: none;
+  }
+}
 
-@import "base/*";
-@import "components/*";
-@import "pages/*";
+table {
+  width: 100%;
+
+  tr {
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: black;
+
+    th {
+      color: darkgray;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    td, th {
+      padding: 10px;
+    }
+
+    td:first-child, th:first-child {
+      padding-left: 0;
+    }
+
+    td:last-child, th:last-child {
+      padding-right: 0;
+    }
+  }
+
+  thead tr {
+    border-width: 0;
+  }
+
+}
