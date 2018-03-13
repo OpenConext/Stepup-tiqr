@@ -15,19 +15,22 @@
  * limitations under the License.
  */
 
-namespace Tests\AppBundle\Controller;
+namespace AppBundle\Tiqr\Exception;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class DefaultControllerTest extends WebTestCase
+final class ConfigurationException extends \Exception
 {
-    public function testDemoSp()
+    public static function noMaximumDuration()
     {
-        $client = static::createClient();
+        return new self('There is no maximum duration to block an user');
+    }
 
-        $crawler = $client->request('GET', '/demo/sp');
+    public static function noMaxAttempts()
+    {
+        return new self('An user can have unlimited attempts');
+    }
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Demo service provider', $crawler->text());
+    public static function noMaxTemporaryAttempts()
+    {
+        return new self('An user can have unlimited temporary block attempts');
     }
 }

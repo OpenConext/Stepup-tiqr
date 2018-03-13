@@ -17,6 +17,8 @@
 
 namespace AppBundle\Tiqr;
 
+use AppBundle\Tiqr\Legacy\TiqrService;
+use AppBundle\Tiqr\Legacy\TiqrUserRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tiqr_Service;
@@ -30,7 +32,7 @@ class TiqrFactory
     private $loaded = false;
 
     public function __construct(
-        TiqrConfiguration $configuration,
+        TiqrConfigurationInterface $configuration,
         ContainerInterface $container,
         SessionInterface $session
     ) {

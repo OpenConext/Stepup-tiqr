@@ -15,19 +15,38 @@
  * limitations under the License.
  */
 
-namespace Tests\AppBundle\Controller;
+namespace AppBundle\Tiqr\Response;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class DefaultControllerTest extends WebTestCase
+class ValidAuthenticationResponse implements AuthenticationResponse
 {
-    public function testDemoSp()
+    private $message;
+
+    /**
+     *
+     * @param string $message
+     */
+    public function __construct($message)
     {
-        $client = static::createClient();
+        $this->message = $message;
+    }
 
-        $crawler = $client->request('GET', '/demo/sp');
+    /**
+     * If the authentication is valid.
+     *
+     * @return boolean
+     */
+    public function isValid()
+    {
+        return true;
+    }
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Demo service provider', $crawler->text());
+    /**
+     * The success or error message for the client app.
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 }

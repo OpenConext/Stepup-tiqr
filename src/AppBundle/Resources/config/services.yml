@@ -35,10 +35,16 @@ services:
 
     AppBundle\Tiqr\TiqrServiceInterface:
       public: true
-      class: AppBundle\Tiqr\TiqrService
+      class: AppBundle\Tiqr\Legacy\TiqrService
       factory: 'AppBundle\Tiqr\TiqrFactory:createService'
 
-    AppBundle\Tiqr\TiqrUserRepository:
+    AppBundle\Tiqr\TiqrUserRepositoryInterface:
       public: true
-      class: AppBundle\Tiqr\TiqrUserRepository
+      class: AppBundle\Tiqr\Legacy\TiqrUserRepository
       factory: 'AppBundle\Tiqr\TiqrFactory:createUserRepository'
+
+    surfnet_saml.saml2.bridge_container:
+      public: true
+      class: Surfnet\SamlBundle\SAML2\BridgeContainer
+      arguments:
+          - '@logger'

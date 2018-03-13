@@ -20,7 +20,6 @@ namespace DevTiqrClientBundle\Controller;
 use AppBundle\Tiqr\TiqrServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,23 +36,30 @@ final class QrLinkController extends Controller
     }
 
     /**
+     * Returns the QR for registration without an active authNRequest.
+     *
+     * @Route("/registration/qr/dev", name="app_identity_registration_qr_dev")
+     * @param Request $request
+     */
+    public function registrationQrAction(Request $request)
+    {
+        $key = $this->tiqrService->generateEnrollmentKey();
+        $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
+        $this->tiqrService->exitWithRegistrationQR($metadataURL);
+    }
+
+    /**
+     * Returns the link for registration without an active authNRequest.
+     *
      * @Route("/registration/qr/link", name="app_identity_registration_qr_link")
      * @param Request $request
      * @return Response
      */
-    public function qrRegistrationAction(Request $request)
+    public function registrationLinkAction(Request $request)
     {
         $key = $this->tiqrService->generateEnrollmentKey();
         $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
         $metadataAppURL = 'tiqrenroll://'.$metadataUrl;
-
-        // Return json if requested.
-        if (in_array('application/json', $request->getAcceptableContentTypes(), true)) {
-            return new JsonResponse([
-                'appUrl' => $metadataAppURL,
-                'url' => $metadataUrl
-            ]);
-        }
 
         // Simply return a html link, so they can click it and see the metadata result.
         return new Response(sprintf(
@@ -61,5 +67,33 @@ final class QrLinkController extends Controller
             htmlentities($metadataUrl),
             htmlentities($metadataAppURL)
         ));
+    }
+
+    /**
+     * Returns the QR without an active authNRequest.
+     *
+     * @Route("/authentication/qr/{nameId}", name="app_identity_authentication_qr_dev")
+     * @param string $nameId
+     */
+    public function authenticationQrAction($nameId)
+    {
+        $this->tiqrService->startAuthentication($nameId);
+        $this->tiqrService->exitWithAuthenticationQR();
+    }
+
+    /**
+     * Returns the link without an active authNRequest.
+     *
+     * @Route("/authentication/qr/{nameId}/link", name="app_identity_authentication_qr_link")
+     * @param string $nameId
+     * @return Response
+     */
+    public function authenticationQrLinkAction($nameId)
+    {
+        $this->tiqrService->startAuthentication($nameId);
+        $challengeUrl = $this->tiqrService->authenticationUrl();
+
+        // Simply return a html link, so they can click it and see the metadata result.
+        return new Response(htmlentities($challengeUrl));
     }
 }

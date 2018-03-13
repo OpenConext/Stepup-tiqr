@@ -1,13 +1,89 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'page.registration.title'|trans }}
+    {{ 'enrol.title'|trans }}
 {% endblock %}
 
 {% block body %}
-    <h2>{{ 'page.registration.sub_title'|trans }}</h2>
+    <h2>{{ 'enrol.title'|trans }}</h2>
+    <div class="content-container status-container">
+        <ul class="status idle">
+            <li>{{ 'enrol.status.idle.1' | trans }}</li>
+            <li>{{ 'enrol.status.idle.2' | trans }}</li>
+            <li>{{ 'enrol.status.idle.3' | trans }}</li>
+        </ul>
+        <ul class="status initialized">
+            <li>{{ 'enrol.status.initialized.1' | trans | raw }}</li>
+            <li>{{ 'enrol.status.initialized.2' | trans | raw }}</li>
+        </ul>
+        <ul class="status retrieved">
+            <li>{{ 'enrol.status.retrieved.1' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.2' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.3' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.4' | trans | raw }}</li>
+        </ul>
+        <div class="status processed">
+            {{ 'enrol.status.processed' | trans }}
+        </div>
+        <div class="status finalized">
+            {{ 'enrol.status.finalized' | trans }}
+        </div>
+        <div class="status error">
+            {{ 'enrol.status.error' | trans }}
+        </div>
+    </div>
+    <div class="content-container qr">
+        <img src="{{ url('app_identity_registration_qr') }}">
+    </div>
+    {{ 'enrol.download' | trans | raw }}
+    <script>
+        jQuery(function () {
+            const idle = "1";
+            const initialized = "2";
+            const retrieved = "3";
+            const processed = "4";
+            const finalized = "5";
 
-    <div>{{ 'page.registration.scan_qr'|trans }}</div>
-    <br/>
-    <img src="{{ url('app_identity_registration_qr') }}">
+            function fadeoutQr() {
+                jQuery(".qr").hide("slow");
+            }
+
+            function updateStatusText(selector) {
+                jQuery('.status-container >').hide();
+                jQuery(selector).show();
+            }
+
+            function updateStatus(status) {
+                switch (status) {
+                    case idle:
+                        updateStatusText('ul.status.idle');
+                        break;
+                    case initialized:
+                        updateStatusText('ul.status.initialized');
+                        break;
+                    case retrieved:
+                        updateStatusText('ul.status.retrieved');
+                        fadeoutQr();
+                        break;
+                    case processed:
+                        updateStatusText('div.status.processed');
+                        break;
+                    case finalized:
+                        updateStatusText('div.status.finalized');
+                        document.location = "{{ path('app_identity_registration') | escape('js') }}";
+                        clearInterval(handle);
+                        break;
+                    default:
+                        updateStatusText("div.status.error");
+                }
+            }
+
+            function requestStatus() {
+                var statusUrl = "{{ path('app_identity_registration_status') | escape('js') }}";
+                jQuery.get(statusUrl, updateStatus);
+            }
+            var handle = setInterval(requestStatus, 1500);
+        });
+    </script>
+
 {% endblock %}

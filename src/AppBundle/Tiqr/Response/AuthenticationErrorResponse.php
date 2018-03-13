@@ -15,29 +15,41 @@
  * limitations under the License.
  */
 
-namespace AppBundle\Tiqr;
+namespace AppBundle\Tiqr\Response;
 
 /**
- * Wrapper around the legacy Tiqr user repository.
+ * An error response that is not directly caused by the user.
  */
-interface TiqrUserRepositoryInterface
+class AuthenticationErrorResponse implements AuthenticationResponse
 {
-    /**
-     * Create new tiqr user.
-     *
-     * @param string $userId
-     * @param string $secret
-     *
-     * @return TiqrUserInterface
-     */
-    public function createUser($userId, $secret);
+    private $error;
 
     /**
-     * @param string $userId
      *
-     * @return TiqrUserInterface
-     *
-     * @throws \AppBundle\Tiqr\Exception\UserNotExistsException
+     * @param string $error
      */
-    public function getUser($userId);
+    public function __construct($error)
+    {
+        $this->error = $error;
+    }
+
+    /**
+     * If the authentication is valid.
+     *
+     * @return boolean
+     */
+    public function isValid()
+    {
+        return false;
+    }
+
+    /**
+     * The success or error message for the client app.
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->error;
+    }
 }

@@ -34,4 +34,61 @@ interface TiqrUserInterface
     public function getSecret();
 
     public function updateNotification($notificationType, $notificationAddress);
+
+    /**
+     * @return string
+     */
+    public function getId();
+
+    /**
+     * Get the amount of unsuccessful login attempts.
+     *
+     * @return int
+     */
+    public function getLoginAttempts();
+
+    /**
+     * Increase the the amount of unsuccessful login attempts by one.
+     */
+    public function addLoginAttempt();
+
+    /**
+     * Get the amount of unsuccessful login attempts.
+     *
+     * @return int
+     */
+    public function getTemporaryLoginAttempts();
+
+    /**
+     * Block the user forever.
+     */
+    public function block();
+
+    /**
+     * Block the user on the current date.
+     *
+     * @param \DateTimeImmutable $blockDate
+     *   The date the user is blocked.
+     */
+    public function blockTemporary(\DateTimeImmutable $blockDate);
+
+    /**
+     * If the user is blocked.
+     */
+    public function isBlocked();
+
+    /**
+     * Resets all login attempts.
+     */
+    public function resetLoginAttempts();
+
+    /**
+     * If the user is blocked.
+     *
+     * @param \DateTimeImmutable $now
+     *   The current date.
+     * @param int $maxDuration
+     *   The maximum duration on minutes
+     */
+    public function isBlockTemporary(\DateTimeImmutable $now, $maxDuration);
 }

@@ -1,6 +1,7 @@
 services:
     sp.controller:
       class: SpBundle\Controller\SPController
+      public: true
       arguments:
         - '@surfnet_saml.hosted.service_provider'
         - '@surfnet_saml.hosted.identity_provider'

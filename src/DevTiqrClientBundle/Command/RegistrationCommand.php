@@ -21,6 +21,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RegistrationCommand extends Command
@@ -42,15 +43,17 @@ class RegistrationCommand extends Command
 'The registration url if not given automatically fetched from /app_dev.php/registration/qr/link .'
 TEXT
                 , false)
-            ->addArgument(
+            ->addOption(
                 'notificationType',
-                InputArgument::OPTIONAL,
+                'nt',
+                InputOption::VALUE_OPTIONAL,
                 'The push notification type APNS/GCM',
                 'APNS'
             )
-            ->addArgument(
+            ->addOption(
                 'notificationAddress',
-                InputArgument::OPTIONAL,
+                'na',
+                InputOption::VALUE_OPTIONAL,
                 'The push notification address',
                 '0000000000111111111122222222223333333333'
             )
@@ -63,7 +66,14 @@ TEXT
         $url = $input->getArgument('url');
         if (!$url) {
             $url = $this->fetchRegistrationUrlFromRemote($output);
+        } elseif (is_file($url)) {
+            $url = $this->readRegistrationUrlFromFile($url, $output);
         }
+        if (preg_match('/^tiqrenroll:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
+            throw new \RuntimeException(sprintf('Expected url with tiqrenroll://'));
+        }
+        $url = $matches['url'];
+
         $output->writeln("<comment>Fetch metadata endpoint from $url</comment>");
         $metadataResponse = $this->client->get($url);
         $metadataBody = $metadataResponse->getBody()->getContents();
@@ -74,6 +84,7 @@ TEXT
         ]);
         if ($metadata === false) {
             $output->writeln('<error>Metadata has expire and returns false</error>');
+
             return;
         }
 
@@ -82,8 +93,8 @@ TEXT
         $registrationBody = [
             'operation' => 'register',
             'secret' => $secret,
-            'notificationType' => $input->getArgument('notificationType'),
-            'notificationAddress' => $input->getArgument('notificationAddress'),
+            'notificationType' => $input->getOption('notificationType'),
+            'notificationAddress' => $input->getOption('notificationAddress'),
         ];
         $output->writeln([
             sprintf(
@@ -101,6 +112,7 @@ TEXT
 
         if ($resultBody !== 'OK' || $result->getStatusCode() !== 200) {
             $output->writeln('<error>Enrollment failed</error>');
+
             return;
         }
         $output->writeln('<info>Enrollment succeeded</info>');
@@ -121,20 +133,41 @@ TEXT
      */
     protected function fetchRegistrationUrlFromRemote(OutputInterface $output)
     {
-        $registrationQRLink = '/app_dev.php/registration/qr/link';
+        $registrationQRLink = '/app_dev.php/registration/qr/dev';
         $output->writeln('<comment>Fetch registration link from </comment>'.$registrationQRLink);
-        $json = $this->client
+        $blob = $this->client
             ->get($registrationQRLink)
             ->getBody()
             ->getContents();
-        $result = json_decode($json);
+        $qrcode = new \QrReader($blob, \QrReader::SOURCE_TYPE_BLOB);
+        $link = $qrcode->text();
+
         $output->writeln([
             'Registration link result: ',
-            $this->decorateResult(json_encode($result, JSON_PRETTY_PRINT)),
+            $this->decorateResult($link),
         ]);
 
-        return $result->url;
+        return $link;
     }
+
+    /**
+     * @param OutputInterface $output
+     *
+     * @return string
+     */
+    protected function readRegistrationUrlFromFile($file, OutputInterface $output)
+    {
+        $qrcode = new \QrReader(file_get_contents($file), \QrReader::SOURCE_TYPE_BLOB);
+        $link = $qrcode->text();
+
+        $output->writeln([
+            'Registration link result: ',
+            $this->decorateResult($link),
+        ]);
+
+        return $link;
+    }
+
 
     /**
      *
@@ -152,15 +185,15 @@ TEXT
         if (file_exists($file)) {
             $userdb = json_decode(file_get_contents($file), true);
         }
-        
+
         // Create service.
         $serviceId = $metadata->service->identifier;
         $userdb[$serviceId]['authenticationUrl'] = $metadata->service->authenticationUrl;
         $userdb[$serviceId]['ocraSuite'] = $metadata->service->ocraSuite;
-        
+
         // Store new user.
         $userId = $metadata->identity->identifier;
-        $userdb[$serviceId]['identities'][$userId] = (array) $metadata->identity;
+        $userdb[$serviceId]['identities'][$userId] = (array)$metadata->identity;
         $userdb[$serviceId]['identities'][$userId]['secret'] = $secret;
         file_put_contents($file, json_encode($userdb, JSON_PRETTY_PRINT));
         $output->writeln("<info>New user of '$serviceId' with identity '$userId' is stored in file $file</info>");

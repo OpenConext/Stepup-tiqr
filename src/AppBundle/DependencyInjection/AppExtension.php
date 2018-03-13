@@ -18,6 +18,7 @@
 namespace AppBundle\DependencyInjection;
 
 use AppBundle\Tiqr\TiqrConfiguration;
+use AppBundle\Tiqr\TiqrConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -31,7 +32,7 @@ class AppExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $container->setDefinition(
-            TiqrConfiguration::class,
+            TiqrConfigurationInterface::class,
             new Definition(TiqrConfiguration::class, [$config])
         );
 

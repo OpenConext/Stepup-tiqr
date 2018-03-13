@@ -1,32 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'page.authentication.title'|trans }}
+    {{ 'login.title'|trans }}
 {% endblock %}
 
 {% block body %}
-    <h2>{{ 'page.authentication.sub_title'|trans }}</h2>
-
-    {% if not requiresAuthentication %}
-        <div class="alert alert-warning">
-            {{ 'page.authentication.requires_authentication'|trans }}
-        </div>
-    {% endif %}
-
-    <form method="post">
-        <label for="NameID">{{ 'saml.subject_name_id'|trans }}</label>
-        <br>
-        <br>
-        <p style="background: white">{{ NameID }}</p>
-        <br>
-        <button id="button_authenticate" name="action" class="button green" value="authenticate">{{ 'page.authentication.authenticate_user'|trans }}</button>
-        <br>
-        <br>
-        <label for="message">{{ 'page.authentication.error_response'|trans }}</label>
-        <br>
-        <input id="message" name="message" size="50" type="text" value="{{ 'page.authentication.random_default_error'|trans }}">
-        <br>
-        <br>
-        <button id="button_error" name="action" class="button gray" value="error">{{ 'page.authentication.submit_error'|trans }}</button>
-    </form>
+    <h2>{{ 'login.title' | trans }}</h2>
+    {{ 'login.qr.message' | trans }}
+    <br/>
+    <div class="content-container">
+        <img src="{{ url('app_identity_authentication_qr') }}">
+        <p>
+            {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">here</a>.
+        </p>
+    </div>
+    <div id="otpform" style="display:none">
+        <form method="POST" class="form-inline">
+            <div class="input-group">
+                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"
+                                                            placeholder="{{ 'login.qr.manual.otp' | trans }}"
+                                                            autocomplete="off"/>
+                &nbsp;
+                <button type="submit" class="btn btn-primary">{{ 'login.qr.manual.button' | trans }}</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function updateStatus(status) {
+            if (status === true) {
+                clearInterval(handle);
+                document.location.reload(true);
+            }
+        }
+        function requestStatus() {
+            var statusUrl = "{{ path('app_identity_authentication_status') | escape('js') }}";
+            jQuery.get(statusUrl, updateStatus);
+        }
+        var handle = setInterval(requestStatus, 1500);
+    </script>
 {% endblock %}

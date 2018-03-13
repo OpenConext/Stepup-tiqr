@@ -51,7 +51,29 @@ class RegistrationController extends Controller
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
 
+        if ($this->tiqrService->enrollmentFinalized()) {
+            $this->registrationService->register($this->tiqrService->getUserId());
+            return $this->registrationService->replyToServiceProvider();
+        }
+
         return $this->render('AppBundle:default:registration.html.twig');
+    }
+
+    /**
+     * For client-side polling retrieving the status.
+     *
+     * @Route("/registration/status", name="app_identity_registration_status")
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function registrationStatusAction(Request $request)
+    {
+        // Do have a valid sample AuthnRequest?.
+        if (!$this->registrationService->registrationRequired()) {
+            return new Response('No registration required', Response::HTTP_BAD_REQUEST);
+        }
+
+        return new Response($this->tiqrService->getEnrollmentStatus());
     }
 
     /**
@@ -68,6 +90,6 @@ class RegistrationController extends Controller
         }
         $key = $this->tiqrService->generateEnrollmentKey();
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
-        $this->tiqrService->exitWithEnrollmentQR($metadataURL);
+        $this->tiqrService->exitWithRegistrationQR($metadataURL);
     }
 }
