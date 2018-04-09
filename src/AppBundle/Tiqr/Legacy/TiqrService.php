@@ -24,10 +24,14 @@ use AppBundle\Tiqr\Response\ValidAuthenticationResponse;
 use AppBundle\Tiqr\TiqrServiceInterface;
 use AppBundle\Tiqr\TiqrUserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
 
 /**
  * Wrapper around the legacy Tiqr service.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * It's Legacy.
  */
 final class TiqrService implements TiqrServiceInterface
 {
@@ -43,10 +47,11 @@ final class TiqrService implements TiqrServiceInterface
         $this->session = $session;
     }
 
-    public function exitWithRegistrationQR($metadataURL)
+    public function createRegistrationQRResponse($metadataURL)
     {
-        $this->tiqrService->generateEnrollmentQR($metadataURL);
-        exit(200);
+        return new StreamedResponse(function () use ($metadataURL) {
+            $this->tiqrService->generateEnrollmentQR($metadataURL);
+        });
     }
 
     public function getEnrollmentSecret($key)
@@ -117,17 +122,18 @@ final class TiqrService implements TiqrServiceInterface
     }
 
     /**
-     * Generate an exit and authentication challenge QR code.
+     * Response with authentication challenge QR code.
      *
      * This URL can be used to link directly to the authentication
      * application, for example to create a link in a mobile website on the
      * same device as where the application is installed
      */
-    public function exitWithAuthenticationQR()
+    public function createAuthenticationQRResponse()
     {
         $sessionKey = $this->session->get('sessionKey');
-        $this->tiqrService->generateAuthQR($sessionKey);
-        exit(200);
+        return new StreamedResponse(function () use ($sessionKey) {
+            $this->tiqrService->generateAuthQR($sessionKey);
+        });
     }
 
     /**

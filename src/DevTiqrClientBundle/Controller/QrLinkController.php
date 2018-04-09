@@ -40,12 +40,13 @@ final class QrLinkController extends Controller
      *
      * @Route("/registration/qr/dev", name="app_identity_registration_qr_dev")
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function registrationQrAction(Request $request)
     {
         $key = $this->tiqrService->generateEnrollmentKey();
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
-        $this->tiqrService->exitWithRegistrationQR($metadataURL);
+        return $this->tiqrService->createRegistrationQRResponse($metadataURL);
     }
 
     /**
@@ -54,6 +55,7 @@ final class QrLinkController extends Controller
      * @Route("/registration/qr/link", name="app_identity_registration_qr_link")
      * @param Request $request
      * @return Response
+     * @throws \InvalidArgumentException
      */
     public function registrationLinkAction(Request $request)
     {
@@ -74,11 +76,12 @@ final class QrLinkController extends Controller
      *
      * @Route("/authentication/qr/{nameId}", name="app_identity_authentication_qr_dev")
      * @param string $nameId
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function authenticationQrAction($nameId)
     {
         $this->tiqrService->startAuthentication($nameId);
-        $this->tiqrService->exitWithAuthenticationQR();
+        return $this->tiqrService->createAuthenticationQRResponse();
     }
 
     /**

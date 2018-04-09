@@ -18,6 +18,7 @@
 namespace AppBundle\Tiqr;
 
 use AppBundle\Tiqr\Response\AuthenticationResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface TiqrServiceInterface
 {
@@ -27,8 +28,9 @@ interface TiqrServiceInterface
      * as it would expose the enrolment key to the client in plaintext next to the "PNG-encoded" version.
      *
      * @param string $metadataURL
+     * @return StreamedResponse
      */
-    public function exitWithRegistrationQR($metadataURL);
+    public function createRegistrationQRResponse($metadataURL);
 
     /**
      * Get a temporary enrollment secret to be able to securely post a user
@@ -130,7 +132,10 @@ interface TiqrServiceInterface
      */
     public function isAuthenticated();
 
-    public function exitWithAuthenticationQR();
+    /**
+     * @return StreamedResponse
+     */
+    public function createAuthenticationQRResponse();
 
     public function authenticationUrl();
 

@@ -30,6 +30,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class WebContext implements Context, KernelAwareContext
 {
     /**
@@ -89,20 +92,6 @@ class WebContext implements Context, KernelAwareContext
     public function resetGoutteDriver()
     {
         $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
-    }
-
-    /**
-     * Create AuthnRequest from demo IdP.
-     *
-     * @When the service provider send the AuthnRequest with HTTP-Redirect binding
-     *
-     * @throws \Surfnet\SamlBundle\Exception\NotFound
-     */
-    public function callIdentityProviderSSOActionWithAuthnRequest()
-    {
-        $this->minkContext->visit('https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp');
-        $this->minkContext->selectOption('idp', 'https://tiqr.example.com/app_dev.php/saml/metadata');
-        $this->minkContext->pressButton('Login');
     }
 
     /**

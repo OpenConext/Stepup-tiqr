@@ -27,7 +27,7 @@ server {
         try_files $uri /app.php$is_args$args;
     }
 
-    location ~ ^/app(_dev)?\.php(/|$) {
+    location ~ ^/app(_(dev|test))?\.php(/|$) {
         fastcgi_pass unix:/var/run/php-fpm/{{ app_name }}.socket;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         # Include fastcgi_params from /etc/nginx/fastcgi_params, then

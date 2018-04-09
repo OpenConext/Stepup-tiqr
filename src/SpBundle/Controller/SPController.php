@@ -41,6 +41,9 @@ use Symfony\Component\HttpFoundation\Request;
  * Demo SP.
  *
  * @Route(service="sp.controller")
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * This is only for demo purposes. Not production code.
  */
 final class SPController extends Controller
 {

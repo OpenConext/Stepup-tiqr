@@ -64,3 +64,5 @@ after_script:
   - cat $TRAVIS_BUILD_DIR/access.log
   - cat $TRAVIS_BUILD_DIR/build/*.html
   - sudo cat /var/log/syslog
+  - cat $TRAVIS_BUILD_DIR/var/logs/*
+

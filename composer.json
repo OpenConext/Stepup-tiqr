@@ -54,6 +54,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "jakub-onderka/php-parallel-lint": "^0.9.2",
         "khanamiryan/qrcode-detector-decoder": "^1.0",
+        "league/csv": "^8.2",
         "malukenho/docheader": "^0.1.6",
         "mockery/mockery": "^1.0",
         "phpmd/phpmd": "^2.6",
@@ -81,7 +82,7 @@
 
         "static-analysis": ["@license-headers", "@phpmd", "@phpcs", "@phpcpd"],
         "license-headers": "vendor/bin/docheader check src/ tests/",
-        "phpmd": "vendor/bin/docheader check src/ tests/",
+        "phpmd": "vendor/bin/phpmd ./src text phpmd.xml  --suffixes php",
         "phpcs": [
             "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./src",
             "vendor/bin/phpcs --standard=phpcs_tests.xml --report=full --warning-severity=0 ./tests"
