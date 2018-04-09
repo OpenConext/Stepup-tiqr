@@ -63,7 +63,7 @@ final class TiqrService implements TiqrServiceInterface
     {
         $userId = $this->generateId();
         $this->session->set('userId', $userId);
-        return $this->tiqrService->startEnrollmentSession($userId, 'SURFconext', $this->session->getId());
+        return $this->tiqrService->startEnrollmentSession($userId, 'OpenConext', $this->session->getId());
     }
 
     public function getUserId()
