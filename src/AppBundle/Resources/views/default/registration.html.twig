@@ -38,11 +38,11 @@
     {{ 'enrol.download' | trans | raw }}
     <script>
         jQuery(function () {
-            const idle = "1";
-            const initialized = "2";
-            const retrieved = "3";
-            const processed = "4";
-            const finalized = "5";
+            var idle = "1";
+            var initialized = "2";
+            var retrieved = "3";
+            var processed = "4";
+            var finalized = "5";
 
             function fadeoutQr() {
                 jQuery(".qr").hide("slow");
