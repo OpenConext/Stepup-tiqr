@@ -453,4 +453,16 @@ class TiqrContext implements Context, KernelAwareContext
     {
         $this->minkContext->fillField($field, $this->metadata->identity->identifier);
     }
+
+    /**
+     * @Given I fill in :field with my one time password and press ok
+     */
+    public function iFillInWithMyOTP($field)
+    {
+        list($serviceId, $session, $challenge) = explode('/', $this->authenticationUrl);
+        $service = (array)$this->metadata->service;
+        $ocraSuite = $service['ocraSuite'];
+        $response = OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
+        $this->minkContext->visit('/authentication?otp=' . urlencode($response));
+    }
 }

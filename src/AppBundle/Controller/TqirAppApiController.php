@@ -17,14 +17,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\WithContextLogger;
+use AppBundle\Tiqr\AuthenticationRateLimitServiceInterface;
 use AppBundle\Tiqr\Exception\UserNotExistsException;
-use AppBundle\Tiqr\Response\AuthenticationResponse;
-use AppBundle\Tiqr\Response\RejectedAuthenticationResponse;
-use AppBundle\Tiqr\TiqrConfigurationInterface;
 use AppBundle\Tiqr\TiqrServiceInterface;
-use AppBundle\Tiqr\TiqrUserInterface;
 use AppBundle\Tiqr\TiqrUserRepositoryInterface;
-use DateTimeImmutable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Psr\Log\LoggerInterface;
@@ -38,32 +35,24 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * Keep in mind that the endpoint routers cannot change becuase 'old'
  * clients are depending on this.
- *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.NPathComplexity)
- *
- * Thought about converting the logic in loginAction into a state machine
- * After some consideration with a college this would make sense if it get's even bigger for now it's
- * still kind of readable.
  */
 class TqirAppApiController extends Controller
 {
     private $tiqrService;
     private $userRepository;
-    private $configuration;
     private $logger;
+    private $authenticationRateLimitService;
 
     public function __construct(
         TiqrServiceInterface $tiqrService,
         TiqrUserRepositoryInterface $userRepository,
-        TiqrConfigurationInterface $configuration,
+        AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         LoggerInterface $logger
     ) {
         $this->tiqrService = $tiqrService;
         $this->userRepository = $userRepository;
-        $this->configuration = $configuration;
         $this->logger = $logger;
+        $this->authenticationRateLimitService = $authenticationRateLimitService;
     }
 
     /**
@@ -80,12 +69,12 @@ class TqirAppApiController extends Controller
     {
         $key = $request->get('key');
         if (empty($key)) {
-            $this->logger->info('without enrollment');
+            $this->logger->info('Without enrollment');
 
             return new Response('Missing enrollment key', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('with key', ['key' => $key]);
+        $this->logger->info('With key', ['key' => $key]);
 
         // Exchange the key submitted by the phone for a new, unique enrollment secret.
         $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($key);
@@ -106,7 +95,7 @@ class TqirAppApiController extends Controller
             $enrollmentUrl
         );
 
-        $this->logger->info('Returning metadata response', ['key' => $key]);
+        $this->logger->info('Return metadata response', ['key' => $key]);
 
         return new JsonResponse($metadata);
     }
@@ -120,7 +109,7 @@ class TqirAppApiController extends Controller
      * @param Request $request
      * @return Response
      * @throws \InvalidArgumentException
-     * @throws \AppBundle\Tiqr\Exception\ConfigurationException
+     * @throws \Exception
      */
     public function tiqr(Request $request)
     {
@@ -181,141 +170,38 @@ class TqirAppApiController extends Controller
      *
      * @return Response
      * @throws \InvalidArgumentException
-     * @throws \AppBundle\Tiqr\Exception\ConfigurationException
      * @throws \Exception
      */
     private function loginAction(Request $request, $notificationType, $notificationAddress)
     {
-        $now = new DateTimeImmutable();
-        $sessionKey = $request->get('sessionKey');
         $userId = $request->get('userId');
-        $response = $request->get('response');
 
-        $logContext = ['key' => $sessionKey, 'userId' => $userId, 'sessionKey' => $sessionKey];
+        $logger = WithContextLogger::from($this->logger, ['userId' => $userId]);
 
-        $this->logger->notice('Login attempt from app', $logContext);
+        $logger->notice('Login attempt from app');
 
         try {
             $user = $this->userRepository->getUser($userId);
         } catch (UserNotExistsException $e) {
-            $this->logger->error('User does not exists', $logContext);
-
+            $logger->error('User does not exists');
             return new Response('INVALID_USER', Response::HTTP_BAD_REQUEST);
         }
 
-        if ($this->configuration->temporaryBlockEnabled() &&
-            $user->isBlockTemporary($now, $this->configuration->getTemporaryBlockDuration())) {
-            $this->logger->info('User is temporary blocked', $logContext);
+        $result = $this->authenticationRateLimitService->authenticate(
+            $request->get('sessionKey'),
+            $user,
+            $request->get('response')
+        );
 
-            return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
-        }
-
-        if (!$this->configuration->temporaryBlockEnabled() && $user->isBlocked()) {
-            $this->logger->info('User is blocked indefinitely', $logContext);
-
-            return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
-        }
-
-        // Verify the app's response.
-        $this->logger->info('Validate user login attempt', $logContext);
-        $result = $this->tiqrService->authenticate($user, $response, $sessionKey);
         if ($result->isValid()) {
-            $user->resetLoginAttempts();
+            $logger->info('User authenticated ' . $result->getMessage());
+
             $user->updateNotification($notificationType, $notificationAddress);
-
-            $this->logger->info('User login attempt is valid', $logContext);
-
             return new Response($result->getMessage(), Response::HTTP_OK);
         }
 
-        // The user did something wrong.
-        if ($result instanceof RejectedAuthenticationResponse) {
-            return $this->handleAuthenticationRejectResponse($logContext, $result, $user);
-        }
+        $logger->info('User denied authenticated ' . $result->getMessage());
 
-        $this->logger->error(
-            sprintf('Unexpected authentication error accorded "%s"', $result->getMessage()),
-            $logContext
-        );
-
-        // An unexpected error occurred.
         return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
-    }
-
-    /**
-     * @param array $logContext
-     * @param AuthenticationResponse $result
-     * @param TiqrUserInterface $user
-     *
-     * @return Response
-     * @throws \InvalidArgumentException
-     * @throws \AppBundle\Tiqr\Exception\ConfigurationException
-     * @throws \Exception
-     */
-    private function handleAuthenticationRejectResponse(
-        array $logContext,
-        AuthenticationResponse $result,
-        TiqrUserInterface $user
-    ) {
-        $now = new DateTimeImmutable();
-        $this->logger->info('User login attempt is rejected', $logContext);
-
-        // If there is no limit how many times the user can try to login.
-        if (!$this->configuration->hasMaxLoginAttempts()) {
-            $this->logger->info('Returning a forbidden response, and ignoring the attempt', $logContext);
-
-            return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
-        }
-
-        // Does the user still have login attempts left?.
-        if ($user->getLoginAttempts() < ($this->configuration->getMaxAttempts() - 1)) {
-            $user->addLoginAttempt();
-            $attemptsLeft = $this->configuration->getMaxAttempts() - $user->getLoginAttempts();
-            $this->logger->info(sprintf(
-                'Increase login attempt. Attempts left %s',
-                $attemptsLeft
-            ), $logContext);
-
-            return new Response($result->getMessage().':'.$attemptsLeft, Response::HTTP_FORBIDDEN);
-        }
-
-        $this->logger->info('No login attempts left', $logContext);
-
-        // If temporary block functionality is not enabled, we block the user forever.
-        if (!$this->configuration->temporaryBlockEnabled()) {
-            $user->block();
-            $this->logger->info('User is blocked indefinitely', $logContext);
-
-            return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
-        }
-
-        // Just block the user temporary if we don't got a limit.
-        if (!$this->configuration->hasMaxTemporaryLoginAttempts()) {
-            $user->blockTemporary($now);
-            $this->logger->info('Blocking the user temporarily.', $logContext);
-
-            return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
-        }
-
-        // Block the user for always, if he has reached the maximum login attempts.
-        if ($user->getTemporaryLoginAttempts() < ($this->configuration->getMaxTemporaryLoginAttempts() - 1)) {
-            $user->block();
-            $this->logger->info(
-                'User reached max login attempts, block user indefinitely',
-                $logContext
-            );
-
-            return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
-        }
-
-        $user->blockTemporary($now);
-        $attemptsLeft = $this->configuration->getMaxTemporaryLoginAttempts() - $user->getTemporaryLoginAttempts();
-
-        $this->logger->info(
-            sprintf('Increase temporary login attempt. Attempts left %s', $attemptsLeft),
-            $logContext
-        );
-
-        return new Response($result->getMessage().':'.$attemptsLeft, Response::HTTP_FORBIDDEN);
     }
 }

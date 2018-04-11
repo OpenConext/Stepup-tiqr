@@ -8,6 +8,8 @@ login:
         instructions.1: Klik op 'OK' om verder te gaan
         instructions.2: Voer je PIN in en klik op 'OK'. Je wordt nu ingelogd.
         fail: Geen pushnotificatie ontvangen? Klik %link_start%hier%link_end% en scan de QR-code met je Tiqr-app.
+    otp:
+      error: Er is iets fouts gebeurt
     qr:
         message: Scan of tap de code met de Tiqr-app op je telefoon om in te loggen.
         manual:
@@ -23,6 +25,7 @@ login:
         invalid_user: gebruiker onbekend.
         attempts_left: aantal herkansingen
         account_blocked: account geblokkeerd
+        account_temporary_blocked: account tijdelijk geblokkeerd
 
 enrol:
     title: Registreer nieuw Tiqr-account

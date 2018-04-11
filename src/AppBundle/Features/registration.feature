@@ -23,57 +23,57 @@ Feature: When an user needs to register for a new token
     Then I should see "urn:oasis:names:tc:SAML:2.0:status:Success"
 
     And the logs are:
-      | level  | message                                                                                                                                     | sari    |
+      | level  | message                                                                                                                                                                                         | sari    |
 
       # GSSP bundle handling the AuthnRequest
-      | notice | Received sso request                                                                                                                        |         |
-      | info   | Processing AuthnRequest                                                                                                                     |         |
-      | debug  | Extracting public keys for ServiceProvider "https://tiqr.example.com/app_test.php/saml/metadata"                                            |         |
-      | debug  | Found "1" keys, filtering the keys to get X509 keys                                                                                         |         |
-      | debug  | Found "1" X509 keys, attempting to use each for signature verification                                                                      |         |
+      | notice | Received sso request                                                                                                                                                                            |         |
+      | info   | Processing AuthnRequest                                                                                                                                                                         |         |
+      | debug  | Extracting public keys for ServiceProvider "https://tiqr.example.com/app_test.php/saml/metadata"                                                                                                |         |
+      | debug  | Found "1" keys, filtering the keys to get X509 keys                                                                                                                                             |         |
+      | debug  | Found "1" X509 keys, attempting to use each for signature verification                                                                                                                          |         |
       | debug  | /Attempting to verify signature with certificate .*/                                                                                        |         |
-      | debug  | Signature VERIFIED                                                                                                                          |         |
+      | debug  | Signature VERIFIED                                                                                                                                                                              |         |
       | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr.example.com\/app_test.php\/saml\/metadata", request ID: ".*"/ |         |
-      | info   | AuthnRequest stored in state                                                                                                                | present |
-      | notice | Redirect user to the application registration route /app_test.php/registration                                                              | present |
+      | info   | AuthnRequest stored in state                                                                                                                                                                    | present |
+      | notice | Redirect user to the application registration route /app_test.php/registration                                                                                                                  | present |
 
-      # Tiqr page with QR code.
-      | info   | Verifying if there is a pending registration from SP                                                                                        | present |
-      | info   | There is a pending registration                                                                                                             | present |
-      | info   | Verifying if registration is finalized                                                                                                      | present |
-      | info   | Registration is not finalized return QR code                                                                                                | present |
+      # Tiqr page with qr code.
+      | info   | Verifying if there is a pending registration from SP                                                                                                                                            | present |
+      | info   | There is a pending registration                                                                                                                                                                 | present |
+      | info   | Verifying if registration is finalized                                                                                                                                                          | present |
+      | info   | Registration is not finalized return QR code                                                                                                                                                    | present |
 
-      # Generate QR img.
-      | info   | Request for registration QR img                                                                                                             | present |
-      | info   | Generating enrollment key                                                                                                                   | present |
-      | info   | Returning registration QR response                                                                                                          | present |
+      # Generate qr img.
+      | info   | Request for registration QR img                                                                                                                                                                 | present |
+      | info   | Generating enrollment key                                                                                                                                                                       | present |
+      | info   | Returning registration QR response                                                                                                                                                              | present |
 
       # From Tiqr app (In prod there is no sari present, internal request .)
-      | info   | with key                                                                                                                                    | present |
-      | info   | Enrollment secret created                                                                                                                   | present |
-      | info   | Enrollment url created for enrollment secret                                                                                                | present |
-      | info   | Returning metadata response                                                                                                                 | present |
-      | info   | Start validating enrollment secret                                                                                                          | present |
-      | info   | Finalizing enrollment                                                                                                                       | present |
-      | info   | Enrollment finalized                                                                                                                        | present |
+      | info   | With key                                                                                                                                                                                        | present |
+      | info   | Enrollment secret created                                                                                                                                                                       | present |
+      | info   | Enrollment url created for enrollment secret                                                                                                                                                    | present |
+      | info   | Return metadata response                                                                                                                                                                        | present |
+      | info   | Start validating enrollment secret                                                                                                                                                              | present |
+      | info   | Finalizing enrollment                                                                                                                                                                           | present |
+      | info   | Enrollment finalized                                                                                                                                                                            | present |
 
       # Tiqr page, finalized return to SP.
-      | info   | Verifying if there is a pending registration from SP                                                                                        | present |
-      | info   | There is a pending registration                                                                                                             | present |
-      | info   | Verifying if registration is finalized                                                                                                      | present |
-      | info   | Registration is finalized returning to service provider                                                                                     | present |
+      | info   | Verifying if there is a pending registration from SP                                                                                                                                            | present |
+      | info   | There is a pending registration                                                                                                                                                                 | present |
+      | info   | Verifying if registration is finalized                                                                                                                                                          | present |
+      | info   | Registration is finalized returning to service provider                                                                                                                                         | present |
 
       # SP
-      | notice | /Application sets the subject nameID to .*/                                                                                                 | present |
-      | notice | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                           | present |
-      | notice | Received sso return request                                                                                                                 | present |
-      | info   | Create sso response                                                                                                                         | present |
+      | notice | /Application sets the subject nameID to .*/                                                                                                                                              | present |
+      | notice | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                                                                               | present |
+      | notice | Received sso return request                                                                                                                                                                     | present |
+      | info   | Create sso response                                                                                                                                                                             | present |
       | notice | /Saml response created with id ".*?", request ID: ".*?"/                                                                                    | present |
-      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.example.com/app_test.php/demo/sp/acs"   | present |
+      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.example.com/app_test.php/demo/sp/acs"                                                       | present |
       | info   | /SAMLResponse with id ".*?" was not signed at root level, not attempting to verify the signature of the reponse itself/                     |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                             |         |
-      | debug  | Validating the signed element with validator of type "SAML2\Signature\PublicKeyValidator"                                                   |         |
-      | debug  | Validation with key "#0" succeeded                                                                                                          |         |
+      | debug  | Validating the signed element with validator of type "SAML2\Signature\PublicKeyValidator"                                                                                                       |         |
+      | debug  | Validation with key "#0" succeeded                                                                                                                                                              |         |
 
   Scenario: When an user needs to cancel the registration
     Given I am on "/demo/sp"

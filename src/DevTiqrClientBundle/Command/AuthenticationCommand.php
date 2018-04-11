@@ -61,6 +61,12 @@ TEXT
                 '0000000000111111111122222222223333333333'
             )
             ->addOption(
+                'offline',
+                'ol',
+                InputOption::VALUE_OPTIONAL,
+                'Don\'t send otp directly'
+            )
+            ->addOption(
                 'nameId',
                 'id',
                 InputOption::VALUE_REQUIRED,
@@ -103,8 +109,8 @@ TEXT
                 'challenge' => $challenge,
                 'sp' => $sp,
                 'version' => $version,
-                'userId' => $userId
-            ], JSON_PRETTY_PRINT))
+                'userId' => $userId,
+            ], JSON_PRETTY_PRINT)),
         ]);
 
         $service = $this->getService($serviceId);
@@ -133,6 +139,14 @@ TEXT
         ]);
 
         $response = OCRA::generateOCRA($ocraSuite, $secret, '', $challenge, '', $session, '');
+        if ($input->getOption('offline')) {
+            $output->writeln([
+                '<info>Please login manually:</info>',
+                $this->decorateResult($response),
+            ]);
+            return;
+        }
+
         $authenticationBody = [
             'operation' => 'login',
             'sessionKey' => $session,
@@ -141,6 +155,7 @@ TEXT
             'notificationType' => $input->getOption('notificationType'),
             'notificationAddress' => $input->getOption('notificationAddress'),
         ];
+
         $output->writeln([
             sprintf(
                 '<comment>Send authentication data to "%s" with body:</comment>',
@@ -223,6 +238,7 @@ TEXT
         if (!isset($userdb[$serviceId])) {
             throw new \RuntimeException(sprintf('Service with id "%s" is unkown', $serviceId));
         }
+
         return $userdb[$serviceId];
     }
 }

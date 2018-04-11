@@ -167,4 +167,11 @@ interface TiqrServiceInterface
      * @return string
      */
     public function getUserId();
+
+    /**
+     * Return the authentication session id.
+     *
+     * @return string
+     */
+    public function getAuthenticationSessionKey();
 }
