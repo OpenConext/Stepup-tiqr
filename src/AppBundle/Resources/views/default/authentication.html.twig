@@ -7,6 +7,19 @@
 {% block body %}
     <h2>{{ 'login.title' | trans }}</h2>
     {{ 'login.qr.message' | trans }}
+
+    {% if otpError is defined %}
+        <br/>
+        <div class="alert alert-warning" role="alert">
+
+            <h4 class="alert-heading">{{ 'login.error.invalid_response' | trans }}</h4>
+
+            {% if attemptsLeft %}
+                <p>{{ attemptsLeft }} {{ 'login.error.attempts_left' | trans }}</p>
+            {% endif %}
+
+        </div>
+    {% endif %}
     <br/>
     <div class="content-container qr">
         <img src="{{ url('app_identity_authentication_qr') }}">
@@ -14,7 +27,7 @@
             {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">here</a>.
         </p>
     </div>
-    <div id="otpform" style="display:none">
+    <div id="otpform">
         <form method="POST" class="form-inline">
             <div class="input-group">
                 {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"
@@ -26,16 +39,20 @@
         </form>
     </div>
     <script>
+        jQuery('#otpform').hide();
+
         function updateStatus(status) {
             if (status === true) {
                 clearInterval(handle);
-                document.location.reload(true);
+                document.location.href = document.location.href + '?';
             }
         }
+
         function requestStatus() {
             var statusUrl = "{{ path('app_identity_authentication_status') | escape('js') }}";
             jQuery.get(statusUrl, updateStatus);
         }
+
         var handle = setInterval(requestStatus, 1500);
     </script>
 {% endblock %}

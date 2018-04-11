@@ -62,8 +62,10 @@ class TiqrUser implements TiqrUserInterface
 
     public function updateNotification($notificationType, $notificationAddress)
     {
-        $this->userStorage->setNotificationType($this->userId, $notificationType);
-        $this->userStorage->setNotificationAddress($this->userId, $notificationAddress);
+        if ($notificationType && $notificationAddress) {
+            $this->userStorage->setNotificationType($this->userId, $notificationType);
+            $this->userStorage->setNotificationAddress($this->userId, $notificationAddress);
+        }
     }
 
     public function resetLoginAttempts()
