@@ -46,21 +46,21 @@ class CancelController extends Controller
      */
     public function cancelAction()
     {
-        $this->logger->notice('cancelAction: User canceled the request');
+        $this->logger->notice('User canceled the request');
         if ($this->authenticationService->authenticationRequired()) {
             $this->authenticationService->reject('User cancelled the request');
 
-            $this->logger->info('cancelAction: Redirect to sso return endpoint with authentication reject response');
+            $this->logger->info('Redirect to sso return endpoint with authentication reject response');
             return $this->authenticationService->replyToServiceProvider();
         }
         if ($this->registrationService->registrationRequired()) {
             $this->registrationService->reject('User cancelled the request');
 
-            $this->logger->info('cancelAction: Redirect to sso return endpoint with registration reject response');
+            $this->logger->info('Redirect to sso return endpoint with registration reject response');
             return $this->registrationService->replyToServiceProvider();
         }
 
-        $this->logger->error('cancelAction: there is no pending request from SP');
+        $this->logger->error('there is no pending request from SP');
         return new Response('No active authnrequest', Response::HTTP_BAD_REQUEST);
     }
 }

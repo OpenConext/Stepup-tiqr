@@ -80,23 +80,23 @@ class TqirAppApiController extends Controller
     {
         $key = $request->get('key');
         if (empty($key)) {
-            $this->logger->info('metadataAction: without enrollment');
+            $this->logger->info('without enrollment');
 
             return new Response('Missing enrollment key', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('metadataAction: with key', ['key' => $key]);
+        $this->logger->info('with key', ['key' => $key]);
 
         // Exchange the key submitted by the phone for a new, unique enrollment secret.
         $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($key);
 
-        $this->logger->info('metadataAction: Enrollment secret created', ['key' => $key]);
+        $this->logger->info('Enrollment secret created', ['key' => $key]);
 
         // $enrollmentSecret is a one time password that the phone is going to use later to post
         // the shared secret of the user account on the phone.
         $enrollmentUrl = $request->getUriForPath(sprintf('/tiqr.php?otp=%s', urlencode($enrollmentSecret)));
 
-        $this->logger->info('metadataAction: Enrollment url created for enrollment secret', ['key' => $key]);
+        $this->logger->info('Enrollment url created for enrollment secret', ['key' => $key]);
 
         // Note that for security reasons you can only ever call getEnrollmentMetadata once in an enrollment session,
         // the data is destroyed after your first call.
@@ -106,7 +106,7 @@ class TqirAppApiController extends Controller
             $enrollmentUrl
         );
 
-        $this->logger->info('metadataAction: Return metadata response', ['key' => $key]);
+        $this->logger->info('Returning metadata response', ['key' => $key]);
 
         return new JsonResponse($metadata);
     }
@@ -150,13 +150,13 @@ class TqirAppApiController extends Controller
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
         $secret = $request->get('secret');
 
-        $this->logger->info('registerAction: Start validating enrollment secret');
+        $this->logger->info('Start validating enrollment secret');
 
         // note: userId is never sent together with the secret! userId is retrieved from session
         $userId = $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
 
         if ($userId === false) {
-            $this->logger->info('registerAction: Invalid enrollment secret');
+            $this->logger->info('Invalid enrollment secret');
 
             return new Response('Enrollment failed', Response::HTTP_FORBIDDEN);
         }
@@ -165,11 +165,11 @@ class TqirAppApiController extends Controller
             ->createUser($userId, $secret)
             ->updateNotification($notificationType, $notificationAddress);
 
-        $this->logger->info('registerAction: Finalizing enrollment');
+        $this->logger->info('Finalizing enrollment');
 
         $this->tiqrService->finalizeEnrollment($enrollmentSecret);
 
-        $this->logger->info('registerAction: Enrollment finalized');
+        $this->logger->info('Enrollment finalized');
 
         return new Response('OK', Response::HTTP_OK);
     }
@@ -193,37 +193,37 @@ class TqirAppApiController extends Controller
 
         $logContext = ['key' => $sessionKey, 'userId' => $userId, 'sessionKey' => $sessionKey];
 
-        $this->logger->notice('loginAction: Login attempt from app', $logContext);
+        $this->logger->notice('Login attempt from app', $logContext);
 
         try {
             $user = $this->userRepository->getUser($userId);
         } catch (UserNotExistsException $e) {
-            $this->logger->error('loginAction: User does not exists', $logContext);
+            $this->logger->error('User does not exists', $logContext);
 
             return new Response('INVALID_USER', Response::HTTP_BAD_REQUEST);
         }
 
         if ($this->configuration->temporaryBlockEnabled() &&
             $user->isBlockTemporary($now, $this->configuration->getTemporaryBlockDuration())) {
-            $this->logger->info('loginAction: User is temporary blocked', $logContext);
+            $this->logger->info('User is temporary blocked', $logContext);
 
             return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
         }
 
         if (!$this->configuration->temporaryBlockEnabled() && $user->isBlocked()) {
-            $this->logger->info('loginAction: User is blocked indefinitely', $logContext);
+            $this->logger->info('User is blocked indefinitely', $logContext);
 
             return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
         }
 
         // Verify the app's response.
-        $this->logger->info('loginAction: Validate user login attempt', $logContext);
+        $this->logger->info('Validate user login attempt', $logContext);
         $result = $this->tiqrService->authenticate($user, $response, $sessionKey);
         if ($result->isValid()) {
             $user->resetLoginAttempts();
             $user->updateNotification($notificationType, $notificationAddress);
 
-            $this->logger->info('loginAction: User login attempt is valid', $logContext);
+            $this->logger->info('User login attempt is valid', $logContext);
 
             return new Response($result->getMessage(), Response::HTTP_OK);
         }
@@ -234,7 +234,7 @@ class TqirAppApiController extends Controller
         }
 
         $this->logger->error(
-            'loginAction: Unexpected error accorded '.$result->getMessage(),
+            sprintf('Unexpected authentication error accorded "%s"', $result->getMessage()),
             $logContext
         );
 
@@ -258,11 +258,11 @@ class TqirAppApiController extends Controller
         TiqrUserInterface $user
     ) {
         $now = new DateTimeImmutable();
-        $this->logger->info('loginAction: User login attempt is rejected', $logContext);
+        $this->logger->info('User login attempt is rejected', $logContext);
 
         // If there is no limit how many times the user can try to login.
         if (!$this->configuration->hasMaxLoginAttempts()) {
-            $this->logger->info('loginAction: Return forbidden and ignore attempt', $logContext);
+            $this->logger->info('Returning a forbidden response, and ignoring the attempt', $logContext);
 
             return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
         }
@@ -272,19 +272,19 @@ class TqirAppApiController extends Controller
             $user->addLoginAttempt();
             $attemptsLeft = $this->configuration->getMaxAttempts() - $user->getLoginAttempts();
             $this->logger->info(sprintf(
-                'loginAction: Increase login attempt. Attempts left %s',
+                'Increase login attempt. Attempts left %s',
                 $attemptsLeft
             ), $logContext);
 
             return new Response($result->getMessage().':'.$attemptsLeft, Response::HTTP_FORBIDDEN);
         }
 
-        $this->logger->info('loginAction: No login attempts left', $logContext);
+        $this->logger->info('No login attempts left', $logContext);
 
         // If temporary block functionality is not enabled, we block the user forever.
         if (!$this->configuration->temporaryBlockEnabled()) {
             $user->block();
-            $this->logger->info('loginAction: User is blocked indefinitely', $logContext);
+            $this->logger->info('User is blocked indefinitely', $logContext);
 
             return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
         }
@@ -292,7 +292,7 @@ class TqirAppApiController extends Controller
         // Just block the user temporary if we don't got a limit.
         if (!$this->configuration->hasMaxTemporaryLoginAttempts()) {
             $user->blockTemporary($now);
-            $this->logger->info('loginAction: Increase temporary block attempt', $logContext);
+            $this->logger->info('Blocking the user temporarily.', $logContext);
 
             return new Response('ACCOUNT_BLOCKED', Response::HTTP_FORBIDDEN);
         }
@@ -301,7 +301,7 @@ class TqirAppApiController extends Controller
         if ($user->getTemporaryLoginAttempts() < ($this->configuration->getMaxTemporaryLoginAttempts() - 1)) {
             $user->block();
             $this->logger->info(
-                'loginAction: User reached max login attempts, block user indefinitely',
+                'User reached max login attempts, block user indefinitely',
                 $logContext
             );
 
@@ -312,7 +312,7 @@ class TqirAppApiController extends Controller
         $attemptsLeft = $this->configuration->getMaxTemporaryLoginAttempts() - $user->getTemporaryLoginAttempts();
 
         $this->logger->info(
-            sprintf('loginAction: Increase temporary login attempt. Attempts left %s', $attemptsLeft),
+            sprintf('Increase temporary login attempt. Attempts left %s', $attemptsLeft),
             $logContext
         );
 

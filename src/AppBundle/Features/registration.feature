@@ -37,31 +37,31 @@ Feature: When an user needs to register for a new token
       | info   | AuthnRequest stored in state                                                                                                                | present |
       | notice | Redirect user to the application registration route /app_test.php/registration                                                              | present |
 
-      # Tiqr page with qr code.
-      | info   | registrationAction: Verifying if there is a pending registration from SP                                                                    | present |
-      | info   | registrationAction: There is a pending registration                                                                                         | present |
-      | info   | registrationAction: Verifying if registration is finalized                                                                                  | present |
-      | info   | registrationAction: Registration is not finalized return qr code                                                                            | present |
+      # Tiqr page with QR code.
+      | info   | Verifying if there is a pending registration from SP                                                                                        | present |
+      | info   | There is a pending registration                                                                                                             | present |
+      | info   | Verifying if registration is finalized                                                                                                      | present |
+      | info   | Registration is not finalized return QR code                                                                                                | present |
 
-      # Generate qr img.
-      | info   | registrationQrAction: Request for registration qr img                                                                                       | present |
-      | info   | registrationQrAction: Generating enrollment key                                                                                             | present |
-      | info   | registrationQrAction: Return registration qr response                                                                                       | present |
+      # Generate QR img.
+      | info   | Request for registration QR img                                                                                                             | present |
+      | info   | Generating enrollment key                                                                                                                   | present |
+      | info   | Returning registration QR response                                                                                                          | present |
 
       # From Tiqr app (In prod there is no sari present, internal request .)
-      | info   | metadataAction: with key                                                                                                                    | present |
-      | info   | metadataAction: Enrollment secret created                                                                                                   | present |
-      | info   | metadataAction: Enrollment url created for enrollment secret                                                                                | present |
-      | info   | metadataAction: Return metadata response                                                                                                    | present |
-      | info   | registerAction: Start validating enrollment secret                                                                                          | present |
-      | info   | registerAction: Finalizing enrollment                                                                                                       | present |
-      | info   | registerAction: Enrollment finalized                                                                                                        | present |
+      | info   | with key                                                                                                                                    | present |
+      | info   | Enrollment secret created                                                                                                                   | present |
+      | info   | Enrollment url created for enrollment secret                                                                                                | present |
+      | info   | Returning metadata response                                                                                                                 | present |
+      | info   | Start validating enrollment secret                                                                                                          | present |
+      | info   | Finalizing enrollment                                                                                                                       | present |
+      | info   | Enrollment finalized                                                                                                                        | present |
 
       # Tiqr page, finalized return to SP.
-      | info   | registrationAction: Verifying if there is a pending registration from SP                                                                    | present |
-      | info   | registrationAction: There is a pending registration                                                                                         | present |
-      | info   | registrationAction: Verifying if registration is finalized                                                                                  | present |
-      | info   | registrationAction: Registration is finalized returning to service provider                                                                 | present |
+      | info   | Verifying if there is a pending registration from SP                                                                                        | present |
+      | info   | There is a pending registration                                                                                                             | present |
+      | info   | Verifying if registration is finalized                                                                                                      | present |
+      | info   | Registration is finalized returning to service provider                                                                                     | present |
 
       # SP
       | notice | /Application sets the subject nameID to .*/                                                                                                 | present |
@@ -78,7 +78,7 @@ Feature: When an user needs to register for a new token
   Scenario: When an user needs to cancel the registration
     Given I am on "/demo/sp"
 
-    # Tiqr page with qr code.
+    # Tiqr page with QR code.
     When I press "Register user"
     Then I should see "Register new Tiqr account"
     And I should be on "/registration"
@@ -106,13 +106,13 @@ Feature: When an user needs to register for a new token
       | notice   | Redirect user to the application registration route /app_test.php/registration                                                              | present |
 
       # Tiqr registration endpoint
-      | info     | registrationAction: Verifying if there is a pending registration from SP                                                                    | present |
-      | info     | registrationAction: There is a pending registration                                                                                         | present |
-      | info     | registrationAction: Verifying if registration is finalized                                                                                  | present |
-      | info     | registrationAction: Registration is not finalized return qr code                                                                            | present |
-      | notice   | cancelAction: User canceled the request                                                                                                     | present |
+      | info     | Verifying if there is a pending registration from SP                                                                                        | present |
+      | info     | There is a pending registration                                                                                                             | present |
+      | info     | Verifying if registration is finalized                                                                                                      | present |
+      | info     | Registration is not finalized return QR code                                                                                                | present |
+      | notice   | User canceled the request                                                                                                                   | present |
       | critical | User cancelled the request                                                                                                                  | present |
-      | info     | cancelAction: Redirect to sso return endpoint with registration reject response                                                             | present |
+      | info     | Redirect to sso return endpoint with registration reject response                                                                           | present |
       | notice   | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                           | present |
       | notice   | Received sso return request                                                                                                                 | present |
       | info     | Create sso response                                                                                                                         | present |

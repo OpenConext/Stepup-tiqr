@@ -42,7 +42,7 @@ class RegistrationController extends Controller
     }
 
     /**
-     * Returns the registration page with qr code that is generated in 'qrRegistrationAction'.
+     * Returns the registration page with QR code that is generated in 'qrRegistrationAction'.
      *
      * @Route("/registration", name="app_identity_registration")
      *
@@ -50,25 +50,25 @@ class RegistrationController extends Controller
      */
     public function registrationAction(Request $request)
     {
-        $this->logger->info('registrationAction: Verifying if there is a pending registration from SP');
+        $this->logger->info('Verifying if there is a pending registration from SP');
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
-            $this->logger->warning('registrationAction: Registration is not required');
+            $this->logger->warning('Registration is not required');
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('registrationAction: There is a pending registration');
+        $this->logger->info('There is a pending registration');
 
-        $this->logger->info('registrationAction: Verifying if registration is finalized');
+        $this->logger->info('Verifying if registration is finalized');
 
         if ($this->tiqrService->enrollmentFinalized()) {
-            $this->logger->info('registrationAction: Registration is finalized returning to service provider');
+            $this->logger->info('Registration is finalized returning to service provider');
             $this->registrationService->register($this->tiqrService->getUserId());
             return $this->registrationService->replyToServiceProvider();
         }
 
-        $this->logger->info('registrationAction: Registration is not finalized return qr code');
+        $this->logger->info('Registration is not finalized return QR code');
 
         return $this->render('AppBundle:default:registration.html.twig');
     }
@@ -82,17 +82,17 @@ class RegistrationController extends Controller
      */
     public function registrationStatusAction(Request $request)
     {
-        $this->logger->info('registrationStatusAction: Request for registration status');
+        $this->logger->info('Request for registration status');
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
-            $this->logger->error('registrationStatusAction: there is no pending registration request');
+            $this->logger->error('there is no pending registration request');
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
 
         $status = $this->tiqrService->getEnrollmentStatus();
-        $this->logger->info(sprintf('registrationStatusAction: Send json response status %s', $status));
+        $this->logger->info(sprintf('Send json response status %s', $status));
 
         return new Response($this->tiqrService->getEnrollmentStatus());
     }
@@ -107,18 +107,18 @@ class RegistrationController extends Controller
      */
     public function registrationQrAction(Request $request)
     {
-        $this->logger->info('registrationQrAction: Request for registration qr img');
+        $this->logger->info('Request for registration QR img');
 
         if (!$this->registrationService->registrationRequired()) {
-            $this->logger->error('registrationQrAction: There is no pending registration request');
+            $this->logger->error('There is no pending registration request');
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
-        $this->logger->info('registrationQrAction: Generating enrollment key');
+        $this->logger->info('Generating enrollment key');
         $key = $this->tiqrService->generateEnrollmentKey();
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
 
-        $this->logger->info('registrationQrAction: Return registration qr response');
+        $this->logger->info('Returning registration QR response');
         return $this->tiqrService->createRegistrationQRResponse($metadataURL);
     }
 }

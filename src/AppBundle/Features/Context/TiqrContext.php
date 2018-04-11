@@ -106,7 +106,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @see QrLinkController::qrRegistrationAction
      *
-     * @Given the registration qr code is scanned
+     * @Given the registration QR code is scanned
      *
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      * @throws \Assert\AssertionFailedException
@@ -127,7 +127,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @see QrLinkController::qrRegistrationAction
      *
-     * @Given the authentication qr code is scanned
+     * @Given the authentication QR code is scanned
      *
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      * @throws \Assert\AssertionFailedException
@@ -240,7 +240,7 @@ class TiqrContext implements Context, KernelAwareContext
     }
 
     /**
-     * @Then we register with the same qr code it should not work anymore.
+     * @Then we register with the same QR code it should not work anymore.
      *
      * @throws \Assert\AssertionFailedException
      * @throws \Exception

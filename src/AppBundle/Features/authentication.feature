@@ -3,7 +3,7 @@ Feature: When an user needs to authenticate
   I need to send an AuthnRequest with a nameID to the identity provider
 
   Background:
-    Given the registration qr code is scanned
+    Given the registration QR code is scanned
     When the user registers the service
     Then we have a registered user
     And I clear the logs
@@ -49,22 +49,22 @@ Feature: When an user needs to authenticate
       | notice | Redirect user to the application authentication route /app_test.php/authentication                                                             | present |
 
       # Tiqr showing qr image
-      | info   | authenticationAction: Verifying if there is a pending authentication request from SP                                                           | present |
-      | info   | authenticationAction: Verifying if authentication is finalized                                                                                 | present |
-      | info   | authenticationAction: start authentication                                                                                                     | present |
-      | info   | authenticationAction: Return authentication page with qr code                                                                                  | present |
-      | info   | authenticationQrAction: client request qr image                                                                                                | present |
-      | info   | authenticationQrAction: return qr image response                                                                                               | present |
+      | info   | Verifying if there is a pending authentication request from SP                                                                                 | present |
+      | info   | Verify if the user is already authenticated                                                                                                    | present |
+      | info   | start authentication                                                                                                                           | present |
+      | info   | Returning authentication page with QR code                                                                                                     | present |
+      | info   | client request QR image                                                                                                                        | present |
+      | info   | Returning QR image response                                                                                                                    | present |
 
       # Tiqr app
-      | notice | loginAction: Login attempt from app                                                                                                            | present |
-      | info   | loginAction: Validate user login attempt                                                                                                       | present |
-      | info   | loginAction: User login attempt is valid                                                                                                       | present |
+      | notice | Login attempt from app                                                                                                                         | present |
+      | info   | Validate user login attempt                                                                                                                    | present |
+      | info   | User login attempt is valid                                                                                                                    | present |
 
       # Tiqr app validating user is authenticated
-      | info   | authenticationAction: Verifying if there is a pending authentication request from SP                                                           | present |
-      | info   | authenticationAction: Verifying if authentication is finalized                                                                                 | present |
-      | info   | authenticationAction: Authentication is finalized, returning to SP                                                                             | present |
+      | info   | Verifying if there is a pending authentication request from SP                                                                                 | present |
+      | info   | Verify if the user is already authenticated                                                                                                    | present |
+      | info   | Authentication is finalized, returning to SP                                                                                                   | present |
       | notice | Application authenticates the user                                                                                                             | present |
       | notice | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                              | present |
 
@@ -84,7 +84,7 @@ Feature: When an user needs to authenticate
     And I fill in "Subject name id" with my identifier
     When I press "Authenticate user"
 
-    # Tiqr authentication page with qr code
+    # Tiqr authentication page with QR code
     Then I should see "Login with Tiqr"
     And I should be on "/authentication"
 
@@ -112,14 +112,14 @@ Feature: When an user needs to authenticate
       | info     | AuthnRequest stored in state                                                                                                                   | present |
       | notice   | Redirect user to the application authentication route /app_test.php/authentication                                                             | present |
 
-      # Tiqr showing qr image
-      | info     | authenticationAction: Verifying if there is a pending authentication request from SP                                                           | present |
-      | info     | authenticationAction: Verifying if authentication is finalized                                                                                 | present |
-      | info     | authenticationAction: start authentication                                                                                                     | present |
-      | info     | authenticationAction: Return authentication page with qr code                                                                                  | present |
-      | notice   | cancelAction: User canceled the request                                                                                                        | present |
+      # Tiqr showing QR image
+      | info     | Verifying if there is a pending authentication request from SP                                                                                 | present |
+      | info     | Verify if the user is already authenticated                                                                                                    | present |
+      | info     | start authentication                                                                                                                           | present |
+      | info     | Returning authentication page with QR code                                                                                                     | present |
+      | notice   | User canceled the request                                                                                                                      | present |
       | critical | User cancelled the request                                                                                                                     | present |
-      | info     | cancelAction: Redirect to sso return endpoint with authentication reject response                                                              | present |
+      | info     | Redirect to sso return endpoint with authentication reject response                                                                            | present |
       | notice   | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                              | present |
 
       # GSSP bundle creates saml return response

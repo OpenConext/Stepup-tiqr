@@ -4,29 +4,29 @@ Feature: User
   I need to to scan the authentication url
 
   Background:
-    Given the registration qr code is scanned
+    Given the registration QR code is scanned
     When the user registers the service
     Then we have a registered user
 
   Scenario: Register a new service
-    Given the authentication qr code is scanned
+    Given the authentication QR code is scanned
     When the app authenticates to the service
     Then we have a authenticated user
 
   Scenario: The authentication QR code can only be used a single time
-    Given the authentication qr code is scanned
+    Given the authentication QR code is scanned
     When the app authenticates to the service
     Then we have a authenticated user
     And the app authenticates to the service
     Then we have the authentication error 'INVALID_CHALLENGE'
 
   Scenario: The authentication fails with wrong password
-    Given the authentication qr code is scanned
+    Given the authentication QR code is scanned
     When the app authenticates to the service with wrong password
     Then we have the authentication error 'INVALID_RESPONSE:4'
 
   Scenario: The user attempts is reset after he successfully authenticated
-    And the authentication qr code is scanned
+    And the authentication QR code is scanned
     When the app authenticates to the service with wrong password
     Then we have the authentication error 'INVALID_RESPONSE:4'
     And the app authenticates to the service with wrong password
@@ -35,12 +35,12 @@ Feature: User
     And the app authenticates to the service
     Then we have a authenticated user
 
-    And the authentication qr code is scanned
+    And the authentication QR code is scanned
     And the app authenticates to the service with wrong password
     Then we have the authentication error 'INVALID_RESPONSE:4'
 
   Scenario: The user is blocked after to many attempts
-    And the authentication qr code is scanned
+    And the authentication QR code is scanned
     When the app authenticates to the service with wrong password
     Then we have the authentication error 'INVALID_RESPONSE:4'
     And the app authenticates to the service with wrong password

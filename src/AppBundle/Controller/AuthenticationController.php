@@ -48,7 +48,7 @@ class AuthenticationController extends Controller
      */
     public function authenticationAction(Request $request)
     {
-        $this->logger->info('authenticationAction: Verifying if there is a pending authentication request from SP');
+        $this->logger->info('Verifying if there is a pending authentication request from SP');
 
         $nameId = $this->authenticationService->getNameId();
         $logContext = ['nameId' => $nameId];
@@ -57,7 +57,7 @@ class AuthenticationController extends Controller
         // Do have a valid sample AuthnRequest?.
         if (!$this->authenticationService->authenticationRequired()) {
             $this->logger->error(
-                'authenticationAction: there is no pending authentication request from SP',
+                'there is no pending authentication request from SP',
                 $logContext
             );
 
@@ -67,17 +67,17 @@ class AuthenticationController extends Controller
 
         // Handle one time password
         if ($request->get('otp') !== null) {
-            $this->logger->info('authenticationAction: handling otp', $logContext);
+            $this->logger->info('handling otp', $logContext);
 
             // Implement otp
             return new Response('One time passord: '.$request->get('otp'), Response::HTTP_I_AM_A_TEAPOT);
         }
 
-        $this->logger->info('authenticationAction: Verifying if authentication is finalized', $logContext);
+        $this->logger->info('Verify if the user is already authenticated', $logContext);
 
         // Are we already logged in with tiqr?
         if ($this->tiqrService->isAuthenticated()) {
-            $this->logger->info('authenticationAction: Authentication is finalized, returning to SP', $logContext);
+            $this->logger->info('Authentication is finalized, returning to SP', $logContext);
             $this->authenticationService->authenticate();
 
             return $this->authenticationService->replyToServiceProvider();
@@ -85,15 +85,15 @@ class AuthenticationController extends Controller
 
         // Start authentication process.
         try {
-            $this->logger->info('authenticationAction: start authentication', $logContext);
+            $this->logger->info('start authentication', $logContext);
             $this->tiqrService->startAuthentication($nameId);
         } catch (\Exception $e) {
             $this->logger->error(sprintf(
-                'authenticationAction: Failed to start authentication %s',
+                'Failed to start authentication "%s"',
                 $e->getMessage()
             ), $logContext);
             $this->logger->info(
-                'authenticationAction: Return authentication failed response',
+                'Returning authentication failed response',
                 $logContext
             );
             $this->authenticationService->reject($e->getMessage());
@@ -102,7 +102,7 @@ class AuthenticationController extends Controller
         }
 
         $this->logger->info(
-            'authenticationAction: Return authentication page with qr code',
+            'Returning authentication page with QR code',
             $logContext
         );
 
@@ -115,10 +115,10 @@ class AuthenticationController extends Controller
      */
     public function authenticationStatusAction()
     {
-        $this->logger->info('authenticationStatusAction: Request for authentication status');
+        $this->logger->info('Request for authentication status');
 
         if (!$this->authenticationService->authenticationRequired()) {
-            $this->logger->error('authenticationStatusAction: there is no pending authentication request from SP');
+            $this->logger->error('there is no pending authentication request from SP');
 
             return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
         }
@@ -126,10 +126,10 @@ class AuthenticationController extends Controller
         $isAuthenticated = $this->tiqrService->isAuthenticated();
 
         if ($isAuthenticated) {
-            $this->logger->info('authenticationStatusAction: Send json response is authenticated');
+            $this->logger->info('Send json response is authenticated');
             return new JsonResponse(true);
         }
-        $this->logger->info('authenticationStatusAction: Send json response is not authenticated');
+        $this->logger->info('Send json response is not authenticated');
         return new JsonResponse(false);
     }
 
@@ -140,16 +140,16 @@ class AuthenticationController extends Controller
      */
     public function authenticationQrAction()
     {
-        $this->logger->info('authenticationQrAction: client request qr image');
+        $this->logger->info('client request QR image');
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->authenticationService->authenticationRequired()) {
-            $this->logger->error('authenticationQrAction: there is no pending authentication request from SP');
+            $this->logger->error('there is no pending authentication request from SP');
 
             return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('authenticationQrAction: return qr image response');
+        $this->logger->info('Returning QR image response');
 
         return $this->tiqrService->createAuthenticationQRResponse();
     }
