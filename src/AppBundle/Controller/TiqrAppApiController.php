@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * The api that connects to the Tiqr app.
  *
- * Keep in mind that the endpoint routers cannot change becuase 'old'
+ * Keep in mind that the endpoint routers cannot change because of the 'old'
  * clients are depending on this.
  *
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -47,7 +47,7 @@ use Symfony\Component\HttpFoundation\Response;
  * After some consideration with a college this would make sense if it get's even bigger for now it's
  * still kind of readable.
  */
-class TqirAppApiController extends Controller
+class TiqrAppApiController extends Controller
 {
     private $tiqrService;
     private $userRepository;
