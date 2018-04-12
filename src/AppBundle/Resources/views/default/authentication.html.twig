@@ -8,7 +8,7 @@
     <h2>{{ 'login.title' | trans }}</h2>
     {{ 'login.qr.message' | trans }}
     <br/>
-    <div class="content-container">
+    <div class="content-container qr">
         <img src="{{ url('app_identity_authentication_qr') }}">
         <p>
             {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">here</a>.

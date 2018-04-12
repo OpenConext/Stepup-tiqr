@@ -67,7 +67,8 @@ final class ErrorReportContext implements Context
             $scenario = $this->getScenario($scope);
             if (null !== $scenario) {
                 $title = $scenario->getTitle();
-            } else {
+            }
+            if (null === $scenario) {
                 $step = $this->getBackGroundStep($scope);
                 $title = $step->getNodeType().'-'.$step->getText();
             }

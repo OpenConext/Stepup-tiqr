@@ -5,7 +5,7 @@ default:
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:
-            base_url: https://tiqr.example.com
+            base_url: https://tiqr.example.com/app_test.php/
             default_session: 'symfony2'
             goutte:
                guzzle_parameters:

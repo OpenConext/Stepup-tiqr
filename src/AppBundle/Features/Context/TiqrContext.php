@@ -21,7 +21,10 @@ use AppBundle\Tiqr\TiqrConfiguration;
 use AppBundle\Tiqr\TiqrConfigurationInterface;
 use AppBundle\Tiqr\TiqrUserRepositoryInterface;
 use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Behat\Context\Context;
@@ -33,6 +36,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * With this context Tiqr can be tested without an active Saml AuthnNRequest.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class TiqrContext implements Context, KernelAwareContext
 {
@@ -101,7 +106,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @see QrLinkController::qrRegistrationAction
      *
-     * @Given the registration qr code is scanned
+     * @Given the registration QR code is scanned
      *
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      * @throws \Assert\AssertionFailedException
@@ -122,7 +127,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @see QrLinkController::qrRegistrationAction
      *
-     * @Given the authentication qr code is scanned
+     * @Given the authentication QR code is scanned
      *
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      * @throws \Assert\AssertionFailedException
@@ -205,6 +210,8 @@ class TiqrContext implements Context, KernelAwareContext
             'notificationType' => $notificationType,
             'notificationAddress' => $notificationAddress,
         ];
+        // Internal request does not like an absolute path.
+        $authenticationUrl = str_replace('https://tiqr.example.com/app_test.php', '', $authenticationUrl);
 
         $this->authenticatioResponse = $this->kernel->handle(
             Request::create($authenticationUrl, 'POST', $authenticationBody)
@@ -233,7 +240,7 @@ class TiqrContext implements Context, KernelAwareContext
     }
 
     /**
-     * @Then we register with the same qr code it should not work anymore.
+     * @Then we register with the same QR code it should not work anymore.
      *
      * @throws \Assert\AssertionFailedException
      * @throws \Exception
@@ -267,6 +274,7 @@ class TiqrContext implements Context, KernelAwareContext
 
     /**
      * @Then we have a authenticated user
+     * @Then we have a authenticated app
      *
      * @throws \Assert\AssertionFailedException
      */
@@ -307,5 +315,142 @@ class TiqrContext implements Context, KernelAwareContext
     private function createClientSecret()
     {
         return bin2hex(openssl_random_pseudo_bytes(32));
+    }
+
+    /**
+     * Read image and set to this context.
+     *
+     * @Then I scan the tiqr registration qrcode
+     *
+     * @throws \Assert\AssertionFailedException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function iScanTheTiqrRegistrationQrcode()
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        /** @var Client $client */
+        $page = $session->getPage();
+        $img = $page->find('css', 'div.qr > img');
+        $src = $img->getAttribute('src');
+
+        $qrcode = new \QrReader($this->getFileContentsInsucure($src), \QrReader::SOURCE_TYPE_BLOB);
+        $content = $qrcode->text();
+        Assertion::startsWith($content, 'tiqrenroll://');
+        Assertion::eq(preg_match('/^tiqrenroll:\/\/(?P<url>.*)/', $content, $matches), 1);
+        $this->metadataUrl = $matches['url'];
+    }
+
+    /**
+     * Read image and set to this context.
+     *
+     * @Then I scan the tiqr authentication qrcode
+     *
+     * @throws \Assert\AssertionFailedException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function iScanTheTiqrAuthenticationQrcode()
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        /** @var Client $client */
+        $page = $session->getPage();
+        $img = $page->find('css', 'div.qr > img');
+        $src = $img->getAttribute('src');
+
+        $qrcode = new \QrReader($this->getFileContentsInsucure($src), \QrReader::SOURCE_TYPE_BLOB);
+        $content = $qrcode->text();
+        Assertion::startsWith($content, 'tiqrauth://');
+        Assertion::eq(preg_match('/^tiqrauth:\/\/(?P<url>.*)/', $content, $matches), 1);
+        $this->authenticationUrl = $matches['url'];
+    }
+
+    /**
+     * @When /^I clear the logs$/
+     */
+    public function clearTheLogs()
+    {
+        /** @var FileLogger $logger */
+        $logger = $this->kernel->getContainer()->get(FileLogger::class);
+        $logger->cleanLogs();
+    }
+
+    /**
+     * @Given /^the logs are:$/
+     *
+     * @throws \Assert\AssertionFailedException
+     * @throws \Exception
+     */
+    public function theLogsAre(TableNode $table)
+    {
+        /** @var FileLogger $logger */
+        $logger = $this->kernel->getContainer()->get(FileLogger::class);
+        $logs = $logger->cleanLogs();
+        $rows = array_values($table->getColumnsHash());
+
+        try {
+            foreach ($rows as $index => $row) {
+                Assertion::true(isset($logs[$index]), sprintf('Missing message %s', $row['message']));
+                list($level, $message, $context) = $logs[$index];
+                if (preg_match('/^\/.*\/$/', $row['message']) === 1) {
+                    Assertion::regex($message, $row['message']);
+                } else {
+                    Assertion::eq($row['message'], $message);
+                }
+                Assertion::eq($row['level'], $level, sprintf('Level does not match for %s', $row['message']));
+                Assertion::choice($row['sari'], ['', 'present']);
+                if ($row['sari'] === 'present') {
+                    Assertion::keyExists($context, 'sari', sprintf('Missing sari for message %s', $row['message']));
+                    Assertion::notEmpty($context['sari']);
+                } else {
+                    Assertion::keyNotExists(
+                        $context,
+                        'sari',
+                        sprintf('Having unexpected sari for message %s', $row['message'])
+                    );
+                }
+            }
+            $logs = array_slice($logs, count($rows));
+            Assertion::noContent($logs, var_export($logs, true));
+        } catch (AssertionFailedException $exception) {
+            $yml = implode(PHP_EOL, array_map(function ($log) {
+                return sprintf(
+                    '| %s | %s | %s |',
+                    $log[0],
+                    $log[1],
+                    isset($log[2]['sari']) ? 'present' : ''
+                );
+            }, $logs));
+
+            throw new \Exception($exception->getMessage() . PHP_EOL . $yml);
+        }
+    }
+
+    /**
+     * Return file from stream response.
+     *
+     * This support the strange way how tiqr sends the qr code.
+     *
+     * @param string $src
+     *
+     * @return string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function getFileContentsInsucure($src)
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        $driver = $session->getDriver();
+        /** @var Client $client */
+        $client = $driver->getClient();
+        ob_start();
+        $client->request('get', $src);
+
+        return ob_get_clean();
+    }
+
+    /**
+     * @Given I fill in :field with my identifier
+     */
+    public function iFillInWithMyIdentifier($field)
+    {
+        $this->minkContext->fillField($field, $this->metadata->identity->identifier);
     }
 }
