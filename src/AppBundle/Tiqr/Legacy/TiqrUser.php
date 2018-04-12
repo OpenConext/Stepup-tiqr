@@ -181,4 +181,24 @@ class TiqrUser implements TiqrUserInterface
         $timestamp = $this->userStorage->getTemporaryBlockTimestamp($this->userId);
         return (strtotime($timestamp) + $maxDuration * 60) < $now->getTimestamp();
     }
+
+    /**
+     * Return push notification type.
+     *
+     * @return string
+     */
+    public function getNotificationType()
+    {
+        return $this->userStorage->getNotificationType($this->userId);
+    }
+
+    /**
+     * Return push notification address.
+     *
+     * @return string
+     */
+    public function getNotificationAddress()
+    {
+        return $this->userStorage->getNotificationAddress($this->userId);
+    }
 }

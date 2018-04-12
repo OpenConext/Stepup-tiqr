@@ -91,4 +91,17 @@ interface TiqrUserInterface
      *   The maximum duration on minutes
      */
     public function isBlockTemporary(\DateTimeImmutable $now, $maxDuration);
+
+    /**
+     * Return push notification type.
+     *
+     * @return string
+     */
+    public function getNotificationType();
+
+    /**
+     *
+     * @return string
+     */
+    public function getNotificationAddress();
 }

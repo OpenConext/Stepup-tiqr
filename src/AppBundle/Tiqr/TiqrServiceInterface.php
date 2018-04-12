@@ -174,4 +174,18 @@ interface TiqrServiceInterface
      * @return string
      */
     public function getAuthenticationSessionKey();
+
+    /**
+     * Exchange a notificationToken for a deviceToken.
+     *
+     * During enrollment, the phone will post a notificationAddress that can be
+     * used to send notifications. To actually send the notification,
+     * this address should be converted to the real device address.
+     *
+     * @param string $notificationType
+     * @param string $notificationAddress
+     *
+     * @return string
+     */
+    public function sendNotification($notificationType, $notificationAddress);
 }
