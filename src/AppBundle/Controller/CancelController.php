@@ -46,7 +46,7 @@ class CancelController extends Controller
      */
     public function cancelAction()
     {
-        $this->logger->notice('User canceled the request');
+        $this->logger->notice('User cancelled the request');
         if ($this->authenticationService->authenticationRequired()) {
             $this->authenticationService->reject('User cancelled the request');
 

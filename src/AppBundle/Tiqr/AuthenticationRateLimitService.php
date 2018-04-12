@@ -95,7 +95,7 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         );
 
         if ($this->isBlockedTemporary($user)) {
-            $logger->info('User is temporary blocked');
+            $logger->info('User is temporarily blocked');
 
             return new TemporaryBlockedAuthenticationResponse();
         }
@@ -122,7 +122,7 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         }
 
         $logger->error(
-            'Unexpected error accorded '.$result->getMessage()
+            'Unexpected error occurred '.$result->getMessage()
         );
 
         return $result;
@@ -191,7 +191,7 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         $user->blockTemporary($this->now);
         $attemptsLeft = $this->configuration->getMaxTemporaryLoginAttempts() - $user->getTemporaryLoginAttempts();
 
-        $logger->info(sprintf('Increase temporary login attempt. Attempts left %s', $attemptsLeft));
+        $logger->info(sprintf('Increase temporary login attempt. Attempts left %d', $attemptsLeft));
 
         return new RateLimitedAuthenticationResponse($result, $attemptsLeft);
     }

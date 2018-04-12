@@ -49,7 +49,7 @@ Feature: When an user needs to register for a new token
       | info   | Returning registration QR response                                                                                                                                                              | present |
 
       # From Tiqr app (In prod there is no sari present, internal request .)
-      | info   | With key                                                                                                                                                                                        | present |
+      | info   | With enrollment key                                                                                                                                                                                        | present |
       | info   | Enrollment secret created                                                                                                                                                                       | present |
       | info   | Enrollment url created for enrollment secret                                                                                                                                                    | present |
       | info   | Return metadata response                                                                                                                                                                        | present |
@@ -110,7 +110,7 @@ Feature: When an user needs to register for a new token
       | info     | There is a pending registration                                                                                                             | present |
       | info     | Verifying if registration is finalized                                                                                                      | present |
       | info     | Registration is not finalized return QR code                                                                                                | present |
-      | notice   | User canceled the request                                                                                                                   | present |
+      | notice   | User cancelled the request                                                                                                                   | present |
       | critical | User cancelled the request                                                                                                                  | present |
       | info     | Redirect to sso return endpoint with registration reject response                                                                           | present |
       | notice   | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                           | present |

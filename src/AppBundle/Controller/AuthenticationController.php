@@ -126,7 +126,7 @@ class AuthenticationController extends Controller
             $this->tiqrService->startAuthentication($nameId);
         } catch (\Exception $e) {
             $logger->error(sprintf(
-                'Failed to start authentication %s',
+                'Failed to start authentication "%s"',
                 $e->getMessage()
             ));
             $logger->info('Return authentication failed response');
@@ -149,7 +149,7 @@ class AuthenticationController extends Controller
         $this->logger->info('Request for authentication status');
 
         if (!$this->authenticationService->authenticationRequired()) {
-            $this->logger->error('there is no pending authentication request from SP');
+            $this->logger->error('There is no pending authentication request from SP');
             return new JsonResponse(false, Response::HTTP_BAD_REQUEST);
         }
 

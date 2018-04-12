@@ -86,13 +86,13 @@ class RegistrationController extends Controller
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
-            $this->logger->error('there is no pending registration request');
+            $this->logger->error('There is no pending registration request');
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
 
         $status = $this->tiqrService->getEnrollmentStatus();
-        $this->logger->info(sprintf('Send json response status %s', $status));
+        $this->logger->info(sprintf('Send json response status "%s"', $status));
 
         return new Response($this->tiqrService->getEnrollmentStatus());
     }

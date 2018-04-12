@@ -122,7 +122,7 @@ Feature: When an user needs to authenticate
       | info     | Verifying if authentication is finalized                                                                                                       | present |
       | info     | Start authentication                                                                                                                           | present |
       | info     | Return authentication page with QR code                                                                                                        | present |
-      | notice   | User canceled the request                                                                                                                      | present |
+      | notice   | User cancelled the request                                                                                                                      | present |
       | critical | User cancelled the request                                                                                                                     | present |
       | info     | Redirect to sso return endpoint with authentication reject response                                                                            | present |
       | notice   | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                              | present |

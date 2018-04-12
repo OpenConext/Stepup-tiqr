@@ -74,7 +74,7 @@ class TiqrAppApiController extends Controller
             return new Response('Missing enrollment key', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('With key', ['key' => $key]);
+        $this->logger->info('With enrollment key', ['key' => $key]);
 
         // Exchange the key submitted by the phone for a new, unique enrollment secret.
         $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($key);
