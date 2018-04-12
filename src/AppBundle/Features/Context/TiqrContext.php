@@ -153,8 +153,8 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      */
     public function userRegisterTheService(
-        $notificationType = 'APNS',
-        $notificationAddress = '0000000000111111111122222222223333333333'
+        $notificationType = null,
+        $notificationAddress = null
     ) {
         $this->notificationType = $notificationType;
         $this->notificationAddress = $notificationAddress;
@@ -192,8 +192,8 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Exception
      */
     public function appAuthenticates(
-        $notificationType = 'APNS',
-        $notificationAddress = '0000000000111111111122222222223333333333'
+        $notificationType = null,
+        $notificationAddress = null
     ) {
         list($serviceId, $session, $challenge, $sp, $version) = explode('/', $this->authenticationUrl);
         list($userId, $serviceId) = explode('@', $serviceId);
@@ -218,8 +218,6 @@ class TiqrContext implements Context, KernelAwareContext
         );
     }
 
-    //
-
     /**
      * This does the app authentication logic.
      *
@@ -229,8 +227,8 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Exception
      */
     public function appAuthenticatesWithWrongPassword(
-        $notificationType = 'APNS',
-        $notificationAddress = '0000000000111111111122222222223333333333'
+        $notificationType = null,
+        $notificationAddress = null
     ) {
         $secret = $this->clientSecret;
         // We scramble the secret key, normally the user does this with his password
