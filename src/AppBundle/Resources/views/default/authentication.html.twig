@@ -4,8 +4,11 @@
     {{ 'login.title'|trans }}
 {% endblock %}
 
+{% block header_title %}
+    {{ 'login.title'|trans }}
+{% endblock %}
+
 {% block body %}
-    <h2>{{ 'login.title' | trans }}</h2>
     {{ 'login.qr.message' | trans }}
 
     {% if otpError is defined %}
