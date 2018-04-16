@@ -1,18 +1,13 @@
-Stepup-gssp-example
-===================
+Stepup-tiqr
+===========
 
 <a href="#">
-    <img src="https://travis-ci.org/OpenConext/Stepup-gssp-bundle.svg?branch=master" alt="build:">
+    <img src="https://travis-ci.org/OpenConext/Stepup-tiqr-bundle.svg?branch=master" alt="build:">
 </a></br>
 
-Example Generic SAML Stepup Provider.
+GSSP implementation of Tiqr. [https://tiqr.org/documentation/](https://tiqr.org/documentation/)
 
-This repository can be used for reference material or 
-as a base project setup for new IdP SecondFactor application.
-
-The SAML logic for receiving authentication request (AuthnRequest) and sending authentication response back is
-placed inside the Symfony bundle [stepup-gssp-bundle](https://github.com/OpenConext/Stepup-gssp-bundle). The state of the
-application is stored inside PHP sessions, each new request will invalidate the current session state.
+Project is based on example GSSP project [https://github.com/OpenConext/Stepup-gssp-example]()
 
 Locale user preference
 ----------------------
@@ -24,7 +19,7 @@ Authentication and registration flows
 -------------------------------------
 
 The application provides internal (SpBundle) and a remote service provider. Instructions for this are given 
-on the homepage of this example project [Homepage](https://tiqr.example.com/app_dev.php/).
+on the homepage of this Tiqr project [Homepage](https://tiqr.example.com/app_dev.php/).
 
 ![flow](docs/flow.png)
 <!---
@@ -32,52 +27,48 @@ regenerate docs/flow.png with `plantum1 README.md` or with http://www.plantuml.c
 @startuml docs/flow
 actor User
 participant "Service provider" as SP
-box "Stepup GSSP example"
+box "Stepup Tiqr"
 participant "GSSP Bundle" as IdP
-participant "SecondFactor implementation" as App
+participant "Tiqr implementation" as TiqrSF
 end box
 User -> SP: Register/Authenticate
 SP -> IdP: Send AuthnRequest
 activate IdP
-IdP -> App: Redirect to SecondFactor endpoint
-App -> App: <Your custom SecondFactor implementation>
-App -> IdP: Redirect to SSO Return endpoint
+IdP -> TiqrSF: Redirect to SecondFactor endpoint
+TiqrSF -> TiqrSF: <Tiqr logic>
+TiqrSF -> IdP: Redirect to SSO Return endpoint
 IdP -> SP: AuthnRequest response
 deactivate IdP
 SP -> User: User registered/Authenticated
 @enduml
 --->
 
+Tiqr registration
+-----------------
 
-How to create your own Stepup Provider
-======================================
-
-There are two ways to approach this. 
-
-Copy this GSSP example repository
----------------------------------
-
-One of the benefits of using this repository is that it contains many pre-configured tools:
-
-* Metrics & test tooling [testing.md](./docs/testing.md)
-* Development environment provisioned by Vagrant 
-* Pre-configured travis.yml for CI integration
-* Default SurfContext styling [frontend_tooling.md](./docs/frontend_tooling.md)
-
-1) Clone and checkout this repository
-2) Change the project configuration variables:
-    * composer.json name and description
-    * this readme.md file
-    * Replace 'tiqr.example.com' in all files with your own hostename
-3) Install the copied project. (See [Development environment](#) section of this README.md file)
-4) Implement your authentication & registration logic in DefaultController::registrationAction and DefaultController::authenticateAction. 
-5) Feel free to rename and change this example clone for your needs.
-
-Install from a clean or exiting symfony project
-------------------------------------
-
-1) [Install Symfony](http://symfony.com/doc/current/setup.html) 
-2) Follow the instructions from the [GSSP bundle](https://github.com/OpenConext/Stepup-gssp-bundle)
+![flow](docs/tiqr_registration.png)
+<!---
+regenerate docs/tiqr_registration.png with `plantum1 README.md` or with http://www.plantuml.com/plantuml
+@startuml docs/tiqr_registration
+actor User
+participant "Website" as Site
+participant "App" as App
+participant "Api" as Api
+activate Site
+Site -> User: Show QR code
+App -> Site: Scan the registration code
+deactivate Site
+activate App
+App -> Api: Request the metadata endpoint 
+App -> User: Asks for verification code
+App -> Api: Registers user with secret and OTP
+deactivate App
+activate Site
+Site -> Api: Asks the Api if the user is registered
+Site -> User: Registration done
+deactivate Site
+@enduml
+--->
 
 Development environment
 ======================
@@ -124,6 +115,8 @@ Debugging
 Xdebug is configured when provisioning your development Vagrant box. 
 It's configured with auto connect IDE_KEY=phpstorm.
 
+Demo sp is available on  [https://tiqr.example.com/app_dev.php/demo/sp]()
+
 Tests and metrics
 ======================
 
@@ -135,8 +128,31 @@ To run all required test you can run the following commands from the dev env:
 
 Every part can be run separately. Check "scripts" section of the composer.json file for the different options.
 
-Release instructions example project
-====================================
+Test Tiqr Api's
+---------------
+
+Demo sp is available on  [https://tiqr.example.com/app_dev.php/demo/sp]()
+
+Fetch registration link automatically from /app_dev.php/registration/qr/dev
+
+``` ./bin/console test:registration```
+
+``` ./bin/console test:registration <registration url>``` 
+
+``` ./bin/console test:registration <./qr_file.png>```  
+
+``` ./bin/console test:authentication```
+
+``` ./bin/console test:authentication <authentication url>``` 
+
+``` ./bin/console test:authentication <./qr_file.png>```  
+
+Authentication can also be done in 'offline' mode, so you need to fill in your 'one time password'.
+
+``` ./bin/console test:authentication --offline=true ./<qr_file.png>```  
+
+Release instructions project
+============================
 
 The projects follow semantic versioning. To create a new release perform the following steps:
 
@@ -160,3 +176,6 @@ Other resources
  - [Developer documentation](docs/index.md)
  - [Issue tracker](https://www.pivotaltracker.com/n/projects/1163646)
  - [License](LICENSE)
+ - [Tiqr library](https://github.com/SURFnet/tiqr-server-libphp)
+ - [Library documentation](https://tiqr.org/documentation/) 
+ - [Tiqr config parameters](https://github.com/SURFnet/simplesamlphp-module-authtiqr)

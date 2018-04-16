@@ -1,68 +1,16 @@
-service_provider: Service provider
 
-page.title: GSSP SDK
-
-page.header.stepup-gateway-gssp: Wiki
-page.header.stepup-gssp-bundle: GSSP-bundel
+page.title: Tiqr
 
 page.navigation.route.homepage: Home
 page.navigation.route.app_identity_registration: Registratie
 page.navigation.route.app_identity_authentication: Authenticatie
-page.navigation.route.gssp_saml_sso: SSO
-page.navigation.route.gssp_saml_sso_return: SSO return
-page.navigation.route.gssp_saml_metadata: Metadata
 page.navigation.route.sp_demo: Demo SP
 
 page.footer.terms: Algemene voorwaarden
 
-page.index.title: Welkom bij Generieke SAML Stepup Provider SDK
-page.index.body.intro: |
-    De applicatie is klaar voor gebruik. Dit voorbeeldproject kan gebruikt worden om een eigen implementatie van een GSSP verificatiemiddel te ontwikkelen.
-    Het demonstreert registratie en authenticatie van second factor tokens geïnitieerd door een dummy service provider.
-
-page.index.body.sdk_discription: |
-    Deze Symfony Framework applicatie bestaat uit een AppBundle waar de voorbeeld registratie- en verificatie-endpoints zijn geïmplementeerd. Dit is het startpunt van de applicatie. Zie DefaultController::registrationAction en DefaultController::authenticateAction.
-    Dit is de plaats om de logica van de GSSP identity provider te implementeren. Lees voor meer informatie de README.md van dit project.
-
-page.index.external_sp: External service provider
-page.index.internal_sp: Internal service provider
-
-page.index.body.registration.title: Registratie flow
-page.index.body.registration.external.step1.go_to_sp: 1) Ga naar
-page.index.body.registration.external.step2.select_idp: 2) Selecteer '%idp-entity-id%' in de lijst 'Identity Provider'
-page.index.body.registration.external.step3.click_login: 3) Klik op de knop 'Aanmelden'
-page.index.body.registration.external.step4.click_register: 4) Klik op de knop 'Gebruiker registreren'
-
-page.index.body.authentication.title: Verificatie flow
-page.index.body.authentication.external.step1.go_to_sp: 1) Ga naar
-page.index.body.authentication.external.step2.select_idp: 2) Selecteer '%idp-entity-id%' in de lijst 'Identity Provider'
-page.index.body.authentication.external.step3.fill_subject: 3) Vul de subject NameId in het veld 'Subject NameID' in
-page.index.body.authentication.external.step4.click_login: 4) Klik op de knop 'Aanmelden'
-page.index.body.authentication.external.step5.click_authenticate: 5) Klik op de knop 'Gebruiker verifiëren'
-
-page.index.body.registration.internal.step1.go_to_sp: 1) Ga naar
-page.index.body.registration.internal.step2.click_login: 2) Klik op de knop 'Registreer gebruiker' van de interne service provider
-page.index.body.registration.internal.step3.click_register: 3) Klik op de knop 'Gebruiker registreren' van de sterke authenticatie IdP
-
-page.index.body.authentication.internal.step1.go_to_sp: 1) Ga naar
-page.index.body.authentication.internal.step2.fill_subject: 2) Vul de subject NameId in het veld 'Subject NameID' in
-page.index.body.authentication.internal.step3.click_login: 3) Klik op de knop 'Gebruiker verifiëren' van de interne service provider
-page.index.body.authentication.internal.step4.click_authenticate: 4) Klik op de knop 'Gebruiker verifiëren' van de sterke authenticatie IdP
-
-page.route.description.documentation_purpose: |
-    Deze url is in het menu gekoppeld voor demo- en documentatiedoeleinden.
-
-page.route.description.app_identity_registration: |
-    Het applicatiepad dat de registratie afhandelt, eigen registratielogica wordt hier geïmplementeerd.
-page.route.description.app_identity_authentication: |
-    Het applicatiepad dat de authenticatie afhandelt, eigen authenticatielogica wordt hier geïmplementeerd.
-page.route.description.gssp_saml_sso: |
-    De gebruiker wordt naar deze URL gestuurd waar het SAML AuthnRequest  wordt afgehandeld door de gebruiker registratie of authenticatie aan te bieden.
-page.route.description.gssp_saml_sso_return: |
-    De gebruiker wordt naar deze URL gestuurd na het afronden van registratie of authenticatie binnen de GSSP-applicatie. De gebruiker wordt hierna teruggestuurd naar de service provider met een SAML response.
-
-    - Als registratie of authenticatie wordt verwacht maar de gebruiker nog niet is geregistreerd of geauthenticeerd door de applicatie, wordt de gebruiker teruggeleid naar het desbetreffende pad.
-    - Toont een submit button als JavaScript is uitgeschakeld
 page.route.description.sp_demo: |
-    Demo url voor het ontvangen van de SAML AuthnRequest response van de IdP.
-    Dit maakt geen deel uit van de sterke authenticatie IdP en kan alleen worden gebruikt in ontwikkelingsmodus.
+  Demo-serviceprovider om de Tiqr-applicatie mee te testen.
+  Dit is geen onderdeel van de tiqr-applicatie en kan alleen worden gebruikt in de ontwikkelingsmodus (app_dev.php).
+
+en: EN
+nl_NL: NL

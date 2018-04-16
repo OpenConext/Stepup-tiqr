@@ -11,4 +11,4 @@ Feature: Metadata endpoint
   Scenario: Metadata must include a SingleSignOnService
     When I go to "/saml/metadata"
     Then the response should be in XML
-    And the XML attribute "Location" on element "/md:EntityDescriptor/md:IDPSSODescriptor/md:SingleSignOnService" should be equal to "https://tiqr.example.com/saml/sso"
+    And the XML attribute "Location" on element "/md:EntityDescriptor/md:IDPSSODescriptor/md:SingleSignOnService" should be equal to "https://tiqr.example.com/app_test.php/saml/sso"

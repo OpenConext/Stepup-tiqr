@@ -17,12 +17,16 @@
 
 namespace AppBundle\Tiqr;
 
+use AppBundle\Tiqr\Exception\ConfigurationException;
 use Assert\Assertion;
 
-final class TiqrConfiguration
+class TiqrConfiguration implements TiqrConfigurationInterface
 {
 
     private $options = [];
+    const TEMPORARY_BLOCK_DURATION = 'temporaryBlockDuration';
+    const MAX_ATTEMPTS = 'maxAttempts';
+    const MAX_TEMPORARY_BLOCKS = 'maxTemporaryBlocks';
 
     /**
      * @param array[] $configuration
@@ -66,19 +70,20 @@ final class TiqrConfiguration
             $this->options['gcm.application'] = $configuration['library']['gcm']['application'];
         }
 
-        if (isset($configuration['accountblocking']['maxAttempts'])) {
-            Assertion::digit($configuration['accountblocking']['maxAttempts']);
-            $this->options['maxAttempts'] = $configuration['accountblocking']['maxAttempts'];
+        if (isset($configuration['accountblocking'][self::MAX_ATTEMPTS])) {
+            Assertion::digit($configuration['accountblocking'][self::MAX_ATTEMPTS]);
+            $this->options[self::MAX_ATTEMPTS] = $configuration['accountblocking'][self::MAX_ATTEMPTS];
         }
 
-        if (isset($configuration['accountblocking']['temporaryBlockDuration'])) {
-            Assertion::digit($configuration['accountblocking']['temporaryBlockDuration']);
-            $this->options['temporaryBlockDuration'] = $configuration['accountblocking']['temporaryBlockDuration'];
+        if (isset($configuration['accountblocking'][self::TEMPORARY_BLOCK_DURATION])) {
+            Assertion::digit($configuration['accountblocking'][self::TEMPORARY_BLOCK_DURATION]);
+            $this->options[self::TEMPORARY_BLOCK_DURATION] =
+                $configuration['accountblocking'][self::TEMPORARY_BLOCK_DURATION];
         }
 
-        if (isset($configuration['accountblocking']['maxTemporaryBlocks'])) {
-            Assertion::digit($configuration['accountblocking']['maxTemporaryBlocks']);
-            $this->options['maxTemporaryBlocks'] = $configuration['accountblocking']['maxTemporaryBlocks'];
+        if (isset($configuration['accountblocking'][self::MAX_TEMPORARY_BLOCKS])) {
+            Assertion::digit($configuration['accountblocking'][self::MAX_TEMPORARY_BLOCKS]);
+            $this->options[self::MAX_TEMPORARY_BLOCKS] = $configuration['accountblocking'][self::MAX_TEMPORARY_BLOCKS];
         }
 
         Assertion::choice($configuration['storage']['statestorage']['type'], ['file', 'memcache']);
@@ -107,5 +112,78 @@ final class TiqrConfiguration
     public function getTiqrOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * @return boolean
+     *    TRUE if there is a maximum block duration.
+     */
+    public function temporaryBlockEnabled()
+    {
+        return isset($this->options[self::TEMPORARY_BLOCK_DURATION]);
+    }
+
+    /**
+     * @return int
+     *    The maximum block duration in minutes.
+     *
+     * @throws ConfigurationException
+     */
+    public function getTemporaryBlockDuration()
+    {
+        if (!$this->temporaryBlockEnabled()) {
+            throw ConfigurationException::noMaximumDuration();
+        }
+        return $this->options[self::TEMPORARY_BLOCK_DURATION];
+    }
+
+    /**
+     * @return int
+     * @throws \AppBundle\Tiqr\Exception\ConfigurationException
+     */
+    public function getMaxAttempts()
+    {
+        if (!$this->hasMaxLoginAttempts()) {
+            throw ConfigurationException::noMaxAttempts();
+        }
+        return $this->options[self::MAX_ATTEMPTS];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasMaxLoginAttempts()
+    {
+        return isset($this->options[self::MAX_ATTEMPTS]);
+    }
+
+    /**
+     * @param int $attempts
+     */
+    public function setMaxLoginAttempts($attempts)
+    {
+        $this->options[self::MAX_ATTEMPTS] = $attempts;
+    }
+
+    /**
+     * @return int
+     *
+     * @throws ConfigurationException
+     */
+    public function getMaxTemporaryLoginAttempts()
+    {
+        if (!$this->hasMaxTemporaryLoginAttempts()) {
+            throw ConfigurationException::noMaxTemporaryAttempts();
+        }
+        return $this->options[self::MAX_TEMPORARY_BLOCKS];
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function hasMaxTemporaryLoginAttempts()
+    {
+        return isset($this->options[self::MAX_TEMPORARY_BLOCKS]);
     }
 }

@@ -17,22 +17,22 @@
 
 namespace AppBundle\Features\Context;
 
-use Behat\Behat\Event\ScenarioEvent;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Mink\Driver\GoutteDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Behat\Context\Context;
-use SAML2_AuthnRequest;
-use SAML2_Certificate_PrivateKeyLoader;
-use SAML2_Configuration_PrivateKey;
-use SAML2_Const;
-use Surfnet\SamlBundle\SAML2\AuthnRequest;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
+use SAML2\AuthnRequest;
+use SAML2\Certificate\PrivateKeyLoader;
+use SAML2\Configuration\PrivateKey;
+use SAML2\Constants;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
-use XMLSecurityKey;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class WebContext implements Context, KernelAwareContext
 {
     /**
@@ -95,20 +95,6 @@ class WebContext implements Context, KernelAwareContext
     }
 
     /**
-     * Create AuthnRequest from demo IdP.
-     *
-     * @When the service provider send the AuthnRequest with HTTP-Redirect binding
-     *
-     * @throws \Surfnet\SamlBundle\Exception\NotFound
-     */
-    public function callIdentityProviderSSOActionWithAuthnRequest()
-    {
-        $this->minkContext->visit('https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?sp=default-sp');
-        $this->minkContext->selectOption('idp', 'https://tiqr.example.com/app_dev.php/saml/metadata');
-        $this->minkContext->pressButton('Login');
-    }
-
-    /**
      * @return \Surfnet\SamlBundle\Entity\IdentityProvider
      */
     public function getIdentityProvider()
@@ -142,30 +128,30 @@ class WebContext implements Context, KernelAwareContext
      */
     public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider()
     {
-        $authnRequest = new SAML2_AuthnRequest();
+        $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://service_provider_unkown/saml/acs');
         $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
         $authnRequest->setIssuer('https://service_provider_unkown/saml/metadata');
-        $authnRequest->setProtocolBinding(SAML2_Const::BINDING_HTTP_REDIRECT);
+        $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
         $authnRequest->setSignatureKey(
-            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(SAML2_Configuration_PrivateKey::NAME_DEFAULT))
+            $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
         );
 
-        $request = AuthnRequest::createNew($authnRequest);
+        $request = \Surfnet\SamlBundle\SAML2\AuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath('/saml/sso?' . $query);
     }
 
     /**
-     * @param SAML2_Configuration_PrivateKey $key
-     * @return SAML2_Configuration_PrivateKey|XMLSecurityKey
+     * @param PrivateKey $key
+     * @return XMLSecurityKey
      * @throws \Exception
      */
-    private static function loadPrivateKey(SAML2_Configuration_PrivateKey $key)
+    private static function loadPrivateKey(PrivateKey $key)
     {
-        $keyLoader = new SAML2_Certificate_PrivateKeyLoader();
+        $keyLoader = new PrivateKeyLoader();
         $privateKey = $keyLoader->loadPrivateKey($key);
 
         $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);

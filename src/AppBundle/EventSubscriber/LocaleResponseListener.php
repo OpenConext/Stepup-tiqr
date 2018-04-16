@@ -17,13 +17,13 @@
 
 namespace AppBundle\EventSubscriber;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles the lang selection based on cookie.
@@ -36,7 +36,7 @@ final class LocaleResponseListener implements EventSubscriberInterface
     private $requestStack;
 
     public function __construct(
-        Translator $translator,
+        TranslatorInterface $translator,
         RequestStack $requestStack
     ) {
         $this->translator = $translator;

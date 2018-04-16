@@ -1,32 +1,89 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'page.registration.title'|trans }}
+    {{ 'enrol.title'|trans }}
 {% endblock %}
 
 {% block body %}
-    <h2>{{ 'page.registration.sub_title'|trans }}</h2>
-
-    {% if not requiresRegistration %}
-        <div class="alert alert-warning">
-            {{ 'page.registration.requires_registration'|trans }}
+    <h2>{{ 'enrol.title'|trans }}</h2>
+    <div class="content-container status-container">
+        <ul class="status idle">
+            <li>{{ 'enrol.status.idle.1' | trans }}</li>
+            <li>{{ 'enrol.status.idle.2' | trans }}</li>
+            <li>{{ 'enrol.status.idle.3' | trans }}</li>
+        </ul>
+        <ul class="status initialized">
+            <li>{{ 'enrol.status.initialized.1' | trans | raw }}</li>
+            <li>{{ 'enrol.status.initialized.2' | trans | raw }}</li>
+        </ul>
+        <ul class="status retrieved">
+            <li>{{ 'enrol.status.retrieved.1' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.2' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.3' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.4' | trans | raw }}</li>
+        </ul>
+        <div class="status processed">
+            {{ 'enrol.status.processed' | trans }}
         </div>
-    {% endif %}
+        <div class="status finalized">
+            {{ 'enrol.status.finalized' | trans }}
+        </div>
+        <div class="status error">
+            {{ 'enrol.status.error' | trans }}
+        </div>
+    </div>
+    <div class="content-container qr">
+        <img src="{{ url('app_identity_registration_qr') }}">
+    </div>
+    {{ 'enrol.download' | trans | raw }}
+    <script>
+        jQuery(function () {
+            var idle = "1";
+            var initialized = "2";
+            var retrieved = "3";
+            var processed = "4";
+            var finalized = "5";
 
-    <form method="post">
-        <label for="NameID">{{ 'saml.subject_name_id'|trans }}</label>
-        <br>
-        <input id="NameID" name="NameID" size="50" type="text" value="{{ NameID }}">
-        <br>
-        <br>
-        <button id="button_authenticate" name="action" class="button green" value="register">{{ 'page.registration.register_user'|trans }}</button>
-        <br>
-        <br>
-        <label for="message">{{ 'page.registration.error_response'|trans }}</label>
-        <br>
-        <input id="message" name="message" size="50" type="text" value="{{ 'page.registration.random_default_error'|trans }}">
-        <br>
-        <br>
-        <button id="button_error" name="action" class="button gray" value="error">{{ 'page.registration.submit_error'|trans }}</button>
-    </form>
+            function fadeoutQr() {
+                jQuery(".qr").hide("slow");
+            }
+
+            function updateStatusText(selector) {
+                jQuery('.status-container >').hide();
+                jQuery(selector).show();
+            }
+
+            function updateStatus(status) {
+                switch (status) {
+                    case idle:
+                        updateStatusText('ul.status.idle');
+                        break;
+                    case initialized:
+                        updateStatusText('ul.status.initialized');
+                        break;
+                    case retrieved:
+                        updateStatusText('ul.status.retrieved');
+                        fadeoutQr();
+                        break;
+                    case processed:
+                        updateStatusText('div.status.processed');
+                        break;
+                    case finalized:
+                        updateStatusText('div.status.finalized');
+                        document.location = "{{ path('app_identity_registration') | escape('js') }}";
+                        clearInterval(handle);
+                        break;
+                    default:
+                        updateStatusText("div.status.error");
+                }
+            }
+
+            function requestStatus() {
+                var statusUrl = "{{ path('app_identity_registration_status') | escape('js') }}";
+                jQuery.get(statusUrl, updateStatus);
+            }
+            var handle = setInterval(requestStatus, 1500);
+        });
+    </script>
+
 {% endblock %}

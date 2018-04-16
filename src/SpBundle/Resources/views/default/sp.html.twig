@@ -4,8 +4,11 @@
     {{ 'page.sp.title'|trans }}
 {% endblock %}
 
+{% block page_heading %}
+    {{ 'page.sp.sub_title'|trans }}
+{% endblock %}
+
 {% block body %}
-    <h2>{{ 'page.sp.sub_title'|trans }}</h2>
     <form method="post">
         <div class='alert'>
             <h2>{{ 'page.sp.registration.title'|trans }}</h2>

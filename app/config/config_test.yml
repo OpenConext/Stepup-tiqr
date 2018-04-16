@@ -11,3 +11,19 @@ framework:
 web_profiler:
     toolbar: false
     intercept_redirects: false
+
+surfnet_saml:
+    remote:
+        service_providers:
+            - entity_id: "%saml_remote_sp_entity_id%"
+              certificate_file: "%saml_remote_sp_certificate%"
+              assertion_consumer_service_url: "%saml_remote_sp_acs%"
+            - entity_id: https://tiqr.example.com/app_test.php/saml/metadata
+              certificate_file: "%saml_idp_publickey%"
+              assertion_consumer_service_url: https://tiqr.example.com/app_test.php/demo/sp/acs
+
+services:
+    AppBundle\Features\Context\FileLogger:
+        decorates: 'logger'
+        arguments:
+          - '@kernel'

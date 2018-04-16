@@ -1,8 +1,12 @@
 services:
+services:
     AppBundle\Twig\GsspExtension:
         tags: [twig.extension]
         arguments:
-            $hostedEntities: '@surfnet_saml.configuration.hosted_entities'
+            $hostedEntities: '@Surfnet\SamlBundle\Entity\HostedEntities'
+
+    Surfnet\SamlBundle\Entity\HostedEntities:
+      alias: surfnet_saml.configuration.hosted_entities
 
     # default configuration for services in *this* file
     _defaults:
@@ -13,6 +17,8 @@ services:
         # this means you cannot fetch services directly from the container via $container->get()
         # if you need to do this, you can override this setting on individual services
         public: false
+        bind:
+            $logger: '@surfnet_gssp.logger'
 
     # makes classes in src/AppBundle available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -29,7 +35,18 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    AppBundle\Tiqr\TiqrService:
+    AppBundle\Tiqr\TiqrServiceInterface:
       public: true
-      class: AppBundle\Tiqr\TiqrService
-      factory: 'AppBundle\Tiqr\TiqrServiceFactory:create'
+      class: AppBundle\Tiqr\Legacy\TiqrService
+      factory: 'AppBundle\Tiqr\TiqrFactory:createService'
+
+    AppBundle\Tiqr\TiqrUserRepositoryInterface:
+      public: true
+      class: AppBundle\Tiqr\Legacy\TiqrUserRepository
+      factory: 'AppBundle\Tiqr\TiqrFactory:createUserRepository'
+
+    surfnet_saml.saml2.bridge_container:
+      public: true
+      class: Surfnet\SamlBundle\SAML2\BridgeContainer
+      arguments:
+          - '@logger'

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'login.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ 'login.title' | trans }}</h2>
+
+    <br/>
+    <div class="alert alert-warning" role="alert">
+        <br/>
+
+        {% if userNotFound is defined and userNotFound %}
+            <h4 class="alert-heading">{{ 'login.error.invalid_user' | trans }}</h4>
+        {% endif %}
+
+        {% if permanentlyBlocked %}
+            <p>{{ 'login.error.account_blocked' | trans }}</p>
+        {% endif %}
+
+        {% if temporaryBlocked %}
+            <p>{{ 'login.error.account_temporary_blocked' | trans }}</p>
+        {% endif %}
+
+    </div>
+{% endblock %}

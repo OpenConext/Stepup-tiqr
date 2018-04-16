@@ -1,3 +1,4 @@
+saml.subject_name_id: Subject name id
 saml.request_id: Request id
 saml.issuer: Issuer
 saml.authenticating_authority: Authenticating authority
