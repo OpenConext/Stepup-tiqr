@@ -43,5 +43,5 @@ interface AuthenticationRateLimitServiceInterface
      *
      * @return bool
      */
-    public function isBlockedTemporary(TiqrUserInterface $user);
+    public function isBlockedTemporarily(TiqrUserInterface $user);
 }

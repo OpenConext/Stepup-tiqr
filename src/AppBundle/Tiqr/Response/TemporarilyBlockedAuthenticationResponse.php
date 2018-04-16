@@ -20,7 +20,7 @@ namespace AppBundle\Tiqr\Response;
 /**
  *
  */
-final class TemporaryBlockedAuthenticationResponse implements AuthenticationResponse
+final class TemporarilyBlockedAuthenticationResponse implements AuthenticationResponse
 {
     /**
      * If the authentication is valid.

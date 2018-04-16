@@ -33,7 +33,7 @@ interface TiqrServiceInterface
     public function createRegistrationQRResponse($metadataURL);
 
     /**
-     * Get a temporary enrollment secret to be able to securely post a user
+     * Get a temporarily enrollment secret to be able to securely post a user
      * secret.
      *
      * As part of the enrollment process the phone will send a user secret.
@@ -74,7 +74,7 @@ interface TiqrServiceInterface
      * @param string $enrollmentUrl
      *      The url you provide to the phone to post
      *      the generated user secret. You must include
-     *      a temporary enrollment secret in this URL
+     *      a temporarily enrollment secret in this URL
      *      to make this process secure. This secret
      *      can be generated with the
      *      getEnrollmentSecret call.
@@ -106,7 +106,7 @@ interface TiqrServiceInterface
      * If the user secret was posted by the phone, was validated using
      * validateEnrollmentSecret AND if the secret was stored securely on the
      * server, you should call finalizeEnrollment. This clears some enrollment
-     * temporary pieces of data, and sets the status of the enrollment to
+     * temporarily pieces of data, and sets the status of the enrollment to
      * finalized.
      * @param String The enrollment secret that was posted by the phone. This
      *               is the same secret used in the call to

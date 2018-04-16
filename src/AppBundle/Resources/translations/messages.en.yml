@@ -21,7 +21,7 @@ login:
         invalid_user: Invalid user.
         attempts_left: attempts left
         account_blocked: Account blocked
-        account_temporary_blocked: account temporarily blocked
+        account_temporarily_blocked: account temporarily blocked
 
 enrol:
     title: Register new Tiqr account

@@ -22,7 +22,7 @@ use AppBundle\Tiqr\Response\AuthenticationResponse;
 use AppBundle\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
 use AppBundle\Tiqr\Response\RateLimitedAuthenticationResponse;
 use AppBundle\Tiqr\Response\RejectedAuthenticationResponse;
-use AppBundle\Tiqr\Response\TemporaryBlockedAuthenticationResponse;
+use AppBundle\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 
@@ -61,7 +61,7 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
      */
     public function isBlockedPermanently(TiqrUserInterface $user)
     {
-        return !$this->configuration->temporaryBlockEnabled() && $user->isBlocked();
+        return !$this->configuration->temporarilyBlockEnabled() && $user->isBlocked();
     }
 
     /**
@@ -70,10 +70,10 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
      * @return bool
      * @throws Exception\ConfigurationException
      */
-    public function isBlockedTemporary(TiqrUserInterface $user)
+    public function isBlockedTemporarily(TiqrUserInterface $user)
     {
-        return $this->configuration->temporaryBlockEnabled() &&
-            $user->isBlockTemporary($this->now, $this->configuration->getTemporaryBlockDuration());
+        return $this->configuration->temporarilyBlockEnabled() &&
+            $user->isBlockTemporarily($this->now, $this->configuration->getTemporarilyBlockDuration());
     }
 
     /**
@@ -94,10 +94,10 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
             ['key' => $sessionKey, 'userId' => $user->getId(), 'sessionKey' => $sessionKey]
         );
 
-        if ($this->isBlockedTemporary($user)) {
+        if ($this->isBlockedTemporarily($user)) {
             $logger->info('User is temporarily blocked');
 
-            return new TemporaryBlockedAuthenticationResponse();
+            return new TemporarilyBlockedAuthenticationResponse();
         }
 
         if ($this->isBlockedPermanently($user)) {
@@ -164,34 +164,34 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
 
         $logger->info('No login attempts left');
 
-        // If temporary block functionality is not enabled, we block the user forever.
-        if (!$this->configuration->temporaryBlockEnabled()) {
+        // If temporarily block functionality is not enabled, we block the user forever.
+        if (!$this->configuration->temporarilyBlockEnabled()) {
             $user->block();
             $logger->info('User is blocked indefinitely');
 
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
-        // Just block the user temporary if we don't got a limit.
-        if (!$this->configuration->hasMaxTemporaryLoginAttempts()) {
-            $user->blockTemporary($this->now);
-            $logger->info('Increase temporary block attempt');
+        // Just block the user temporarily if we don't got a limit.
+        if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
+            $user->blockTemporarily($this->now);
+            $logger->info('Increase temporarily block attempt');
 
-            return new TemporaryBlockedAuthenticationResponse();
+            return new TemporarilyBlockedAuthenticationResponse();
         }
 
         // Block the user for always, if he has reached the maximum login attempts.
-        if ($user->getTemporaryLoginAttempts() < ($this->configuration->getMaxTemporaryLoginAttempts() - 1)) {
+        if ($user->getTemporarilyLoginAttempts() < ($this->configuration->getMaxTemporarilyLoginAttempts() - 1)) {
             $user->block();
             $logger->info('User reached max login attempts, block user indefinitely');
 
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
-        $user->blockTemporary($this->now);
-        $attemptsLeft = $this->configuration->getMaxTemporaryLoginAttempts() - $user->getTemporaryLoginAttempts();
+        $user->blockTemporarily($this->now);
+        $attemptsLeft = $this->configuration->getMaxTemporarilyLoginAttempts() - $user->getTemporarilyLoginAttempts();
 
-        $logger->info(sprintf('Increase temporary login attempt. Attempts left %d', $attemptsLeft));
+        $logger->info(sprintf('Increase temporarily login attempt. Attempts left %d', $attemptsLeft));
 
         return new RateLimitedAuthenticationResponse($result, $attemptsLeft);
     }

@@ -41,9 +41,16 @@
     <script>
         jQuery('#otpform').hide();
 
+        /**
+         * Reload the page to finalize the authentication process when
+         * the user is logged in.
+         *
+         * @param {Boolean} status
+         */
         function updateStatus(status) {
             if (status === true) {
                 clearInterval(handle);
+                // We can't do a 'normal' page reload because then we will re-submit the OTP code again.
                 document.location.href = document.location.href + '?';
             }
         }

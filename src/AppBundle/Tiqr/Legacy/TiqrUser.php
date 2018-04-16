@@ -116,7 +116,7 @@ class TiqrUser implements TiqrUserInterface
      *
      * @return int
      */
-    public function getTemporaryLoginAttempts()
+    public function getTemporarilyLoginAttempts()
     {
         return $this->userStorage->getTemporaryBlockAttempts($this->userId);
     }
@@ -124,7 +124,7 @@ class TiqrUser implements TiqrUserInterface
     /**
      * Increase the the amount of unsuccessful login attempts by one.
      */
-    public function addTemporaryLoginAttempt()
+    public function addTemporarilyLoginAttempt()
     {
         $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporaryLoginAttempts() + 1);
     }
@@ -135,12 +135,12 @@ class TiqrUser implements TiqrUserInterface
      * @param \DateTimeImmutable $blockDate
      *   The date the user is blocked.
      */
-    public function blockTemporary(\DateTimeImmutable $blockDate)
+    public function blockTemporarily(\DateTimeImmutable $blockDate)
     {
-        // Order is important, with setting the BlockTimestamp we knows it's a temporary block.
+        // Order is important, with setting the BlockTimestamp we knows it's a temporarily block.
         $this->block();
         $this->userStorage->setTemporaryBlockTimestamp($this->userId, $blockDate->format('Y-m-d H:i:s'));
-        $this->addTemporaryLoginAttempt();
+        $this->addTemporarilyLoginAttempt();
     }
 
     /**
@@ -164,7 +164,7 @@ class TiqrUser implements TiqrUserInterface
      * @return boolean
      * @throws \Assert\AssertionFailedException
      */
-    public function isBlockTemporary(\DateTimeImmutable $now, $maxDuration)
+    public function isBlockTemporarily(\DateTimeImmutable $now, $maxDuration)
     {
         Assertion::digit($maxDuration);
 
@@ -173,7 +173,7 @@ class TiqrUser implements TiqrUserInterface
         }
         $timestamp = $this->userStorage->getTemporaryBlockTimestamp($this->userId);
 
-        // If the TemporaryBlock Timestamp is empty, the use is blocked forever.
+        // If the TemporarilyBlock Timestamp is empty, the use is blocked forever.
         if (empty($timestamp)) {
             return true;
         }

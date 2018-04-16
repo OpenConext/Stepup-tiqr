@@ -29,8 +29,8 @@ final class ConfigurationException extends \Exception
         return new self('An user can have unlimited attempts');
     }
 
-    public static function noMaxTemporaryAttempts()
+    public static function noMaxTemporarilyAttempts()
     {
-        return new self('An user can have unlimited temporary block attempts');
+        return new self('An user can have unlimited temporarily block attempts');
     }
 }

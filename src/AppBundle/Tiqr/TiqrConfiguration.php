@@ -24,9 +24,9 @@ class TiqrConfiguration implements TiqrConfigurationInterface
 {
 
     private $options = [];
-    const TEMPORARY_BLOCK_DURATION = 'temporaryBlockDuration';
+    const TEMPORARILY_BLOCK_DURATION = 'temporarilyBlockDuration';
     const MAX_ATTEMPTS = 'maxAttempts';
-    const MAX_TEMPORARY_BLOCKS = 'maxTemporaryBlocks';
+    const MAX_TEMPORARILY_BLOCKS = 'maxTemporarilyBlocks';
 
     /**
      * @param array[] $configuration
@@ -75,15 +75,15 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             $this->options[self::MAX_ATTEMPTS] = $configuration['accountblocking'][self::MAX_ATTEMPTS];
         }
 
-        if (isset($configuration['accountblocking'][self::TEMPORARY_BLOCK_DURATION])) {
-            Assertion::digit($configuration['accountblocking'][self::TEMPORARY_BLOCK_DURATION]);
-            $this->options[self::TEMPORARY_BLOCK_DURATION] =
-                $configuration['accountblocking'][self::TEMPORARY_BLOCK_DURATION];
+        if (isset($configuration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION])) {
+            Assertion::digit($configuration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION]);
+            $this->options[self::TEMPORARILY_BLOCK_DURATION] =
+                $configuration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION];
         }
 
-        if (isset($configuration['accountblocking'][self::MAX_TEMPORARY_BLOCKS])) {
-            Assertion::digit($configuration['accountblocking'][self::MAX_TEMPORARY_BLOCKS]);
-            $this->options[self::MAX_TEMPORARY_BLOCKS] = $configuration['accountblocking'][self::MAX_TEMPORARY_BLOCKS];
+        if (isset($configuration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS])) {
+            Assertion::digit($configuration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS]);
+            $this->options[self::MAX_TEMPORARILY_BLOCKS] = $configuration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS];
         }
 
         Assertion::choice($configuration['storage']['statestorage']['type'], ['file', 'memcache']);
@@ -118,9 +118,9 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      * @return boolean
      *    TRUE if there is a maximum block duration.
      */
-    public function temporaryBlockEnabled()
+    public function temporarilyBlockEnabled()
     {
-        return isset($this->options[self::TEMPORARY_BLOCK_DURATION]);
+        return isset($this->options[self::TEMPORARILY_BLOCK_DURATION]);
     }
 
     /**
@@ -129,12 +129,12 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      *
      * @throws ConfigurationException
      */
-    public function getTemporaryBlockDuration()
+    public function getTemporarilyBlockDuration()
     {
-        if (!$this->temporaryBlockEnabled()) {
+        if (!$this->temporarilyBlockEnabled()) {
             throw ConfigurationException::noMaximumDuration();
         }
-        return $this->options[self::TEMPORARY_BLOCK_DURATION];
+        return $this->options[self::TEMPORARILY_BLOCK_DURATION];
     }
 
     /**
@@ -170,20 +170,20 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      *
      * @throws ConfigurationException
      */
-    public function getMaxTemporaryLoginAttempts()
+    public function getMaxTemporarilyLoginAttempts()
     {
-        if (!$this->hasMaxTemporaryLoginAttempts()) {
-            throw ConfigurationException::noMaxTemporaryAttempts();
+        if (!$this->hasMaxTemporarilyLoginAttempts()) {
+            throw ConfigurationException::noMaxTemporarilyAttempts();
         }
-        return $this->options[self::MAX_TEMPORARY_BLOCKS];
+        return $this->options[self::MAX_TEMPORARILY_BLOCKS];
     }
 
     /**
      *
      * @return bool
      */
-    public function hasMaxTemporaryLoginAttempts()
+    public function hasMaxTemporarilyLoginAttempts()
     {
-        return isset($this->options[self::MAX_TEMPORARY_BLOCKS]);
+        return isset($this->options[self::MAX_TEMPORARILY_BLOCKS]);
     }
 }

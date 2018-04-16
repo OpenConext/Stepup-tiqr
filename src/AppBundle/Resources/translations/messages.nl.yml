@@ -25,7 +25,7 @@ login:
         invalid_user: gebruiker onbekend.
         attempts_left: aantal herkansingen
         account_blocked: account geblokkeerd
-        account_temporary_blocked: account tijdelijk geblokkeerd
+        account_temporarily_blocked: account tijdelijk geblokkeerd
 
 enrol:
     title: Registreer nieuw Tiqr-account

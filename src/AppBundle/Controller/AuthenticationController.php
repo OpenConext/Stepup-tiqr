@@ -81,19 +81,19 @@ class AuthenticationController extends Controller
             return $this->render('AppBundle:default:authenticationError.html.twig', [
                 'userNotFound' => true,
                 'permanentlyBlocked' => false,
-                'temporaryBlocked' => false,
+                'temporarilyBlocked' => false,
             ]);
         }
 
         // Verify if user is blocked.
         $logger->info('Verify if user is blocked');
-        $blockedTemporary = $this->authenticationRateLimitService->isBlockedTemporary($user);
+        $blockedTemporarily = $this->authenticationRateLimitService->isBlockedTemporarily($user);
         $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
-        if ($blockedTemporary || $blockedPermanently) {
+        if ($blockedTemporarily || $blockedPermanently) {
             $logger->info('User is blocked');
             return $this->render('AppBundle:default:authenticationError.html.twig', [
                 'permanentlyBlocked' => $blockedPermanently,
-                'temporaryBlocked' => $blockedTemporary,
+                'temporarilyBlocked' => $blockedTemporarily,
             ]);
         }
 
@@ -187,13 +187,13 @@ class AuthenticationController extends Controller
 
     private function handleInvalidResponse(TiqrUserInterface $user, $response, LoggerInterface $logger)
     {
-        $blockedTemporary = $this->authenticationRateLimitService->isBlockedTemporary($user);
+        $blockedTemporarily = $this->authenticationRateLimitService->isBlockedTemporarily($user);
         $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
-        if ($blockedTemporary || $blockedPermanently) {
+        if ($blockedTemporarily || $blockedPermanently) {
             $logger->info('User is blocked');
             return $this->render('AppBundle:default:authenticationError.html.twig', [
                 'permanentlyBlocked' => $blockedPermanently,
-                'temporaryBlocked' => $blockedTemporary,
+                'temporarilyBlocked' => $blockedTemporarily,
             ]);
         }
         return $this->render('AppBundle:default:authentication.html.twig', [

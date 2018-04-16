@@ -57,7 +57,7 @@ interface TiqrUserInterface
      *
      * @return int
      */
-    public function getTemporaryLoginAttempts();
+    public function getTemporarilyLoginAttempts();
 
     /**
      * Block the user forever.
@@ -70,7 +70,7 @@ interface TiqrUserInterface
      * @param \DateTimeImmutable $blockDate
      *   The date the user is blocked.
      */
-    public function blockTemporary(\DateTimeImmutable $blockDate);
+    public function blockTemporarily(\DateTimeImmutable $blockDate);
 
     /**
      * If the user is blocked.
@@ -90,5 +90,5 @@ interface TiqrUserInterface
      * @param int $maxDuration
      *   The maximum duration on minutes
      */
-    public function isBlockTemporary(\DateTimeImmutable $now, $maxDuration);
+    public function isBlockTemporarily(\DateTimeImmutable $now, $maxDuration);
 }
