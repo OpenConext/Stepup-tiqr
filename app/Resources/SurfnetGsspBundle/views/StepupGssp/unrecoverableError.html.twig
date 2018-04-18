@@ -1,5 +1,11 @@
 {% extends '@!SurfnetGssp/StepupGssp/unrecoverableError.html.twig' %}
 
 {% block header_title %}
-    {{ 'gssp.unrecoverable_error.message.title'|trans }}
+    {{ 'error.title'|trans }}
 {% endblock %}
+
+{% block body %}
+
+    {{ 'error.message'|trans }}
+
+{% endblock body %}

@@ -1,6 +1,8 @@
 cancel: Annuleren
 page.title: Tiqr
-
+error:
+  message: Er is iets mis gegaan. Probeer het opnieuw.
+  title: Oeps!
 page.navigation.route.homepage: Home
 page.navigation.route.app_identity_registration: Registratie
 page.navigation.route.app_identity_authentication: Authenticatie

@@ -90,6 +90,7 @@ body {
 
   footer {
     padding: 1rem;
+    padding-bottom: 3rem;
 
     form {
       display: inline;
@@ -132,4 +133,11 @@ div.middle {
     float: none;
   }
 
+}
+
+#otpform {
+  @extend .center-block;
+  @extend .col-md-4;
+
+  float: none;
 }
