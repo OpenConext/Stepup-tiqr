@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f5c555c436ad7899e6f314c5a7ec0fd",
+    "content-hash": "71a61419dc8ab1ad30d3773ccd3b0562",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1359,16 +1359,16 @@
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-gssp-bundle.git",
-                "reference": "0692362604dae5ab96055806e71842d0b34244e8"
+                "reference": "239364fb36cc2ec7fe4ac3abf6eb8f8efb1ecc62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/0692362604dae5ab96055806e71842d0b34244e8",
-                "reference": "0692362604dae5ab96055806e71842d0b34244e8",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/239364fb36cc2ec7fe4ac3abf6eb8f8efb1ecc62",
+                "reference": "239364fb36cc2ec7fe4ac3abf6eb8f8efb1ecc62",
                 "shasum": ""
             },
             "require": {
@@ -1395,7 +1395,6 @@
                 "phpunit/phpunit": "^5.7",
                 "sebastian/phpcpd": "^3.0",
                 "sensio/generator-bundle": "^3.0",
-                "sensiolabs/security-checker": "^4.1",
                 "squizlabs/php_codesniffer": "^3.1",
                 "symfony/phpunit-bridge": "^3.3",
                 "symfony/symfony": "^3.3"
@@ -1419,8 +1418,7 @@
                     "@lint",
                     "@static-analysis",
                     "@phpunit",
-                    "@behat",
-                    "@security-tests"
+                    "@behat"
                 ],
                 "lint": [
                     "@lint-php",
@@ -1462,9 +1460,6 @@
                 "behat": [
                     "vendor/bin/behat  --config behat.yml"
                 ],
-                "security-tests": [
-                    "vendor/bin/security-checker security:check --end-point=http://security.sensiolabs.org/check_lock"
-                ],
                 "coverage": [
                     "@phpunit-coverage",
                     "mkdir -p coverage/reports",
@@ -1479,10 +1474,10 @@
             ],
             "description": "Generic SAML Stepup Provider bundle.",
             "support": {
-                "source": "https://github.com/OpenConext/Stepup-gssp-bundle/tree/1.0.2",
+                "source": "https://github.com/OpenConext/Stepup-gssp-bundle/tree/1.1.0",
                 "issues": "https://github.com/OpenConext/Stepup-gssp-bundle/issues"
             },
-            "time": "2018-02-15T15:25:39+00:00"
+            "time": "2018-04-18T11:50:13+00:00"
         },
         {
             "name": "surfnet/stepup-saml-bundle",
