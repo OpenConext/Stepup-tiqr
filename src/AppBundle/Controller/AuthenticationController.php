@@ -78,6 +78,12 @@ class AuthenticationController extends Controller
         try {
             $user = $this->userRepository->getUser($nameId);
         } catch (UserNotExistsException $exception) {
+            $logger->error(sprintf(
+                'User with nameId "%s" not found, error "%s"',
+                $nameId,
+                $exception->getMessage()
+            ));
+
             return $this->render('AppBundle:default:authenticationError.html.twig', [
                 'userNotFound' => true,
                 'permanentlyBlocked' => false,
@@ -157,9 +163,11 @@ class AuthenticationController extends Controller
 
         if ($isAuthenticated) {
             $this->logger->info('Send json response is authenticated');
+
             return new JsonResponse(true);
         }
         $this->logger->info('Send json response is not authenticated');
+
         return new JsonResponse(false);
     }
 
@@ -181,7 +189,36 @@ class AuthenticationController extends Controller
 
         $this->logger->info('Return QR image response');
 
-        return $this->tiqrService->createAuthenticationQRResponse();
+        $response = $this->tiqrService->createAuthenticationQRResponse();
+
+        // Get user.
+        $nameId = $this->authenticationService->getNameId();
+        try {
+            $user = $this->userRepository->getUser($nameId);
+        } catch (UserNotExistsException $exception) {
+            $this->logger->error(sprintf(
+                'User with nameId "%s" not found, error "%s"',
+                $nameId,
+                $exception->getMessage()
+            ));
+
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
+
+        // Send notification.
+        $notificationType = $user->getNotificationType();
+        $notificationAddress = $user->getNotificationAddress();
+        if ($notificationType && $notificationAddress) {
+            $this->logger->info(sprintf(
+                'Sending client notification for type "%s" and address "%s"',
+                $notificationType,
+                $notificationAddress
+            ));
+            $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
+            $this->logNotificationResponse($result, $notificationType, $notificationAddress);
+        }
+
+        return $response;
     }
 
 
@@ -191,14 +228,39 @@ class AuthenticationController extends Controller
         $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
         if ($blockedTemporarily || $blockedPermanently) {
             $logger->info('User is blocked');
+
             return $this->render('AppBundle:default:authenticationError.html.twig', [
                 'permanentlyBlocked' => $blockedPermanently,
                 'temporarilyBlocked' => $blockedTemporarily,
             ]);
         }
+
         return $this->render('AppBundle:default:authentication.html.twig', [
             'otpError' => true,
             'attemptsLeft' => $response instanceof RateLimitedAuthenticationResponse ? $response->getAttemptsLeft() : null,
         ]);
+    }
+
+    /**
+     * @param boolean $result
+     * @param string $notificationType
+     * @param string $notificationAddress
+     */
+    private function logNotificationResponse($result, $notificationType, $notificationAddress)
+    {
+        if ($result) {
+            $this->logger->info(sprintf(
+                'Push notification successfully send for type "%s" and address "%s"',
+                $notificationType,
+                $notificationAddress
+            ));
+
+            return;
+        }
+        $this->logger->warning(sprintf(
+            'Failed to send push notification for type "%s" and address "%s"',
+            $notificationType,
+            $notificationAddress
+        ));
     }
 }
