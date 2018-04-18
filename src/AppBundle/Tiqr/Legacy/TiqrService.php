@@ -204,4 +204,17 @@ final class TiqrService implements TiqrServiceInterface
     {
         return $this->session->get('sessionKey');
     }
+
+    /**
+     * Send authentication notification.
+     *
+     * @param string $notificationType
+     * @param string $notificationAddress
+     * @return bool
+     */
+    public function sendNotification($notificationType, $notificationAddress)
+    {
+        $translatedAddress = $this->tiqrService->translateNotificationAddress($notificationType, $notificationAddress);
+        return $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, $translatedAddress);
+    }
 }
