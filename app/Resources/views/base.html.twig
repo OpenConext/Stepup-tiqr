@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{{ 'page.title'|trans }}{% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('build/global.css') }}">
@@ -15,38 +16,27 @@
 <div class="container">
 
     <div class="content">
-        <div class="page-header clearfix">
-            <img src="/images/tiqr.png" class="pull-left" alt="tiqr" height="74">
-            <img src="{{ asset('images/header-logo.png') }}" alt="OpenConext Stepup"/>
-        </div>
-
-        <div class="pull-right">
-            <select class="tiqr_switch_locale">
-                {% for lang in ['en', 'nl_NL'] %}
-                    <option value="{{ path('local', {lang: lang}) }}" {{ app.request.getLocale() == lang ? 'selected' :'' }}>{{ lang|trans }}</option>
-                {% endfor %}
-            </select>
+        <div class="page-header container-fluid">
+            <img class="pull-right logo" src="{{ asset('images/header-logo.png') }}" alt="OpenConext Stepup"/>
+            <h1>{% block header_title %}{% endblock %}</h1>
         </div>
     </div>
-
-    {% block body %}{% endblock %}
-
+    <div class="main-content">
+        {% block body %}{% endblock %}
+    </div>
+    <hr/>
     <footer>
-        <div class="row-fluid">
-            <div class="span8 offset2">
-                <hr>
-                <ul class="nav nav-pills">
-                    <li><a href="{{ path('app_cancel') }}">Cancel</a></li>
-                </ul>
+        <div class="container-fluid">
+            <div class="pull-left">
+                <a href="{{ path('app_cancel') }}">{{ 'cancel'|trans }}</a>
+            </div>
+            <div class="pull-right">
+                {% for lang in ['en', 'nl_NL'] %}
+                    <a href="{{ path('local', {lang: lang}) }}" class="{% if loop.last %}footer-lang-border{% endif %}">{{ lang|trans }}</a>
+                {% endfor %}
             </div>
         </div>
     </footer>
-</div>
-<script>
-    document.querySelector('.tiqr_switch_locale').onchange = function (e) {
-        window.location.href = e.target.value;
-    };
-</script>
-{% block javascripts %}{% endblock %}
+    {% block javascripts %}{% endblock %}
 </body>
 </html>

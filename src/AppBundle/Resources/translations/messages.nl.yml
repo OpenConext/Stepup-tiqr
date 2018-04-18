@@ -17,6 +17,7 @@ login:
             userid: User ID
             otp: One time password
             button: OK
+            here: hier
         no_account: Geen account? Maak er dan %link_start%hier%link_end% eerst een aan.
     cancel: Annuleren
     error:

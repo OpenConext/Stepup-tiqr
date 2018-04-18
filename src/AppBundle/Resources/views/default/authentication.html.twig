@@ -4,8 +4,11 @@
     {{ 'login.title'|trans }}
 {% endblock %}
 
+{% block header_title %}
+    {{ 'login.title'|trans }}
+{% endblock %}
+
 {% block body %}
-    <h2>{{ 'login.title' | trans }}</h2>
     {{ 'login.qr.message' | trans }}
 
     {% if otpError is defined %}
@@ -23,14 +26,14 @@
     <br/>
     <div class="content-container qr">
         <img src="{{ url('app_identity_authentication_qr') }}">
-        <p>
-            {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">here</a>.
-        </p>
     </div>
+    <p>
+        {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">{{ 'login.qr.manual.here' | trans }}</a>.
+    </p>
     <div id="otpform">
         <form method="POST" class="form-inline">
             <div class="input-group">
-                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"
+                <input type="text" name="otp" tabindex="3"
                                                             placeholder="{{ 'login.qr.manual.otp' | trans }}"
                                                             autocomplete="off"/>
                 &nbsp;
