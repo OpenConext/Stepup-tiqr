@@ -165,16 +165,16 @@ Maximum number of login attempts before a block is set, set to 0 for not using b
 TEXT
                     )
                 ->end()
-                ->scalarNode('temporaryBlockDuration')
+                ->scalarNode('temporarilyBlockDuration')
                     ->info(<<<TEXT
-Duration of temporary block in minutes, set to 0 for no blocks or permanent blocks only.
+Duration of temporarily block in minutes, set to 0 for no blocks or permanent blocks only.
 TEXT
                     )
                 ->end()
-                ->scalarNode('maxTemporaryBlocks')
+                ->scalarNode('maxTemporarilyBlocks')
                     ->info(<<<TEXT
-Defines the number of temporary blocks before setting a permanent block, 
-set to anything other then 0 for using temporary and permanent blocks.
+Defines the number of temporarily blocks before setting a permanent block, 
+set to anything other then 0 for using temporarily and permanent blocks.
 TEXT
                     )
                 ->end()
@@ -189,7 +189,7 @@ TEXT
             ->arrayNode('statestorage')
                 ->isRequired()
                 ->info(<<<TEXT
-This is the name of the storage class that you will be using to store temporary session data. 
+This is the name of the storage class that you will be using to store temporarily session data. 
 The default is 'file' which stores the state information in the /tmp folder. 
 If you have memcache installed, you can use 'memcache' instead. 
 See the documentation inside the statestorage folder for 
