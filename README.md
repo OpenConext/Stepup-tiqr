@@ -139,13 +139,17 @@ Fetch registration link automatically from /app_dev.php/registration/qr/dev
 
 ``` ./bin/console test:registration <registration url>``` 
 
-``` ./bin/console test:registration <./<qr_file.png>```  
+``` ./bin/console test:registration <./qr_file.png>```  
 
 ``` ./bin/console test:authentication```
 
 ``` ./bin/console test:authentication <authentication url>``` 
 
-``` ./bin/console test:authentication <./<qr_file.png>```  
+``` ./bin/console test:authentication <./qr_file.png>```  
+
+Authentication can also be done in 'offline' mode, so you need to fill in your 'one time password'.
+
+``` ./bin/console test:authentication --offline=true ./<qr_file.png>```  
 
 Release instructions project
 ============================

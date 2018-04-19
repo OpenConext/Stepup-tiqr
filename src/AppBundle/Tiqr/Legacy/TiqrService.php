@@ -116,7 +116,7 @@ final class TiqrService implements TiqrServiceInterface
      */
     public function authenticationUrl()
     {
-        $sessionKey = $this->session->get('sessionKey');
+        $sessionKey = $this->getAuthenticationSessionKey();
 
         return $this->tiqrService->generateAuthURL($sessionKey);
     }
@@ -130,7 +130,7 @@ final class TiqrService implements TiqrServiceInterface
      */
     public function createAuthenticationQRResponse()
     {
-        $sessionKey = $this->session->get('sessionKey');
+        $sessionKey = $this->getAuthenticationSessionKey();
         return new StreamedResponse(function () use ($sessionKey) {
             $this->tiqrService->generateAuthQR($sessionKey);
         });
@@ -193,5 +193,28 @@ final class TiqrService implements TiqrServiceInterface
     public function enrollmentFinalized()
     {
         return $this->getEnrollmentStatus() === Tiqr_Service::ENROLLMENT_STATUS_FINALIZED;
+    }
+
+    /**
+     * Return the authentication session id.
+     *
+     * @return string
+     */
+    public function getAuthenticationSessionKey()
+    {
+        return $this->session->get('sessionKey');
+    }
+
+    /**
+     * Send authentication notification.
+     *
+     * @param string $notificationType
+     * @param string $notificationAddress
+     * @return bool
+     */
+    public function sendNotification($notificationType, $notificationAddress)
+    {
+        $translatedAddress = $this->tiqrService->translateNotificationAddress($notificationType, $notificationAddress);
+        return $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, $translatedAddress);
     }
 }

@@ -16,6 +16,6 @@ page.sp.registration.title: Registratie
 page.sp.register_user: Registreer gebruiker
 
 page.acs.title: Demo service provider ACS
-page.acs.sub_title: Demo serviceprovider ConsumerAssertionService endpoint
+page.acs.sub_title: Demo service provider ACS
 
 page.sp.common_properties.title: Algemeene request parameters

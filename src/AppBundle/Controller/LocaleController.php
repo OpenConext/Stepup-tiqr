@@ -33,7 +33,7 @@ final class LocaleController extends Controller
         // Make sure we redirect back to the this host.
         $referer = $request->headers->get('referer');
         if ($request->getHost() !== parse_url($referer, PHP_URL_HOST)) {
-            return new Response(sprintf('Cannot be requested from %s', $referer), Response::HTTP_BAD_REQUEST);
+            return new Response(sprintf('Cannot be requested from "%s"', $referer), Response::HTTP_BAD_REQUEST);
         }
 
         // Set local.

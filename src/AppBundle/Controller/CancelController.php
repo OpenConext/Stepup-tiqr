@@ -46,7 +46,7 @@ class CancelController extends Controller
      */
     public function cancelAction()
     {
-        $this->logger->notice('User canceled the request');
+        $this->logger->notice('User cancelled the request');
         if ($this->authenticationService->authenticationRequired()) {
             $this->authenticationService->reject('User cancelled the request');
 
@@ -60,7 +60,7 @@ class CancelController extends Controller
             return $this->registrationService->replyToServiceProvider();
         }
 
-        $this->logger->error('there is no pending request from SP');
+        $this->logger->error('There is no pending request from SP');
         return new Response('No active authnrequest', Response::HTTP_BAD_REQUEST);
     }
 }

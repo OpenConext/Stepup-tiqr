@@ -4,20 +4,36 @@
     {{ 'login.title'|trans }}
 {% endblock %}
 
+{% block header_title %}
+    {{ 'login.title'|trans }}
+{% endblock %}
+
 {% block body %}
-    <h2>{{ 'login.title' | trans }}</h2>
     {{ 'login.qr.message' | trans }}
+
+    {% if otpError is defined %}
+        <br/>
+        <div class="alert alert-warning" role="alert">
+
+            <h4 class="alert-heading">{{ 'login.error.invalid_response' | trans }}</h4>
+
+            {% if attemptsLeft %}
+                <p>{{ attemptsLeft }} {{ 'login.error.attempts_left' | trans }}</p>
+            {% endif %}
+
+        </div>
+    {% endif %}
     <br/>
     <div class="content-container qr">
         <img src="{{ url('app_identity_authentication_qr') }}">
-        <p>
-            {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">here</a>.
-        </p>
     </div>
-    <div id="otpform" style="display:none">
+    <p>
+        {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">{{ 'login.qr.manual.here' | trans }}</a>.
+    </p>
+    <div id="otpform">
         <form method="POST" class="form-inline">
             <div class="input-group">
-                {{ 'login.qr.manual.otp' | trans }}: <input type="text" name="otp" tabindex="3"
+                <input type="text" name="otp" tabindex="3"
                                                             placeholder="{{ 'login.qr.manual.otp' | trans }}"
                                                             autocomplete="off"/>
                 &nbsp;
@@ -26,16 +42,27 @@
         </form>
     </div>
     <script>
+        jQuery('#otpform').hide();
+
+        /**
+         * Reload the page to finalize the authentication process when
+         * the user is logged in.
+         *
+         * @param {Boolean} status
+         */
         function updateStatus(status) {
             if (status === true) {
                 clearInterval(handle);
-                document.location.reload(true);
+                // We can't do a 'normal' page reload because then we will re-submit the OTP code again.
+                document.location.href = document.location.href + '?';
             }
         }
+
         function requestStatus() {
             var statusUrl = "{{ path('app_identity_authentication_status') | escape('js') }}";
             jQuery.get(statusUrl, updateStatus);
         }
+
         var handle = setInterval(requestStatus, 1500);
     </script>
 {% endblock %}

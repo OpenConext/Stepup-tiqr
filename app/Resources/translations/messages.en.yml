@@ -1,5 +1,8 @@
+cancel: Cancel
 page.title: Tiqr
-
+error:
+  message: Something went wrong. Please try again.
+  title: Oops!
 page.navigation.route.homepage: Home
 page.navigation.route.app_identity_registration: Registration
 page.navigation.route.app_identity_authentication: Authentication

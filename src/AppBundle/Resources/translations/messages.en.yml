@@ -13,6 +13,7 @@ login:
             userid: User ID
             otp: One time password
             button: OK
+            here: here
         no_account: No account yet? Please create a new account %link_start%here%link_end%.
     cancel: Cancel
     error:
@@ -21,6 +22,7 @@ login:
         invalid_user: Invalid user.
         attempts_left: attempts left
         account_blocked: Account blocked
+        account_temporarily_blocked: account temporarily blocked
 
 enrol:
     title: Register new Tiqr account

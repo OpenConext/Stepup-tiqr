@@ -15,22 +15,30 @@
  * limitations under the License.
  */
 
-namespace AppBundle\Tiqr\Exception;
+namespace AppBundle\Tiqr\Response;
 
-final class ConfigurationException extends \Exception
+/**
+ *
+ */
+final class TemporarilyBlockedAuthenticationResponse implements AuthenticationResponse
 {
-    public static function noMaximumDuration()
+    /**
+     * If the authentication is valid.
+     *
+     * @return boolean
+     */
+    public function isValid()
     {
-        return new self('There is no maximum duration to block an user');
+        return false;
     }
 
-    public static function noMaxAttempts()
+    /**
+     * The success or error message for the client app.
+     *
+     * @return string
+     */
+    public function getMessage()
     {
-        return new self('An user can have unlimited attempts');
-    }
-
-    public static function noMaxTemporarilyAttempts()
-    {
-        return new self('An user can have unlimited temporarily block attempts');
+        return 'ACCOUNT_BLOCKED';
     }
 }

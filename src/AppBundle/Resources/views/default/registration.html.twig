@@ -4,8 +4,11 @@
     {{ 'enrol.title'|trans }}
 {% endblock %}
 
+{% block header_title %}
+    {{ 'enrol.title'|trans }}
+{% endblock %}
+
 {% block body %}
-    <h2>{{ 'enrol.title'|trans }}</h2>
     <div class="content-container status-container">
         <ul class="status idle">
             <li>{{ 'enrol.status.idle.1' | trans }}</li>
