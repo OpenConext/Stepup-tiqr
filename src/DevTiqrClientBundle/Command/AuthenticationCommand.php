@@ -42,10 +42,7 @@ class AuthenticationCommand extends Command
         $this
             ->setName('test:authentication')
             ->setDescription('Register the app with authentication url.')
-            ->addArgument('url', InputArgument::OPTIONAL, <<<TEXT
-'The authentication url if not given automatically fetched from /app_dev.php/authentication/qr.'
-TEXT
-                , false)
+            ->addArgument('path', InputArgument::REQUIRED, 'Path to QR-code image')
             ->addOption(
                 'notificationType',
                 'nt',
@@ -78,18 +75,9 @@ TEXT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Fetching the metadata from the Tiqr IDP.
-        $url = $input->getArgument('url');
-        if (is_file($url)) {
-            $url = $this->readAuthenticationLinkFromFile($url, $output);
-        } elseif (!$url) {
-            $nameId = $input->getOption('nameId');
-            if ($nameId === null) {
-                $service = $this->getService('tiqr.example.com');
-                $ids = array_keys($service['identities']);
-                $nameId = reset($ids);
-            }
-            $url = $this->fetchAuthenticationLinkFromRemote($nameId, $output);
-        }
+        $path = $input->getArgument('path');
+        $url = $this->readAuthenticationLinkFromFile($path, $output);
+
         if (preg_match('/^tiqrauth:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
             throw new \RuntimeException(sprintf('Expected url with tiqrauth://'));
         }
@@ -177,33 +165,6 @@ TEXT
     protected function decorateResult($text)
     {
         return "<options=bold>$text</>";
-    }
-
-    /**
-     * @param string $nameId
-     * @param OutputInterface $output
-     *
-     * @return string
-     */
-    protected function fetchAuthenticationLinkFromRemote($nameId, OutputInterface $output)
-    {
-        $authenticationQRLink = sprintf('/app_dev.php/authentication/qr/%s', urlencode($nameId));
-        $output->writeln('<comment>Fetch authentication link from </comment>'.$authenticationQRLink);
-
-        $blob = $this->client
-            ->get($authenticationQRLink)
-            ->getBody()
-            ->getContents();
-
-        $qrcode = new \QrReader($blob, \QrReader::SOURCE_TYPE_BLOB);
-        $link = $qrcode->text();
-
-        $output->writeln([
-            'Registration link result: ',
-            $this->decorateResult($link),
-        ]);
-
-        return $link;
     }
 
     /**

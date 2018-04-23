@@ -52,9 +52,10 @@
          */
         function updateStatus(status) {
             if (status === true) {
-                clearInterval(handle);
                 // We can't do a 'normal' page reload because then we will re-submit the OTP code again.
                 document.location.href = document.location.href + '?';
+            } else {
+                setTimeout(requestStatus, 1500);
             }
         }
 
@@ -63,6 +64,6 @@
             jQuery.get(statusUrl, updateStatus);
         }
 
-        var handle = setInterval(requestStatus, 1500);
+        requestStatus();
     </script>
 {% endblock %}
