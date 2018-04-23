@@ -101,7 +101,7 @@ Install composer dependencies:
 
 ``` composer install ```
 
-Build frond-end assets:
+Build frontend assets:
 
 ``` composer encore dev ``` or ``` composer encore production ``` for production 
 
