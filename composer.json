@@ -133,10 +133,12 @@
         "symfony-var-dir": "var",
         "symfony-web-dir": "web",
         "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         },
         "branch-alias": null
+    },
+    "archive": {
+        "exclude": ["!/web/build", "!/web/bundles"]
     }
 }
