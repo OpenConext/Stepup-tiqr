@@ -101,7 +101,7 @@ Install composer dependencies:
 
 ``` composer install ```
 
-Build frond-end assets:
+Build frontend assets:
 
 ``` composer encore dev ``` or ``` composer encore production ``` for production 
 
@@ -135,15 +135,7 @@ Demo sp is available on  [https://tiqr.example.com/app_dev.php/demo/sp]()
 
 Fetch registration link automatically from /app_dev.php/registration/qr/dev
 
-``` ./bin/console test:registration```
-
-``` ./bin/console test:registration <registration url>``` 
-
 ``` ./bin/console test:registration <./qr_file.png>```  
-
-``` ./bin/console test:authentication```
-
-``` ./bin/console test:authentication <authentication url>``` 
 
 ``` ./bin/console test:authentication <./qr_file.png>```  
 

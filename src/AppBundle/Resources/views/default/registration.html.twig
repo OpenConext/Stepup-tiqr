@@ -54,6 +54,8 @@
             function updateStatusText(selector) {
                 jQuery('.status-container >').hide();
                 jQuery(selector).show();
+
+                setTimeout(requestStatus, 1500);
             }
 
             function updateStatus(status) {
@@ -74,7 +76,6 @@
                     case finalized:
                         updateStatusText('div.status.finalized');
                         document.location = "{{ path('app_identity_registration') | escape('js') }}";
-                        clearInterval(handle);
                         break;
                     default:
                         updateStatusText("div.status.error");
@@ -85,7 +86,8 @@
                 var statusUrl = "{{ path('app_identity_registration_status') | escape('js') }}";
                 jQuery.get(statusUrl, updateStatus);
             }
-            var handle = setInterval(requestStatus, 1500);
+
+            requestStatus();
         });
     </script>
 

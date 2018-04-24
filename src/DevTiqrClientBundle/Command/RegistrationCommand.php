@@ -39,10 +39,7 @@ class RegistrationCommand extends Command
         $this
             ->setName('test:registration')
             ->setDescription('Register the app with registration url.')
-            ->addArgument('url', InputArgument::OPTIONAL, <<<TEXT
-'The registration url if not given automatically fetched from /app_dev.php/registration/qr/link .'
-TEXT
-                , false)
+            ->addArgument('path', InputArgument::REQUIRED, 'Path to QR-code image')
             ->addOption(
                 'notificationType',
                 'nt',
@@ -63,12 +60,9 @@ TEXT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Fetching the metadata from the Tiqr IDP.
-        $url = $input->getArgument('url');
-        if (!$url) {
-            $url = $this->fetchRegistrationUrlFromRemote($output);
-        } elseif (is_file($url)) {
-            $url = $this->readRegistrationUrlFromFile($url, $output);
-        }
+        $path = $input->getArgument('path');
+        $url = $this->readRegistrationUrlFromFile($path, $output);
+
         if (preg_match('/^tiqrenroll:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
             throw new \RuntimeException(sprintf('Expected url with tiqrenroll://'));
         }
@@ -124,30 +118,6 @@ TEXT
     protected function decorateResult($text)
     {
         return "<options=bold>$text</>";
-    }
-
-    /**
-     * @param OutputInterface $output
-     *
-     * @return string
-     */
-    protected function fetchRegistrationUrlFromRemote(OutputInterface $output)
-    {
-        $registrationQRLink = '/app_dev.php/registration/qr/dev';
-        $output->writeln('<comment>Fetch registration link from </comment>'.$registrationQRLink);
-        $blob = $this->client
-            ->get($registrationQRLink)
-            ->getBody()
-            ->getContents();
-        $qrcode = new \QrReader($blob, \QrReader::SOURCE_TYPE_BLOB);
-        $link = $qrcode->text();
-
-        $output->writeln([
-            'Registration link result: ',
-            $this->decorateResult($link),
-        ]);
-
-        return $link;
     }
 
     /**
