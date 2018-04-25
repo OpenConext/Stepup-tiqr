@@ -139,6 +139,6 @@
         "branch-alias": null
     },
     "archive": {
-        "exclude": ["!/web/build", "!/web/bundles"]
+        "exclude": ["/node_modules", "!/web/build", "!/web/bundles"]
     }
 }
