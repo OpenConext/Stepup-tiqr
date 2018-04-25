@@ -14,6 +14,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Surfnet\SamlBundle\SurfnetSamlBundle(),
+            new Surfnet\StepupBundle\SurfnetStepupBundle(),
             new Surfnet\GsspBundle\SurfnetGsspBundle(),
             new AppBundle\AppBundle(),
         ];
