@@ -140,6 +140,6 @@
         "branch-alias": null
     },
     "archive": {
-        "exclude": ["/node_modules", "!/web/build", "!/web/bundles"]
+        "exclude": ["/node_modules", "!/var/bootstrap.php.cache", "!/web/build", "!/web/bundles"]
     }
 }
