@@ -74,18 +74,22 @@ class TiqrAppApiController extends Controller
             return new Response('Missing enrollment key', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('With enrollment key', ['key' => $key]);
+        $logger = WithContextLogger::from($this->logger, [
+            'sari' => $this->tiqrService->getSariForSessionIdentifier($key),
+        ]);
+
+        $logger->info('With enrollment key', ['key' => $key]);
 
         // Exchange the key submitted by the phone for a new, unique enrollment secret.
         $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($key);
 
-        $this->logger->info('Enrollment secret created', ['key' => $key]);
+        $logger->info('Enrollment secret created', ['key' => $key]);
 
         // $enrollmentSecret is a one time password that the phone is going to use later to post
         // the shared secret of the user account on the phone.
         $enrollmentUrl = $request->getUriForPath(sprintf('/tiqr.php?otp=%s', urlencode($enrollmentSecret)));
 
-        $this->logger->info('Enrollment url created for enrollment secret', ['key' => $key]);
+        $logger->info('Enrollment url created for enrollment secret', ['key' => $key]);
 
         // Note that for security reasons you can only ever call getEnrollmentMetadata once in an enrollment session,
         // the data is destroyed after your first call.
@@ -95,7 +99,7 @@ class TiqrAppApiController extends Controller
             $enrollmentUrl
         );
 
-        $this->logger->info('Return metadata response', ['key' => $key]);
+        $logger->info('Return metadata response', ['key' => $key]);
 
         return new JsonResponse($metadata);
     }
@@ -139,13 +143,17 @@ class TiqrAppApiController extends Controller
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
         $secret = $request->get('secret');
 
-        $this->logger->info('Start validating enrollment secret');
+        $logger = WithContextLogger::from($this->logger, [
+            'sari' => $this->tiqrService->getSariForSessionIdentifier($secret),
+        ]);
+
+        $logger->info('Start validating enrollment secret');
 
         // note: userId is never sent together with the secret! userId is retrieved from session
         $userId = $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
 
         if ($userId === false) {
-            $this->logger->info('Invalid enrollment secret');
+            $logger->info('Invalid enrollment secret');
 
             return new Response('Enrollment failed', Response::HTTP_FORBIDDEN);
         }
@@ -154,11 +162,11 @@ class TiqrAppApiController extends Controller
             ->createUser($userId, $secret)
             ->updateNotification($notificationType, $notificationAddress);
 
-        $this->logger->info('Finalizing enrollment');
+        $logger->info('Finalizing enrollment');
 
         $this->tiqrService->finalizeEnrollment($enrollmentSecret);
 
-        $this->logger->info('Enrollment finalized');
+        $logger->info('Enrollment finalized');
 
         return new Response('OK', Response::HTTP_OK);
     }
@@ -175,8 +183,12 @@ class TiqrAppApiController extends Controller
     private function loginAction(Request $request, $notificationType, $notificationAddress)
     {
         $userId = $request->get('userId');
+        $sessionKey = $request->get('sessionKey');
 
-        $logger = WithContextLogger::from($this->logger, ['userId' => $userId]);
+        $logger = WithContextLogger::from($this->logger, [
+            'userId' => $userId,
+            'sari' => $this->tiqrService->getSariForSessionIdentifier($sessionKey),
+        ]);
 
         $logger->notice('Login attempt from app');
 
@@ -188,7 +200,7 @@ class TiqrAppApiController extends Controller
         }
 
         $result = $this->authenticationRateLimitService->authenticate(
-            $request->get('sessionKey'),
+            $sessionKey,
             $user,
             $request->get('response')
         );

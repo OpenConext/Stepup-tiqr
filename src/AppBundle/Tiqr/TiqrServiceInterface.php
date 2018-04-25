@@ -51,9 +51,11 @@ interface TiqrServiceInterface
     /**
      * Starts and generates an enrollment key.
      *
+     * @param string $sari
+     *
      * @return string
      */
-    public function generateEnrollmentKey();
+    public function generateEnrollmentKey($sari);
 
     /**
      * Retrieve the metadata for an enrollment session.
@@ -122,10 +124,11 @@ interface TiqrServiceInterface
      * same device as where the application is installed
      *
      * @param string $nameId
+     * @param string $sari
      *
      * @return string
      */
-    public function startAuthentication($nameId);
+    public function startAuthentication($nameId, $sari);
 
     /**
      * @return boolean
@@ -188,4 +191,12 @@ interface TiqrServiceInterface
      * @return string
      */
     public function sendNotification($notificationType, $notificationAddress);
+
+    /**
+     * @param string $identifier Enrollment key or session key
+     * @param string $sari
+     *
+     * @return string
+     */
+    public function getSariForSessionIdentifier($identifier);
 }

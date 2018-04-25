@@ -44,7 +44,7 @@ final class QrLinkController extends Controller
      */
     public function registrationQrAction(Request $request)
     {
-        $key = $this->tiqrService->generateEnrollmentKey();
+        $key = $this->tiqrService->generateEnrollmentKey('dev');
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
         return $this->tiqrService->createRegistrationQRResponse($metadataURL);
     }
@@ -59,7 +59,7 @@ final class QrLinkController extends Controller
      */
     public function registrationLinkAction(Request $request)
     {
-        $key = $this->tiqrService->generateEnrollmentKey();
+        $key = $this->tiqrService->generateEnrollmentKey('dev');
         $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
         $metadataAppURL = 'tiqrenroll://'.$metadataUrl;
 
@@ -80,7 +80,7 @@ final class QrLinkController extends Controller
      */
     public function authenticationQrAction($nameId)
     {
-        $this->tiqrService->startAuthentication($nameId);
+        $this->tiqrService->startAuthentication($nameId, 'dev');
         return $this->tiqrService->createAuthenticationQRResponse();
     }
 
@@ -93,7 +93,7 @@ final class QrLinkController extends Controller
      */
     public function authenticationQrLinkAction($nameId)
     {
-        $this->tiqrService->startAuthentication($nameId);
+        $this->tiqrService->startAuthentication($nameId, 'dev');
         $challengeUrl = $this->tiqrService->authenticationUrl();
 
         // Simply return a html link, so they can click it and see the metadata result.

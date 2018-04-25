@@ -21,6 +21,7 @@ use AppBundle\Tiqr\TiqrServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
+use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,13 +31,16 @@ class RegistrationController extends Controller
     private $registrationService;
     private $tiqrService;
     private $logger;
+    private $stateHandler;
 
     public function __construct(
         RegistrationService $registrationService,
+        StateHandlerInterface $stateHandler,
         TiqrServiceInterface $tiqrService,
         LoggerInterface $logger
     ) {
         $this->registrationService = $registrationService;
+        $this->stateHandler = $stateHandler;
         $this->tiqrService = $tiqrService;
         $this->logger = $logger;
     }
@@ -115,7 +119,9 @@ class RegistrationController extends Controller
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
         $this->logger->info('Generating enrollment key');
-        $key = $this->tiqrService->generateEnrollmentKey();
+        $key = $this->tiqrService->generateEnrollmentKey(
+            $this->stateHandler->getRequestId()
+        );
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
 
         $this->logger->info('Returning registration QR response');

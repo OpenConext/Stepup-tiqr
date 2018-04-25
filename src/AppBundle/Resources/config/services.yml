@@ -19,6 +19,7 @@ services:
         public: false
         bind:
             $logger: '@surfnet_gssp.logger'
+            $stateHandler: '@surfnet_gssp.state_handler.service'
 
     # makes classes in src/AppBundle available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

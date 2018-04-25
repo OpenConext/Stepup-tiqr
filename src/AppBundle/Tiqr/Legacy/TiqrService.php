@@ -26,6 +26,7 @@ use AppBundle\Tiqr\TiqrUserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
+use Tiqr_StateStorage_Abstract;
 
 /**
  * Wrapper around the legacy Tiqr service.
@@ -39,11 +40,16 @@ final class TiqrService implements TiqrServiceInterface
      * @var \Tiqr_Service
      */
     private $tiqrService;
+    private $tiqrStateStorage;
     private $session;
 
-    public function __construct($tiqrService, SessionInterface $session)
-    {
+    public function __construct(
+        Tiqr_Service $tiqrService,
+        Tiqr_StateStorage_Abstract $tiqrStateStorage,
+        SessionInterface $session
+    ) {
         $this->tiqrService = $tiqrService;
+        $this->tiqrStateStorage = $tiqrStateStorage;
         $this->session = $session;
     }
 
@@ -62,13 +68,20 @@ final class TiqrService implements TiqrServiceInterface
     /**
      * Starts and generates an enrollment key.
      *
+     * @param string $sari
+     *
      * @return string
      */
-    public function generateEnrollmentKey()
+    public function generateEnrollmentKey($sari)
     {
         $userId = $this->generateId();
         $this->session->set('userId', $userId);
-        return $this->tiqrService->startEnrollmentSession($userId, 'OpenConext', $this->session->getId());
+
+        $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, 'OpenConext', $this->session->getId());
+
+        $this->setSariForSessionIdentifier($enrollmentKey, $sari);
+
+        return $enrollmentKey;
     }
 
     public function getUserId()
@@ -89,12 +102,15 @@ final class TiqrService implements TiqrServiceInterface
     public function finalizeEnrollment($enrollmentSecret)
     {
         $this->tiqrService->finalizeEnrollment($enrollmentSecret);
+        $this->unsetSariForSessionIdentifier($enrollmentSecret);
     }
 
-    public function startAuthentication($nameId)
+    public function startAuthentication($nameId, $sari)
     {
         $sessionKey = $this->tiqrService->startAuthenticationSession($nameId, $this->session->getId());
         $this->session->set('sessionKey', $sessionKey);
+
+        $this->setSariForSessionIdentifier($sessionKey, $sari);
 
         return $this->tiqrService->generateAuthURL($sessionKey);
     }
@@ -147,6 +163,8 @@ final class TiqrService implements TiqrServiceInterface
         $result = $this->tiqrService->authenticate($user->getId(), $user->getSecret(), $sessionKey, $response);
         switch ($result) {
             case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
+                $this->unsetSariForSessionIdentifier($sessionKey);
+
                 return new ValidAuthenticationResponse('OK');
             case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
                 return new AuthenticationErrorResponse('INVALID_CHALLENGE');
@@ -216,5 +234,33 @@ final class TiqrService implements TiqrServiceInterface
     {
         $translatedAddress = $this->tiqrService->translateNotificationAddress($notificationType, $notificationAddress);
         return $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, $translatedAddress);
+    }
+
+    /**
+     * @param string $identifier Enrollment key or session key
+     *
+     * @return string
+     */
+    public function getSariForSessionIdentifier($identifier)
+    {
+        return $this->tiqrStateStorage->getValue('sari_' . $identifier);
+    }
+
+
+    /**
+     * @param string $identifier Enrollment key or session key
+     */
+    private function unsetSariForSessionIdentifier($identifier)
+    {
+        $this->tiqrStateStorage->unsetValue('sari_' . $identifier);
+    }
+
+    /**
+     * @param string $identifier Session identifier: enrollment key or session key
+     * @param string $sari
+     */
+    private function setSariForSessionIdentifier($identifier, $sari)
+    {
+        $this->tiqrStateStorage->setValue('sari_' . $identifier, $sari);
     }
 }
