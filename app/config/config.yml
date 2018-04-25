@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: logging.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -54,6 +55,14 @@ surfnet_saml:
 surfnet_gssp:
     registration_route: app_identity_registration
     authentication_route: app_identity_authentication
+
+surfnet_stepup:
+    logging:
+        application_name: tiqr
+    loa_definition:
+        enabled: false
+    sms:
+        enabled: false
 
 # Twig Configuration
 twig:
