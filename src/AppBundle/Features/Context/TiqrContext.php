@@ -331,7 +331,7 @@ class TiqrContext implements Context, KernelAwareContext
         $img = $page->find('css', 'div.qr > img');
         $src = $img->getAttribute('src');
 
-        $qrcode = new \QrReader($this->getFileContentsInsucure($src), \QrReader::SOURCE_TYPE_BLOB);
+        $qrcode = new \QrReader($this->getFileContentsInsecure($src), \QrReader::SOURCE_TYPE_BLOB);
         $content = $qrcode->text();
         Assertion::startsWith($content, 'tiqrenroll://');
         Assertion::eq(preg_match('/^tiqrenroll:\/\/(?P<url>.*)/', $content, $matches), 1);
@@ -354,7 +354,7 @@ class TiqrContext implements Context, KernelAwareContext
         $img = $page->find('css', 'div.qr > img');
         $src = $img->getAttribute('src');
 
-        $qrcode = new \QrReader($this->getFileContentsInsucure($src), \QrReader::SOURCE_TYPE_BLOB);
+        $qrcode = new \QrReader($this->getFileContentsInsecure($src), \QrReader::SOURCE_TYPE_BLOB);
         $content = $qrcode->text();
         Assertion::startsWith($content, 'tiqrauth://');
         Assertion::eq(preg_match('/^tiqrauth:\/\/(?P<url>.*)/', $content, $matches), 1);
@@ -432,7 +432,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function getFileContentsInsucure($src)
+    private function getFileContentsInsecure($src)
     {
         $session = $this->minkContext->getMink()->getSession();
         $driver = $session->getDriver();
