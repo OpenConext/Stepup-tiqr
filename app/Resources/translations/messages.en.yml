@@ -26,6 +26,3 @@ page.footer.terms: Terms and Conditions
 page.route.description.sp_demo: |
   Demo service provider to test the tiqr application with.
   This is not part of the tiqr application and can only be used in development (app_dev.php) mode.
-
-en: EN
-nl_NL: NL

@@ -26,6 +26,3 @@ page.footer.terms: Algemene voorwaarden
 page.route.description.sp_demo: |
   Demo-serviceprovider om de Tiqr-applicatie mee te testen.
   Dit is geen onderdeel van de tiqr-applicatie en kan alleen worden gebruikt in de ontwikkelingsmodus (app_dev.php).
-
-en: EN
-nl_NL: NL
