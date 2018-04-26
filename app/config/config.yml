@@ -2,7 +2,6 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: global_view_parameters.yml }
     - { resource: logging.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
@@ -74,30 +73,4 @@ twig:
         global_view_parameters: "@AppBundle\\Service\\GlobalViewParameters"
 
 app:
-    general:
-      identifier: '%tiqr_identity%'
-      name: 'OpenConext Stepup'
-      auth_protocol: 'tiqrauth'
-      enroll_protocol: 'tiqrenroll'
-      ocra_suite: 'OCRA-1:HOTP-SHA1-6:QH10-S'
-      logoUrl: '%base_url%/tiqrRGB.png'
-      infoUrl: 'https://tiqr.org'
-    library: []
-    accountblocking:
-      maxAttempts: 5
-    storage:
-      statestorage:
-        type: 'file'
-        arguments:
-          path: '/tmp'
-      userstorage:
-        type: 'file'
-        arguments:
-          path: '/tmp'
-          encryption: 'dummy'
-      usersecretstorage:
-        type: 'file'
-        arguments:
-          path: '/tmp'
-
-
+    tiqr_library_options: '%tiqr_library_options%'

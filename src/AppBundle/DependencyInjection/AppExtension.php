@@ -33,7 +33,7 @@ class AppExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $container->setDefinition(
             TiqrConfigurationInterface::class,
-            new Definition(TiqrConfiguration::class, [$config])
+            new Definition(TiqrConfiguration::class, [$config['tiqr_library_options']])
         );
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

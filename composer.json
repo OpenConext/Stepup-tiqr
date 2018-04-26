@@ -137,9 +137,6 @@
         "incenteev-parameters": [
             {
                 "file": "app/config/parameters.yml"
-            },
-            {
-                "file": "app/config/global_view_parameters.yml"
             }
         ],
         "branch-alias": null
