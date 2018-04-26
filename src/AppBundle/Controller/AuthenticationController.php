@@ -27,6 +27,7 @@ use AppBundle\Tiqr\TiqrUserRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
+use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,15 +43,18 @@ class AuthenticationController extends Controller
     private $logger;
     private $authenticationRateLimitService;
     private $userRepository;
+    private $stateHandler;
 
     public function __construct(
         AuthenticationService $authenticationService,
+        StateHandlerInterface $stateHandler,
         TiqrServiceInterface $tiqrService,
         TiqrUserRepositoryInterface $userRepository,
         AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         LoggerInterface $logger
     ) {
         $this->authenticationService = $authenticationService;
+        $this->stateHandler = $stateHandler;
         $this->tiqrService = $tiqrService;
         $this->logger = $logger;
         $this->authenticationRateLimitService = $authenticationRateLimitService;
@@ -129,7 +133,10 @@ class AuthenticationController extends Controller
         // Start authentication process.
         try {
             $logger->info('Start authentication');
-            $this->tiqrService->startAuthentication($nameId);
+            $this->tiqrService->startAuthentication(
+                $nameId,
+                $this->stateHandler->getRequestId()
+            );
         } catch (\Exception $e) {
             $logger->error(sprintf(
                 'Failed to start authentication "%s"',

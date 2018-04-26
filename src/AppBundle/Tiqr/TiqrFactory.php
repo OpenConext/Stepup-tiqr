@@ -22,6 +22,7 @@ use AppBundle\Tiqr\Legacy\TiqrUserRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tiqr_Service;
+use Tiqr_StateStorage;
 use Tiqr_UserStorage;
 
 class TiqrFactory
@@ -45,7 +46,20 @@ class TiqrFactory
     {
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
-        return new TiqrService(new Tiqr_Service($options), $this->session);
+
+        $storageType = "file";
+        $storageOptions = array();
+
+        if (isset($options["statestorage"])) {
+            $storageType = $options["statestorage"]["type"];
+            $storageOptions = $options["statestorage"];
+        }
+
+        return new TiqrService(
+            new Tiqr_Service($options),
+            Tiqr_StateStorage::getStorage($storageType, $storageOptions),
+            $this->session
+        );
     }
 
     public function createUserRepository()
