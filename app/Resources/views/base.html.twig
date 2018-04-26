@@ -18,7 +18,7 @@
     <div class="content">
         <div class="page-header container-fluid">
             <img class="pull-right logo" src="{{ asset('images/header-logo.png') }}" alt="OpenConext Stepup"/>
-            <h1>{% block header_title %}{% endblock %}</h1>
+            <h1>{% block header_title %}{{ 'login.title'|trans }}{% endblock %}</h1>
         </div>
     </div>
     <div class="main-content">
@@ -28,7 +28,6 @@
         {# stepup-bundle 'content', don't bother, just define them both #}
         {% block content %}{% endblock %}
     </div>
-    <hr/>
     <footer>
         <div class="container-fluid">
             <div class="pull-left">
@@ -42,5 +41,6 @@
         </div>
     </footer>
     {% block javascripts %}{% endblock %}
+</div>
 </body>
 </html>
