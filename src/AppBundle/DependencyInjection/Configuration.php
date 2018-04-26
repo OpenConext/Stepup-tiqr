@@ -30,7 +30,11 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('app');
-        $rootNode->children()
+        $optionsNode = $rootNode->children()
+            ->arrayNode('tiqr_library_options')
+            ->isRequired();
+
+        $optionsNode->children()
             ->append($this->createGeneralConfig())
             ->append($this->createLibraryConfig())
             ->append($this->createStorageConfig())
