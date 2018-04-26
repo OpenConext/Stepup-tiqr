@@ -23,3 +23,8 @@ parameters:
     # Hosting settings (own URL)
     base_url: 'https://tiqr.example.com'
     tiqr_identity: 'tiqr.example.com'
+
+    # View parameters
+    support_url:
+        en_GB: "https://support.example.org/faq-strong-authentication"
+        nl_NL: "https://support.example.org/faq-sterke-authenticatie"
