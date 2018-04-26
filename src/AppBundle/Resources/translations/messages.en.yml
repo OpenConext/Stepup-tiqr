@@ -19,10 +19,16 @@ login:
     error:
         invalid_challenge: Invalid challenge - please reload this page and try again.
         invalid_response: Invalid response - have you entered the correct PIN?
-        invalid_user: Invalid user.
         attempts_left: attempts left
-        account_blocked: Account blocked
-        account_temporarily_blocked: account temporarily blocked
+        user_not_found:
+            title: User not found
+            description: Something went wrong, please try again.
+        account_permanently_blocked:
+            title: Your account is blocked
+            description: Your account is permanently blocked.
+        account_temporarily_blocked:
+            title: Your account is blocked
+            description: Your account is temporarily blocked, please try again later.
 
 enrol:
     title: Register new Tiqr account

@@ -106,35 +106,35 @@ Feature: When an user needs to register for a new token
       | notice   | Redirect user to the application registration route /app_test.php/registration                                                              | present |
 
       # Tiqr registration endpoint
-      | info     | Verifying if there is a pending registration from SP                                                                                        | present |
-      | info     | There is a pending registration                                                                                                             | present |
-      | info     | Verifying if registration is finalized                                                                                                      | present |
-      | info     | Registration is not finalized return QR code                                                                                                | present |
-      | notice   | User cancelled the request                                                                                                                   | present |
-      | critical | User cancelled the request                                                                                                                  | present |
-      | info     | Redirect to sso return endpoint with registration reject response                                                                           | present |
-      | notice   | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                           | present |
-      | notice   | Received sso return request                                                                                                                 | present |
-      | info     | Create sso response                                                                                                                         | present |
-      | notice   | /Saml response created with id ".*?", request ID: ".*?"/                                                                                    | present |
-      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.example.com/app_test.php/demo/sp/acs"   | present |
+      | info     | Verifying if there is a pending registration from SP                                                                                      | present |
+      | info     | There is a pending registration                                                                                                           | present |
+      | info     | Verifying if registration is finalized                                                                                                    | present |
+      | info     | Registration is not finalized return QR code                                                                                              | present |
+      | notice   | User cancelled the request                                                                                                                | present |
+      | critical | User cancelled the request                                                                                                                | present |
+      | info     | Redirect to sso return endpoint with registration reject response                                                                         | present |
+      | notice   | Created redirect response for sso return endpoint "/app_test.php/saml/sso_return"                                                         | present |
+      | notice   | Received sso return request                                                                                                               | present |
+      | info     | Create sso response                                                                                                                       | present |
+      | notice   | /Saml response created with id ".*?", request ID: ".*?"/                                                                                  | present |
+      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.example.com/app_test.php/demo/sp/acs" | present |
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page
     Given a normal SAML 2.0 AuthnRequest form a unknown service provider
     Then the response status code should be 406
     And I should see "Something went wrong. Please try again."
     And the logs are:
-      | level    | message                                                                                                                                                  | sari |
-      | notice   | Received sso request                                                                                                                                     |      |
-      | info     | Processing AuthnRequest                                                                                                                                  |      |
-      | critical | Could not process Request, error: "AuthnRequest received from ServiceProvider with an unknown EntityId: "https://service_provider_unkown/saml/metadata"" |      |
+      | level    | message                                                                                                                           | sari |
+      | notice   | Received sso request                                                                                                              |      |
+      | info     | Processing AuthnRequest                                                                                                           |      |
+      | critical | /.*Error processing the SAML authentication request: AuthnRequest received from ServiceProvider with an unknown EntityId: ".*".*/ |      |
 
   Scenario: When an user request the sso endpoint without AuthnRequest the request should be denied
     When I am on "/saml/sso"
     Then the response status code should be 406
     And I should see "Something went wrong. Please try again."
     And the logs are:
-      | level    | message                                                                                                                     | sari |
-      | notice   | Received sso request                                                                                                        |      |
-      | info     | Processing AuthnRequest                                                                                                     |      |
-      | critical | Could not process Request, error: "Could not receive AuthnRequest from HTTP Request: expected query parameters, none found" |      |
+      | level    | message                                                                                                                                         | sari |
+      | notice   | Received sso request                                                                                                                            |      |
+      | info     | Processing AuthnRequest                                                                                                                         |      |
+      | critical | /.*Error processing the SAML authentication request: Could not receive AuthnRequest from HTTP Request: expected query parameters, none found.*/ |      |

@@ -23,10 +23,16 @@ login:
     error:
         invalid_challenge: ongeldig - herlaad deze pagina en probeer opnieuw.
         invalid_response: ongeldig one time password - heb je de juiste PIN ingevoerd?
-        invalid_user: gebruiker onbekend.
         attempts_left: aantal herkansingen
-        account_blocked: account geblokkeerd
-        account_temporarily_blocked: account tijdelijk geblokkeerd
+        user_not_found:
+            title: Gebruiker onbekend
+            description: Er is iets fout gegaan, probeer het later opnieuw.
+        account_permanently_blocked:
+            title: Je account is geblokkeerd
+            description: Je account is permanent geblokkeerd.
+        account_temporarily_blocked:
+            title: Je account is geblokkeerd
+            description: Je account is tijdelijk geblokkeerd, probeer het later opnieuw.
 
 enrol:
     title: Registreer nieuw Tiqr-account

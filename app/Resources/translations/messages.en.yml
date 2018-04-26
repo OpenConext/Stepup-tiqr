@@ -1,8 +1,21 @@
+stepup.error.page_not_found:
+    title: Page not found
+    text: The page you requested was not found.
+stepup.error.support_page.text: Please try again or visit <a href="%support_url%" target="_blank">the support page</a> if this does not fix your problem. On this page you will find more information about possible causes of the error and how to contact the support team.
+stepup.error.generic_error:
+    title: Oops!
+    description: Something went wrong. Please try again.
+
+stepup.error.timestamp: Time
+stepup.error.hostname: Application
+stepup.error.request_id: Request ID
+stepup.error.error_code: Error code
+stepup.error.user_agent: User agent
+stepup.error.ip_address: IP address
+
 cancel: Cancel
 page.title: Tiqr
-error:
-  message: Something went wrong. Please try again.
-  title: Oops!
+
 page.navigation.route.homepage: Home
 page.navigation.route.app_identity_registration: Registration
 page.navigation.route.app_identity_authentication: Authentication
