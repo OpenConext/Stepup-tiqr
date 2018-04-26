@@ -1,8 +1,21 @@
+stepup.error.page_not_found:
+    title: Pagina niet gevonden
+    text: De pagina die je zocht kan niet gevonden worden.
+stepup.error.support_page.text: Bezoek <a href="%support_url%" target="_blank">de support pagina</a> als dit je probleem niet oplost. Op deze pagina vind je meer informatie over de mogelijk oorzaken en hoe je contact kan opnemen met het supportteam.
+stepup.error.generic_error:
+    title: Oeps!
+    description: Er is iets mis gegaan. Probeer het opnieuw.
+
+stepup.error.timestamp: Tijd
+stepup.error.hostname: Applicatie
+stepup.error.request_id: Request ID
+stepup.error.error_code: Foutcode
+stepup.error.user_agent: User agent
+stepup.error.ip_address: IP-adres
+
 cancel: Annuleren
 page.title: Tiqr
-error:
-  message: Er is iets mis gegaan. Probeer het opnieuw.
-  title: Oeps!
+
 page.navigation.route.homepage: Home
 page.navigation.route.app_identity_registration: Registratie
 page.navigation.route.app_identity_authentication: Authenticatie

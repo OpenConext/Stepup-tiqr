@@ -22,7 +22,11 @@
         </div>
     </div>
     <div class="main-content">
+        {# stepup-gssp-bundle and stepup-tiqr use 'body' #}
         {% block body %}{% endblock %}
+
+        {# stepup-bundle 'content', don't bother, just define them both #}
+        {% block content %}{% endblock %}
     </div>
     <hr/>
     <footer>

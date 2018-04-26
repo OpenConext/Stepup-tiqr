@@ -2,12 +2,13 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: global_view_parameters.yml }
     - { resource: logging.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: en_GB
 
 framework:
     #esi: ~
@@ -68,7 +69,9 @@ surfnet_stepup:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
-    exception_controller: SurfnetStepupBundle:Exception:show
+    exception_controller: AppBundle:Exception:show
+    globals:
+        global_view_parameters: "@AppBundle\\Service\\GlobalViewParameters"
 
 app:
     general:

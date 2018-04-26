@@ -17,6 +17,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Exception\UserNotFoundException;
+use AppBundle\Exception\UserPermanentlyBlockedException;
+use AppBundle\Exception\UserTemporarilyBlockedException;
 use AppBundle\WithContextLogger;
 use AppBundle\Tiqr\AuthenticationRateLimitServiceInterface;
 use AppBundle\Tiqr\Exception\UserNotExistsException;
@@ -88,11 +91,7 @@ class AuthenticationController extends Controller
                 $exception->getMessage()
             ));
 
-            return $this->render('AppBundle:default:authenticationError.html.twig', [
-                'userNotFound' => true,
-                'permanentlyBlocked' => false,
-                'temporarilyBlocked' => false,
-            ]);
+            throw new UserNotFoundException();
         }
 
         // Verify if user is blocked.
@@ -101,10 +100,8 @@ class AuthenticationController extends Controller
         $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
         if ($blockedTemporarily || $blockedPermanently) {
             $logger->info('User is blocked');
-            return $this->render('AppBundle:default:authenticationError.html.twig', [
-                'permanentlyBlocked' => $blockedPermanently,
-                'temporarilyBlocked' => $blockedTemporarily,
-            ]);
+
+            return $this->showUserIsBlockedErrorPage($blockedPermanently);
         }
 
         // Handle one time password
@@ -236,10 +233,7 @@ class AuthenticationController extends Controller
         if ($blockedTemporarily || $blockedPermanently) {
             $logger->info('User is blocked');
 
-            return $this->render('AppBundle:default:authenticationError.html.twig', [
-                'permanentlyBlocked' => $blockedPermanently,
-                'temporarilyBlocked' => $blockedTemporarily,
-            ]);
+            return $this->showUserIsBlockedErrorPage($blockedPermanently);
         }
 
         return $this->render('AppBundle:default:authentication.html.twig', [
@@ -269,5 +263,21 @@ class AuthenticationController extends Controller
             $notificationType,
             $notificationAddress
         ));
+    }
+
+    private function showUserIsBlockedErrorPage($isBlockedPermanently)
+    {
+        $exception = new UserTemporarilyBlockedException();
+
+        if ($isBlockedPermanently) {
+            $exception = new UserPermanentlyBlockedException();
+        }
+        // Forward to the exception controller to prevent an error being logged.
+        return $this->forward(
+            'AppBundle::Exception::show',
+            [
+                'exception'=> $exception,
+            ]
+        );
     }
 }
