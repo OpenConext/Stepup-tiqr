@@ -66,7 +66,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
         if (isset($configuration['library']['gcm'])) {
             Assertion::string($configuration['library']['gcm']['apikey']);
             $this->options['gcm.apikey'] = $configuration['library']['gcm']['apikey'];
-            Assertion::string($configuration['library']['gcm']['environment']);
+            Assertion::string($configuration['library']['gcm']['application']);
             $this->options['gcm.application'] = $configuration['library']['gcm']['application'];
         }
 
