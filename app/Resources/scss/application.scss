@@ -76,21 +76,17 @@ body {
     }
   }
 
-  @media (min-width: $medium) {
-    div.main-content {
-      margin-left: 3em;
-      margin-right: 3em;
-    }
-  }
-
   .page-header {
     margin: 0 0 2rem 0;
     padding: 2rem 0 1rem 0;
   }
 
   footer {
-    padding: 1rem;
-    padding-bottom: 3rem;
+    padding-bottom: 2rem;
+
+    .container-fluid {
+        padding: 0;
+    }
 
     form {
       display: inline;
