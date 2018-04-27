@@ -202,7 +202,7 @@ TEXT
                 )
                 ->children()
                     ->enumNode('type')
-                        ->values(['file', 'memcache'])
+                        ->values(['file', 'memcache', 'pdo'])
                         ->isRequired()
                         ->info('Type of storage')
                     ->end()
@@ -211,7 +211,8 @@ TEXT
                     ->end()
                 ->end()
             ->end()
-            ->scalarNode('devicestorage')
+            ->arrayNode('devicestorage')
+                ->isRequired()
                 ->info(<<<TEXT
 Tiqr supports exchanging hardware based devicetokens 
 for more generic notification tokens. 
@@ -221,6 +222,16 @@ Set this to 'dummy' if you do want push notifications but do not want to use a t
 (not recommended).
 TEXT
                 )
+                ->children()
+                    ->enumNode('type')
+                        ->values(['dummy', 'tokenexchange'])
+                        ->isRequired()
+                        ->info('Type of token exchange')
+                    ->end()
+                    ->variableNode('arguments')
+                        ->isRequired()
+                    ->end()
+                ->end()
             ->end()
             ->arrayNode('userstorage')
                 ->isRequired()
@@ -234,7 +245,7 @@ TEXT
                 )
                 ->children()
                     ->enumNode('type')
-                        ->values(['file', 'memcache'])
+                        ->values(['file', 'ldap', 'pdo'])
                         ->isRequired()
                         ->info('Type of storage')
                     ->end()
@@ -251,7 +262,7 @@ TEXT
                 )
                 ->children()
                     ->enumNode('type')
-                        ->values(['file', 'memcache'])
+                        ->values(['file', 'ldap', 'pdo', 'oathserviceclient'])
                         ->isRequired()
                         ->info('Type of storage')
                     ->end()
