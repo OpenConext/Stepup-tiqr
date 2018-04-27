@@ -52,6 +52,9 @@ parameters:
                 arguments:
                   path: '/tmp'
                   encryption: 'dummy'
+            devicestorage:
+              type: 'dummy'
+              arguments: []
             usersecretstorage:
                 type: 'file'
                 arguments:
