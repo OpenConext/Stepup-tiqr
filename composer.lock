@@ -1590,16 +1590,16 @@
         },
         {
             "name": "surfnet/stepup-bundle",
-            "version": "3.5.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-bundle.git",
-                "reference": "83d1cd52688118a0d13ce531b91eebcf8c404112"
+                "reference": "f3bdb47fc59eda89afc15ab3be2eb787894d3146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-bundle/zipball/83d1cd52688118a0d13ce531b91eebcf8c404112",
-                "reference": "83d1cd52688118a0d13ce531b91eebcf8c404112",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-bundle/zipball/f3bdb47fc59eda89afc15ab3be2eb787894d3146",
+                "reference": "f3bdb47fc59eda89afc15ab3be2eb787894d3146",
                 "shasum": ""
             },
             "require": {
@@ -1642,7 +1642,7 @@
                 "suaas",
                 "surfnet"
             ],
-            "time": "2018-04-25T12:24:10+00:00"
+            "time": "2018-04-30T07:08:36+00:00"
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
