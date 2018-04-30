@@ -53,8 +53,8 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('identifier')
                 ->isRequired()
                 ->info(<<<TEXT
-    This is an identifier of your identity provider. This is typically a domainname and 
-    it's what the user sees if they enroll an account. If you're installing tiqr to enroll accounts 
+    This is an identifier of your identity provider. This is typically a domainname and
+    it's what the user sees if they enroll an account. If you're installing tiqr to enroll accounts
     at my.piggybank.com then my.piggybank.com would be a suitable identifier.'
 TEXT
                 )
@@ -66,8 +66,8 @@ TEXT
             ->scalarNode('auth_protocol')
                 ->isRequired()
                 ->info(<<<TEXT
-Every tiqr based mobile app is identified by a set of url specifiers. If you use the tiqr application 
-from the appstore, the value for this would be 'tiqrauth'. If you build your own iphone app and 
+Every tiqr based mobile app is identified by a set of url specifiers. If you use the tiqr application
+from the appstore, the value for this would be 'tiqrauth'. If you build your own iphone app and
 that uses the url specifier 'piggyauth', then that's what you'd configure here.
 It ties the identity provider to the mobile apps.
 TEXT
@@ -76,7 +76,7 @@ TEXT
             ->scalarNode('enroll_protocol')
                 ->isRequired()
                 ->info(<<<TEXT
-Similar to the previous entry but for enrollment. 'tiqrenroll' for the default tiqr app, 
+Similar to the previous entry but for enrollment. 'tiqrenroll' for the default tiqr app,
 'piggyenroll' if that's what you used while compiling your own apps.
 TEXT
                 )
@@ -85,9 +85,9 @@ TEXT
                 ->isRequired()
                 ->info(<<<TEXT
 The challenge response algorithm to use for authentication. Must be a valid OCRA suite value (see the OCRA spec).
-Note that we don't support counter and time based input, so you can only use OCRA suites that do not contain 
-counter or time inputs. If you're confused by this setting, you can leave it to the default, 
-which results in the system using 10-digit hexadecimal challenges, a 6 digit numeric response, 
+Note that we don't support counter and time based input, so you can only use OCRA suites that do not contain
+counter or time inputs. If you're confused by this setting, you can leave it to the default,
+which results in the system using 10-digit hexadecimal challenges, a 6 digit numeric response,
 and SHA1 as the hashing algorithm (OCRA-1:HOTP-SHA1-6:QH10-S).
 TEXT
                 )
@@ -95,8 +95,8 @@ TEXT
             ->scalarNode('logoUrl')
                 ->isRequired()
                 ->info(<<<TEXT
-An url that points to your logo. 
-The logo is automatically scaled down but to avoid high download times, try to stay under 250x250 resolution. 
+An url that points to your logo.
+The logo is automatically scaled down but to avoid high download times, try to stay under 250x250 resolution.
 The logo will be displayed in the app during enrollment and authentication steps.
 TEXT
             )
@@ -104,8 +104,8 @@ TEXT
             ->scalarNode('infoUrl')
                 ->isRequired()
                 ->info(<<<TEXT
-An url that contains a page with more information about your enrollment process. 
-If a user enrolls for your service, this page is where they'll go to for questions. 
+An url that contains a page with more information about your enrollment process.
+If a user enrolls for your service, this page is where they'll go to for questions.
 You can provide any url that you like but typically it's a page on your main company website.
 TEXT
             )
@@ -122,7 +122,7 @@ TEXT
                 ->scalarNode('certificate')
                     ->isRequired()
                     ->info(<<<TEXT
- Your Apple push notification certificate.Note: if you use the tiqr app store app, you can't send push notifications, 
+ Your Apple push notification certificate.Note: if you use the tiqr app store app, you can't send push notifications,
  to use this feature you need your own apps and your own certificates.
 TEXT
                     )
@@ -130,7 +130,7 @@ TEXT
                 ->scalarNode('environment')
                     ->isRequired()
                     ->info(<<<TEXT
-Set to 'sandbox' if you're testing the push notifications, set to 'production' if you use the push notifications 
+Set to 'sandbox' if you're testing the push notifications, set to 'production' if you use the push notifications
 in a production environment.
 TEXT
                     )
@@ -177,7 +177,7 @@ TEXT
                 ->end()
                 ->scalarNode('maxTemporarilyBlocks')
                     ->info(<<<TEXT
-Defines the number of temporarily blocks before setting a permanent block, 
+Defines the number of temporarily blocks before setting a permanent block,
 set to anything other then 0 for using temporarily and permanent blocks.
 TEXT
                     )
@@ -193,10 +193,10 @@ TEXT
             ->arrayNode('statestorage')
                 ->isRequired()
                 ->info(<<<TEXT
-This is the name of the storage class that you will be using to store temporarily session data. 
-The default is 'file' which stores the state information in the /tmp folder. 
-If you have memcache installed, you can use 'memcache' instead. 
-See the documentation inside the statestorage folder for 
+This is the name of the storage class that you will be using to store temporarily session data.
+The default is 'file' which stores the state information in the /tmp folder.
+If you have memcache installed, you can use 'memcache' instead.
+See the documentation inside the statestorage folder for
 memcache or file based specific configuration options.
 TEXT
                 )
@@ -214,11 +214,11 @@ TEXT
             ->arrayNode('devicestorage')
                 ->isRequired()
                 ->info(<<<TEXT
-Tiqr supports exchanging hardware based devicetokens 
-for more generic notification tokens. 
-This is only required if you use the push notifications. 
-You can use a tokenexchange server to handle the token swapping. 
-Set this to 'dummy' if you do want push notifications but do not want to use a token exchange 
+Tiqr supports exchanging hardware based devicetokens
+for more generic notification tokens.
+This is only required if you use the push notifications.
+You can use a tokenexchange server to handle the token swapping.
+Set this to 'dummy' if you do want push notifications but do not want to use a token exchange
 (not recommended).
 TEXT
                 )
@@ -237,8 +237,8 @@ TEXT
                 ->isRequired()
                 ->info(<<<TEXT
 Tiqr must store user secrets and other details for a user.
-By default this setting is set to 'file' which stores the data in 
-JSON files in the specifified directory. While this is great for testing purposes, 
+By default this setting is set to 'file' which stores the data in
+JSON files in the specifified directory. While this is great for testing purposes,
 we recommend you implement your own user storage (e.g. your existing user database or an LDAP server).
 To do this, have a look at the userstorage subdirectory in the authTiqr directory.
 TEXT
@@ -256,7 +256,7 @@ TEXT
             ->end()
             ->arrayNode('usersecretstorage')
                 ->info(<<<TEXT
-Tiqr must store user secrets and other details for a user. By default secrets are stored together with other user data. 
+Tiqr must store user secrets and other details for a user. By default secrets are stored together with other user data.
 This setting can be user to store the secrets separately in a database or on a separate host.
 TEXT
                 )
