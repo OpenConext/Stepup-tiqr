@@ -86,18 +86,15 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             $this->options[self::MAX_TEMPORARILY_BLOCKS] = $configuration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS];
         }
 
-        Assertion::choice($configuration['storage']['statestorage']['type'], ['file', 'memcache']);
         $this->options['statestorage']['type'] = $configuration['storage']['statestorage']['type'];
         Assertion::isArray($configuration['storage']['statestorage']['arguments']);
         $this->options['statestorage'] += $configuration['storage']['statestorage']['arguments'];
 
-        Assertion::choice($configuration['storage']['userstorage']['type'], ['file', 'memcache']);
         $this->options['userstorage']['type'] = $configuration['storage']['userstorage']['type'];
         Assertion::isArray($configuration['storage']['userstorage']['arguments']);
         $this->options['userstorage'] += $configuration['storage']['userstorage']['arguments'];
 
         if (isset($configuration['storage']['usersecretstorage'])) {
-            Assertion::choice($configuration['storage']['usersecretstorage']['type'], ['file', 'memcache']);
             $this->options['usersecretstorage']['type'] = $configuration['storage']['usersecretstorage']['type'];
             Assertion::isArray($configuration['storage']['usersecretstorage']['arguments']);
             $this->options['usersecretstorage'] += $configuration['storage']['usersecretstorage']['arguments'];
