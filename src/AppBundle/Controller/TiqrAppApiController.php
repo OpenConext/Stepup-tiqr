@@ -61,6 +61,7 @@ class TiqrAppApiController extends Controller
      * The endpoint where the Tiqr app get's it's registration information from.
      *
      * @Route("/tiqr.php", name="app_identity_registration_metadata")
+     * @Route("/tiqr/tiqr.php")
      * @Method({"GET"})
      *
      * @throws \InvalidArgumentException
@@ -108,6 +109,7 @@ class TiqrAppApiController extends Controller
      * This is the route where the app authenticates or registers.
      *
      * @Route("/tiqr.php", name="app_identity_registration_authentication")
+     * @Route("/tiqr/tiqr.php")
      * @Method({"POST"})
      *
      * @param Request $request
