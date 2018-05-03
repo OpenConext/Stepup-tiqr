@@ -11,6 +11,12 @@
 {% block body %}
     {{ 'login.qr.message' | trans }}
 
+    <div class="spinner-container">
+        <img class="img-rotate spinner" src="{{ asset('images/spinner.svg') }}">
+    </div>
+
+    {{ 'login.qr.manual.no_push_notification' | trans({ '%link_start%':'<a id="trigger-qr">', '%link_end%': '</a>' }) | raw }}
+
     {% if otpError is defined %}
         <br/>
         <div class="alert alert-warning" role="alert">
@@ -24,12 +30,14 @@
         </div>
     {% endif %}
     <br/>
-    <div class="content-container qr">
+    <div id="qr" class="content-container qr">
         <img src="{{ url('app_identity_authentication_qr') }}">
+
+        <p>
+            {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">{{ 'login.qr.manual.here' | trans }}</a>.
+        </p>
     </div>
-    <p>
-        {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">{{ 'login.qr.manual.here' | trans }}</a>.
-    </p>
+
     <div id="otpform">
         <form method="POST" class="form-inline">
             <div class="input-group">
@@ -42,7 +50,14 @@
         </form>
     </div>
     <script>
+        jQuery('#qr').hide();
         jQuery('#otpform').hide();
+
+        jQuery('#trigger-qr').on('click', function(){
+            jQuery('#qr').slideToggle();
+            jQuery('#otpform').hide();
+            jQuery('.spinner').slideToggle();
+        });
 
         /**
          * Reload the page to finalize the authentication process when
