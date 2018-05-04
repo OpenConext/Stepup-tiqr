@@ -58,7 +58,8 @@ class TiqrFactory
         return new TiqrService(
             new Tiqr_Service($options),
             Tiqr_StateStorage::getStorage($storageType, $storageOptions),
-            $this->session
+            $this->session,
+            $options['name']
         );
     }
 

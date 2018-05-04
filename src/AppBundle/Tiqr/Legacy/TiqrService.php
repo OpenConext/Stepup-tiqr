@@ -43,14 +43,21 @@ final class TiqrService implements TiqrServiceInterface
     private $tiqrStateStorage;
     private $session;
 
+    /**
+     * @var string
+     */
+    private $accountName;
+
     public function __construct(
         Tiqr_Service $tiqrService,
         Tiqr_StateStorage_Abstract $tiqrStateStorage,
-        SessionInterface $session
+        SessionInterface $session,
+        $accountName
     ) {
         $this->tiqrService = $tiqrService;
         $this->tiqrStateStorage = $tiqrStateStorage;
         $this->session = $session;
+        $this->accountName = $accountName;
     }
 
     public function createRegistrationQRResponse($metadataURL)
@@ -77,7 +84,7 @@ final class TiqrService implements TiqrServiceInterface
         $userId = $this->generateId();
         $this->session->set('userId', $userId);
 
-        $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, 'OpenConext', $this->session->getId());
+        $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $this->session->getId());
 
         $this->setSariForSessionIdentifier($enrollmentKey, $sari);
 
