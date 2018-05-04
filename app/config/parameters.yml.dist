@@ -33,6 +33,7 @@ parameters:
     tiqr_library_options:
         general:
             identifier: '%tiqr_identity%'
+            # The name of the service that uses tiqr for second factor authentication.
             name: 'OpenConext Stepup'
             auth_protocol: 'tiqrauth'
             enroll_protocol: 'tiqrenroll'
