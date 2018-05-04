@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'info.title'|trans }}
+{% endblock %}
+
+{% block header_title %}
+    {{ 'info.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    {{ 'enrol.download' | trans | raw }}
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <div class="container-fluid">
+            <div class="pull-right">
+                <a href="{{ global_view_parameters.supportUrl }}" target="_blank">Help</a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
