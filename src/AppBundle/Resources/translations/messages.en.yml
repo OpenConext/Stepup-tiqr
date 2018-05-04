@@ -48,3 +48,6 @@ enrol:
         error: Unknown error happened. Please try again by refreshing your browser.
     download: Download tiqr for <a href="http://itunes.apple.com/us/app/tiqr/id430838214?mt=8&ls=1" >iOS</a>/<a href="https://play.google.com/store/apps/details?id=org.tiqr.authenticator&hl=nl">Android</a>
     cancel: Cancel
+
+info:
+    title: tiqr

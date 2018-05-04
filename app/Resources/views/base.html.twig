@@ -28,6 +28,8 @@
         {# stepup-bundle 'content', don't bother, just define them both #}
         {% block content %}{% endblock %}
     </div>
+
+    {% block footer %}
     <footer>
         <div class="container-fluid">
             <div class="pull-left">
@@ -38,6 +40,8 @@
             </div>
         </div>
     </footer>
+    {% endblock %}
+
     {% block javascripts %}{% endblock %}
 </div>
 </body>
