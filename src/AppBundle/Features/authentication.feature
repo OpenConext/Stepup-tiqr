@@ -15,7 +15,7 @@ Feature: When an user needs to authenticate
     When I press "Authenticate user"
 
     # Tiqr authentication page with qr code
-    Then I should see "Login with Tiqr"
+    Then I should see "Log in with tiqr"
     And I should be on "/authentication"
 
     # The app
@@ -89,7 +89,7 @@ Feature: When an user needs to authenticate
     When I press "Authenticate user"
 
     # Tiqr authentication page with QR code
-    Then I should see "Login with Tiqr"
+    Then I should see "Log in with tiqr"
     And I should be on "/authentication"
 
     # The app
@@ -141,7 +141,7 @@ Feature: When an user needs to authenticate
     When I press "Authenticate user"
 
     # Tiqr authentication page with qr code
-    Then I should see "Login with Tiqr"
+    Then I should see "Log in with tiqr"
     And I should be on "/authentication"
 
     # The app

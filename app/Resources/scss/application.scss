@@ -4,9 +4,23 @@
 @import "bootstrap";
 @import "vars";
 
+.main-content {
+  margin: 2rem 4rem;
+}
+
 .status-container {
+  max-width: 75rem;
   .status:not(.initialized) {
     display: none;
+  }
+}
+
+.spinner-container {
+  min-height: 2rem;
+  img.spinner {
+    height: 75px;
+    display: block;
+    margin: 4rem auto;
   }
 }
 
@@ -45,7 +59,7 @@ table.sp-table {
 
 
 body {
-  background-color: #EEEEEE;
+  background-color: $gray-lighter;
   font-size: 15px;
   line-height: 20px;
 
@@ -59,7 +73,7 @@ body {
   }
 
   .container {
-    max-width: 100rem;
+    max-width: 75rem;
     background: #fff;
     padding: 0 2rem;
 
@@ -121,15 +135,22 @@ div.middle {
   img {
     @extend .center-block;
     @extend .col-md-4;
-
+    width: 400px;
     float: none;
   }
 
 }
 
 #otpform {
-  @extend .center-block;
-  @extend .col-md-4;
-
+  width: 50%;
+  margin: 0 auto;
+  display: block;
   float: none;
+
+  @media (max-width: $medium) {
+    width: 100%;
+    input {
+      width: 165px;
+    }
+  }
 }
