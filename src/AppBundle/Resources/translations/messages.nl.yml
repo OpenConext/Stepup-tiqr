@@ -4,17 +4,17 @@ login:
     title: Log in met tiqr
     timeout: Login timeout. Ververs de pagina om nogmaals te proberen.
     push:
-        message: Je ontvangt een pushnotificatie op je telefoon.
+        message: Je ontvangt een push notificatie op je telefoon.
         instructions.1: Klik op 'OK' om verder te gaan
         instructions.2: Voer je PIN in en klik op 'OK'. Je wordt nu ingelogd.
-        fail: Geen pushnotificatie ontvangen? Klik %link_start%hier%link_end% en scan de QR-code met je tiqr-app.
+        fail: Geen push notificatie ontvangen? Klik %link_start%hier%link_end% en scan de QR-code met je tiqr-app.
     otp:
       error: Er is iets fouts gebeurt
     qr:
-        message: Open de de tiqr pushnotificatie op je telefoon en volg de instructies.
+        message: Open de de tiqr push notificatie op je telefoon en volg de instructies.
         manual:
             message: Als je telefoon offline is moet je het
-            no_push_notification: Geen pushnotificatie ontvangen? %link_start%Genereer de QR-code%link_end% en scan deze met je tiqr app.
+            no_push_notification: Geen push notificatie ontvangen? %link_start%Genereer de QR-code%link_end% en scan deze met je tiqr app.
             userid: User ID
             otp: code
             button: OK
