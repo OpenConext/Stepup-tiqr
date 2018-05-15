@@ -162,6 +162,71 @@ The projects follow semantic versioning. To create a new release perform the fol
 
 5. Release the new version on Github [Releases](https://github.com/OpenConext/Stepup-gssp-example/releases)
 
+User storage
+============
+Currently we support three user storage solutions. Which are file system storage, ldap and database storage. The 
+filesystem storage is used by default and stores the registered users in the `/var/userdb.json` file. 
+
+Database storage
+----------------
+To use the database storage you will need to change some settings:
+
+In the `parametes.yml`, in the `tiqr_library_options.storage.userstorage` section configure: 
+
+```yaml
+tiqr_library_options:        
+    storage:
+        userstorage:
+            type: pdo
+            arguments:
+                table: user
+                dsn: 'mysql:host=tiqr.example.com;dbname=tiqr'
+                username: tiqr-user
+                password: tiqr-secret
+```
+
+The database schema can be found here: `app/Resources/db/mysql-create-tables.sql`
+
+Filesystem storage
+------------------
+Or if you want to use the filesystem storage use this:
+
+```yaml
+tiqr_library_options:        
+    storage:
+        userstorage:
+            type: 'file'
+            arguments:
+              path: '/tmp'
+              encryption: 'dummy' # mcrypt is also supported, dummy will not encrypt the entries in the user storage file
+```
+
+LDAP storage
+------------
+Finally to use the LDAP backend provide the following options:
+
+```yaml
+tiqr_library_options:        
+    storage:
+        userstorage:
+            type: 'ldap'
+            # The argument values equal the default values set when the arguments are omitted. So all arguments are
+            # optional.
+            arguments:
+                userClass: 'tiqrPerson'
+                dnPattern: '%s'
+                idAttr: 'dn'
+                displayNameAttr: 'sn'
+                secretAttr: 'tiqrSecret'
+                notificationTypeAttr: 'tiqrNotificationType'        
+                notificationAddressAttr: 'tiqrNotificationAddress'        
+                isBlockedAttr: 'tiqrIsBlocked'
+                loginAttemptsAttr: 'tiqrLoginAttempts'  
+                temporaryBlockAttemptsAttr: 'tiqrTemporaryBlockAttempts'
+                temporaryBlockTimestampAttr: 'tiqrTemporaryBlockTimestamp'
+                attributes: null
+```
+
 Other resources
 ======================
 
