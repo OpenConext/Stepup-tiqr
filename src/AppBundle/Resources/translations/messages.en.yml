@@ -2,15 +2,15 @@ login:
     title: Log in with tiqr
     timeout: Login timeout. Please refresh this page and try again.
     push:
-        message: Open the tiqr pushmessage on your phone and follow the instructions.
+        message: Open the tiqr push notification on your phone and follow the instructions.
         instructions.1: Please click on 'OK' to proceed.
         instructions.2: Enter your PIN and click on 'OK'. You will be logged in.
         fail: Did you not receive a push notification? Click %link_start%here%link_end% and scan the QR code with your tiqr app.
     qr:
-        message: Open the tiqr pushmessage on your phone and follow the instructions.
+        message: Open the tiqr push notification on your phone and follow the instructions.
         manual:
             message: If your mobile phone is offline you need to
-            no_push_notification: No pushmessage received? %link_start%Generate a QR-code%link_end% and scan it with your tiqr app.
+            no_push_notification: No push notification received? %link_start%Generate a QR-code%link_end% and scan it with your tiqr app.
             userid: User ID
             otp: code
             button: OK
