@@ -87,7 +87,9 @@ Requirements
 Install
 =======
 
-``` ansible-galaxy install -r ansible/requirements.yml -p ansible/roles/ ```
+``` ansible-galaxy install -r ansible/requirements.yml -p ansible/roles/```
+
+Using the `-c` flag can be used to disable ssl verification on the install command.
 
 ``` vagrant up ```
 
