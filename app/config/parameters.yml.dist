@@ -24,8 +24,10 @@ parameters:
     base_url: 'https://tiqr.example.com'
     tiqr_identity: 'tiqr.example.com'
 
-    # View parameters
+    # View parameters, 'en' entry was added as this is the default used by Translator. Was unable to configure it to
+    # use en_GB. TODO: look into configuring this the right way.
     support_url:
+        en: "https://support.example.org/faq-strong-authentication"
         en_GB: "https://support.example.org/faq-strong-authentication"
         nl_NL: "https://support.example.org/faq-sterke-authenticatie"
 
