@@ -18,6 +18,7 @@
   with_items:
   - nginx
   - php-fpm
+  - php-gmp
   - php-cli
   - php-mbstring
   - php-mcrypt

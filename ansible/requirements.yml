@@ -1,4 +1,4 @@
-- name: openmicroscopy.nginx-ssl-selfsigned
+- name: openmicroscopy.ssl-certificate
 - name: reallyenglish.ntpd
 - name: geerlingguy.nodejs
 - name: geerlingguy.java

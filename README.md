@@ -87,7 +87,9 @@ Requirements
 Install
 =======
 
-``` ansible-galaxy install -r ansible/requirements.yml -p ansible/roles/ ```
+``` ansible-galaxy install -r ansible/requirements.yml -p ansible/roles/```
+
+Using the `-c` flag can be used to disable ssl verification on the install command.
 
 ``` vagrant up ```
 
@@ -108,6 +110,8 @@ Build frontend assets:
 If everything goes as planned you can go to:
 
 [https://tiqr.example.com](https://tiqr.example.com)
+
+You might need to add your IP address to the list of allowed remote address in `web/app_dev.php`.
 
 Debugging
 ---------
