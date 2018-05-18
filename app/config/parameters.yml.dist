@@ -42,7 +42,14 @@ parameters:
             ocra_suite: 'OCRA-1:HOTP-SHA1-6:QH10-S'
             logoUrl: '%base_url%/tiqrRGB.png'
             infoUrl: 'https://tiqr.org'
-        library: []
+        library:
+            # Configuration of the push notification clients.
+            gcm:
+                apikey: 'Your GMC API KEY'
+                application: 'the application name'
+            apns:
+                certificate: 'absolute path to certificate'
+                environment: production
         accountblocking:
             maxAttempts: 5
         storage:
