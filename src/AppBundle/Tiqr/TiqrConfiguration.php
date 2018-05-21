@@ -94,6 +94,10 @@ class TiqrConfiguration implements TiqrConfigurationInterface
         Assertion::isArray($configuration['storage']['userstorage']['arguments']);
         $this->options['userstorage'] += $configuration['storage']['userstorage']['arguments'];
 
+        $this->options['devicestorage']['type'] = $configuration['storage']['devicestorage']['type'];
+        Assertion::isArray($configuration['storage']['devicestorage']['arguments']);
+        $this->options['devicestorage'] += $configuration['storage']['devicestorage']['arguments'];
+
         if (isset($configuration['storage']['usersecretstorage'])) {
             $this->options['usersecretstorage']['type'] = $configuration['storage']['usersecretstorage']['type'];
             Assertion::isArray($configuration['storage']['usersecretstorage']['arguments']);
