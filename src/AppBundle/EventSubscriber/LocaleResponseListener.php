@@ -19,7 +19,6 @@ namespace AppBundle\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -33,20 +32,15 @@ final class LocaleResponseListener implements EventSubscriberInterface
     const STEPUP_LOCALE_COOKIE = 'stepup_locale';
 
     private $translator;
-    private $requestStack;
 
-    public function __construct(
-        TranslatorInterface $translator,
-        RequestStack $requestStack
-    ) {
+    public function __construct(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
-        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::RESPONSE => ['onKernelResponse'],
             KernelEvents::REQUEST => ['onKernelRequest'],
         ];
     }
@@ -62,37 +56,5 @@ final class LocaleResponseListener implements EventSubscriberInterface
         $local = $request->cookies->get(self::STEPUP_LOCALE_COOKIE, $request->getLocale());
         $request->setLocale($local);
         $this->translator->setLocale($local);
-    }
-
-    /**
-     * Preserves the current selected local as user cookie.
-     *
-     * @param FilterResponseEvent $event
-     */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-        $request = $this->requestStack->getMasterRequest();
-        $response = $event->getResponse();
-        $cookie = new Cookie(
-            self::STEPUP_LOCALE_COOKIE,
-            $request->getLocale(),
-            0,
-            '/',
-            $this->getNakedDomain()
-        );
-        $response->headers->setCookie($cookie);
-    }
-
-    /**
-     * Return's the naked domain for the cookie variables so that is shared between the different sub-domains.
-     *
-     * @return string
-     */
-    private function getNakedDomain()
-    {
-        $masterRequest = $this->requestStack->getMasterRequest();
-        $host = $masterRequest->getHost();
-        $parts = explode('.', $host);
-        return implode('.', array_slice($parts, -2, 2));
     }
 }
