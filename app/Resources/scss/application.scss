@@ -130,8 +130,6 @@ div.middle {
 }
 
 .qr {
-  @extend .row;
-
   img {
     @extend .center-block;
     cursor: none;
