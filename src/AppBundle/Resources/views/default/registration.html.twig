@@ -48,39 +48,57 @@
             var processed = "4";
             var finalized = "5";
 
+            // Remember if registration has been initialized on the server.
+            // If this is NOT the case, and we can an IDLE status back, we know initialization is not yet started.
+            // If this IS the case, we know something went wrong (probably session expired).
+            var hasBeenInitialized = false;
+
             function fadeoutQr() {
                 jQuery(".qr").hide("slow");
             }
 
             function updateStatusText(selector) {
+                hasBeenInitialized = true;
                 jQuery('.status-container >').hide();
                 jQuery(selector).show();
+            }
 
+            function scheduleNextPoll() {
                 setTimeout(requestStatus, 1500);
             }
 
             function updateStatus(status) {
                 switch (status) {
                     case idle:
-                        updateStatusText('ul.status.idle');
-                        fadeoutQr();
+                        if (hasBeenInitialized) {
+                            updateStatusText('ul.status.idle');
+                            fadeoutQr();
+                        }
+                        scheduleNextPoll();
                         break;
                     case initialized:
                         updateStatusText('ul.status.initialized');
+                        scheduleNextPoll();
                         break;
                     case retrieved:
                         updateStatusText('ul.status.retrieved');
+                        scheduleNextPoll();
                         fadeoutQr();
                         break;
                     case processed:
                         updateStatusText('div.status.processed');
+                        scheduleNextPoll();
+                        fadeoutQr();
                         break;
                     case finalized:
                         updateStatusText('div.status.finalized');
+                        scheduleNextPoll();
+                        fadeoutQr();
                         document.location = "{{ path('app_identity_registration') | escape('js') }}";
                         break;
                     default:
                         updateStatusText("div.status.error");
+                        scheduleNextPoll();
                 }
             }
 
