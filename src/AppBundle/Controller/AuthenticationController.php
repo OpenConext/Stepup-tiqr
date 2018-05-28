@@ -274,7 +274,7 @@ class AuthenticationController extends Controller
         }
         // Forward to the exception controller to prevent an error being logged.
         return $this->forward(
-            'AppBundle::Exception::show',
+            'AppBundle:Exception:show',
             [
                 'exception'=> $exception,
             ]

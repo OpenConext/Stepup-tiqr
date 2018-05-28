@@ -43,7 +43,7 @@ final class ExceptionController extends BaseExceptionController
             $title = $translator->trans('login.error.account_temporarily_blocked.title');
             $description = $translator->trans('login.error.account_temporarily_blocked.description');
         } elseif ($exception instanceof UserPermanentlyBlockedException) {
-            $title = $translator->trans('login.error.account_permanently_blocked.description.title');
+            $title = $translator->trans('login.error.account_permanently_blocked.title');
             $description = $translator->trans('login.error.account_permanently_blocked.description');
         }
 
