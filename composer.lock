@@ -2543,16 +2543,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "v1.1.4",
+            "version": "v1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "76b7524355951c59b005117134c45cfa6396833b"
+                "reference": "160b8c6abbb4beaf6680c88304337cb653704b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/76b7524355951c59b005117134c45cfa6396833b",
-                "reference": "76b7524355951c59b005117134c45cfa6396833b",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/160b8c6abbb4beaf6680c88304337cb653704b6a",
+                "reference": "160b8c6abbb4beaf6680c88304337cb653704b6a",
                 "shasum": ""
             },
             "require": {
@@ -2566,7 +2566,7 @@
                 "BSD-3-Clause"
             ],
             "description": "php library for tiqr authentication.",
-            "time": "2015-09-17T16:29:50+00:00"
+            "time": "2017-04-18T19:56:16+00:00"
         },
         {
             "name": "twig/twig",
@@ -2730,6 +2730,7 @@
                 "ZF1",
                 "framework"
             ],
+            "abandoned": "zendframework/zendframework",
             "time": "2016-09-08T14:50:34+00:00"
         }
     ],
