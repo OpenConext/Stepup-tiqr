@@ -192,6 +192,14 @@ interface TiqrServiceInterface
      */
     public function sendNotification($notificationType, $notificationAddress);
 
+
+    /**
+     * Return error information about the last failed push notification attempt.
+     *
+     * @return array
+     */
+    public function getNotificationError();
+
     /**
      * @param string $identifier Enrollment key or session key
      * @param string $sari

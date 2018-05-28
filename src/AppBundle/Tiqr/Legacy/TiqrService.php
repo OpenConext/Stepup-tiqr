@@ -244,6 +244,16 @@ final class TiqrService implements TiqrServiceInterface
     }
 
     /**
+     * Return error information about the last failed push notification attempt.
+     *
+     * @return array
+     */
+    public function getNotificationError()
+    {
+        return $this->tiqrService->getNotificationError();
+    }
+
+    /**
      * @param string $identifier Enrollment key or session key
      *
      * @return string
