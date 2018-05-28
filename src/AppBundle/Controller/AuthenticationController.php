@@ -311,11 +311,17 @@ class AuthenticationController extends Controller
 
             return;
         }
-        $this->logger->warning(sprintf(
-            'Failed to send push notification for type "%s" and address "%s"',
-            $notificationType,
-            $notificationAddress
-        ));
+
+        $this->logger->warning(
+            sprintf(
+                'Failed to send push notification for type "%s" and address "%s"',
+                $notificationType,
+                $notificationAddress
+            ),
+            [
+                'error_info' => $this->tiqrService->getNotificationError(),
+            ]
+        );
     }
 
     private function showUserIsBlockedErrorPage($isBlockedPermanently)
