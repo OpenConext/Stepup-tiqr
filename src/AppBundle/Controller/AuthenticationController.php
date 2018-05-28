@@ -160,7 +160,11 @@ class AuthenticationController extends Controller
 
         if (!$this->authenticationService->authenticationRequired()) {
             $this->logger->error('There is no pending authentication request from SP');
-            return new JsonResponse(false, Response::HTTP_BAD_REQUEST);
+            return $this->refreshAuthenticationPage();
+        }
+
+        if ($this->authenticationChallengeIsExpired()) {
+            return $this->refreshAuthenticationPage();
         }
 
         $isAuthenticated = $this->tiqrService->isAuthenticated();
@@ -168,11 +172,60 @@ class AuthenticationController extends Controller
         if ($isAuthenticated) {
             $this->logger->info('Send json response is authenticated');
 
-            return new JsonResponse(true);
+            return $this->refreshAuthenticationPage();
         }
         $this->logger->info('Send json response is not authenticated');
 
-        return new JsonResponse(false);
+        return $this->scheduleNextPollOnAuthenticationPage();
+    }
+
+    /**
+     * Check if the authentication challenge is expired.
+     *
+     * If the challenge is expired, the page should be refreshed so a new
+     * challenge and QR code is generated.
+     *
+     * @return bool
+     */
+    private function authenticationChallengeIsExpired()
+    {
+        return $this->tiqrService->authenticationUrl() === false;
+    }
+
+    /**
+     * Authentication is pending, schedule a new poll action.
+     *
+     * @return JsonResponse
+     */
+    private function scheduleNextPollOnAuthenticationPage()
+    {
+        return $this->generateAuthenticationStatusResponse('pending');
+    }
+
+    /**
+     * Generate a response for authentication.html: refresh the page.
+     *
+     * @return JsonResponse
+     */
+    private function refreshAuthenticationPage()
+    {
+        return $this->generateAuthenticationStatusResponse('needs-refresh');
+    }
+
+    /**
+     * Generate a response for authentication.html.
+     *
+     * The javascript in the authentication page expects one of three statusses:
+     *
+     *  - pending: waiting for user action, schedule next poll
+     *  - needs-refresh: refresh the page (the /authentication page will handle the succes or error)
+     *
+     * @param string $status
+     * @return JsonResponse
+     */
+    private function generateAuthenticationStatusResponse($status)
+    {
+        return new JsonResponse($status);
     }
 
     /**

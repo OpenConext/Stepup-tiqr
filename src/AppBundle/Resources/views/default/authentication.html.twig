@@ -63,14 +63,13 @@
          * Reload the page to finalize the authentication process when
          * the user is logged in.
          *
-         * @param {Boolean} status
+         * @param {String} status
          */
         function updateStatus(status) {
-            if (status === true) {
-                // We can't do a 'normal' page reload because then we will re-submit the OTP code again.
-                document.location.href = document.location.href + '?';
-            } else {
+            if (status === 'pending') {
                 setTimeout(requestStatus, 1500);
+            } else {
+                document.location.replace(document.location.href);
             }
         }
 
