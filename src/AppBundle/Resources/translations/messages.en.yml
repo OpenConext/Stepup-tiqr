@@ -8,6 +8,7 @@ login:
         fail: Did you not receive a push notification? Click %link_start%here%link_end% and scan the QR code with your tiqr app.
     qr:
         message: Open the tiqr push notification on your phone and follow the instructions.
+        instruction: Scan this QR code with your tiqr app.
         manual:
             message: If your mobile phone is offline you need to
             no_push_notification: No push notification received? %link_start%Generate a QR-code%link_end% and scan it with your tiqr app.
