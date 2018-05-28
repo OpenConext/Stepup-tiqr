@@ -37,8 +37,9 @@
     </div>
     <div class="content-container qr">
         <img src="{{ url('app_identity_registration_qr') }}">
+        {{ 'enrol.download' | trans | raw }}
     </div>
-    {{ 'enrol.download' | trans | raw }}
+
     <script>
         jQuery(function () {
             var idle = "1";
@@ -62,6 +63,7 @@
                 switch (status) {
                     case idle:
                         updateStatusText('ul.status.idle');
+                        fadeoutQr();
                         break;
                     case initialized:
                         updateStatusText('ul.status.initialized');
