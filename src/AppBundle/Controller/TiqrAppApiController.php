@@ -149,22 +149,23 @@ class TiqrAppApiController extends Controller
         $notificationType,
         $notificationAddress
     ) {
-        if (!$userAgentMatcher->isOfficialTiqrMobileApp($request)) {
-            return new Response(
-                sprintf(
-                    'Received request from unsupported mobile app with user agent: "%s"',
-                    $request->headers->get('User-Agent')
-                ),
-                Response::HTTP_NOT_ACCEPTABLE
-            );
-        }
-
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
         $secret = $request->get('secret');
 
         $logger = WithContextLogger::from($this->logger, [
             'sari' => $this->tiqrService->getSariForSessionIdentifier($secret),
         ]);
+
+        if (!$userAgentMatcher->isOfficialTiqrMobileApp($request)) {
+            $message = sprintf(
+                'Received request from unsupported mobile app with user agent: "%s"',
+                $request->headers->get('User-Agent')
+            );
+
+            $logger->warning($message);
+
+            return new Response($message, Response::HTTP_NOT_ACCEPTABLE);
+        }
 
         $logger->info('Start validating enrollment secret');
 
