@@ -55,6 +55,8 @@ class TiqrContext implements Context, KernelAwareContext
 
     protected $clientSecret;
 
+    protected $userAgent;
+
     /**
      * The registration metadata.
      * @var mixed
@@ -99,6 +101,16 @@ class TiqrContext implements Context, KernelAwareContext
     {
         $environment = $scope->getEnvironment();
         $this->minkContext = $environment->getContext(MinkContext::class);
+    }
+
+    /**
+     * Configure the tiqr mobile app user agent.
+     *
+     * @BeforeScenario
+     */
+    public function restore(BeforeScenarioScope $scope)
+    {
+        $this->userAgent = 'Behat UA';
     }
 
     /**
@@ -177,9 +189,25 @@ class TiqrContext implements Context, KernelAwareContext
 
         /** @var \Symfony\Bundle\FrameworkBundle\Client $client */
         $client = $this->minkContext->getSession()->getDriver()->getClient();
-        $client->request('POST', $metadata->service->enrollmentUrl, $registrationBody);
-        $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
-        Assertion::eq($resultBody, 'OK', 'Enrollment failed');
+        $client->request(
+            'POST',
+            $metadata->service->enrollmentUrl,
+            $registrationBody,
+            [],
+            [
+                'HTTP_USER_AGENT' => $this->userAgent,
+            ]
+        );
+    }
+
+    /**
+     * @Given the mobile tiqr app identifies itself with the user agent :userAgent
+     *
+     * @param string $userAgent
+     */
+    public function mobileAppUsesUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
     }
 
     /**
@@ -238,6 +266,25 @@ class TiqrContext implements Context, KernelAwareContext
     }
 
     /**
+     * @Then tiqr errors with a message telling the wrong user agent was wrong
+     *
+     * @throws \Assert\AssertionFailedException
+     * @throws \Exception
+     */
+    public function userRegisteredWithWrongUserAgent()
+    {
+        $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
+        Assertion::eq(
+            $resultBody,
+            sprintf(
+                'Received request from unsupported mobile app with user agent: "%s"',
+                'Bad UA'
+            ),
+            'Enrollment with wrong user agent should have failed'
+        );
+    }
+
+    /**
      * @Then we register with the same QR code it should not work anymore.
      *
      * @throws \Assert\AssertionFailedException
@@ -245,6 +292,11 @@ class TiqrContext implements Context, KernelAwareContext
      */
     public function userRegisterTheServiceWithSameQr()
     {
+        // The first registration attempt should succeed.
+        $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
+        Assertion::eq($resultBody, 'OK', 'Enrollment failed');
+
+        // The second attempt should fail.
         try {
             $this->userRegisterTheService($this->notificationType, $this->notificationAddress);
         } catch (\Exception $exception) {
@@ -263,6 +315,9 @@ class TiqrContext implements Context, KernelAwareContext
      */
     public function weHaveARegisteredUser()
     {
+        $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
+        Assertion::eq($resultBody, 'OK', 'Enrollment failed');
+
         /** @var TiqrUserRepositoryInterface $userRepository */
         $userRepository = $this->kernel->getContainer()->get(TiqrUserRepositoryInterface::class);
         // we have a registered user

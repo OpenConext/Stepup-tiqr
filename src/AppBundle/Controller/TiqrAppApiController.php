@@ -17,6 +17,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\UserAgentMatcherInterface;
 use AppBundle\WithContextLogger;
 use AppBundle\Tiqr\AuthenticationRateLimitServiceInterface;
 use AppBundle\Tiqr\Exception\UserNotExistsException;
@@ -112,18 +113,19 @@ class TiqrAppApiController extends Controller
      * @Route("/tiqr/tiqr.php")
      * @Method({"POST"})
      *
+     * @param UserAgentMatcherInterface $userAgentMatcher
      * @param Request $request
      * @return Response
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
-    public function tiqr(Request $request)
+    public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request)
     {
         $operation = $request->get('operation');
         $notificationType = $request->get('notificationType');
         $notificationAddress = $request->get('notificationAddress');
         if ($operation === 'register') {
-            return $this->registerAction($request, $notificationType, $notificationAddress);
+            return $this->registerAction($userAgentMatcher, $request, $notificationType, $notificationAddress);
         }
         if ($operation === 'login') {
             return $this->loginAction($request, $notificationType, $notificationAddress);
@@ -133,6 +135,7 @@ class TiqrAppApiController extends Controller
     }
 
     /**
+     * @param UserAgentMatcherInterface $userAgentMatcher
      * @param Request $request
      * @param $notificationType
      * @param $notificationAddress
@@ -140,14 +143,29 @@ class TiqrAppApiController extends Controller
      * @return Response
      * @throws \InvalidArgumentException
      */
-    private function registerAction(Request $request, $notificationType, $notificationAddress)
-    {
+    private function registerAction(
+        UserAgentMatcherInterface $userAgentMatcher,
+        Request $request,
+        $notificationType,
+        $notificationAddress
+    ) {
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
         $secret = $request->get('secret');
 
         $logger = WithContextLogger::from($this->logger, [
             'sari' => $this->tiqrService->getSariForSessionIdentifier($secret),
         ]);
+
+        if (!$userAgentMatcher->isOfficialTiqrMobileApp($request)) {
+            $message = sprintf(
+                'Received request from unsupported mobile app with user agent: "%s"',
+                $request->headers->get('User-Agent')
+            );
+
+            $logger->warning($message);
+
+            return new Response($message, Response::HTTP_NOT_ACCEPTABLE);
+        }
 
         $logger->info('Start validating enrollment secret');
 

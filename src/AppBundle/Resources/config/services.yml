@@ -53,3 +53,7 @@ services:
       class: Surfnet\SamlBundle\SAML2\BridgeContainer
       arguments:
           - '@logger'
+
+    AppBundle\Service\UserAgentMatcher:
+      arguments:
+        - '%mobile_app_user_agent_pattern%'

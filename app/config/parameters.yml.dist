@@ -31,6 +31,13 @@ parameters:
         en_GB: "https://support.example.org/faq-strong-authentication"
         nl_NL: "https://support.example.org/faq-sterke-authenticatie"
 
+    # Mobile Tiqr apps identify themselves with a user agent
+    # header. If the user agent does not match below pattern during
+    # registration, registration will fail. The default pattern (^.*$)
+    # will effectively allow any Tiqr app. The pattern must adhere to
+    # PCRE as accepted by preg_match (http://php.net/preg_match).
+    mobile_app_user_agent_pattern: "/^.*$/"
+
     # Options for the tiqr library
     tiqr_library_options:
         general:
