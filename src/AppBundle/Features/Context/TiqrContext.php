@@ -266,7 +266,7 @@ class TiqrContext implements Context, KernelAwareContext
     }
 
     /**
-     * @Then tiqr errors with a message telling the wrong user agent was wrong
+     * @Then tiqr errors with a message telling the user agent was wrong
      *
      * @throws \Assert\AssertionFailedException
      * @throws \Exception

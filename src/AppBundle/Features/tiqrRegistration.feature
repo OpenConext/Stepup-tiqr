@@ -17,4 +17,4 @@ Feature: User
     Given the registration QR code is scanned
     And the mobile tiqr app identifies itself with the user agent "Bad UA"
     When the user registers the service
-    Then tiqr errors with a message telling the wrong user agent was wrong
+    Then tiqr errors with a message telling the user agent was wrong
