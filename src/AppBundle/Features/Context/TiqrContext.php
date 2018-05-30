@@ -174,7 +174,7 @@ class TiqrContext implements Context, KernelAwareContext
         $metadataBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
 
         $metadata = json_decode($metadataBody);
-        Assertion::notEq($metadata, false, 'Metadata has expire and returns false');
+        Assertion::notEq($metadata, false, 'Metadata has expired');
         $this->metadata = $metadata;
 
         // Doing the actual registration.
@@ -300,7 +300,7 @@ class TiqrContext implements Context, KernelAwareContext
         try {
             $this->userRegisterTheService($this->notificationType, $this->notificationAddress);
         } catch (\Exception $exception) {
-            Assertion::eq($exception->getMessage(), 'Metadata has expire and returns false');
+            Assertion::eq($exception->getMessage(), 'Metadata has expired');
 
             return;
         }

@@ -77,7 +77,7 @@ class RegistrationCommand extends Command
             $this->decorateResult(json_encode($metadata, JSON_PRETTY_PRINT)),
         ]);
         if ($metadata === false) {
-            $output->writeln('<error>Metadata has expire and returns false</error>');
+            $output->writeln('<error>Metadata has expired</error>');
 
             return;
         }
