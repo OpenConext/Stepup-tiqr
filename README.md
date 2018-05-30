@@ -128,6 +128,7 @@ To run all required test you can run the following commands from the dev env:
 
 ```bash 
     composer test 
+    composer behat
 ```
 
 Every part can be run separately. Check "scripts" section of the composer.json file for the different options.

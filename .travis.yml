@@ -59,6 +59,10 @@ script:
   # Test if the website is actually running
   - composer test
 
+  # Only run behat on PHP>5.6, this is not ideal, but we can't work around
+  # this PHP bug: https://bugs.php.net/bug.php?id=72286
+  - (php --version | grep -q 'PHP 5\.6\.') || composer behat
+
 after_script:
   - cat $TRAVIS_BUILD_DIR/error.log
   - cat $TRAVIS_BUILD_DIR/access.log
