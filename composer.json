@@ -72,7 +72,6 @@
             "@lint",
             "@static-analysis",
             "@phpunit",
-            "@behat",
             "@security-tests"
         ],
 
