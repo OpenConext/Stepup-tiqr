@@ -65,7 +65,7 @@ class AuthenticationController extends Controller
     }
 
     /**
-     * @Route("/authentication", name="app_identity_authentication")
+     * @Route("/authentication", name="app_identity_authentication", methods={"GET", "POST"})
      * @throws \InvalidArgumentException
      */
     public function authenticationAction(Request $request)
@@ -151,7 +151,7 @@ class AuthenticationController extends Controller
     }
 
     /**
-     * @Route("/authentication/status", name="app_identity_authentication_status")
+     * @Route("/authentication/status", name="app_identity_authentication_status", methods={"GET"})
      * @throws \InvalidArgumentException
      */
     public function authenticationStatusAction()
@@ -230,7 +230,7 @@ class AuthenticationController extends Controller
 
     /**
      *
-     * @Route("/authentication/qr", name="app_identity_authentication_qr")
+     * @Route("/authentication/qr", name="app_identity_authentication_qr", methods={"GET"})
      * @throws \InvalidArgumentException
      */
     public function authenticationQrAction()

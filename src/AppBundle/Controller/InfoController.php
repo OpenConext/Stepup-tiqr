@@ -37,7 +37,7 @@ class InfoController extends Controller
     }
 
     /**
-     * @Route("/info.html", name="app_info")
+     * @Route("/info.html", name="app_info", methods={"GET"})
      */
     public function infoAction()
     {

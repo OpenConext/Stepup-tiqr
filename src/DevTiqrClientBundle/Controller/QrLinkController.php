@@ -38,7 +38,7 @@ final class QrLinkController extends Controller
     /**
      * Returns the QR for registration without an active authNRequest.
      *
-     * @Route("/registration/qr/dev", name="app_identity_registration_qr_dev")
+     * @Route("/registration/qr/dev", name="app_identity_registration_qr_dev", methods={"GET"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -52,7 +52,7 @@ final class QrLinkController extends Controller
     /**
      * Returns the link for registration without an active authNRequest.
      *
-     * @Route("/registration/qr/link", name="app_identity_registration_qr_link")
+     * @Route("/registration/qr/link", name="app_identity_registration_qr_link", methods={"GET"})
      * @param Request $request
      * @return Response
      * @throws \InvalidArgumentException
@@ -74,7 +74,7 @@ final class QrLinkController extends Controller
     /**
      * Returns the QR without an active authNRequest.
      *
-     * @Route("/authentication/qr/{nameId}", name="app_identity_authentication_qr_dev")
+     * @Route("/authentication/qr/{nameId}", name="app_identity_authentication_qr_dev", methods={"GET"})
      * @param string $nameId
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -87,7 +87,7 @@ final class QrLinkController extends Controller
     /**
      * Returns the link without an active authNRequest.
      *
-     * @Route("/authentication/qr/{nameId}/link", name="app_identity_authentication_qr_link")
+     * @Route("/authentication/qr/{nameId}/link", name="app_identity_authentication_qr_link", methods={"GET"})
      * @param string $nameId
      * @return Response
      */
