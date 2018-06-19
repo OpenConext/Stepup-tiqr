@@ -16,6 +16,10 @@ class AppKernel extends Kernel
             new Surfnet\SamlBundle\SurfnetSamlBundle(),
             new Surfnet\StepupBundle\SurfnetStepupBundle(),
             new Surfnet\GsspBundle\SurfnetGsspBundle(),
+
+            // OpenConext Monitor integration
+            new OpenConext\MonitorBundle\OpenConextMonitorBundle(),
+
             new AppBundle\AppBundle(),
         ];
 
