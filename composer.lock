@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8eb177bea3fe3c66293c78486dcf625",
+    "content-hash": "9d59b332136f87459786220a795401ff",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1646,16 +1646,16 @@
         },
         {
             "name": "surfnet/stepup-gssp-bundle",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-gssp-bundle.git",
-                "reference": "96d926939220a575b54e5319013540ea3a6c7817"
+                "reference": "4099bcee23606d2964d7615661418ed82ff040f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/96d926939220a575b54e5319013540ea3a6c7817",
-                "reference": "96d926939220a575b54e5319013540ea3a6c7817",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-gssp-bundle/zipball/4099bcee23606d2964d7615661418ed82ff040f1",
+                "reference": "4099bcee23606d2964d7615661418ed82ff040f1",
                 "shasum": ""
             },
             "require": {
@@ -1761,10 +1761,10 @@
             ],
             "description": "Generic SAML Stepup Provider bundle.",
             "support": {
-                "source": "https://github.com/OpenConext/Stepup-gssp-bundle/tree/2.0.0",
+                "source": "https://github.com/OpenConext/Stepup-gssp-bundle/tree/2.1.0",
                 "issues": "https://github.com/OpenConext/Stepup-gssp-bundle/issues"
             },
-            "time": "2018-04-26T09:24:10+00:00"
+            "time": "2018-06-19T07:55:42+00:00"
         },
         {
             "name": "surfnet/stepup-saml-bundle",
