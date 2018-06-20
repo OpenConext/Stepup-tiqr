@@ -1,9 +1,0 @@
-
-VERSION 1  FIRST RELEASE
-========================
-
-   Version 1.1 - Remove phantomjs and use goutte instead for webtest
-      21/12/2017 15:19  1.1.0  initial release
-
-   Version 1.0 - First release
-      20/12/2017 15:52  1.0.0  initial release
