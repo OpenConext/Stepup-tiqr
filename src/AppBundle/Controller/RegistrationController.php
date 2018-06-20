@@ -48,7 +48,7 @@ class RegistrationController extends Controller
     /**
      * Returns the registration page with QR code that is generated in 'qrRegistrationAction'.
      *
-     * @Route("/registration", name="app_identity_registration")
+     * @Route("/registration", name="app_identity_registration", methods={"GET", "POST"})
      *
      * @throws \InvalidArgumentException
      */
@@ -80,7 +80,7 @@ class RegistrationController extends Controller
     /**
      * For client-side polling retrieving the status.
      *
-     * @Route("/registration/status", name="app_identity_registration_status")
+     * @Route("/registration/status", name="app_identity_registration_status", methods={"GET"})
      *
      * @throws \InvalidArgumentException
      */
@@ -106,7 +106,8 @@ class RegistrationController extends Controller
      *
      * @see /registration/qr/link
      *
-     * @Route("/registration/qr", name="app_identity_registration_qr")
+     * @Route("/registration/qr", name="app_identity_registration_qr", methods={"GET"})
+     *
      * @throws \InvalidArgumentException
      */
     public function registrationQrAction(Request $request)

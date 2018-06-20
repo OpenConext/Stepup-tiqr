@@ -62,9 +62,9 @@ final class SPController extends Controller
     }
 
     /**
-     * @Route("/demo/sp", name="sp_demo")
+     * @Route("/demo/sp", name="sp_demo", methods={"GET", "POST"})
      *
-     * See @see RegistrationService for a more clean example.
+     * @see RegistrationService for a more clean example.
      *
      * @throws \Exception
      */
@@ -104,7 +104,7 @@ final class SPController extends Controller
     }
 
     /**
-     * @Route("/demo/sp/acs", name="sp_demo_acs")
+     * @Route("/demo/sp/acs", name="sp_demo_acs", methods={"POST"})
      *
      * See @see RegistrationService for a more clean example.
      */

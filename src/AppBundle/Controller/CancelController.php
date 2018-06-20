@@ -41,7 +41,7 @@ class CancelController extends Controller
     }
 
     /**
-     * @Route("/cancel", name="app_cancel")
+     * @Route("/cancel", name="app_cancel", methods={"GET"})
      * @throws \InvalidArgumentException
      */
     public function cancelAction()
