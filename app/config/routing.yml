@@ -4,3 +4,7 @@ app:
 
 gssp_saml:
     resource: '@SurfnetGsspBundle/Resources/config/routing.yml'
+
+openconext_monitor:
+    resource:   "@OpenConextMonitorBundle/Resources/config/routing.yml"
+    prefix:     /

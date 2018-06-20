@@ -13,6 +13,10 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        monitor:
+            pattern: ^/(info|health)$
+            security: false
+
         main:
             anonymous: ~
             logout_on_user_change: true
