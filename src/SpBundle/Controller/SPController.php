@@ -17,7 +17,7 @@
 
 namespace SpBundle\Controller;
 
-use DOMDocument;
+use AppBundle\EventSubscriber\LocaleResponseListener;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Assertion;
 use SAML2\Certificate\PrivateKeyLoader;
@@ -70,9 +70,17 @@ final class SPController extends Controller
      */
     public function demoSpAction(Request $request)
     {
-        if (!$request->isMethod(Request::METHOD_POST)) {
-            return $this->render('SpBundle:default:sp.html.twig');
+        $local = $request->get('local-cookie');
+        if ($local) {
+            // Should not do this in production code.
+            setcookie(LocaleResponseListener::STEPUP_LOCALE_COOKIE, $local);
+            $request->cookies->set(LocaleResponseListener::STEPUP_LOCALE_COOKIE, $local);
         }
+
+        if (!$request->isMethod(Request::METHOD_POST)) {
+            return $this->render('SpBundle:default:sp.html.twig', ['local' => $request->cookies->get(LocaleResponseListener::STEPUP_LOCALE_COOKIE)]);
+        }
+
         $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->identityProvider);
 
         // Set nameId when we want to authenticate.

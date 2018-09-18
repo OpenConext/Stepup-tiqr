@@ -38,6 +38,13 @@
             <br>
             <input id="X-Stepup-Request-Id" name="X-Stepup-Request-Id" size="50" type="text">
             <br>
+            <label for="local-cookie">Local</label>
+            <br>
+            <select id="local-cookie" name="local-cookie" >
+                <option value="en" {%  if local == 'en' %}selected{% endif %}>English</option>
+                <option value="nl_NL" {%  if local == 'nl_NL' %}selected{% endif %}>Dutch</option>
+            </select>
+            <br>
         </div>
 
     </form>
