@@ -18,6 +18,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Exception\NoActiveAuthenrequestException;
 use AppBundle\Exception\UserNotFoundException;
 use AppBundle\Exception\UserPermanentlyBlockedException;
 use AppBundle\Exception\UserTemporarilyBlockedException;
@@ -45,6 +46,9 @@ final class ExceptionController extends BaseExceptionController
         } elseif ($exception instanceof UserPermanentlyBlockedException) {
             $title = $translator->trans('login.error.account_permanently_blocked.title');
             $description = $translator->trans('login.error.account_permanently_blocked.description');
+        } elseif ($exception instanceof NoActiveAuthenrequestException) {
+            $title = $translator->trans('stepup.error.no_active_authentrequest.title');
+            $description = $translator->trans('stepup.error.no_active_authentrequest.description');
         }
 
         if (isset($title) && isset($description)) {
