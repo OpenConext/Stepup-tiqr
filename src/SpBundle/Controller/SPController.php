@@ -18,6 +18,7 @@
 namespace SpBundle\Controller;
 
 use AppBundle\EventSubscriber\LocaleResponseListener;
+use DOMDocument;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Assertion;
 use SAML2\Certificate\PrivateKeyLoader;
