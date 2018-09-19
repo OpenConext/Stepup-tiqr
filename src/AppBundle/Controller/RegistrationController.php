@@ -60,7 +60,7 @@ class RegistrationController extends Controller
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->warning('Registration is not required');
-            throw new NoActiveAuthenrequestException('Registration is not required');
+            throw new NoActiveAuthenrequestException();
         }
 
         $this->logger->info('There is a pending registration');

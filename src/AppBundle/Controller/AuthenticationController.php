@@ -80,7 +80,7 @@ class AuthenticationController extends Controller
         if (!$this->authenticationService->authenticationRequired()) {
             $logger->error('There is no pending authentication request from SP');
 
-            throw new NoActiveAuthenrequestException('Registration is not required');
+            throw new NoActiveAuthenrequestException();
         }
 
         try {

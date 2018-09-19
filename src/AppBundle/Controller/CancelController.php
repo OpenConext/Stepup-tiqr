@@ -62,6 +62,6 @@ class CancelController extends Controller
 
         $this->logger->error('There is no pending request from SP');
 
-        throw new NoActiveAuthenrequestException('No active authnrequest');
+        throw new NoActiveAuthenrequestException();
     }
 }
