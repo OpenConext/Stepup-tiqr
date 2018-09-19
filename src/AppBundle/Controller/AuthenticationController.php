@@ -165,7 +165,7 @@ class AuthenticationController extends Controller
         }
 
         if ($this->authenticationChallengeIsExpired()) {
-            return $this->refreshAuthenticationPage();
+            return $this->timeoutNeedsManualRetry();
         }
 
         $isAuthenticated = $this->tiqrService->isAuthenticated();
@@ -201,6 +201,16 @@ class AuthenticationController extends Controller
     private function scheduleNextPollOnAuthenticationPage()
     {
         return $this->generateAuthenticationStatusResponse('pending');
+    }
+
+    /**
+     * Generate a response for authentication.html: Ask the user to retry.
+     *
+     * @return JsonResponse
+     */
+    private function timeoutNeedsManualRetry()
+    {
+        return $this->generateAuthenticationStatusResponse('timeout-needs-retry');
     }
 
     /**

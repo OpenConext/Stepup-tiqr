@@ -3,6 +3,8 @@ nl: Nederlands
 login:
     title: Log in met tiqr
     timeout: Login timeout. Ververs de pagina om nogmaals te proberen.
+    retry: Probeer opnieuw.
+    status-request-error: Er is een fout opgetreden bij het opalen van de status. Ververs de pagina om nogmaals te proberen.
     push:
         message: Je ontvangt een push notificatie op je telefoon.
         instructions.1: Klik op 'OK' om verder te gaan
