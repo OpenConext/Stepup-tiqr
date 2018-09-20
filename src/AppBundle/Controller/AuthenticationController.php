@@ -17,6 +17,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Exception\NoActiveAuthenrequestException;
 use AppBundle\Exception\UserNotFoundException;
 use AppBundle\Exception\UserPermanentlyBlockedException;
 use AppBundle\Exception\UserTemporarilyBlockedException;
@@ -79,7 +80,7 @@ class AuthenticationController extends Controller
         if (!$this->authenticationService->authenticationRequired()) {
             $logger->error('There is no pending authentication request from SP');
 
-            return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
+            throw new NoActiveAuthenrequestException();
         }
 
         try {

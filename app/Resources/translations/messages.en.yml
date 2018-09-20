@@ -5,6 +5,9 @@ stepup.error.support_page.text: Please try again or visit <a href="%support_url%
 stepup.error.generic_error:
     title: Oops!
     description: Something went wrong. Please try again.
+stepup.error.no_active_authentrequest:
+  title: Oops!
+  description: No active authentication request.
 
 stepup.error.timestamp: Time
 stepup.error.hostname: Application

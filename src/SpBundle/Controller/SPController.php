@@ -17,6 +17,7 @@
 
 namespace SpBundle\Controller;
 
+use AppBundle\EventSubscriber\LocaleResponseListener;
 use DOMDocument;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Assertion;
@@ -70,9 +71,10 @@ final class SPController extends Controller
      */
     public function demoSpAction(Request $request)
     {
-        if (!$request->isMethod(Request::METHOD_POST)) {
-            return $this->render('SpBundle:default:sp.html.twig');
+        if (!$request->isMethod(Request::METHOD_POST) || $request->get('action') === 'locale') {
+            return $this->render('SpBundle:default:sp.html.twig', ['locale' => $request->cookies->get(LocaleResponseListener::STEPUP_LOCALE_COOKIE)]);
         }
+
         $authnRequest = AuthnRequestFactory::createNewRequest($this->serviceProvider, $this->identityProvider);
 
         // Set nameId when we want to authenticate.

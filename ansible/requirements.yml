@@ -2,3 +2,4 @@
 - name: reallyenglish.ntpd
 - name: geerlingguy.nodejs
 - name: geerlingguy.java
+- name: openmicroscopy.nginx-ssl-selfsigned
