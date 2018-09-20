@@ -9,14 +9,6 @@ module.exports = {
         "!**/node_modules/**",
         "!.yarn-cache/**"
     ],
-    coverageThreshold: {
-        "global": {
-            "branches": 100,
-            "functions": 100,
-            "lines": 100,
-            "statements": 0
-        }
-    },
     moduleFileExtensions: [
         "ts",
         "tsx",

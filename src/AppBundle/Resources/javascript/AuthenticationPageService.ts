@@ -90,6 +90,7 @@ export class AuthenticationPageService {
     this.statusErrorComponent.show();
   }
 
+  /* istanbul ignore next */
   public reloadPage() {
     document.location.replace(document.location.href);
   }

@@ -72,7 +72,8 @@
             "@lint",
             "@static-analysis",
             "@phpunit",
-            "@security-tests"
+            "@security-tests",
+            "@jest"
         ],
 
         "lint": ["@lint-php", "@lint-yml", "@lint-composer"],
@@ -103,6 +104,10 @@
 
         "encore": [
             "./node_modules/.bin/encore"
+        ],
+
+        "jest": [
+            "./node_modules/.bin/jest"
         ],
 
         "frontend-install": [
