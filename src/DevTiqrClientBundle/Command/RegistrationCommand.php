@@ -46,14 +46,14 @@ class RegistrationCommand extends Command
                 'nt',
                 InputOption::VALUE_OPTIONAL,
                 'The push notification type APNS/GCM',
-                'APNS'
+                ''
             )
             ->addOption(
                 'notificationAddress',
                 'na',
                 InputOption::VALUE_OPTIONAL,
                 'The push notification address',
-                '0000000000111111111122222222223333333333'
+                ''
             )
             ->setHelp('Give the url as argument.');
     }

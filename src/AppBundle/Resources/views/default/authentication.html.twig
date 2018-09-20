@@ -14,7 +14,7 @@
 
         <img class="img-rotate spinner" src="{{ asset('images/spinner.svg') }}">
 
-        {% set link_start %}<a id="trigger-qr" onclick="switchStateToManual()">{% endset %}
+        {% set link_start %}<a id="trigger-qr" onclick="authenticationPageService.switchToManual()">{% endset %}
             {% set link_end %}</a>{% endset %}
         {{ 'login.qr.manual.no_push_notification' | trans({ '%link_start%':link_start, '%link_end%': link_end}) | raw }}
     </div>
@@ -32,12 +32,17 @@
         </div>
     {% endif %}
 
+    <div id="notificationError">
+        {{ 'login.notification_error' | trans }} <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>.
+        <br/><br/>
+    </div>
+
     <div id="qr" class="content-container qr">
         {{ 'login.qr.instruction' | trans }}
 
         <img src="{{ url('app_identity_authentication_qr') }}">
 
-        {{ 'login.qr.manual.message' | trans }} <a onClick="switchStateToOtp()">{{ 'login.qr.manual.here' | trans }}</a>.
+        {{ 'login.qr.manual.message' | trans }} <a onClick="authenticationPageService.switchToOtp()">{{ 'login.qr.manual.here' | trans }}</a>.
     </div>
 
     <div id="otpform">
@@ -52,215 +57,25 @@
         </form>
     </div>
 
-    <div id="timeout" class="content-container">
-        {{ 'login.timeout' | trans }}
+    <div id="challengeExpired" class="content-container">
+        {{ 'login.challenge_expired' | trans }}
 
-        <a onClick="reloadPage()">{{ 'login.retry' | trans }}</a>.
+        <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>.
     </div>
 
     <div id="status-request-error" class="content-container">
-        {{ 'login.status-request-error' | trans }}
+        {{ 'login.status_request_error' | trans }}
 
-        <a onClick="reloadPage()">{{ 'login.retry' | trans }}</a>.
+        <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>.
     </div>
+    <script src="{{ asset('build/authentication.js') }}" ></script>
     <script>
         /**
-         * @var {'polling' | 'manual' | 'timeout' | 'otp' | 'status-request-error'} state
-         **/
-        var state;
-
-        function switchState(newState) {
-            state = newState;
-            render();
-        }
-
-        function switchStateToManual() {
-            switchState('manual');
-        }
-
-        function switchStateToOtp() {
-            switchState('otp');
-        }
-
-        function switchStateToTimeout() {
-            switchState('timeout');
-        }
-
-        function switchStateToPolling() {
-            switchState('polling');
-            statusPoll.start();
-        }
-
-        function switchStateToStatusRequestError(error) {
-            switchState('status-request-error');
-        }
-
-        var statusPoll = {
-            timeoutHandler: null,
-            statusUrl: "{{ path('app_identity_authentication_status') | escape('js') }}",
-            start: function () {
-                this.sendRequest();
-            },
-            /**
-             * Handles the received status.
-             *
-             * @private
-             * @param {string} status
-             */
-            successHandler: function (status) {
-                switch (status) {
-                    case 'pending':
-                        // Clear any previous timeout handlers.
-                        clearTimeout(this.timeoutHandler);
-                        this.timeoutHandler = setTimeout(this.whenInPollingState(this.sendRequest), 1500);
-                        break;
-                    case 'timeout-needs-retry':
-                        switchStateToTimeout();
-                        break;
-                    case 'needs-refresh':
-                    default:
-                        reloadPage();
-                        break;
-                }
-            },
-            /**
-             * @private
-             * @param {any} error
-             */
-            errorHandler: function (error) {
-                switchStateToStatusRequestError(error);
-            },
-            /**
-             * Request status from api and bind success and error handlers.
-             *
-             * @private
-             */
-            sendRequest: function () {
-                this.requestStatus(
-                    this.whenInPollingState(this.successHandler),
-                    this.whenInPollingState(this.errorHandler),
-                );
-            },
-            /**
-             * Request status form the API.
-             *
-             * @private
-             * @param {Function} callback
-             * @param {Function} errorCallback
-             */
-            requestStatus: function (callback, errorCallback) {
-                jQuery.get(this.statusUrl, callback).fail(errorCallback);
-            },
-            /**
-             * Only call the callback function when current state is still polling.
-             *
-             * This will prevent strange errors from happening. For example when the state is already switch to manual
-             * but the timeout is completed.
-             *
-             * @private
-             * @param {Function} callback
-             * @returns {Function}
-             */
-            whenInPollingState: function (callback) {
-                var that = this;
-                return function () {
-                    if (state !== 'polling') {
-                        return;
-                    }
-                    return callback.apply(that, arguments);
-                }
-            }
-        };
-
-        function reloadPage() {
-            document.location.replace(document.location.href);
-        }
-
-        function render() {
-            allComponents.hide();
-            switch (state) {
-                case 'polling':
-                    spinnerComponent.show();
-                    break;
-                case 'manual':
-                    qrComponent.show();
-                    break;
-                case 'otp':
-                    qrComponent.show();
-                    otpFormComponent.show();
-                    break;
-                case 'timeout':
-                    timeoutComponent.show();
-                    break;
-                case 'status-request-error':
-                    errorComponent.show();
-                    break;
-            }
-        }
-
-        var spinnerComponent = {
-            show: function () {
-                this.element.stop();
-                this.element.slideDown();
-            },
-            hide: function () {
-                this.element.stop();
-                this.element.slideUp();
-            },
-            element: jQuery('.spinner-container'),
-        };
-
-        var qrComponent = {
-            show: function () {
-                this.element.stop();
-                this.element.slideDown();
-            },
-            hide: function () {
-                this.element.stop();
-                this.element.slideUp();
-            },
-            element: jQuery('#qr'),
-        };
-
-        var otpFormComponent = {
-            show: function () {
-                this.element.show();
-            },
-            hide: function () {
-                this.element.hide();
-            },
-            element: jQuery('#otpform'),
-        };
-
-        var timeoutComponent = {
-            show: function () {
-                this.element.show();
-            },
-            hide: function () {
-                this.element.hide();
-            },
-            element: jQuery('#timeout'),
-        };
-
-        var errorComponent = {
-            show: function () {
-                this.element.show();
-            },
-            hide: function () {
-                this.element.hide();
-            },
-            element: jQuery('#status-request-error'),
-        };
-
-        var allComponents = {
-            hide: function () {
-                this.elements.forEach(function (component) {
-                    component.hide();
-                });
-            },
-            elements: [spinnerComponent, qrComponent, otpFormComponent, timeoutComponent, errorComponent],
-        };
-
-        switchStateToPolling();
+         * @var {AuthenticationPageService} authenticationPageService
+         */
+        const authenticationPageService = bootstrapAuthentication(
+            "{{ path('app_identity_authentication_status') | escape('js') }}",
+            "{{ path('app_identity_authentication_notification') | escape('js') }}",
+        );
     </script>
 {% endblock %}
