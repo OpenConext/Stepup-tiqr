@@ -165,7 +165,7 @@ class AuthenticationController extends Controller
         }
 
         if ($this->authenticationChallengeIsExpired()) {
-            return $this->refreshAuthenticationPage();
+            return $this->timeoutNeedsManualRetry();
         }
 
         $isAuthenticated = $this->tiqrService->isAuthenticated();
@@ -204,6 +204,16 @@ class AuthenticationController extends Controller
     }
 
     /**
+     * Generate a response for authentication.html: Ask the user to retry.
+     *
+     * @return JsonResponse
+     */
+    private function timeoutNeedsManualRetry()
+    {
+        return $this->generateAuthenticationStatusResponse('challenge-expired');
+    }
+
+    /**
      * Generate a response for authentication.html: refresh the page.
      *
      * @return JsonResponse
@@ -214,17 +224,35 @@ class AuthenticationController extends Controller
     }
 
     /**
-     * Generate a response for authentication.html.
+     * Generate a status response for authentication.html.
      *
-     * The javascript in the authentication page expects one of three statusses:
+     * The javascript in the authentication page expects one of three statuses:
      *
      *  - pending: waiting for user action, schedule next poll
-     *  - needs-refresh: refresh the page (the /authentication page will handle the succes or error)
+     *  - needs-refresh: refresh the page (the /authentication page will handle the success or error)
+     *  - challenge-expired: Message user challenge is expired, let the user give the option to retry.
      *
      * @param string $status
      * @return JsonResponse
      */
     private function generateAuthenticationStatusResponse($status)
+    {
+        return new JsonResponse($status);
+    }
+
+    /**
+     * Generate a notification response for authentication.html.
+     *
+     * The javascript in the authentication page expects one of three statuses:
+     *
+     *  - success: Notification send successfully
+     *  - error: Notification was not send successfully
+     *  - no-device: There was no device to send the notification
+     *
+     * @param string $status
+     * @return JsonResponse
+     */
+    private function generateNotificationResponse($status)
     {
         return new JsonResponse($status);
     }
@@ -247,7 +275,26 @@ class AuthenticationController extends Controller
 
         $this->logger->info('Return QR image response');
 
-        $response = $this->tiqrService->createAuthenticationQRResponse();
+        return $this->tiqrService->createAuthenticationQRResponse();
+    }
+
+    /**
+     *
+     * @Route("/authentication/notification", name="app_identity_authentication_notification", methods={"POST"})
+     * @throws \InvalidArgumentException
+     */
+    public function authenticationNotificationAction()
+    {
+        $this->logger->info('Client request QR image');
+
+        // Do have a valid sample AuthnRequest?.
+        if (!$this->authenticationService->authenticationRequired()) {
+            $this->logger->error('There is no pending authentication request from SP');
+
+            return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->logger->info('Return QR image response');
 
         // Get user.
         $nameId = $this->authenticationService->getNameId();
@@ -274,9 +321,13 @@ class AuthenticationController extends Controller
             ));
             $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
             $this->logNotificationResponse($result, $notificationType, $notificationAddress);
+            if ($result) {
+                return $this->generateNotificationResponse('success');
+            }
+            return $this->generateNotificationResponse('error');
         }
 
-        return $response;
+        return $this->generateNotificationResponse('no-device');
     }
 
 

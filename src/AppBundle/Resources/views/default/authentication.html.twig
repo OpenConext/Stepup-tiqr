@@ -14,7 +14,9 @@
 
         <img class="img-rotate spinner" src="{{ asset('images/spinner.svg') }}">
 
-        {{ 'login.qr.manual.no_push_notification' | trans({ '%link_start%':'<a id="trigger-qr">', '%link_end%': '</a>' }) | raw }}
+        {% set link_start %}<a id="trigger-qr" onclick="authenticationPageService.switchToManual()">{% endset %}
+            {% set link_end %}</a>{% endset %}
+        {{ 'login.qr.manual.no_push_notification' | trans({ '%link_start%':link_start, '%link_end%': link_end}) | raw }}
     </div>
 
     {% if otpError is defined %}
@@ -30,54 +32,50 @@
         </div>
     {% endif %}
 
+    <div id="notificationError">
+        {{ 'login.notification_error' | trans }} <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>.
+        <br/><br/>
+    </div>
+
     <div id="qr" class="content-container qr">
         {{ 'login.qr.instruction' | trans }}
 
         <img src="{{ url('app_identity_authentication_qr') }}">
 
-        {{ 'login.qr.manual.message' | trans }} <a onClick="jQuery('#otpform').slideToggle();">{{ 'login.qr.manual.here' | trans }}</a>.
+        {{ 'login.qr.manual.message' | trans }} <a onClick="authenticationPageService.switchToOtp()">{{ 'login.qr.manual.here' | trans }}</a>.
     </div>
 
     <div id="otpform">
         <form method="POST" class="form-inline">
             <div class="input-group">
                 <input type="text" name="otp" tabindex="3"
-                                                            placeholder="{{ 'login.qr.manual.otp' | trans }}"
-                                                            autocomplete="off"/>
+                       placeholder="{{ 'login.qr.manual.otp' | trans }}"
+                       autocomplete="off"/>
                 &nbsp;
                 <button type="submit" class="btn btn-primary">{{ 'login.qr.manual.button' | trans }}</button>
             </div>
         </form>
     </div>
+
+    <div id="challengeExpired" class="content-container">
+        {{ 'login.challenge_expired' | trans }}
+
+        <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>.
+    </div>
+
+    <div id="status-request-error" class="content-container">
+        {{ 'login.status_request_error' | trans }}
+
+        <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>.
+    </div>
+    <script src="{{ asset('build/authentication.js') }}" ></script>
     <script>
-        jQuery('#qr').hide();
-        jQuery('#otpform').hide();
-
-        jQuery('#trigger-qr').on('click', function(){
-            jQuery('#qr').slideToggle();
-            jQuery('#otpform').hide();
-            jQuery('.spinner-container').slideToggle();
-        });
-
         /**
-         * Reload the page to finalize the authentication process when
-         * the user is logged in.
-         *
-         * @param {String} status
+         * @var {AuthenticationPageService} authenticationPageService
          */
-        function updateStatus(status) {
-            if (status === 'pending') {
-                setTimeout(requestStatus, 1500);
-            } else {
-                document.location.replace(document.location.href);
-            }
-        }
-
-        function requestStatus() {
-            var statusUrl = "{{ path('app_identity_authentication_status') | escape('js') }}";
-            jQuery.get(statusUrl, updateStatus);
-        }
-
-        requestStatus();
+        const authenticationPageService = bootstrapAuthentication(
+            "{{ path('app_identity_authentication_status') | escape('js') }}",
+            "{{ path('app_identity_authentication_notification') | escape('js') }}",
+        );
     </script>
 {% endblock %}
