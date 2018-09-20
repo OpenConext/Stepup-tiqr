@@ -2,8 +2,8 @@ import { StatusPollService } from './StatusPollService';
 import { StatusClient } from './Client/StatusClient';
 import { AuthenticationPageService } from './AuthenticationPageService';
 import { NotificationClient } from './Client/NotificationClient';
-import { SlideAbleComponent } from './Component/SlideAbleComponent';
-import { HideAbleComponent } from './Component/HideAbleComponent';
+import { SlideableComponent } from './Component/SlideableComponent';
+import { HideableComponent } from './Component/HideableComponent';
 
 declare global {
   interface Window {
@@ -16,12 +16,12 @@ window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: stri
   const notificationClient = new NotificationClient(notificationApiUrl);
   const pollingService = new StatusPollService(statusClient);
 
-  const spinnerComponent = new SlideAbleComponent(jQuery('.spinner-container'));
-  const qrComponent = new SlideAbleComponent(jQuery('#qr'));
-  const otpFormComponent = new HideAbleComponent(jQuery('#otpform'));
-  const challengeExpiredComponent = new HideAbleComponent(jQuery('#challengeExpired'));
-  const statusErrorComponent = new HideAbleComponent(jQuery('#status-request-error'));
-  const notificationErrorComponent = new HideAbleComponent(jQuery('#notificationError'));
+  const spinnerComponent = new SlideableComponent(jQuery('.spinner-container'));
+  const qrComponent = new SlideableComponent(jQuery('#qr'));
+  const otpFormComponent = new HideableComponent(jQuery('#otpform'));
+  const challengeExpiredComponent = new HideableComponent(jQuery('#challengeExpired'));
+  const statusErrorComponent = new HideableComponent(jQuery('#status-request-error'));
+  const notificationErrorComponent = new HideableComponent(jQuery('#notificationError'));
 
   const authenticationPageService = new AuthenticationPageService(
     pollingService,

@@ -1,3 +1,13 @@
+## 2.1.0
+
+- Show styled error page for routes authentication, registration, cancel page when no AuthNRequest is active.
+
+Changes on the authentication page. 
+
+- Stop polling for status when an error or authentication token is expired.  
+- Disabled automatic page refresh when authentication token is expired.
+- Move logic for authentication request to client-side (fixes timeouts on push notification name resolvers).
+
 ## 2.0.1
 The most notable changes are
 - A user agent pattern can be set to ensure the users tiqr app is of the correct vendor. 

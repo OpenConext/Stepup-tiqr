@@ -1,7 +1,7 @@
 import 'jquery';
 import { Component } from './Component';
 
-export class SlideAbleComponent implements Component {
+export class SlideableComponent implements Component {
 
   constructor(private element: JQuery) {
 

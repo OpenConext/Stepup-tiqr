@@ -1,7 +1,7 @@
 import 'jquery';
 import { Component } from './Component';
 
-export class HideAbleComponent implements Component {
+export class HideableComponent implements Component {
 
   constructor(private element: JQuery) {
 

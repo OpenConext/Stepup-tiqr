@@ -198,10 +198,8 @@ describe('AuthenticationPageService', () => {
       if (!successCallback || !errorCallback) {
         throw new Error('Should have started notification request');
       }
-      expect(context).toMatchSnapshot('notification succeeded');
       successCallback('success');
       // Should change nothing.
-      expect(context).toMatchSnapshot('notification succeeded');
     });
 
     it('Should show push notification when failed', () => {
