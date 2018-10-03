@@ -41,6 +41,7 @@ login:
 
 enrol:
     title: Registreer nieuw tiqr-account
+    retry: Probeer opnieuw.
     status:
         idle.1: Je sessie is verlopen.
         idle.2: Ververs de pagina om nogmaals te proberen.

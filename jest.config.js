@@ -25,7 +25,7 @@ module.exports = {
     ],
     transform: {
         "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest",
-        "\\.(ts|tsx)$": "ts-jest/preprocessor.js"
+        "\\.(ts|tsx)$": "ts-jest"
     },
     testRegex: ".*\\.test\\.(ts|tsx|js|jsx)$",
     globals: {
