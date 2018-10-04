@@ -2,7 +2,10 @@ en: Engels
 nl: Nederlands
 login:
     title: Log in met tiqr
-    timeout: Login timeout. Ververs de pagina om nogmaals te proberen.
+    challenge_expired: Login timeout. Ververs de pagina om nogmaals te proberen.
+    retry: Probeer opnieuw.
+    status_request_error: Er is een fout opgetreden bij het opalen van de status. Ververs de pagina om nogmaals te proberen.
+    notification_error: Er is een fout opgetreden bij het versturen van de tiqr push notification. Probeer opnieuw of scan de QR code handmatig.
     push:
         message: Je ontvangt een push notificatie op je telefoon.
         instructions.1: Klik op 'OK' om verder te gaan
@@ -38,6 +41,7 @@ login:
 
 enrol:
     title: Registreer nieuw tiqr-account
+    retry: Probeer opnieuw.
     status:
         idle.1: Je sessie is verlopen.
         idle.2: Ververs de pagina om nogmaals te proberen.

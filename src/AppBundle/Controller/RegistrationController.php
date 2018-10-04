@@ -17,6 +17,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Exception\NoActiveAuthenrequestException;
 use AppBundle\Tiqr\TiqrServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Psr\Log\LoggerInterface;
@@ -59,7 +60,7 @@ class RegistrationController extends Controller
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->warning('Registration is not required');
-            return new Response('No registration required', Response::HTTP_BAD_REQUEST);
+            throw new NoActiveAuthenrequestException();
         }
 
         $this->logger->info('There is a pending registration');

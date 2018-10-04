@@ -10,7 +10,7 @@
 
 {% block body %}
     <div class="content-container status-container">
-        <ul class="status idle">
+        <ul class="status expired">
             <li>{{ 'enrol.status.idle.1' | trans }}</li>
             <li>{{ 'enrol.status.idle.2' | trans }}</li>
             <li>{{ 'enrol.status.idle.3' | trans }}</li>
@@ -33,81 +33,18 @@
         </div>
         <div class="status error">
             {{ 'enrol.status.error' | trans }}
+            <a href="{{  path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
         </div>
     </div>
     <div class="content-container qr">
         <img src="{{ url('app_identity_registration_qr') }}">
         {{ 'enrol.download' | trans | raw }}
     </div>
-
+    <script src="{{ asset('build/registration.js') }}" ></script>
     <script>
-        jQuery(function () {
-            var idle = "1";
-            var initialized = "2";
-            var retrieved = "3";
-            var processed = "4";
-            var finalized = "5";
-
-            // Remember if registration has been initialized on the server.
-            // If this is NOT the case, and we can an IDLE status back, we know initialization is not yet started.
-            // If this IS the case, we know something went wrong (probably session expired).
-            var hasBeenInitialized = false;
-
-            function fadeoutQr() {
-                jQuery(".qr").hide("slow");
-            }
-
-            function updateStatusText(selector) {
-                hasBeenInitialized = true;
-                jQuery('.status-container >').hide();
-                jQuery(selector).show();
-            }
-
-            function scheduleNextPoll() {
-                setTimeout(requestStatus, 1500);
-            }
-
-            function updateStatus(status) {
-                switch (status) {
-                    case idle:
-                        if (hasBeenInitialized) {
-                            updateStatusText('ul.status.idle');
-                            fadeoutQr();
-                        }
-                        scheduleNextPoll();
-                        break;
-                    case initialized:
-                        updateStatusText('ul.status.initialized');
-                        scheduleNextPoll();
-                        break;
-                    case retrieved:
-                        updateStatusText('ul.status.retrieved');
-                        scheduleNextPoll();
-                        fadeoutQr();
-                        break;
-                    case processed:
-                        updateStatusText('div.status.processed');
-                        scheduleNextPoll();
-                        fadeoutQr();
-                        break;
-                    case finalized:
-                        updateStatusText('div.status.finalized');
-                        scheduleNextPoll();
-                        fadeoutQr();
-                        document.location = "{{ path('app_identity_registration') | escape('js') }}";
-                        break;
-                    default:
-                        updateStatusText("div.status.error");
-                        scheduleNextPoll();
-                }
-            }
-
-            function requestStatus() {
-                var statusUrl = "{{ path('app_identity_registration_status') | escape('js') }}";
-                jQuery.get(statusUrl, updateStatus);
-            }
-
-            requestStatus();
-        });
+        var registrationStateMachine = bootstrapRegistration(
+            "{{ path('app_identity_registration_status') | escape('js') }}",
+            "{{ path('app_identity_registration') | escape('js') }}",
+        );
     </script>
 {% endblock %}

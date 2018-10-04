@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Zxing\QrReader;
 
 class RegistrationCommand extends Command
 {
@@ -45,14 +46,14 @@ class RegistrationCommand extends Command
                 'nt',
                 InputOption::VALUE_OPTIONAL,
                 'The push notification type APNS/GCM',
-                'APNS'
+                ''
             )
             ->addOption(
                 'notificationAddress',
                 'na',
                 InputOption::VALUE_OPTIONAL,
                 'The push notification address',
-                '0000000000111111111122222222223333333333'
+                ''
             )
             ->setHelp('Give the url as argument.');
     }
@@ -127,7 +128,7 @@ class RegistrationCommand extends Command
      */
     protected function readRegistrationUrlFromFile($file, OutputInterface $output)
     {
-        $qrcode = new \QrReader(file_get_contents($file), \QrReader::SOURCE_TYPE_BLOB);
+        $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
 
         $output->writeln([

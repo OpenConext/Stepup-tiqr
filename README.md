@@ -148,25 +148,6 @@ Authentication can also be done in 'offline' mode, so you need to fill in your '
 
 ``` ./bin/console test:authentication --offline=true ./<qr_file.png>```  
 
-Release instructions project
-============================
-
-The projects follow semantic versioning. To create a new release perform the following steps:
-
-1. Merge feature branch in development branch.
-
-2. Merge development branch in master branch.
-
-3. Checkout and update (pull) master branch
-
-4. Create version with RMT
-
-```bash 
-    ./RMT release
-```
-
-5. Release the new version on Github [Releases](https://github.com/OpenConext/Stepup-gssp-example/releases)
-
 User storage
 ============
 Currently we support three user storage solutions. Which are file system storage, ldap and database storage. The 
@@ -231,6 +212,9 @@ tiqr_library_options:
                 temporaryBlockTimestampAttr: 'tiqrTemporaryBlockTimestamp'
                 attributes: null
 ```
+
+# Release strategy
+Please read: https://github.com/OpenConext/Stepup-Deploy/wiki/Release-Management fro more information on the release strategy used in Stepup projects.
 
 Other resources
 ======================

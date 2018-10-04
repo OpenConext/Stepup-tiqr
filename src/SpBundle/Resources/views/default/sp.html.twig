@@ -38,7 +38,21 @@
             <br>
             <input id="X-Stepup-Request-Id" name="X-Stepup-Request-Id" size="50" type="text">
             <br>
+            <label for="locale-cookie">Locale</label>
+            <br>
+            <select id="locale-cookie" name="locale-cookie" >
+                <option value="en" {%  if locale == 'en' %}selected{% endif %}>English</option>
+                <option value="nl_NL" {%  if locale == 'nl_NL' %}selected{% endif %}>Dutch</option>
+            </select>
+            <br>
         </div>
 
     </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script>
+        jQuery('#locale-cookie').on('change', (input) => {
+            Cookies.set('stepup_locale', input.target.value);
+        });
+    </script>
 {% endblock %}

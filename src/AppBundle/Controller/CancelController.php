@@ -17,12 +17,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Exception\NoActiveAuthenrequestException;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 
 class CancelController extends Controller
 {
@@ -61,6 +61,7 @@ class CancelController extends Controller
         }
 
         $this->logger->error('There is no pending request from SP');
-        return new Response('No active authnrequest', Response::HTTP_BAD_REQUEST);
+
+        throw new NoActiveAuthenrequestException();
     }
 }
