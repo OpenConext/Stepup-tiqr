@@ -76,9 +76,10 @@
             "@jest"
         ],
 
-        "lint": ["@lint-php", "@lint-yml", "@lint-composer"],
+        "lint": ["@lint-php", "@lint-yml", "@lint-composer", "@lint-ts"],
         "lint-php": "vendor/bin/parallel-lint app src",
         "lint-yml": "bin/console lint:yaml app/config",
+        "lint-ts": "yarn tslint --project tsconfig.json",
         "lint-composer": "composer validate",
 
         "static-analysis": ["@license-headers", "@phpmd", "@phpcs", "@phpcpd"],

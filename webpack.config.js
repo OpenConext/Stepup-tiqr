@@ -9,6 +9,8 @@ Encore
     .autoProvidejQuery()
     .addStyleEntry('global', './app/Resources/scss/application.scss')
     .addEntry('authentication', './src/AppBundle/Resources/javascript/authentication.ts')
+    .addEntry('registration', './src/AppBundle/Resources/javascript/registration.ts')
+
     // Convert sass files.
     .enableSassLoader(function (options) {
         // https://github.com/sass/node-sass#options.
