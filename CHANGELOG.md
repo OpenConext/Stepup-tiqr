@@ -1,3 +1,9 @@
+## 2.1.1
+Changes on the registration page. 
+
+- inline JS logic converted to typescript.
+- Stop polling for status when an error or session is expired.
+
 ## 2.1.0
 
 - Show styled error page for routes authentication, registration, cancel page when no AuthNRequest is active.
