@@ -73,7 +73,7 @@
         /**
          * @var {AuthenticationPageService} authenticationPageService
          */
-        const authenticationPageService = bootstrapAuthentication(
+        var authenticationPageService = bootstrapAuthentication(
             "{{ path('app_identity_authentication_status') | escape('js') }}",
             "{{ path('app_identity_authentication_notification') | escape('js') }}",
         );
