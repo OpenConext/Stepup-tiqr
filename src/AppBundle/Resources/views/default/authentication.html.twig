@@ -40,7 +40,9 @@
     <div id="qr" class="content-container qr">
         {{ 'login.qr.instruction' | trans }}
 
-        <img src="{{ url('app_identity_authentication_qr') }}">
+        <a href={{ authenticateUrl }}>
+            <img src="{{ url('app_identity_authentication_qr') }}">
+        </a>
 
         {{ 'login.qr.manual.message' | trans }} <a onClick="authenticationPageService.switchToOtp()">{{ 'login.qr.manual.here' | trans }}</a>.
     </div>

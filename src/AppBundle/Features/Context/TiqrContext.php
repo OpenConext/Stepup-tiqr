@@ -406,9 +406,8 @@ class TiqrContext implements Context, KernelAwareContext
         $session = $this->minkContext->getMink()->getSession();
         /** @var Client $client */
         $page = $session->getPage();
-        $img = $page->find('css', 'div.qr > img');
+        $img = $page->find('css', 'div.qr img');
         $src = $img->getAttribute('src');
-
         $qrcode = new QrReader($this->getFileContentsInsecure($src), QrReader::SOURCE_TYPE_BLOB);
         $content = $qrcode->text();
         Assertion::startsWith($content, 'tiqrauth://');

@@ -148,7 +148,9 @@ class AuthenticationController extends Controller
 
         $logger->info('Return authentication page with QR code');
 
-        return $this->render('AppBundle:default:authentication.html.twig', []);
+        return $this->render('AppBundle:default:authentication.html.twig', [
+            'authenticateUrl' => $this->tiqrService->authenticationUrl()
+        ]);
     }
 
     /**
