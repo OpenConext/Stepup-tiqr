@@ -14,7 +14,7 @@ login:
     otp:
       error: Er is iets fouts gebeurt
     qr:
-        message: Open de de tiqr push notificatie op je telefoon en volg de instructies.
+        message: Open de tiqr push notificatie op je telefoon en volg de instructies.
         instruction: Scan deze QR code met je tiqr app.
         manual:
             message: Als je telefoon offline is moet je het
