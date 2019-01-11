@@ -164,10 +164,6 @@ class AuthenticationController extends Controller
             return $this->refreshAuthenticationPage();
         }
 
-        if ($this->authenticationChallengeIsExpired()) {
-            return $this->timeoutNeedsManualRetry();
-        }
-
         $isAuthenticated = $this->tiqrService->isAuthenticated();
 
         if ($isAuthenticated) {
@@ -175,6 +171,11 @@ class AuthenticationController extends Controller
 
             return $this->refreshAuthenticationPage();
         }
+
+        if ($this->authenticationChallengeIsExpired()) {
+            return $this->timeoutNeedsManualRetry();
+        }
+
         $this->logger->info('Send json response is not authenticated');
 
         return $this->scheduleNextPollOnAuthenticationPage();
