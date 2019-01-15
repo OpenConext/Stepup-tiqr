@@ -61,12 +61,12 @@ script:
 
   # Only run behat on PHP>5.6, this is not ideal, but we can't work around
   # this PHP bug: https://bugs.php.net/bug.php?id=72286
-  - (php --version | grep -q 'PHP 5\.6\.') || composer behat
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then composer behat; fi
 
 after_script:
   - cat $TRAVIS_BUILD_DIR/error.log
   - cat $TRAVIS_BUILD_DIR/access.log
   - cat $TRAVIS_BUILD_DIR/build/*.html
   - sudo cat /var/log/syslog
-  - cat $TRAVIS_BUILD_DIR/var/logs/*
+  - cat $TRAVIS_BUILD_DIR/var/log/*
 
