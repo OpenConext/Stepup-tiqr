@@ -1,3 +1,12 @@
+## 2.1.2
+Changes on the registration page. 
+
+- Add request timeout notification request.
+- Fix js IE issue (no const, use var in twig template)
+- Add authenticateUrl to authentication page 
+- Textual changes
+- Fix authentication status endpoint
+
 ## 2.1.1
 Changes on the registration page. 
 

@@ -2,19 +2,19 @@ en: Engels
 nl: Nederlands
 login:
     title: Log in met tiqr
-    challenge_expired: Login timeout. Ververs de pagina om nogmaals te proberen.
+    challenge_expired: Login timeout. Ververs de pagina om het nogmaals te proberen.
     retry: Probeer opnieuw.
-    status_request_error: Er is een fout opgetreden bij het opalen van de status. Ververs de pagina om nogmaals te proberen.
-    notification_error: Er is een fout opgetreden bij het versturen van de tiqr push notification. Probeer opnieuw of scan de QR code handmatig.
+    status_request_error: Er is een fout opgetreden bij het ophalen van de status. Ververs de pagina om het nogmaals te proberen.
+    notification_error: Er is een fout opgetreden bij het versturen van de tiqr push notificatie. Probeer opnieuw of scan de QR code.
     push:
         message: Je ontvangt een push notificatie op je telefoon.
         instructions.1: Klik op 'OK' om verder te gaan
         instructions.2: Voer je PIN in en klik op 'OK'. Je wordt nu ingelogd.
         fail: Geen push notificatie ontvangen? Klik %link_start%hier%link_end% en scan de QR-code met je tiqr-app.
     otp:
-      error: Er is iets fouts gebeurt
+      error: Er is iets fout gegaan
     qr:
-        message: Open de de tiqr push notificatie op je telefoon en volg de instructies.
+        message: Open de tiqr push notificatie op je telefoon en volg de instructies.
         instruction: Scan deze QR code met je tiqr app.
         manual:
             message: Als je telefoon offline is moet je het
@@ -27,7 +27,7 @@ login:
     cancel: Annuleren
     error:
         invalid_challenge: ongeldig - herlaad deze pagina en probeer opnieuw.
-        invalid_response: ongeldig one time password - heb je de juiste PIN ingevoerd?
+        invalid_response: ongeldig eenmalig wachtwoord - heb je de juiste PIN ingevoerd?
         attempts_left: aantal herkansingen
         user_not_found:
             title: Gebruiker onbekend
@@ -40,22 +40,22 @@ login:
             description: Je account is tijdelijk geblokkeerd, probeer het later opnieuw.
 
 enrol:
-    title: Registreer nieuw tiqr-account
+    title: Registreer nieuw tiqr account
     retry: Probeer opnieuw.
     status:
         idle.1: Je sessie is verlopen.
         idle.2: Ververs de pagina om nogmaals te proberen.
         idle.3: Of klik op 'Annuleren' om terug te keren naar het beginscherm.
-        initialized.1: Open de tiqr-app op je telefoon.
-        initialized.2: Scan de QR code met de tiqr-app.
+        initialized.1: Open de tiqr app op je telefoon.
+        initialized.2: Scan de QR code met de tiqr app.
         retrieved.1: Op je telefoon verschijnt het scherm 'Account Activatie'.
         retrieved.2: Klik in de app op 'OK' om je account te activeren.
-        retrieved.3: Bedenk een PIN voor je tiqr-account<br/>Let op! Onthoud deze PIN goed, deze PIN kun je niet meer wijzigen.
-        retrieved.4: Na het invoeren van je PIN in de tiqr-app ga je automatisch door naar de volgende stap.
+        retrieved.3: Bedenk een PIN voor je tiqr account<br/>Let op! Onthoud deze PIN goed, deze PIN kun je niet meer wijzigen.
+        retrieved.4: Na het invoeren van je PIN in de tiqr app ga je automatisch door naar de volgende stap.
         processed: Een ogenblik geduld a.u.b.
         finalized: Je account is gereed voor gebruik.
         error: Er is een onbekende fout opgetreden. Probeer het opnieuw door uw browser te vernieuwen.
-    download: Download de tiqr-app voor <a href="http://itunes.apple.com/us/app/tiqr/id430838214?mt=8&ls=1" >iOS</a>/<a href="https://play.google.com/store/apps/details?id=org.tiqr.authenticator&hl=nl">Android</a>
+    download: Download de tiqr-app voor <a href="https://itunes.apple.com/us/app/tiqr/id430838214?mt=8&ls=1" target="_blank">iOS</a>/<a href="https://play.google.com/store/apps/details?id=org.tiqr.authenticator&hl=nl" target="_blank">Android</a>
     cancel: Annuleren
 
 info:
