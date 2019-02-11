@@ -154,10 +154,12 @@ final class SPController extends Controller
      */
     private function toFormattedXml($xml)
     {
+        $previous = libxml_disable_entity_loader(true);
         $domxml = new DOMDocument('1.0');
         $domxml->preserveWhiteSpace = false;
         $domxml->formatOutput = true;
         $domxml->loadXML($xml);
+        libxml_disable_entity_loader($previous);
 
         return $domxml->saveXML();
     }
