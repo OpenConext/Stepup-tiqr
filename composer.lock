@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "248f98a1778700b5f817d9805d9c93bc",
@@ -2627,20 +2627,22 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "v1.1.6",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "9d3fc594c5070c0427f998bd27f6be71e99a3f36"
+                "reference": "ea2dd26d16e9a542377947feb69d576fd35b7546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/9d3fc594c5070c0427f998bd27f6be71e99a3f36",
-                "reference": "9d3fc594c5070c0427f998bd27f6be71e99a3f36",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/ea2dd26d16e9a542377947feb69d576fd35b7546",
+                "reference": "ea2dd26d16e9a542377947feb69d576fd35b7546",
                 "shasum": ""
             },
             "require": {
+                "ext-curl": "*",
                 "ext-gd": "*",
+                "ext-json": "*",
                 "kairos/phpqrcode": "~1.0",
                 "zendframework/zendframework1": "~1.12"
             },
@@ -2650,7 +2652,7 @@
                 "BSD-3-Clause"
             ],
             "description": "php library for tiqr authentication.",
-            "time": "2018-09-04T11:58:24+00:00"
+            "time": "2019-02-18T08:38:04+00:00"
         },
         {
             "name": "twig/twig",
@@ -4671,6 +4673,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-06-30T09:13:00+00:00"
         },
         {

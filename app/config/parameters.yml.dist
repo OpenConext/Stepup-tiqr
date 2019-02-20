@@ -57,6 +57,8 @@ parameters:
             apns:
                 certificate: 'absolute path to certificate'
                 environment: production
+            firebase:
+                apikey: 'Your Firebase API KEY'
         accountblocking:
             maxAttempts: 5
         storage:
