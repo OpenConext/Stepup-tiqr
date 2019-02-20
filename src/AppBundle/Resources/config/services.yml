@@ -1,5 +1,4 @@
 services:
-services:
     AppBundle\Twig\GsspExtension:
         tags: [twig.extension]
         arguments:
@@ -57,3 +56,7 @@ services:
     AppBundle\Service\UserAgentMatcher:
       arguments:
         - '%mobile_app_user_agent_pattern%'
+
+
+    AppBundle\Controller\AuthenticationController:
+      $useGcmFallback: '%use_gcm_fallback%'

@@ -38,6 +38,9 @@ parameters:
     # PCRE as accepted by preg_match (http://php.net/preg_match).
     mobile_app_user_agent_pattern: "/^.*$/"
 
+    # Flag for GCM fallback with FCM on failure
+    use_gcm_fallback: true
+
     # Options for the tiqr library
     tiqr_library_options:
         general:
@@ -57,6 +60,8 @@ parameters:
             apns:
                 certificate: 'absolute path to certificate'
                 environment: production
+            firebase:
+                apikey: 'Your Firebase API KEY'
         accountblocking:
             maxAttempts: 5
         storage:
