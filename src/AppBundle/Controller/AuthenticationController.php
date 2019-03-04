@@ -51,7 +51,7 @@ class AuthenticationController extends Controller
     /**
      * @var bool
      */
-    private $useGcmFallback;
+    private $useFirebaseFallbackForGcm;
 
     public function __construct(
         AuthenticationService $authenticationService,
@@ -60,7 +60,7 @@ class AuthenticationController extends Controller
         TiqrUserRepositoryInterface $userRepository,
         AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         LoggerInterface $logger,
-        $useGcmFallback
+        $useFirebaseFallbackForGcm
     ) {
         $this->authenticationService = $authenticationService;
         $this->stateHandler = $stateHandler;
@@ -68,7 +68,7 @@ class AuthenticationController extends Controller
         $this->logger = $logger;
         $this->authenticationRateLimitService = $authenticationRateLimitService;
         $this->userRepository = $userRepository;
-        $this->useGcmFallback = $useGcmFallback;
+        $this->useFirebaseFallbackForGcm = $useFirebaseFallbackForGcm;
     }
 
     /**
@@ -382,11 +382,10 @@ class AuthenticationController extends Controller
         $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
         if (!$result
             && $notificationType == 'GCM'
-            && $this->useGcmFallback
+            && $this->useFirebaseFallbackForGcm
             && $this->tiqrService->getNotificationError()['message'] == 'MismatchSenderId'
         ) {
             // Retry with FCM if GCM
-
             $this->logger->notice(
                 sprintf(
                     'Failed to send push notification for type "%s" and address "%s" retrying with FCM',

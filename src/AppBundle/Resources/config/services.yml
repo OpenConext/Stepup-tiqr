@@ -54,9 +54,9 @@ services:
           - '@logger'
 
     AppBundle\Service\UserAgentMatcher:
-      arguments:
-        - '%mobile_app_user_agent_pattern%'
-
+      bind:
+        $pattern: '%mobile_app_user_agent_pattern%'
 
     AppBundle\Controller\AuthenticationController:
-      $useGcmFallback: '%use_gcm_fallback%'
+      bind:
+        $useFirebaseFallbackForGcm: '%use_firebase_fallback_for_gcm%'

@@ -39,7 +39,7 @@ parameters:
     mobile_app_user_agent_pattern: "/^.*$/"
 
     # Flag for GCM fallback with FCM on failure
-    use_gcm_fallback: true
+    use_firebase_fallback_for_gcm: true
 
     # Options for the tiqr library
     tiqr_library_options:
