@@ -38,6 +38,10 @@ parameters:
     # PCRE as accepted by preg_match (http://php.net/preg_match).
     mobile_app_user_agent_pattern: "/^.*$/"
 
+    # Flag to use Firebse as fallback when GCM fails with a MismatchSenderId.
+    # This is used to handle the push notification method rollover from GCM to Firebase.
+    use_firebase_fallback_for_gcm: true
+
     # Options for the tiqr library
     tiqr_library_options:
         general:
@@ -57,6 +61,8 @@ parameters:
             apns:
                 certificate: 'absolute path to certificate'
                 environment: production
+            firebase:
+                apikey: 'Your Firebase API KEY'
         accountblocking:
             maxAttempts: 5
         storage:

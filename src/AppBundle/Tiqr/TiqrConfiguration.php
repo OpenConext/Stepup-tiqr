@@ -70,6 +70,11 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             $this->options['gcm.application'] = $configuration['library']['gcm']['application'];
         }
 
+        if (isset($configuration['library']['firebase'])) {
+            Assertion::string($configuration['library']['firebase']['apikey']);
+            $this->options['firebase.apikey'] = $configuration['library']['firebase']['apikey'];
+        }
+
         if (isset($configuration['accountblocking'][self::MAX_ATTEMPTS])) {
             Assertion::digit($configuration['accountblocking'][self::MAX_ATTEMPTS]);
             $this->options[self::MAX_ATTEMPTS] = $configuration['accountblocking'][self::MAX_ATTEMPTS];
