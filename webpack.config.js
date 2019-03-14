@@ -36,7 +36,9 @@ Encore
             }
         ]
     })
-    .enableSourceMaps();
+    .enableSourceMaps()
+    .enableVersioning();
+
 
 module.exports = Encore.getWebpackConfig();
 module.exports.externals = {
