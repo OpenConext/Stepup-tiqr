@@ -1,3 +1,16 @@
+## Next release
+
+## 2.1.9
+A bugfix release where Firebase push notifications would contain a
+duplicate text. See #74 for more details.
+
+## 2.1.3 .. 2.1.8
+These releases added Firebase push notification support to Stepup-tiqr 
+and fixed the security checker.
+
+Support Firebase fallback. Tiqr needs a fallback mechanism to support 
+Firebase as fallback notification mechanism in case GCM fails.
+
 ## 2.1.2
 Changes on the registration page. 
 
