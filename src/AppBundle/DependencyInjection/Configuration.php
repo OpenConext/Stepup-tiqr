@@ -155,6 +155,16 @@ TEXT
                 ->end()
             ->end()
         ->end()
+        ->arrayNode('firebase')
+            ->children()
+                ->scalarNode('apikey')
+                    ->info(<<<TEXT
+        The API key you use for your Google Cloud Messaging (Firebase) account (android push notifications).
+TEXT
+                    )
+                ->end()
+            ->end()
+        ->end()
         ->end();
     }
 
