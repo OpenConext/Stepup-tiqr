@@ -33,6 +33,8 @@ window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: stri
     statusErrorComponent,
     notificationErrorComponent,
   );
+
   authenticationPageService.switchToPolling();
+
   return authenticationPageService;
 };
