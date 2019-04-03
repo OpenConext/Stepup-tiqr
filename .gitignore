@@ -8,6 +8,8 @@
 /.web-server-pid
 /app/config/parameters.yml
 /app/config/global_view_parameters.yml
+/app/config/*.pem
+/app/config/*.crt
 /build/
 /var/*
 !/var/cache
