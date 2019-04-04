@@ -1,5 +1,11 @@
 ## Next release
 
+## 2.1.10 .. 2.1.12
+This release adds some JavaScript browser support for older IE browsers. This should result in the ability to perform tiqr registrations and authentications in IE >= 8.
+
+- Add ECMAScript 3 support #75
+- Spinner support for non SVG SMIL supporting browsers #77
+
 ## 2.1.9
 A bugfix release where Firebase push notifications would contain a
 duplicate text. See #74 for more details.
