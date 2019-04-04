@@ -42,7 +42,7 @@
     </div>
     <script src="{{ asset('build/registration.js') }}" ></script>
     <script>
-        var registrationStateMachine = bootstrapRegistration(
+        var registrationStateMachine = window.bootstrapRegistration(
             "{{ path('app_identity_registration_status') | escape('js') }}",
             "{{ path('app_identity_registration') | escape('js') }}"
         );

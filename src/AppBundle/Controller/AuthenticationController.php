@@ -417,7 +417,7 @@ class AuthenticationController extends Controller
 
         $this->logger->notice(
             sprintf(
-                'Successfully send push notification for type "%s" and address "%s"',
+                'Successfully sent push notification for type "%s" and address "%s"',
                 $notificationType,
                 $notificationAddress
             )
