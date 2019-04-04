@@ -36,3 +36,8 @@ window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: stri
   authenticationPageService.switchToPolling();
   return authenticationPageService;
 };
+
+// Fallback for non-SVG supporting browsers (for the spinner)
+if (typeof SVGRect === 'undefined') {
+  jQuery('img.spinner').attr('src', '/images/spinner.gif').attr('height', '38');
+}
