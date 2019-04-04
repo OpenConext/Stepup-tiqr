@@ -11,6 +11,20 @@ Encore
     .addEntry('authentication', './src/AppBundle/Resources/javascript/authentication.ts')
     .addEntry('registration', './src/AppBundle/Resources/javascript/registration.ts')
 
+    // Disable minification to support ie8
+    .configureUglifyJsPlugin(function (options) {
+        options.ie8 = true;
+        options.compress = {
+            screw_ie8: false,
+        };
+        options.mangleProperties = {
+            screw_ie8: false,
+        };
+        options.output = {
+            screw_ie8: false,
+        };
+    })
+
     // Convert sass files.
     .enableSassLoader(function (options) {
         // https://github.com/sass/node-sass#options.
