@@ -1,9 +1,7 @@
 Stepup-tiqr
 ===========
 
-<a href="#">
-    <img src="https://travis-ci.org/OpenConext/Stepup-tiqr-bundle.svg?branch=master" alt="build:">
-</a></br>
+[![Build Status](https://travis-ci.org/OpenConext/Stepup-tiqr.svg?branch=develop)](https://travis-ci.org/OpenConext/Stepup-tiqr)
 
 GSSP implementation of Tiqr. [https://tiqr.org/documentation/](https://tiqr.org/documentation/)
 
