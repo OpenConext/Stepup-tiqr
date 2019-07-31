@@ -1,9 +1,9 @@
 ## Next release
 
-## 2.1.12
+## 2.1.13
  * Update symfony/symfony and symfony/phpunit-bridge #79
 
-## 2.1.10 .. 2.1.11
+## 2.1.10 .. 2.1.12
 This release adds some JavaScript browser support for older IE browsers. This should result in the ability to perform tiqr registrations and authentications in IE >= 8.
 
 - Add ECMAScript 3 support #75
