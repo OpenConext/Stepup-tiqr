@@ -1,5 +1,8 @@
 ## Next release
 
+## 2.1.14
+ * Use FCM always as fallback for GCM #80
+ 
 ## 2.1.13
  * Update symfony/symfony and symfony/phpunit-bridge #79
 
