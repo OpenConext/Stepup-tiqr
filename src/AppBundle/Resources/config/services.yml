@@ -56,7 +56,3 @@ services:
     AppBundle\Service\UserAgentMatcher:
       bind:
         $pattern: '%mobile_app_user_agent_pattern%'
-
-    AppBundle\Controller\AuthenticationController:
-      bind:
-        $useFirebaseFallbackForGcm: '%use_firebase_fallback_for_gcm%'
