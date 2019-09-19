@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'enrol.title'|trans }}
+{% endblock %}
+
+{% block header_title %}
+    {{ 'enrol.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="content-container status-container">
+        <ul class="status expired">
+            <li>{{ 'enrol.status.idle.1' | trans }}</li>
+            <li>{{ 'enrol.status.idle.2' | trans }}</li>
+            <li>{{ 'enrol.status.idle.3' | trans }}</li>
+        </ul>
+        <ul class="status initialized">
+            <li>{{ 'enrol.status.initialized.1' | trans | raw }}</li>
+            <li>{{ 'enrol.status.initialized.2' | trans | raw }}</li>
+        </ul>
+        <ul class="status retrieved">
+            <li>{{ 'enrol.status.retrieved.1' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.2' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.3' | trans | raw }}</li>
+            <li>{{ 'enrol.status.retrieved.4' | trans | raw }}</li>
+        </ul>
+        <div class="status processed">
+            {{ 'enrol.status.processed' | trans }}
+        </div>
+        <div class="status finalized">
+            {{ 'enrol.status.finalized' | trans }}
+        </div>
+        <div class="status error">
+            {{ 'enrol.status.error' | trans }}
+            <a href="{{ path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
+        </div>
+    </div>
+    <div class="content-container qr">
+        <img src="{{ url('app_identity_registration_qr') }}">
+        {{ 'enrol.download' | trans | raw }}
+    </div>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('registration') }}
+        <script>
+            var registrationStateMachine = window.bootstrapRegistration(
+                "{{ path('app_identity_registration_status') | escape('js') }}",
+                "{{ path('app_identity_registration') | escape('js') }}"
+            );
+        </script>
+    {% endblock %}
+{% endblock %}

@@ -11,9 +11,7 @@ addons:
       - apache2
 
 php:
-  - 5.6
-  - 7.0
-  - 7.1
+  - 7.2
 
 cache:
   directories:
@@ -63,12 +61,8 @@ before_script:
   - curl --insecure https://tiqr.example.com/bootstrap.min.js
 
 script:
-  # Test if the website is actually running
   - composer test
-
-  # Only run behat on PHP>5.6, this is not ideal, but we can't work around
-  # this PHP bug: https://bugs.php.net/bug.php?id=72286
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then composer behat; fi
+  - composer behat
 
 after_script:
   - cat $TRAVIS_BUILD_DIR/error.log

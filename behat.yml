@@ -3,9 +3,12 @@ default:
         progress:
             paths: false
     extensions:
-        Behat\Symfony2Extension: ~
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: config/bootstrap.php
+                class: App\Kernel
         Behat\MinkExtension:
-            base_url: https://tiqr.example.com/app_test.php/
+            base_url: https://tiqr.example.com
             default_session: 'symfony2'
             goutte:
                guzzle_parameters:
@@ -16,24 +19,13 @@ default:
             sessions:
                 symfony2:
                     symfony2: ~
-
         Behatch\Extension: ~
     suites:
-        app_bundle:
-            type: symfony_bundle
+        default:
+            paths: [ src/Features ]
             contexts:
-                - AppBundle\Features\Context\WebContext
-                - AppBundle\Features\Context\TiqrContext
-                - AppBundle\Features\Context\ErrorReportContext
+                - App\Features\Context\WebContext
+                - App\Features\Context\ErrorReportContext
+                - App\Features\Context\TiqrContext
                 - Behat\MinkExtension\Context\MinkContext
                 - behatch:context:xml
-            bundle: 'AppBundle'
-        sp_bundle:
-            type: symfony_bundle
-            contexts:
-                - AppBundle\Features\Context\WebContext
-                - AppBundle\Features\Context\ErrorReportContext
-                - Behat\MinkExtension\Context\MinkContext
-                - behatch:context:xml
-            bundle: 'SpBundle'
-

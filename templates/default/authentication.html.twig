@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'login.title'|trans }}
+{% endblock %}
+
+{% block header_title %}
+    {{ 'login.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="spinner-container">
+        {{ 'login.qr.message' | trans }}
+
+        <img class="img-rotate spinner" src="{{ asset('images/spinner.svg') }}">
+
+        {% set link_start %}<a id="trigger-qr" onclick="authenticationPageService.switchToManual()">{% endset %}
+            {% set link_end %}</a>{% endset %}
+        {{ 'login.qr.manual.no_push_notification' | trans({ '%link_start%':link_start, '%link_end%': link_end}) | raw }}
+    </div>
+
+    {% if otpError is defined %}
+        <br />
+        <div class="alert alert-warning" role="alert">
+
+            <h4 class="alert-heading">{{ 'login.error.invalid_response' | trans }}</h4>
+
+            {% if attemptsLeft %}
+                <p>{{ attemptsLeft }} {{ 'login.error.attempts_left' | trans }}</p>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div id="notificationError">
+        {{ 'login.notification_error' | trans }} <a
+                onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>
+        <br /><br />
+    </div>
+
+    <div id="qr" class="content-container qr">
+        {{ 'login.qr.instruction' | trans }}
+
+        <a href={{ authenticateUrl }}>
+            <img src="{{ url('app_identity_authentication_qr') }}">
+        </a>
+
+        {{ 'login.qr.manual.message' | trans }} <a
+                onClick="authenticationPageService.switchToOtp()">{{ 'login.qr.manual.here' | trans }}</a>.
+    </div>
+
+    <div id="otpform">
+        <form method="POST" class="form-inline">
+            <div class="input-group">
+                <input type="text" name="otp" tabindex="3"
+                       placeholder="{{ 'login.qr.manual.otp' | trans }}"
+                       autocomplete="off" />
+                &nbsp;
+                <button type="submit" class="btn btn-primary">{{ 'login.qr.manual.button' | trans }}</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="challengeExpired" class="content-container">
+        {{ 'login.challenge_expired' | trans }}
+
+        <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>
+    </div>
+
+    <div id="status-request-error" class="content-container">
+        {{ 'login.status_request_error' | trans }}
+
+        <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>
+    </div>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('authentication') }}
+        <script>
+            /**
+             * @var {AuthenticationPageService} authenticationPageService
+             */
+            var authenticationPageService = window.bootstrapAuthentication(
+                "{{ path('app_identity_authentication_status') | escape('js') }}",
+                "{{ path('app_identity_authentication_notification') | escape('js') }}"
+            );
+        </script>
+    {% endblock %}
+{% endblock %}

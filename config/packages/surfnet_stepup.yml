@@ -1,0 +1,7 @@
+surfnet_stepup:
+    logging:
+        application_name: Webauthn
+    loa_definition:
+        enabled: false
+    sms:
+        enabled: false

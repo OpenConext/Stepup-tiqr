@@ -1,0 +1,34 @@
+stepup.error.page_not_found:
+    title: Page not found
+    text: The page you requested was not found.
+stepup.error.support_page.text: Please try again or visit <a href="%support_url%" target="_blank">the support page</a> if this does not fix your problem. On this page you will find more information about possible causes of the error and how to contact the support team.
+stepup.error.generic_error:
+    title: Oops!
+    description: Something went wrong. Please try again.
+stepup.error.no_active_authentrequest:
+  title: Oops!
+  description: No active authentication request.
+
+stepup.error.timestamp: Time
+stepup.error.hostname: Application
+stepup.error.request_id: Request ID
+stepup.error.error_code: Error code
+stepup.error.user_agent: User agent
+stepup.error.ip_address: IP address
+
+cancel: Cancel
+page.title: Tiqr
+
+page.navigation.route.homepage: Home
+page.navigation.route.app_identity_registration: Registration
+page.navigation.route.app_identity_authentication: Authentication
+page.navigation.route.sp_demo: Demo SP
+
+page.footer.terms: Terms and Conditions
+
+page.route.description.sp_demo: |
+  Demo service provider to test the tiqr application with.
+  This is not part of the tiqr application and can only be used in development (app_dev.php) mode.
+
+
+stepup.error.unknown_service_provider.title: Unknown service provider

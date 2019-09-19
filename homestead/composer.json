@@ -1,0 +1,6 @@
+{
+  "name": "dev/homestead",
+  "require": {
+    "laravel/homestead": "^9.0"
+  }
+}

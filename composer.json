@@ -1,150 +1,179 @@
 {
-    "name": "surfnet/stepup-tiqr",
-    "license": "Apache-2.0",
-    "description": "Tiqr implemented with GSSP bundle.",
-    "type": "project",
-    "minimum-stability": "stable",
-    "prefer-stable": true,
-    "autoload": {
-        "psr-4": {
-            "AppBundle\\": "src/AppBundle",
-            "DevTiqrClientBundle\\": "src/DevTiqrClientBundle",
-            "SpBundle\\": "src/SpBundle"
-        },
-        "classmap": [
-            "app/AppKernel.php",
-            "app/AppCache.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        },
-        "files": [
-            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
-        ]
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/OpenConext/Stepup-gssp-bundle"
-        }
-    ],
-    "require": {
-        "php": ">=5.5.9",
-        "incenteev/composer-parameter-handler": "^2.0",
-        "kairos/phpqrcode": "^1.0",
-        "openconext/monitor-bundle": "^1.0",
-        "robrichards/xmlseclibs": "^3.0",
-        "sensio/distribution-bundle": "^5.0.19",
-        "sensio/framework-extra-bundle": "^3.0.2",
-        "surfnet/stepup-bundle": "^3.5",
-        "surfnet/stepup-gssp-bundle": "^2.1",
-        "symfony/monolog-bundle": "^3.1.0",
-        "symfony/polyfill-apcu": "^1.0",
-        "symfony/symfony": "^3",
-        "tiqr/tiqr-server-libphp": "^1.1",
-        "twig/twig": "^1.0||^2.0",
-        "ext-json": "*"
-    },
-    "require-dev": {
-        "behat/behat": "^3.4",
-        "behat/mink-browserkit-driver": "^1.3",
-        "behat/mink-extension": "^2.2",
-        "behat/mink-goutte-driver": "^1.2",
-        "behat/symfony2-extension": "^2.1",
-        "behatch/contexts": "^2.7",
-        "guzzlehttp/guzzle": "^6.3",
-        "jakub-onderka/php-parallel-lint": "^0.9.2",
-        "khanamiryan/qrcode-detector-decoder": "^1.0",
-        "league/csv": "^8.2",
-        "malukenho/docheader": "^0.1.6",
-        "mockery/mockery": "^1.0",
-        "phpmd/phpmd": "^2.6",
-        "phpunit/phpcov": "^3.1",
-        "phpunit/phpunit": "^5.7",
-        "sebastian/phpcpd": "^3.0",
-        "sensio/generator-bundle": "^3.0",
-        "sensiolabs/security-checker": "^5.0",
-        "squizlabs/php_codesniffer": "^3.1",
-        "symfony/phpunit-bridge": "^3.0"
-    },
-    "scripts": {
-        "test": [
-            "@lint",
-            "@static-analysis",
-            "@phpunit",
-            "@security-tests",
-            "@jest"
-        ],
-
-        "lint": ["@lint-php", "@lint-yml", "@lint-composer", "@lint-ts"],
-        "lint-php": "vendor/bin/parallel-lint app src",
-        "lint-yml": "bin/console lint:yaml app/config",
-        "lint-ts": "yarn tslint --project tsconfig.json",
-        "lint-composer": "composer validate",
-
-        "static-analysis": ["@license-headers", "@phpmd", "@phpcs", "@phpcpd"],
-        "license-headers": "vendor/bin/docheader check src/ tests/",
-        "phpmd": "vendor/bin/phpmd ./src text phpmd.xml  --suffixes php",
-        "phpcs": [
-            "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./src",
-            "vendor/bin/phpcs --standard=phpcs_tests.xml --report=full --warning-severity=0 ./tests"
-        ],
-        "phpcpd": ["vendor/bin/phpcpd  ./src", "vendor/bin/phpcpd  ./tests"],
-
-        "phpunit": "vendor/bin/phpunit tests",
-        "behat": ["vendor/bin/behat  --config behat.yml --tags '~skip'"],
-
-        "security-tests": "vendor/bin/security-checker security:check",
-
-        "coverage": [
-            "@phpunit-coverage",
-            "mkdir -p coverage/reports",
-            "vendor/bin/phpcov merge coverage/reports --html coverage"
-        ],
-        "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
-
-        "jest": [
-            "yarn jest"
-        ],
-
-        "frontend-install": [
-            "yarn install",
-            "yarn encore production"
-        ],
-        "symfony-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ],
-        "post-install-cmd": [
-            "@symfony-scripts"
-        ],
-        "post-update-cmd": [
-            "@symfony-scripts"
-        ]
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "symfony-app-dir": "app",
-        "symfony-bin-dir": "bin",
-        "symfony-var-dir": "var",
-        "symfony-web-dir": "web",
-        "symfony-tests-dir": "tests",
-        "incenteev-parameters": [
-            {
-                "file": "app/config/parameters.yml"
-            }
-        ],
-        "branch-alias": null
-    },
-    "archive": {
-        "exclude": ["/node_modules", "!/var/bootstrap.php.cache", "!/web/build", "!/web/bundles"]
+  "name": "surfnet/stepup-tiqr",
+  "license": "Apache-2.0",
+  "description": "Tiqr implemented with GSSP bundle.",
+  "type": "project",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "App\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dev\\": "dev",
+      "Tests\\": "tests/"
+    },
+    "files": [
+      "vendor/symfony/var-dumper/Resources/functions/dump.php"
+    ]
+  },
+  "require": {
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-zlib": "*",
+    "sensio/framework-extra-bundle": "^5.4",
+    "surfnet/stepup-bundle": "^4.1.0-beta.3",
+    "surfnet/stepup-gssp-bundle": "^3",
+    "surfnet/stepup-saml-bundle": "^4.1.7",
+    "symfony/asset": "^4.3",
+    "symfony/console": "^4.3",
+    "symfony/dotenv": "^4.3",
+    "symfony/flex": "^1.4",
+    "symfony/form": "^4.3",
+    "symfony/monolog-bundle": "^3.4",
+    "symfony/security-bundle": "^4.3",
+    "symfony/templating": "^4.3",
+    "symfony/translation": "^4.3",
+    "symfony/twig-bundle": "^4.3",
+    "symfony/validator": "^4.3",
+    "symfony/webpack-encore-bundle": "^1.6",
+    "symfony/yaml": "^4.3",
+    "tiqr/tiqr-server-libphp": "^1.1"
+  },
+  "require-dev": {
+    "behat/symfony2-extension": "^2.1",
+    "symfony/maker-bundle": "~1",
+    "symfony/profiler-pack": "~1",
+    "jakub-onderka/php-parallel-lint": "~1",
+    "malukenho/docheader": "^0",
+    "mockery/mockery": "^1",
+    "phpmd/phpmd": "~2",
+    "phpunit/phpcov": "~6",
+    "sebastian/phpcpd": "~4",
+    "sensiolabs/security-checker": "~6",
+    "squizlabs/php_codesniffer": "~3",
+    "symfony/browser-kit": "^4.3",
+    "symfony/css-selector": "^3",
+    "symfony/test-pack": "^1.0",
+    "behat/mink": "^1.7",
+    "behatch/contexts": "^3.2",
+    "behat/mink-browserkit-driver": "^1.3",
+    "behat/mink-goutte-driver": "^1.2",
+    "league/csv": "^8.2",
+    "khanamiryan/qrcode-detector-decoder": "^1.0"
+  },
+  "scripts": {
+    "test": [
+      "@lint",
+      "@static-analysis",
+      "@phpunit",
+      "@behat",
+      "@security-tests",
+      "@jest"
+    ],
+    "lint": [
+      "@lint-php",
+      "@lint-yml",
+      "@lint-composer",
+      "@lint-ts",
+      "@lint-tsc"
+    ],
+    "lint-php": "vendor/bin/parallel-lint dev src",
+    "lint-yml": "bin/console lint:yaml config",
+    "lint-ts": "yarn tslint --project tsconfig.json",
+    "lint-tsc": "yarn tsc --noEmit",
+    "lint-composer": "composer validate",
+    "static-analysis": [
+      "@license-headers",
+      "@phpmd",
+      "@phpcs",
+      "@phpcpd"
+    ],
+    "license-headers": "vendor/bin/docheader check src/ dev/ tests/",
+    "phpmd": "vendor/bin/phpmd ./src text phpmd.xml  --suffixes php",
+    "phpcs": [
+      "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./src",
+      "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./dev"
+    ],
+    "phpcpd": [
+      "vendor/bin/phpcpd  ./src",
+      "vendor/bin/phpcpd  ./tests"
+    ],
+    "phpunit": "vendor/bin/phpunit tests",
+    "behat": "vendor/bin/behat --stop-on-failure --config behat.yml --tags=~skip",
+    "security-tests": "vendor/bin/security-checker security:check",
+    "coverage": [
+      "@phpunit-coverage",
+      "mkdir -p coverage/reports",
+      "vendor/bin/phpcov merge coverage/reports --html coverage"
+    ],
+    "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
+    "encore": [
+      "yarn encore production"
+    ],
+    "jest": [
+      "yarn jest"
+    ],
+    "frontend-install": [
+      "yarn install --frozen-lockfile",
+      "yarn encore production"
+    ],
+    "auto-scripts": {
+      "cache:clear": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd"
+    },
+    "pre-archive-cmd": [
+      "composer install --no-ansi --no-dev --no-interaction --no-progress --optimize-autoloader",
+      "yarn install",
+      "yarn encore prod",
+      "composer dump-env prod",
+      "./bin/console assets:install",
+      "APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear"
+    ]
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/OpenConext/Stepup-saml-bundle"
+    }
+  ],
+  "archive": {
+    "exclude": [
+      "!/.env",
+      "!/.env.local.php",
+      "!/var/cache/prod",
+      "!/public/build",
+      "/node_modules",
+      "/dev",
+      "/translations/sp",
+      "/coverage",
+      "/homestead",
+      "tests",
+      "/build",
+      "/travis-ci-apache.conf",
+      "/tsconfig.json",
+      "/tslint.json",
+      "/Vagrantfile",
+      "/webpack.config.js",
+      "/jest.config.js",
+      "/.docheader",
+      "/.env.ci",
+      "/.env.test",
+      "/.env.vm",
+      "/*.xml",
+      "/*.xml.dist",
+      "/config/routes/dev",
+      "/config/packages/dev",
+      "/config/packages/test",
+      "/node_modules",
+      "/coverage",
+      "/homestead",
+      "/build"
+    ]
+  }
 }
