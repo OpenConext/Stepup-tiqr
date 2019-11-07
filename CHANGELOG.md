@@ -1,5 +1,15 @@
 ## Next release
 
+## 2.1.15
+"This is a security release that will harden the application against CVE 2019-3465
+ * Upgrade xmlseclibs to version 3.0.4
+ 
+## 2.1.14
+ * Use FCM always as fallback for GCM #80
+ 
+## 2.1.13
+ * Update symfony/symfony and symfony/phpunit-bridge #79
+
 ## 2.1.10 .. 2.1.12
 This release adds some JavaScript browser support for older IE browsers. This should result in the ability to perform tiqr registrations and authentications in IE >= 8.
 

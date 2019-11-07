@@ -48,10 +48,6 @@ class AuthenticationController extends Controller
     private $authenticationRateLimitService;
     private $userRepository;
     private $stateHandler;
-    /**
-     * @var bool
-     */
-    private $useFirebaseFallbackForGcm;
 
     public function __construct(
         AuthenticationService $authenticationService,
@@ -59,8 +55,7 @@ class AuthenticationController extends Controller
         TiqrServiceInterface $tiqrService,
         TiqrUserRepositoryInterface $userRepository,
         AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
-        LoggerInterface $logger,
-        $useFirebaseFallbackForGcm
+        LoggerInterface $logger
     ) {
         $this->authenticationService = $authenticationService;
         $this->stateHandler = $stateHandler;
@@ -68,7 +63,6 @@ class AuthenticationController extends Controller
         $this->logger = $logger;
         $this->authenticationRateLimitService = $authenticationRateLimitService;
         $this->userRepository = $userRepository;
-        $this->useFirebaseFallbackForGcm = $useFirebaseFallbackForGcm;
     }
 
     /**
@@ -379,28 +373,18 @@ class AuthenticationController extends Controller
             $notificationAddress
         ));
 
-        $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
-        if (!$result
-            && $notificationType == 'GCM'
-            && $this->useFirebaseFallbackForGcm
-            && $this->tiqrService->getNotificationError()['message'] == 'MismatchSenderId'
-        ) {
-            // Retry with FCM if GCM
+        if ($notificationType == 'GCM') {
+            $notificationType = 'FCM';
+
             $this->logger->notice(
                 sprintf(
-                    'Failed to send push notification for type "%s" and address "%s" retrying with FCM',
-                    $notificationType,
+                    'GCM is not supported with address "%s" retrying with FCM',
                     $notificationAddress
-                ),
-                [
-                    'error_info' => $this->tiqrService->getNotificationError(),
-                ]
+                )
             );
-
-            $notificationType = 'FCM';
-            $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
         }
 
+        $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
         if (!$result) {
             $this->logger->warning(
                 sprintf(
