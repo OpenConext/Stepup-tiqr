@@ -1,5 +1,9 @@
 ## Next release
 
+## 2.1.15
+"This is a security release that will harden the application against CVE 2019-3465
+ * Upgrade xmlseclibs to version 3.0.4
+ 
 ## 2.1.14
  * Use FCM always as fallback for GCM #80
  
