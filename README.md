@@ -5,7 +5,7 @@ Stepup-tiqr
 
 GSSP implementation of Tiqr. [https://tiqr.org/documentation/](https://tiqr.org/documentation/)
 
-Project is based on example GSSP project [https://github.com/OpenConext/Stepup-gssp-example]()
+Project is based on example GSSP project [https://github.com/OpenConext/Stepup-gssp-example](https://github.com/OpenConext/Stepup-gssp-example)
 
 Locale user preference
 ----------------------
