@@ -104,16 +104,13 @@
         ],
         "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
 
-        "encore": [
-            "./node_modules/.bin/encore"
-        ],
-
         "jest": [
             "./node_modules/.bin/jest"
         ],
 
         "frontend-install": [
-            "yarn install"
+            "yarn install",
+            "yarn encore production"
         ],
         "symfony-scripts": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -124,8 +121,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-install-cmd": [
-            "@symfony-scripts",
-            "@frontend-install"
+            "@symfony-scripts"
         ],
         "post-update-cmd": [
             "@symfony-scripts"
