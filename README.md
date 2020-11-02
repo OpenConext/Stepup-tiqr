@@ -101,9 +101,13 @@ Install composer dependencies:
 
 ``` composer install ```
 
+Install frontend assets:
+
+```yarn install```
+
 Build frontend assets:
 
-``` composer encore dev ``` or ``` composer encore production ``` for production 
+``` yarn encore dev ``` or ``` yarn encore production ``` for production 
 
 If everything goes as planned you can go to:
 

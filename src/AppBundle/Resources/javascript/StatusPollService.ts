@@ -7,7 +7,7 @@ import { PendingRequest, StatusClient } from './Client/StatusClient';
  */
 export class StatusPollService {
 
-  private timeoutHandle?: number;
+  private timeoutHandle?: ReturnType<typeof setTimeout>;
   private pendingRequest?: PendingRequest;
 
   constructor(private statusClient: StatusClient) {
@@ -37,7 +37,9 @@ export class StatusPollService {
    * Stop timer and pending http request.
    */
   public stop() {
-    clearTimeout(this.timeoutHandle);
+    if (this.timeoutHandle) {
+      clearTimeout(this.timeoutHandle);
+    }
     if (this.pendingRequest) {
       this.pendingRequest.abort();
       this.pendingRequest = undefined;

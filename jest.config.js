@@ -28,9 +28,4 @@ module.exports = {
         "\\.(ts|tsx)$": "ts-jest"
     },
     testRegex: ".*\\.test\\.(ts|tsx|js|jsx)$",
-    globals: {
-        "ts-jest": {
-            tsConfigFile: "tsconfig.json",
-        }
-    }
 };
