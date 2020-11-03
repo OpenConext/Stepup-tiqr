@@ -51,7 +51,7 @@ before_script:
 
   # Install dependencies
   - cp .env.ci .env
-  - cp config/packages/parameters.yaml.dist config/packages/parameters.yaml
+  - cp config/packages/parameters.yml.dist config/packages/parameters.yml
   - composer install
   - yarn install --frozen-lockfile
   - yarn encore dev
