@@ -44,7 +44,8 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony/symfony": "^3",
         "tiqr/tiqr-server-libphp": "^1.1",
-        "twig/twig": "^1.0||^2.0"
+        "twig/twig": "^1.0||^2.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "behat/behat": "^3.4",
@@ -105,7 +106,7 @@
         "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
 
         "jest": [
-            "./node_modules/.bin/jest"
+            "yarn jest"
         ],
 
         "frontend-install": [

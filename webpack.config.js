@@ -6,52 +6,37 @@ Encore
     .cleanupOutputBeforeBuild()
     // Convert typescript files.
     .enableTypeScriptLoader()
-    .autoProvidejQuery()
     .addStyleEntry('global', './app/Resources/scss/application.scss')
     .addEntry('authentication', './src/AppBundle/Resources/javascript/authentication.ts')
     .addEntry('registration', './src/AppBundle/Resources/javascript/registration.ts')
 
-    // Disable minification to support ie8
-    .configureUglifyJsPlugin(function (options) {
-        options.ie8 = true;
-        options.compress = {
-            screw_ie8: false,
-        };
-        options.mangleProperties = {
-            screw_ie8: false,
-        };
-        options.output = {
-            screw_ie8: false,
-        };
-    })
-
     // Convert sass files.
     .enableSassLoader(function (options) {
-        // https://github.com/sass/node-sass#options.
-        options.includePaths = [
-            'node_modules/bootstrap-sass/assets/stylesheets'
-        ];
-        options.outputStyle = 'expanded';
+        options.sassOptions = {
+            outputStyle: 'expanded',
+            includePaths: ['public'],
+        };
     })
-    .addLoader({ test: /\.scss$/, loader: 'import-glob-loader' })
+    .addLoader({test: /\.scss$/, loader: 'import-glob-loader'})
     .autoProvidejQuery()
     .addLoader({
         test: /\.tsx?|\.js$/,
         exclude: /node_modules|vendor/,
-        use: [
-            {
-                loader: 'tslint-loader',
-                options: {
-                    configFile: 'tslint.json',
-                    emitErrors: true,
-                    failOnHint: Encore.isProduction(),
-                    typeCheck: true
-                }
+        use: [{
+            loader: 'tslint-loader',
+            options: {
+                configFile: 'tslint.json',
+                emitErrors: true,
+                failOnHint: Encore.isProduction(),
+                typeCheck: true
             }
-        ]
+        }]
     })
-    .enableSourceMaps()
-    .enableVersioning();
+    .enableSingleRuntimeChunk()
+    .enableSourceMaps(!Encore.isProduction())
+    // enables hashed filenames (e.g. app.abc123.css)
+    .enableVersioning(Encore.isProduction())
+;
 
 
 module.exports = Encore.getWebpackConfig();

@@ -18,6 +18,7 @@
 namespace DevTiqrClientBundle\Command;
 
 use GuzzleHttp\Client;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -64,8 +65,9 @@ class RegistrationCommand extends Command
         $path = $input->getArgument('path');
         $url = $this->readRegistrationUrlFromFile($path, $output);
 
+        $matches = [];
         if (preg_match('/^tiqrenroll:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
-            throw new \RuntimeException(sprintf('Expected url with tiqrenroll://'));
+            throw new RuntimeException(sprintf('Expected url with tiqrenroll://'));
         }
         $url = $matches['url'];
 
