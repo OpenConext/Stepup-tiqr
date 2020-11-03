@@ -50,6 +50,8 @@ before_script:
   - sudo service apache2 restart
 
   # Install dependencies
+  - cp .env.ci .env
+  - cp config/packages/parameters.yaml.dist config/packages/parameters.yaml
   - composer install
   - yarn install --frozen-lockfile
   - yarn encore dev
