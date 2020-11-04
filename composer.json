@@ -123,15 +123,7 @@
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
-    },
-    "pre-archive-cmd": [
-      "composer install --no-ansi --no-dev --no-interaction --no-progress --optimize-autoloader",
-      "yarn install",
-      "yarn encore prod",
-      "composer dump-env prod",
-      "./bin/console assets:install",
-      "APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear"
-    ]
+    }
   },
   "config": {
     "sort-packages": true
