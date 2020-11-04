@@ -39,6 +39,6 @@ class InfoController extends AbstractController
     public function infoAction()
     {
         $this->logger->notice('User requested the info.html page');
-        return $this->render('default/:info.html.twig', []);
+        return $this->render('default/info.html.twig', []);
     }
 }

@@ -338,7 +338,7 @@ class AuthenticationController extends AbstractController
             return $this->showUserIsBlockedErrorPage($blockedPermanently);
         }
 
-        return $this->render('default/:authentication.html.twig', [
+        return $this->render('default/authentication.html.twig', [
             'otpError' => true,
             'attemptsLeft' => $response instanceof RateLimitedAuthenticationResponse ? $response->getAttemptsLeft() : null,
         ]);
