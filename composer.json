@@ -101,7 +101,7 @@
       "vendor/bin/phpcpd  ./src",
       "vendor/bin/phpcpd  ./tests"
     ],
-    "phpunit": "vendor/bin/phpunit tests",
+    "phpunit": "vendor/bin/phpunit",
     "behat": "vendor/bin/behat --stop-on-failure --config behat.yml --tags=~skip",
     "security-tests": "vendor/bin/security-checker security:check",
     "coverage": [
@@ -109,7 +109,7 @@
       "mkdir -p coverage/reports",
       "vendor/bin/phpcov merge coverage/reports --html coverage"
     ],
-    "phpunit-coverage": "vendor/bin/phpunit tests --coverage-php coverage/reports/unit.cov",
+    "phpunit-coverage": "vendor/bin/phpunit --coverage-php coverage/reports/unit.cov",
     "encore": [
       "yarn encore production"
     ],
