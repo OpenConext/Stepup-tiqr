@@ -98,8 +98,7 @@
       "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./dev"
     ],
     "phpcpd": [
-      "vendor/bin/phpcpd  ./src",
-      "vendor/bin/phpcpd  ./tests"
+      "vendor/bin/phpcpd  ./src"
     ],
     "phpunit": "vendor/bin/phpunit",
     "behat": "vendor/bin/behat --stop-on-failure --config behat.yml --tags=~skip",
