@@ -33,7 +33,8 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 final class ExceptionController extends BaseExceptionController
 {
-    public function onKernelException(ExceptionEvent $event) {
+    public function onKernelException(ExceptionEvent $event)
+    {
         $event->setResponse($this->showAction($event->getRequest(), $event->getException()));
     }
 
