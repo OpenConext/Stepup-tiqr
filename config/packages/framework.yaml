@@ -13,7 +13,7 @@ framework:
     #esi: true
     fragments: true
     php_errors:
-        log: true
+        log: "%kernel.debug%"
     templating:
         engines:
             - twig
