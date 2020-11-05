@@ -1,6 +1,6 @@
 surfnet_stepup:
     logging:
-        application_name: Webauthn
+        application_name: stepup-tiqr
     loa_definition:
         enabled: false
     sms:
