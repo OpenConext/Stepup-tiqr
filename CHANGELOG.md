@@ -3,7 +3,12 @@
 ## 3.0 
 
 * Drop php 5.* support
-* Use sf4
+* Upgrade to SF4
+* Update travis configuration
+* Remove obsolete pre archive command
+* Enable php code style checking
+* Re-enabled running unittests
+* Use syslog for logging in production
 
 ## 2.1.15
 "This is a security release that will harden the application against CVE 2019-3465
