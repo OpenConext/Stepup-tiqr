@@ -11,9 +11,7 @@ addons:
       - apache2
 
 php:
-  - 5.6
-  - 7.0
-  - 7.1
+  - 7.2
 
 cache:
   directories:
@@ -22,7 +20,7 @@ cache:
 before_script:
   - composer self-update 1.10.16
   - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-  - nvm install 10.22.0
+  - nvm install 10
   - curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
@@ -52,6 +50,8 @@ before_script:
   - sudo service apache2 restart
 
   # Install dependencies
+  - cp .env.ci .env
+  - cp config/packages/parameters.yml.dist config/packages/parameters.yml
   - composer install
   - yarn install --frozen-lockfile
   - yarn encore dev
@@ -63,12 +63,8 @@ before_script:
   - curl --insecure https://tiqr.example.com/bootstrap.min.js
 
 script:
-  # Test if the website is actually running
   - composer test
-
-  # Only run behat on PHP>5.6, this is not ideal, but we can't work around
-  # this PHP bug: https://bugs.php.net/bug.php?id=72286
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} != "5.6" ]]; then composer behat; fi
+  - composer behat
 
 after_script:
   - cat $TRAVIS_BUILD_DIR/error.log

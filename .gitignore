@@ -5,11 +5,9 @@
 # Web application ignores #
 ###########################
 
+/userdb.json
 /.web-server-pid
-/app/config/parameters.yml
-/app/config/global_view_parameters.yml
-/app/config/*.pem
-/app/config/*.crt
+/config/packages/parameters.yml
 /build/
 /var/*
 !/var/cache
@@ -28,14 +26,12 @@
 /web/js/
 /node_modules/
 /web/build
-userdb.json
-yarn-error.log
+.env
 
 # Vagrant files #
 #################
-vagrant.retry
 .vagrant
-ansible/roles
+homestead/vendor
 
 # Code coverage reports #
 #################
@@ -46,4 +42,35 @@ ansible/roles
 .DS_Store
 .DS_Store?
 
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
 
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+/public/typescript/**/*.js
+/public/typescript/**/*.js.map
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+###< squizlabs/php_codesniffer ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'page.acs.title'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h2>{{ 'page.acs.sub_title'|trans }}</h2>
+    <a href="{{ path('sp_demo', {nameId: nameId.value}) }}">{{ 'page.sp.return_to'|trans }}</a>
+    <br/><br/>
+
+    <table>
+        <tbody>
+        <tr>
+            <td>{{ 'saml.request_id'|trans }}</td>
+            <td>{{ requestId }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'saml.subject_name_id'|trans }}</td>
+            <td>{% include 'dev/table.html.twig' with {values: nameId} %}</td>
+        </tr>
+        <tr>
+            <td>{{ 'saml.issuer'|trans }}</td>
+            <td>{{ issuer }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'saml.authenticating_authority'|trans }}</td>
+            <td>{% include 'dev/table.html.twig' with {values: authenticatingAuthority} %}</td>
+        </tr>
+        <tr>
+            <td>{{ 'saml.relay_state'|trans }}</td>
+            <td>
+                {% if relayState is empty %}
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                {% else %}
+                    {{ relayState }}
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>SAMLResponse</h2>
+    <div class='alert'>
+        <pre style="overflow-x: scroll;">{{ xml }}</pre>
+    </div>
+
+{% endblock %}

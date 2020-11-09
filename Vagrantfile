@@ -1,22 +1,50 @@
-Vagrant.configure(2) do |config|
-  config.vm.box = "CentOS-7.0"
-  config.vm.box_url = "https://build.openconext.org/vagrant_boxes/virtualbox-centos7.box"
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
+require 'json'
+require 'yaml'
 
-  config.vm.network "private_network", ip: "192.168.18.45"
-  config.vm.hostname = "tiqr.example.com"
-  config.vm.synced_folder ".", "/vagrant", :nfs => true, type: "nfs"
-  config.vm.synced_folder ".", "/var/www/tiqr.example.com", type: "nfs"
+VAGRANTFILE_API_VERSION ||= "2"
+confDir = $confDir ||= File.expand_path("homestead/vendor/laravel/homestead", File.dirname(__FILE__))
 
-  config.vm.provider "virtualbox" do |v|
-    v.customize ["modifyvm", :id, "--memory", "3048"]
-  end
+homesteadYamlPath = File.expand_path("homestead/Homestead.yaml", File.dirname(__FILE__))
+homesteadJsonPath = File.expand_path("homestead/Homestead.json", File.dirname(__FILE__))
+afterScriptPath = "homestead/after.sh"
+customizationScriptPath = "homestead/user-customizations.sh"
+aliasesPath = "homestead/aliases"
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "ansible/vagrant.yml"
-    ansible.groups = {"dev" => "default"}
-    ansible.extra_vars = {
-      develop_spd: true
-    }
-  end
+require File.expand_path(confDir + '/scripts/homestead.rb')
+
+Vagrant.require_version '>= 1.9.0'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.boot_timeout = 600
+    if File.exist? aliasesPath then
+        config.vm.provision "file", source: aliasesPath, destination: "/tmp/bash_aliases"
+        config.vm.provision "shell" do |s|
+            s.inline = "awk '{ sub(\"\r$\", \"\"); print }' /tmp/bash_aliases > /home/vagrant/.bash_aliases"
+        end
+    end
+
+    if File.exist? homesteadYamlPath then
+        settings = YAML::load(File.read(homesteadYamlPath))
+    elsif File.exist? homesteadJsonPath then
+        settings = JSON.parse(File.read(homesteadJsonPath))
+    else
+        abort "Homestead settings file not found in #{confDir}"
+    end
+
+    Homestead.configure(config, settings)
+
+    if File.exist? afterScriptPath then
+        config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true
+    end
+
+    if File.exist? customizationScriptPath then
+        config.vm.provision "shell", path: customizationScriptPath, privileged: false, keep_color: true
+    end
+
+    if defined? VagrantPlugins::HostsUpdater
+        config.hostsupdater.aliases = settings['sites'].map { |site| site['map'] }
+    end
 end

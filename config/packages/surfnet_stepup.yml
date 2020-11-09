@@ -1,0 +1,7 @@
+surfnet_stepup:
+    logging:
+        application_name: stepup-tiqr
+    loa_definition:
+        enabled: false
+    sms:
+        enabled: false

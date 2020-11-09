@@ -1,0 +1,16 @@
+<table class="sp-table">
+    <tbody>
+    {% for name, value in values %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>
+                {% if value is iterable %}
+                    {% include 'default/table.html.twig' with {values: value} %}
+                {% else %}
+                    {{ value }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,17 @@
+# config/services.yaml
+imports:
+  - { resource: '../dev/services.yaml' }
+
+services:
+    Dev\FileLogger:
+      public: true
+      decorates: 'logger'
+      arguments:
+        - '@kernel'
+
+    overide_matcher:
+      class: App\Service\UserAgentMatcher
+      public: true
+      decorates: App\Service\UserAgentMatcher
+      arguments:
+        - '/^Behat UA$/'

@@ -1,14 +1,14 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .setOutputPath('web/build/')
+    .setOutputPath('public/build/')
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
     // Convert typescript files.
     .enableTypeScriptLoader()
-    .addStyleEntry('global', './app/Resources/scss/application.scss')
-    .addEntry('authentication', './src/AppBundle/Resources/javascript/authentication.ts')
-    .addEntry('registration', './src/AppBundle/Resources/javascript/registration.ts')
+    .addStyleEntry('global', './public/scss/application.scss')
+    .addEntry('authentication', './public/typescript/authentication.ts')
+    .addEntry('registration', './public/typescript/registration.ts')
 
     // Convert sass files.
     .enableSassLoader(function (options) {
@@ -18,7 +18,6 @@ Encore
         };
     })
     .addLoader({test: /\.scss$/, loader: 'import-glob-loader'})
-    .autoProvidejQuery()
     .addLoader({
         test: /\.tsx?|\.js$/,
         exclude: /node_modules|vendor/,
@@ -40,6 +39,3 @@ Encore
 
 
 module.exports = Encore.getWebpackConfig();
-module.exports.externals = {
-    jquery: 'jQuery'
-};

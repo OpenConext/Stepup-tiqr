@@ -1,5 +1,10 @@
 ## Next release
 
+## 3.0 
+
+* Drop php 5.* support
+* Use sf4
+
 ## 2.1.15
 "This is a security release that will harden the application against CVE 2019-3465
  * Upgrade xmlseclibs to version 3.0.4

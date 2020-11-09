@@ -1,21 +1,26 @@
-<?xml version="1.0"?>
-<ruleset name="Ibuildings QA Tools Standard Wrapper">
-    <description>
-        This is used by the Ibuildings QA tools to wrap the coding standard of your choice.
-        By default it is less stringent about long lines than other coding standards
-    </description>
+<?xml version="1.0" encoding="UTF-8"?>
 
-    <exclude-pattern>src/*/*Bundle/Resources</exclude-pattern>
-    <exclude-pattern>src/*/Bundle/*Bundle/Resources</exclude-pattern>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
-    <!-- This is the rule we inherit from. If you want to exlude some specific rules, see the docs on how to do that -->
-    <rule ref="PSR2" />
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+
+    <rule ref="PSR2"/>
+
+    <file>bin/</file>
+    <file>config/</file>
+    <file>public/</file>
+    <file>src/</file>
+    <file>dev/</file>
 
     <!-- Lines can be a little bit longer before they break the build -->
     <rule ref="Generic.Files.LineLength">
         <properties>
-            <property name="lineLimit" value="120" />
-            <property name="absoluteLineLimit" value="150" />
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="150"/>
         </properties>
     </rule>
 </ruleset>

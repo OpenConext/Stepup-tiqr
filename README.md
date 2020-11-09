@@ -85,43 +85,11 @@ Requirements
 Install
 =======
 
-``` ansible-galaxy install -r ansible/requirements.yml -p ansible/roles/```
+See one of the following guides:
 
-Using the `-c` flag can be used to disable ssl verification on the install command.
+[Development guide](docs/development.md)
 
-``` vagrant up ```
-
-Go to the directory inside the VM:
-
-``` vagrant ssh ```
-
-``` cd /vagrant ```
-
-Install composer dependencies:
-
-``` composer install ```
-
-Install frontend assets:
-
-```yarn install```
-
-Build frontend assets:
-
-``` yarn encore dev ``` or ``` yarn encore production ``` for production 
-
-If everything goes as planned you can go to:
-
-[https://tiqr.example.com](https://tiqr.example.com)
-
-You might need to add your IP address to the list of allowed remote address in `web/app_dev.php`.
-
-Debugging
----------
-
-Xdebug is configured when provisioning your development Vagrant box. 
-It's configured with auto connect IDE_KEY=phpstorm.
-
-Demo sp is available on  [https://tiqr.example.com/app_dev.php/demo/sp]()
+[Production installation](docs/deployment.md)
 
 Tests and metrics
 ======================

@@ -1,0 +1,22 @@
+saml.subject_name_id: Subject name id
+saml.request_id: RequestId
+saml.issuer: Issuer
+saml.authenticating_authority: Authentictie autoriteit
+saml.relay_state: Relay state
+saml.status: Status
+saml.error: Foutmelding
+
+page.sp.return_to: Keer terug naar de service provider
+page.sp.title: Demo service provider
+page.sp.sub_title: Demo service provider
+
+page.sp.authentication.title: Verificatie
+page.sp.authenticate_user: Gebruiker verifiëren
+
+page.sp.registration.title: Registratie
+page.sp.register_user: Registreer gebruiker
+
+page.acs.title: Demo service provider ACS
+page.acs.sub_title: Demo service provider ACS
+
+page.sp.common_properties.title: Algemene request parameters
