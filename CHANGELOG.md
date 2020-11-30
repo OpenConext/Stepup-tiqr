@@ -1,5 +1,8 @@
 ## Next release
 
+## 3.0.1
+ * Move parameters to legacy folder
+
 ## 3.0.0
 
 * Drop php 5.* support
