@@ -6,6 +6,7 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt
 
     # All locales supported by the application
+    default_locale: en_GB
     locales:
         - nl_NL
         - en_GB
