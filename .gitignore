@@ -7,7 +7,7 @@
 
 /userdb.json
 /.web-server-pid
-/config/packages/parameters.yml
+/config/legacy/parameters.yaml
 /build/
 /var/*
 !/var/cache
