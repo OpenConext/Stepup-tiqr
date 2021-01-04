@@ -22,7 +22,8 @@
   "dependencies": {
     "bootstrap": "^3",
     "jquery": "^3.5.0",
-    "select2": "^4.0.3"
+    "select2": "^4.0.3",
+    "yargs-parser": ">=18.1.2"
   },
   "resolutions": {
     "yargs-parser": ">=18.1.2"
