@@ -1,13 +1,13 @@
 {
   "devDependencies": {
     "@symfony/webpack-encore": "^0",
-    "@types/jest": "^24",
+    "@types/jest": "^26",
     "@types/jquery": "^3.3.9",
     "@types/node": "^10",
     "compass-mixins": "^0.12.10",
     "css-loader": "^5",
     "import-glob-loader": "^1.1.0",
-    "jest": "^24",
+    "jest": "^26",
     "node-sass": "^4.5.3",
     "sass-loader": "^9",
     "ts-jest": "^24",
