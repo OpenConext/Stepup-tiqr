@@ -92,7 +92,7 @@ export class AuthenticationPageService {
 
   /* istanbul ignore next */
   public reloadPage() {
-    document.location.replace(document.location.href);
+    location.reload();
   }
 
   /**
