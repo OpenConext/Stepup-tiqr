@@ -1,10 +1,12 @@
 ## Next release
 
+## 3.0.2
+* Use location.reload() to prevent rare chrome issue
+
 ## 3.0.1
  * Move parameters to legacy folder
 
 ## 3.0.0
-
 * Drop php 5.* support
 * Upgrade to SF4
 * Update travis configuration
