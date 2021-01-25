@@ -11,5 +11,6 @@ return [
     Surfnet\SamlBundle\SurfnetSamlBundle::class => ['all' => true],
     Surfnet\GsspBundle\SurfnetGsspBundle::class => ['all' => true],
     Surfnet\StepupBundle\SurfnetStepupBundle::class => ['all' => true],
-    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true]
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    OpenConext\MonitorBundle\OpenConextMonitorBundle::class => ['all' => true],
 ];
