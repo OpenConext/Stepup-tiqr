@@ -1,4 +1,6 @@
 ## Next release
+ - Add monitoring endpoints /health and /info
+ - Update dependencies
 
 ## 3.0.2
 * Use location.reload() to prevent rare chrome issue
