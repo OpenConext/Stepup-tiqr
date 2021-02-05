@@ -1,6 +1,7 @@
 ## Next release
  - Add monitoring endpoints /health and /info
  - Update dependencies
+ - Move from security-checker to local-php-security-checker
 
 ## 3.0.2
 * Use location.reload() to prevent rare chrome issue
