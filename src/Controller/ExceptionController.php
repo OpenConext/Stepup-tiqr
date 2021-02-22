@@ -78,7 +78,7 @@ final class ExceptionController extends BaseExceptionController
     {
         $translator = $this->getTranslator();
 
-        if ($exception instanceof UnrecoverableErrorException) {
+        if ($exception instanceof UnrecoverableErrorException && $exception->getPrevious() !== null) {
             return $this->getPageTitleAndDescription($exception->getPrevious());
         } elseif ($exception instanceof UserNotFoundException) {
             $title = $translator->trans('login.error.user_not_found.title');
