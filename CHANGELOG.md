@@ -2,6 +2,8 @@
  - Add monitoring endpoints /health and /info
  - Update dependencies
  - Move from security-checker to local-php-security-checker
+ - Fix duplicate push-notifications
+ - Fix rare reloading-after-authentication issue
 
 ## 3.0.2
 * Use location.reload() to prevent rare chrome issue
