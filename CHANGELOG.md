@@ -1,4 +1,4 @@
-## Next release
+## 3.0.3
  - Add monitoring endpoints /health and /info
  - Update dependencies
  - Move from security-checker to local-php-security-checker
