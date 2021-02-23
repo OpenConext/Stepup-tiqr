@@ -8,6 +8,16 @@
     {{ 'enrol.title'|trans }}
 {% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('registration') }}
+    <script>
+        var registrationStateMachine = window.bootstrapRegistration(
+            "{{ path('app_identity_registration_status') | escape('js') }}",
+            "{{ path('app_identity_registration') | escape('js') }}"
+        );
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="content-container status-container">
         <ul class="status expired">
@@ -40,13 +50,4 @@
         <img src="{{ url('app_identity_registration_qr') }}">
         {{ 'enrol.download' | trans | raw }}
     </div>
-    {% block javascripts %}
-        {{ encore_entry_script_tags('registration') }}
-        <script>
-            var registrationStateMachine = window.bootstrapRegistration(
-                "{{ path('app_identity_registration_status') | escape('js') }}",
-                "{{ path('app_identity_registration') | escape('js') }}"
-            );
-        </script>
-    {% endblock %}
 {% endblock %}

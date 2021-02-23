@@ -8,6 +8,19 @@
     {{ 'login.title'|trans }}
 {% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('authentication') }}
+    <script>
+        /**
+         * @var {AuthenticationPageService} authenticationPageService
+         */
+        var authenticationPageService = window.bootstrapAuthentication(
+            "{{ path('app_identity_authentication_status') | escape('js') }}",
+            "{{ path('app_identity_authentication_notification') | escape('js') }}"
+        );
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="spinner-container">
         {{ 'login.qr.message' | trans }}
@@ -72,16 +85,4 @@
 
         <a onClick="authenticationPageService.reloadPage()">{{ 'login.retry' | trans }}</a>
     </div>
-    {% block javascripts %}
-        {{ encore_entry_script_tags('authentication') }}
-        <script>
-            /**
-             * @var {AuthenticationPageService} authenticationPageService
-             */
-            var authenticationPageService = window.bootstrapAuthentication(
-                "{{ path('app_identity_authentication_status') | escape('js') }}",
-                "{{ path('app_identity_authentication_notification') | escape('js') }}"
-            );
-        </script>
-    {% endblock %}
 {% endblock %}
