@@ -11,7 +11,7 @@ framework:
         cookie_samesite: lax
     assets: ~
     #esi: true
-    fragments: true
+    fragments: false
     php_errors:
         log: "%kernel.debug%"
     templating:
