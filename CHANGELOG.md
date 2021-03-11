@@ -1,3 +1,8 @@
+## Unreleased
+- Fix favicon after SF4 update
+- Update dependencies
+- Disable unused fragments
+
 ## 3.0.3
  - Add monitoring endpoints /health and /info
  - Update dependencies
