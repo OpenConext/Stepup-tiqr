@@ -31,6 +31,14 @@ Encore
             }
         }]
     })
+    .configureTerserPlugin((options) => {
+      options.terserOptions = {
+          optimization: {
+              minimize: false,
+              mangle: false,
+          }
+      }
+    })
     .enableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
