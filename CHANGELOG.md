@@ -2,6 +2,7 @@
 - Fix favicon after SF4 update
 - Update dependencies
 - Disable unused fragments
+- Fix error message for broken accounts
 
 ## 3.0.3
  - Add monitoring endpoints /health and /info
