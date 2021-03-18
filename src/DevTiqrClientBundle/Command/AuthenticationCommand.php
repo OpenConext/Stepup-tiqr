@@ -19,12 +19,15 @@ namespace DevTiqrClientBundle\Command;
 
 use GuzzleHttp\Client;
 use OCRA;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zxing\QrReader;
+use function json_decode;
+use function json_encode;
 
 require_once __DIR__.'/../../../vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/OATH/OCRA.php';
 
@@ -78,9 +81,9 @@ class AuthenticationCommand extends Command
         // Fetching the metadata from the Tiqr IDP.
         $path = $input->getArgument('path');
         $url = $this->readAuthenticationLinkFromFile($path, $output);
-
+        $matches = [];
         if (preg_match('/^tiqrauth:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
-            throw new \RuntimeException(sprintf('Expected url with tiqrauth://'));
+            throw new RuntimeException(sprintf('Expected url with tiqrauth://'));
         }
         $authn = $matches['url'];
         list($serviceId, $session, $challenge, $sp, $version) = explode('/', $authn);
@@ -114,7 +117,7 @@ class AuthenticationCommand extends Command
         }
 
         if (!isset($identities[$userId])) {
-            throw new \RuntimeException(sprintf('User with id "%s" not found ', $userId));
+            throw new RuntimeException(sprintf('User with id "%s" not found ', $userId));
         }
 
         $user = $identities[$userId];
@@ -191,14 +194,14 @@ class AuthenticationCommand extends Command
      * @param $serviceId
      *
      * @return mixed
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function getService($serviceId)
     {
         $file = getcwd().'/userdb.json';
         $userdb = json_decode(file_get_contents($file), true);
         if (!isset($userdb[$serviceId])) {
-            throw new \RuntimeException(sprintf('Service with id "%s" is unkown', $serviceId));
+            throw new RuntimeException(sprintf('Service with id "%s" is unkown', $serviceId));
         }
 
         return $userdb[$serviceId];
