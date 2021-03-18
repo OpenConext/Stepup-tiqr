@@ -64,7 +64,6 @@
         "phpunit/phpunit": "^5.7",
         "sebastian/phpcpd": "^3.0",
         "sensio/generator-bundle": "^3.0",
-        "sensiolabs/security-checker": "^5.0",
         "squizlabs/php_codesniffer": "^3.1",
         "symfony/phpunit-bridge": "^3.0"
     },
@@ -95,7 +94,10 @@
         "phpunit": "vendor/bin/phpunit tests",
         "behat": ["vendor/bin/behat  --config behat.yml --tags '~skip'"],
 
-        "security-tests": "vendor/bin/security-checker security:check",
+        "security-tests": [
+          "wget -q https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64 -O local-php-security-checker && chmod +x ./local-php-security-checker && ./local-php-security-checker",
+          "yarn audit"
+        ],
 
         "coverage": [
             "@phpunit-coverage",
