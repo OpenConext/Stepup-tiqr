@@ -1,8 +1,9 @@
-## Unreleased
+## 3.0.4
 - Fix favicon after SF4 update
 - Update dependencies
 - Disable unused fragments
 - Fix error message for broken accounts
+- Add X-UA-Compatible meta tag
 
 ## 3.0.3
  - Add monitoring endpoints /health and /info
