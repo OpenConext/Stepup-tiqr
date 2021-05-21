@@ -1,6 +1,6 @@
 language: php
 
-dist: trusty
+dist: xenial
 
 addons:
   hosts:
@@ -72,4 +72,3 @@ after_script:
   - cat $TRAVIS_BUILD_DIR/build/*.html
   - sudo cat /var/log/syslog
   - cat $TRAVIS_BUILD_DIR/var/log/*
-
