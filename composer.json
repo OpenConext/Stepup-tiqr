@@ -41,7 +41,7 @@
     "symfony/webpack-encore-bundle": "^1.6",
     "symfony/yaml": "^4.3",
     "tiqr/tiqr-server-libphp": "^1.1",
-    "openconext/monitor-bundle": "^2.0"
+    "openconext/monitor-bundle": "^2.1"
   },
   "require-dev": {
     "behat/symfony2-extension": "^2.1",
