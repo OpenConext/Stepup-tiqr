@@ -385,7 +385,7 @@ class TiqrContext implements Context, KernelAwareContext
         $session = $this->minkContext->getMink()->getSession();
         /** @var Client $client */
         $page = $session->getPage();
-        $img = $page->find('css', 'div.qr > img');
+        $img = $page->find('css', 'div.qr > a > img');
         $src = $img->getAttribute('src');
 
         $qrcode = new QrReader($this->getFileContentsInsecure($src), QrReader::SOURCE_TYPE_BLOB);
@@ -393,6 +393,23 @@ class TiqrContext implements Context, KernelAwareContext
         Assertion::startsWith($content, 'tiqrenroll://');
         Assertion::eq(preg_match('/^tiqrenroll:\/\/(?P<url>.*)/', $content, $matches), 1);
         $this->metadataUrl = $matches['url'];
+    }
+
+    /**
+     * Click the enrollment Url instead of scanning the QR code
+     *
+     * @Then I click the tiqr registration qrcode
+     *
+     * @throws \Assert\AssertionFailedException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function iClickTheTiqrRegistrationQrcode()
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        /** @var Client $client */
+        $page = $session->getPage();
+        $anchor = $page->find('css', 'div.qr > a');
+        $this->metadataUrl = $anchor->getAttribute('href');
     }
 
     /**

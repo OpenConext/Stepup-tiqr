@@ -47,7 +47,9 @@
         </div>
     </div>
     <div class="content-container qr">
-        <img src="{{ url('app_identity_registration_qr') }}">
+        <a href="{{ metadataUrl }}">
+            <img src="{{ url('app_identity_registration_qr', {'enrollmentKey': enrollmentKey}) }}">
+        </a>
         {{ 'enrol.download' | trans | raw }}
     </div>
 {% endblock %}
