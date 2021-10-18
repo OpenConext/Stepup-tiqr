@@ -75,7 +75,19 @@ class RegistrationController extends AbstractController
 
         $this->logger->info('Registration is not finalized return QR code');
 
-        return $this->render('default/registration.html.twig');
+        $this->logger->info('Generating enrollment key');
+        $key = $this->tiqrService->generateEnrollmentKey(
+            $this->stateHandler->getRequestId()
+        );
+        $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
+
+        return $this->render(
+            'default/registration.html.twig',
+            [
+                'metadataUrl' => $metadataUrl,
+                'enrollmentKey' => $key
+            ]
+        );
     }
 
     /**
@@ -107,11 +119,11 @@ class RegistrationController extends AbstractController
      *
      * @see /registration/qr/link
      *
-     * @Route("/registration/qr", name="app_identity_registration_qr", methods={"GET"})
+     * @Route("/registration/qr/{enrollmentKey}", name="app_identity_registration_qr", methods={"GET"})
      *
      * @throws \InvalidArgumentException
      */
-    public function registrationQrAction(Request $request)
+    public function registrationQrAction(Request $request, $enrollmentKey)
     {
         $this->logger->info('Request for registration QR img');
 
@@ -120,13 +132,8 @@ class RegistrationController extends AbstractController
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
-        $this->logger->info('Generating enrollment key');
-        $key = $this->tiqrService->generateEnrollmentKey(
-            $this->stateHandler->getRequestId()
-        );
-        $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
-
+        $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($enrollmentKey)));
         $this->logger->info('Returning registration QR response');
-        return $this->tiqrService->createRegistrationQRResponse($metadataURL);
+        return $this->tiqrService->createRegistrationQRResponse($metadataUrl);
     }
 }
