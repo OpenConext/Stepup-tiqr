@@ -409,7 +409,7 @@ class TiqrContext implements Context, KernelAwareContext
         /** @var Client $client */
         $page = $session->getPage();
         $anchor = $page->find('css', 'div.qr > a');
-        $this->metadataUrl = $anchor->getAttribute('href');
+        $this->metadataUrl = str_replace('tiqrenroll://', '', $anchor->getAttribute('href'));
     }
 
     /**
