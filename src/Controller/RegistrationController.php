@@ -84,7 +84,7 @@ class RegistrationController extends AbstractController
         return $this->render(
             'default/registration.html.twig',
             [
-                'metadataUrl' => $metadataUrl,
+                'metadataUrl' => sprintf("tiqrenroll://%s", $metadataUrl),
                 'enrollmentKey' => $key
             ]
         );
