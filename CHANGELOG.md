@@ -1,3 +1,16 @@
+## 3.1.0
+**Feature**
+* Add the enrollment link on the QR code #128 #129:wq
+
+**Chores**
+ - Updated travis runtime environment variables #119
+ - Update monitor-bundle to add opcache info #126
+
+**Security updates**
+Multiple security updates have been installed in this new release. But one issue remains unresolved. This is the entire
+removal of the vulnerable version of ansi-regex. This should be fixed in the near future by webpack and its peers. As
+this is strictly a build-time only issue. It is considered an acceptable risk at this point.
+
 ## 3.0.4
 - Fix favicon after SF4 update
 - Update dependencies
