@@ -23,6 +23,7 @@ use App\Tiqr\Response\RejectedAuthenticationResponse;
 use App\Tiqr\Response\ValidAuthenticationResponse;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
@@ -36,12 +37,14 @@ use Tiqr_StateStorage_Abstract;
  */
 final class TiqrService implements TiqrServiceInterface
 {
+    const ENROLL_KEYS_SESSION_NAME = 'enrollment-session-keys';
     /**
      * @var \Tiqr_Service
      */
     private $tiqrService;
     private $tiqrStateStorage;
     private $session;
+    private $logger;
 
     /**
      * @var string
@@ -52,11 +55,13 @@ final class TiqrService implements TiqrServiceInterface
         Tiqr_Service $tiqrService,
         Tiqr_StateStorage_Abstract $tiqrStateStorage,
         SessionInterface $session,
+        LoggerInterface $logger,
         $accountName
     ) {
         $this->tiqrService = $tiqrService;
         $this->tiqrStateStorage = $tiqrStateStorage;
         $this->session = $session;
+        $this->logger = $logger;
         $this->accountName = $accountName;
     }
 
@@ -81,14 +86,57 @@ final class TiqrService implements TiqrServiceInterface
      */
     public function generateEnrollmentKey($sari)
     {
+        $this->logger->debug('Generating userId');
         $userId = $this->generateId();
+        $this->logger->debug('Storing the userId to session state');
         $this->session->set('userId', $userId);
-
-        $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $this->session->getId());
-
+        $sessionId = $this->session->getId();
+        $this->logger->debug('Clearing the previous enrollment state(s)');
+        $this->clearPreviousEnrollmentState();
+        $this->logger->debug('Starting the new enrollment session');
+        $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $sessionId);
+        $this->logger->debug('Storing the enrollemnt key for future reference');
+        $this->storeEnrollmentKey($enrollmentKey);
         $this->setSariForSessionIdentifier($enrollmentKey, $sari);
-
+        $this->logger->debug('Returning the new enrollment key');
         return $enrollmentKey;
+    }
+
+    /**
+     * When the registration key is generated (enrollemnt key), it
+     * should be stored in session. This to be able to clear it when
+     * a new registration starts (in another browser tab).
+     */
+    private function storeEnrollmentKey(string $key): void
+    {
+        $keys = [];
+        if ($this->session->has(self::ENROLL_KEYS_SESSION_NAME)) {
+            $keys = $this->session->get(self::ENROLL_KEYS_SESSION_NAME);
+        }
+        $keys[] = $key;
+        $this->session->set(self::ENROLL_KEYS_SESSION_NAME, $keys);
+    }
+
+    /**
+     * Read the session for previously started registrations (enrollments) and
+     * clear them in the tiqr-server.
+     */
+    private function clearPreviousEnrollmentState(): void
+    {
+        $keys = [];
+        if ($this->session->has(self::ENROLL_KEYS_SESSION_NAME)) {
+            $keys = $this->session->get(self::ENROLL_KEYS_SESSION_NAME);
+        }
+        $format = "Removing %d keys from the enrollment session states";
+        $this->logger->debug(sprintf($format, count($keys)));
+        foreach ($keys as $key) {
+            $this->tiqrService->clearEnrollmentState($key);
+            unset($keys[$key]);
+        }
+        $format = "Reset enroll session keys, remaining keys: %d";
+        $this->logger->debug(sprintf($format, count($keys)));
+
+        $this->session->set(self::ENROLL_KEYS_SESSION_NAME, $keys);
     }
 
     public function getUserId()

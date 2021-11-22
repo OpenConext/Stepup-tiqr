@@ -19,6 +19,7 @@ namespace App\Tiqr;
 
 use App\Tiqr\Legacy\TiqrService;
 use App\Tiqr\Legacy\TiqrUserRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tiqr_Service;
@@ -30,16 +31,19 @@ class TiqrFactory
     private $configuration;
     private $container;
     private $session;
+    private $logger;
     private $loaded = false;
 
     public function __construct(
         TiqrConfigurationInterface $configuration,
         ContainerInterface $container,
-        SessionInterface $session
+        SessionInterface $session,
+        LoggerInterface $logger
     ) {
         $this->configuration = $configuration;
         $this->container = $container;
         $this->session = $session;
+        $this->logger = $logger;
     }
 
     public function createService()
@@ -59,6 +63,7 @@ class TiqrFactory
             new Tiqr_Service($options),
             Tiqr_StateStorage::getStorage($storageType, $storageOptions),
             $this->session,
+            $this->logger,
             $options['name']
         );
     }
