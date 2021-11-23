@@ -1,16 +1,16 @@
 {
   "devDependencies": {
     "@symfony/webpack-encore": "^1",
-    "@types/jest": "^24",
+    "@types/jest": "^27",
     "@types/jquery": "^3.3.9",
     "@types/node": "^10",
     "compass-mixins": "^0.12.10",
     "css-loader": "^5",
     "import-glob-loader": "^1.1.0",
-    "jest": "^24",
+    "jest": "^27",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
-    "ts-jest": "^24",
+    "ts-jest": "^27",
     "ts-loader": "^8.0.0",
     "tslint": "^5",
     "tslint-config-airbnb": "^5.11.0",
@@ -22,14 +22,6 @@
   "dependencies": {
     "bootstrap": "^3",
     "jquery": "^3.5.0",
-    "select2": "^4.0.3",
-    "yargs-parser": ">=18.1.2"
-  },
-  "resolutions": {
-    "node-notifier": ">=8.0.1",
-    "yargs-parser": ">=18.1.2",
-    "set-value": ">=4.0.1",
-    "tar": ">3.2.3",
-    "trim-newlines": ">=3.0.1"
+    "select2": "^4.0.3"
   }
 }

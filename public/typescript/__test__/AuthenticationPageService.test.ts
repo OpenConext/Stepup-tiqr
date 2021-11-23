@@ -1,6 +1,10 @@
 import 'jest';
 import { AuthenticationPageService } from '../AuthenticationPageService';
 
+/**
+ * @jest-environment jsdom
+ */
+
 describe('AuthenticationPageService', () => {
   let context = createTestContext();
 
