@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df12789554de0a4e7788d0b4e930df11",
+    "content-hash": "96e20e946f62451027ad965eda4b0221",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1148,16 +1148,16 @@
         },
         {
             "name": "surfnet/stepup-saml-bundle",
-            "version": "4.3.0",
+            "version": "4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
-                "reference": "2924e2973466061a074079b1993f7a4fd2dc6c08"
+                "reference": "add45ebea90b33e89f723239e77e7a9f0c018b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/2924e2973466061a074079b1993f7a4fd2dc6c08",
-                "reference": "2924e2973466061a074079b1993f7a4fd2dc6c08",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/add45ebea90b33e89f723239e77e7a9f0c018b27",
+                "reference": "add45ebea90b33e89f723239e77e7a9f0c018b27",
                 "shasum": ""
             },
             "require": {
@@ -1200,10 +1200,10 @@
                 "surfnet"
             ],
             "support": {
-                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/4.3.0",
+                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/4.3.2",
                 "issues": "https://github.com/OpenConext/Stepup-saml-bundle/issues"
             },
-            "time": "2021-09-23T11:20:24+00:00"
+            "time": "2021-11-23T10:22:55+00:00"
         },
         {
             "name": "symfony/asset",
@@ -8445,6 +8445,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
@@ -8960,50 +8961,6 @@
             "time": "2021-10-28T19:22:18+00:00"
         },
         {
-            "name": "symfony/profiler-pack",
-            "version": "v1.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/profiler-pack.git",
-                "reference": "bcd6e80af9819454ac18594362e7875fd1d771c7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/profiler-pack/zipball/bcd6e80af9819454ac18594362e7875fd1d771c7",
-                "reference": "bcd6e80af9819454ac18594362e7875fd1d771c7",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/stopwatch": "*",
-                "symfony/web-profiler-bundle": "*"
-            },
-            "require-dev": {
-                "symfony/stopwatch": "*",
-                "symfony/web-profiler-bundle": "*"
-            },
-            "type": "symfony-pack",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A pack for the Symfony web profiler",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-08-20T17:27:58+00:00"
-        },
-        {
             "name": "symfony/stopwatch",
             "version": "v5.3.4",
             "source": {
@@ -9061,54 +9018,6 @@
                 }
             ],
             "time": "2021-07-10T08:58:57+00:00"
-        },
-        {
-            "name": "symfony/test-pack",
-            "version": "v1.0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/test-pack.git",
-                "reference": "66a2b0a5c9152128b42feb439a735130a9b4d3dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/test-pack/zipball/66a2b0a5c9152128b42feb439a735130a9b4d3dc",
-                "reference": "66a2b0a5c9152128b42feb439a735130a9b4d3dc",
-                "shasum": ""
-            },
-            "require": {
-                "phpunit/phpunit": "*",
-                "symfony/browser-kit": "*",
-                "symfony/css-selector": "*",
-                "symfony/phpunit-bridge": "*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*",
-                "symfony/browser-kit": "*",
-                "symfony/css-selector": "*",
-                "symfony/phpunit-bridge": "*"
-            },
-            "type": "symfony-pack",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A pack for functional and end-to-end testing within a Symfony app",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-08-20T17:29:16+00:00"
         },
         {
             "name": "symfony/web-profiler-bundle",
