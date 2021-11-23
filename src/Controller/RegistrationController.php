@@ -79,6 +79,7 @@ class RegistrationController extends AbstractController
         $key = $this->tiqrService->generateEnrollmentKey(
             $this->stateHandler->getRequestId()
         );
+
         $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
 
         return $this->render(

@@ -1,6 +1,10 @@
+## 3.1.1
+**Bugfix**
+* Prevent session data collisions during enrollment
+
 ## 3.1.0
 **Feature**
-* Add the enrollment link on the QR code #128 #129:wq
+* Add the enrollment link on the QR code #128 #129
 
 **Chores**
  - Updated travis runtime environment variables #119
