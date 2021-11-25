@@ -1,3 +1,6 @@
+## 3.1.2
+Re-enable the Jest tests that where disabled in 3.1.1
+
 ## 3.1.1
 **Bugfix**
 * Prevent session data collisions during enrollment
