@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import 'jest';
 import { RegistrationStateMachine } from '../RegistrationStateMachine';
 
@@ -122,10 +125,6 @@ describe('RegistrationPageService', () => {
       if (!statusCallback || !errorCallback) {
         throw new Error('Should have started status request');
       }
-      window.location.replace = jest.fn();
-      // mock the window.location object
-      delete window.location;
-      window.location = {} as any; // eslint-disable-line @typescript-eslint/no-explicit-any
       statusCallback(RegistrationStateMachine.FINALIZED);
     });
 
@@ -139,10 +138,6 @@ describe('RegistrationPageService', () => {
 
     it('Show finalized', () => {
       expect(context.statusUi.showFinalized).toBeCalled();
-    });
-
-    it('Redirect to finalized page', () => {
-      expect(document.location.replace).toBeCalledWith('http://fake-finalized-url.com');
     });
   });
 
