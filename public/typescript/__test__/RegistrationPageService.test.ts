@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-
 import 'jest';
 import { RegistrationStateMachine } from '../RegistrationStateMachine';
 
@@ -126,24 +125,19 @@ describe('RegistrationPageService', () => {
       if (!statusCallback || !errorCallback) {
         throw new Error('Should have started status request');
       }
-      window.document.location.replace = jest.fn();
       statusCallback(RegistrationStateMachine.FINALIZED);
     });
 
-    it.skip('SKIPPED TEMPORARILY! The qr code should be hidden', () => {
+    it('The qr code should be hidden', () => {
       expect(context.qrComponent.isVisible()).toBeFalsy();
     });
 
-    it.skip('SKIPPED TEMPORARILY! Polling should be disabled', () => {
+    it('Polling should be disabled', () => {
       expect(context.pollingService.enabled).toBeFalsy();
     });
 
-    it.skip('SKIPPED TEMPORARILY! Show finalized', () => {
+    it('Show finalized', () => {
       expect(context.statusUi.showFinalized).toBeCalled();
-    });
-
-    it.skip('SKIPPED TEMPORARILY! Redirect to finalized page', () => {
-      expect(document.location.replace).toBeCalledWith('http://fake-finalized-url.com');
     });
   });
 
