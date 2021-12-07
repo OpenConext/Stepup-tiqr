@@ -1,6 +1,9 @@
+## 3.1.0.1
+- Intermediate IE11 fix to resolve the Babel IE11 compatibility issues
+
 ## 3.1.0
 **Feature**
-* Add the enrollment link on the QR code #128 #129:wq
+* Add the enrollment link on the QR code #128 #129
 
 **Chores**
  - Updated travis runtime environment variables #119
