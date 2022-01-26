@@ -24,5 +24,8 @@
     "bootstrap": "^3",
     "jquery": "^3.5.0",
     "select2": "^4.0.3"
+  },
+  "resolutions": {
+    "postcss": ">=8.2.13"
   }
 }
