@@ -22,5 +22,5 @@ sites:
         to: /home/vagrant/code/archive/public
         type: symfony4
         php: '7.2'
-name: tiqr
+name: tiqr-homestead
 hostname: tiqr
