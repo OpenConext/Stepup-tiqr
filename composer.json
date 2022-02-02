@@ -142,7 +142,6 @@
       "!/.env",
       "!/.env.local.php",
       "!/var/cache/prod",
-      "!/public/build",
       "/node_modules",
       "/dev",
       "/translations/sp",
@@ -168,7 +167,12 @@
       "/node_modules",
       "/coverage",
       "/homestead",
-      "/build"
+      "/build",
+      "/.github",
+      "/docs",
+      ".gitignore",
+      ".travis.*",
+      "behat.yml"
     ]
   }
 }
