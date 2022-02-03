@@ -51,17 +51,17 @@ class TiqrFactory
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
 
-        $storageType = "file";
-        $storageOptions = array();
+        $userStorageType = "file";
+        $userStorageOptions = [];
 
         if (isset($options["statestorage"])) {
-            $storageType = $options["statestorage"]["type"];
-            $storageOptions = $options["statestorage"];
+            $userStorageType = $options["statestorage"]["type"];
+            $userStorageOptions = $options["statestorage"];
         }
 
         return new TiqrService(
             new Tiqr_Service($options),
-            Tiqr_StateStorage::getStorage($storageType, $storageOptions),
+            Tiqr_StateStorage::getStorage($userStorageType, $userStorageOptions),
             $this->session,
             $this->logger,
             $options['name']
@@ -72,8 +72,15 @@ class TiqrFactory
     {
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
-        $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
-        return new TiqrUserRepository($userStorage);
+        $userStorage = Tiqr_UserStorage::getStorage(
+            $options['userstorage']['type'],
+            $options['userstorage']
+        );
+        $userSecretStorage = Tiqr_UserStorage::getStorage(
+            $options['usersecretstorage']['type'],
+            $options['usersecretstorage']
+        );
+        return new TiqrUserRepository($userStorage, $userSecretStorage);
     }
 
     private function loadDependencies()

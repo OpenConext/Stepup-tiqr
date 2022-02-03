@@ -18,8 +18,8 @@
 namespace App\Tiqr\Legacy;
 
 use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\Legacy\TiqrUser;
 use App\Tiqr\TiqrUserRepositoryInterface;
+use Tiqr_UserStorage_Interface;
 
 /**
  * Wrapper around the legacy Tiqr user repository.
@@ -27,19 +27,26 @@ use App\Tiqr\TiqrUserRepositoryInterface;
 final class TiqrUserRepository implements TiqrUserRepositoryInterface
 {
     /**
-     * @var \Tiqr_UserStorage_Interface
+     * @var Tiqr_UserStorage_Interface
      */
     private $userStorage;
+    /**
+     * @var Tiqr_UserStorage_Interface
+     */
+    private $userSecretStorage;
 
-    public function __construct($userStorage)
-    {
+    public function __construct(
+        Tiqr_UserStorage_Interface $userStorage,
+        Tiqr_UserStorage_Interface $userSecretStorage
+    ) {
         $this->userStorage = $userStorage;
+        $this->userSecretStorage = $userSecretStorage;
     }
 
     public function createUser($userId, $secret)
     {
         $this->userStorage->createUser($userId, 'anonymous');
-        $this->userStorage->setSecret($userId, $secret);
+        $this->userSecretStorage->setSecret($userId, $secret);
         return $this->getUser($userId);
     }
 
