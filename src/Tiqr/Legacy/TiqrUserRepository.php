@@ -55,6 +55,6 @@ final class TiqrUserRepository implements TiqrUserRepositoryInterface
         if (!$this->userStorage->userExists($userId)) {
             throw UserNotExistsException::createFromId($userId);
         }
-        return new TiqrUser($this->userStorage, $userId);
+        return new TiqrUser($this->userStorage, $this->userSecretStorage, $userId);
     }
 }

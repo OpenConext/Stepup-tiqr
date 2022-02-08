@@ -34,9 +34,10 @@ class TiqrUser implements TiqrUserInterface
     private $userStorage;
     private $userId;
 
-    public function __construct($userStorage, $userId)
+    public function __construct(Tiqr_UserStorage_Interface $userStorage, Tiqr_UserStorage_Interface $userSecretStorage, $userId)
     {
         $this->userStorage = $userStorage;
+        $this->userSecretStorage = $userSecretStorage;
         $this->userId = $userId;
     }
 
@@ -57,7 +58,7 @@ class TiqrUser implements TiqrUserInterface
      */
     public function getSecret()
     {
-        return $this->userStorage->getSecret($this->userId);
+        return $this->userSecretStorage->getSecret($this->userId);
     }
 
     public function updateNotification($notificationType, $notificationAddress)
