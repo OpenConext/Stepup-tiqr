@@ -1,3 +1,6 @@
+## 3.1.3
+- Setup Github Actions tag release workflow
+
 ## 3.1.2
 - Added browserlist entry in package.json to ensure IE 11 support
 - Re-enable the Jest tests that where disabled in 3.1.1
