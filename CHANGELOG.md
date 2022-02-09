@@ -1,3 +1,6 @@
+## 3.2.1
+- Use github actions to automate tiqr builds
+
 ## 3.1.2
 - Added browserlist entry in package.json to ensure IE 11 support
 - Re-enable the Jest tests that where disabled in 3.1.1
