@@ -10,6 +10,7 @@
 /config/legacy/parameters.yaml
 /build/
 /var/*
+/app/
 !/var/cache
 /var/cache/*
 !var/cache/.gitkeep
