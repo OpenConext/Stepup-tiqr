@@ -77,3 +77,6 @@ yarn-error.log
 ###< symfony/phpunit-bridge ###
 
 local-php-security-checker
+*.crt
+*.key
+ci/qa/.phpcs-cache
