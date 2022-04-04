@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/../../
+
+vendor/bin/behat --stop-on-failure --config ./ci/qa/qa-config/behat.yml --tags=~skip
+echo "Behat tests passed"
