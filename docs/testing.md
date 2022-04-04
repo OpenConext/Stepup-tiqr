@@ -59,8 +59,8 @@ Acceptance tests will be written for all command handlers and will be run as par
 
 You can run these tools manually with composer:
 
-> **Notice**: The behat tests sometimes gives a false positive, if the tests fail retry the tests before troubleshooting
-
+> **Notice**: The behat test: [registration.feature](https://github.com/OpenConext/Stepup-tiqr/blob/develop/src/Features/registration.feature)
+sometimes gives a false positive, if the tests fail retry the tests before troubleshooting.
 ```bash
 composer behat
 ```

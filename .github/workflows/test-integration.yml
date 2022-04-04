@@ -2,7 +2,7 @@ name: test-integration
 on:
   pull_request:
   push:
-#    branches: [ master, develop ]
+    branches: [ master, develop ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,8 +29,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Generate SSL key and certificate
-        run: |
-          sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ci/files/tiqr.example.com.key -out ./ci/files/tiqr.example.com.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=tiqr.example.com"
+        run: sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ci/files/tiqr.example.com.key -out ./ci/files/tiqr.example.com.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=tiqr.example.com"
       - name: Init environment
         run: |
           cd ci/docker
@@ -49,4 +48,4 @@ jobs:
         run: cd ci/docker && docker-compose exec -T tiqr.php.test.vm.openconext.org bash -lc ' composer test '
       - name: Output log files on failure
         if: failure()
-        run: cd ci/docker && docker-compose exec -T tiqr.php.test.vm.openconext.org -c 'cat var/log/webtest.log'
+        run: tail -2000 /var/log/syslog
