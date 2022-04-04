@@ -1,0 +1,22 @@
+version: '2.4'
+
+services:
+  tiqr.vm.openconext.org:
+    image: nginx:latest
+    volumes:
+      -  ../docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../web:/var/www/web
+      - ../../ci/files/tiqr.example.com.crt:/etc/nginx/certs/tiqr.example.com.crt
+      - ../../ci/files/tiqr.example.com.key:/etc/nginx/certs/tiqr.example.com.key
+    ports:
+      - 443:443
+    depends_on:
+      - tiqr.php.test.vm.openconext.org
+
+  tiqr.php.test.vm.openconext.org:
+    stdin_open: true
+    image: ghcr.io/openconext/openconext-containers/openconext-php-test-stepup:latest
+    volumes:
+      - ../../:/var/www
+    environment:
+      APP_ENV: test
