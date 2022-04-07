@@ -265,6 +265,7 @@ TEXT
                 ->end()
             ->end()
             ->arrayNode('usersecretstorage')
+                ->isRequired()
                 ->info(<<<TEXT
 Tiqr must store user secrets and other details for a user. By default secrets are stored together with other user data.
 This setting can be user to store the secrets separately in a database or on a separate host.

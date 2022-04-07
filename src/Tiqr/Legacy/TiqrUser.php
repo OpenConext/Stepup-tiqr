@@ -19,6 +19,8 @@ namespace App\Tiqr\Legacy;
 
 use App\Tiqr\TiqrUserInterface;
 use Assert\Assertion;
+use Tiqr_UserSecretStorage_Interface;
+use Tiqr_UserStorage_Interface;
 
 /**
  * Wrapper around the legacy Tiqr storage.
@@ -29,14 +31,24 @@ use Assert\Assertion;
 class TiqrUser implements TiqrUserInterface
 {
     /**
-     * @var \Tiqr_UserStorage_Interface
+     * @var Tiqr_UserStorage_Interface
      */
     private $userStorage;
+
+    /**
+     * @var Tiqr_UserSecretStorage_Interface
+     */
+    private $userSecretStorage;
+
     private $userId;
 
-    public function __construct($userStorage, $userId)
-    {
+    public function __construct(
+        Tiqr_UserStorage_Interface $userStorage,
+        Tiqr_UserSecretStorage_Interface $userSecretStorage,
+        $userId
+    ) {
         $this->userStorage = $userStorage;
+        $this->userSecretStorage = $userSecretStorage;
         $this->userId = $userId;
     }
 
@@ -57,7 +69,7 @@ class TiqrUser implements TiqrUserInterface
      */
     public function getSecret()
     {
-        return $this->userStorage->getSecret($this->userId);
+        return $this->userSecretStorage->getSecret($this->userId);
     }
 
     public function updateNotification($notificationType, $notificationAddress)

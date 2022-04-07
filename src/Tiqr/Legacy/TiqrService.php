@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
 use Tiqr_StateStorage_Abstract;
+use Tiqr_StateStorage_StateStorageInterface;
 
 /**
  * Wrapper around the legacy Tiqr service.
@@ -53,7 +54,7 @@ final class TiqrService implements TiqrServiceInterface
 
     public function __construct(
         Tiqr_Service $tiqrService,
-        Tiqr_StateStorage_Abstract $tiqrStateStorage,
+        Tiqr_StateStorage_StateStorageInterface $tiqrStateStorage,
         SessionInterface $session,
         LoggerInterface $logger,
         $accountName
