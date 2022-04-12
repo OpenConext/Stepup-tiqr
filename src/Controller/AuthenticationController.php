@@ -373,12 +373,13 @@ class AuthenticationController extends AbstractController
             $notificationAddress
         ));
 
+        // The GCM API has been replaced by FCM
         if ($notificationType == 'GCM') {
             $notificationType = 'FCM';
 
-            $this->logger->notice(
+            $this->logger->info(
                 sprintf(
-                    'GCM is not supported with address "%s" retrying with FCM',
+                    'Updating GCM notificationType to FCM',
                     $notificationAddress
                 )
             );
