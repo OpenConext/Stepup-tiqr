@@ -48,6 +48,7 @@ Feature: When an user needs to register for a new token
       | info   | Enrollment secret created                                                                                                     | present |
       | info   | Enrollment url created for enrollment secret                                                                                  | present |
       | info   | Return metadata response                                                                                                      | present |
+      | notice | Received register action from client with User-Agent "Behat UA" and version ""                                                | present |
       | info   | Start validating enrollment secret                                                                                            | present |
       | info   | Finalizing enrollment                                                                                                         | present |
       | info   | Enrollment finalized                                                                                                          | present |
@@ -106,6 +107,7 @@ Feature: When an user needs to register for a new token
       | info   | Enrollment secret created                                                                                                     | present |
       | info   | Enrollment url created for enrollment secret                                                                                  | present |
       | info   | Return metadata response                                                                                                      | present |
+      | notice | Received register action from client with User-Agent "Behat UA" and version ""                                                | present |
       | info   | Start validating enrollment secret                                                                                            | present |
       | info   | Finalizing enrollment                                                                                                         | present |
       | info   | Enrollment finalized                                                                                                          | present |

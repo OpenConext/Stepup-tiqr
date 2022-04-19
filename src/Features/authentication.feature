@@ -53,6 +53,7 @@ Feature: When an user needs to authenticate
       | info   | Return QR image response                                                                                                        | present |
 
       # Tiqr app
+      | notice | Received login action from client with User-Agent "Symfony" and version ""                                                      | present |
       | notice | Login attempt from app                                                                                                          | present |
       | info   | Validate user login attempt                                                                                                     | present |
       | info   | User login attempt is valid                                                                                                     | present |
