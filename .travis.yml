@@ -1,0 +1,74 @@
+language: php
+
+dist: xenial
+
+addons:
+  hosts:
+    - tiqr.example.com
+  apt:
+    packages:
+      - cmake
+      - apache2
+
+php:
+  - 7.2
+
+cache:
+  directories:
+    - ~/.composer/cache/files
+
+before_script:
+  - composer self-update 1.10.16
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+  - nvm install 14
+  - curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+  # configure ssl
+  - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/gssp.key -out /etc/ssl/certs/gssp.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=tiqr.example.com"
+
+  - sudo apt-get update
+  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - export PHP_VERSION=$(phpenv version-name)
+  - sudo cp ~/.phpenv/versions/${PHP_VERSION}/etc/php-fpm.conf.default ~/.phpenv/versions/${PHP_VERSION}/etc/php-fpm.conf
+  - sudo cp ~/.phpenv/versions/${PHP_VERSION}/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/${PHP_VERSION}/etc/php-fpm.d/www.conf || true
+  - sudo a2enmod rewrite actions fastcgi alias ssl proxy proxy_fcgi
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/${PHP_VERSION}/etc/php.ini
+  - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+  - sudo chown -R travis:travis /var/lib/apache2/fastcgi
+  - ~/.phpenv/versions/${PHP_VERSION}/sbin/php-fpm
+
+  # configure apache virtual hosts
+  - sudo cp -f ${TRAVIS_BUILD_DIR}/travis-ci-apache.conf /etc/apache2/sites-available/000-default.conf
+  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
+  - sudo sed -e "s?%PHP_VERSION%?${PHP_VERSION}?g" --in-place /etc/apache2/sites-available/000-default.conf
+  - sudo cat /etc/apache2/sites-available/000-default.conf
+
+  # Create apache error log.
+  - touch $TRAVIS_BUILD_DIR/error.log
+  - touch $TRAVIS_BUILD_DIR/access.log
+  - sudo service apache2 restart
+
+  # Install dependencies
+  - cp .env.ci .env
+  - cp config/legacy/parameters.yaml.dist config/legacy/parameters.yaml
+  - composer install
+  - yarn install --frozen-lockfile
+  - yarn encore dev
+
+  # Check if everything runs properly
+  - ps aux | grep php-fpm
+  - netstat -an | grep :9000
+  - curl --insecure https://tiqr.example.com
+  - curl --insecure https://tiqr.example.com/bootstrap.min.js
+
+script:
+  - composer test
+  - composer behat
+
+after_script:
+  - cat $TRAVIS_BUILD_DIR/error.log
+  - cat $TRAVIS_BUILD_DIR/access.log
+  - cat $TRAVIS_BUILD_DIR/build/*.html
+  - sudo cat /var/log/syslog
+  - cat $TRAVIS_BUILD_DIR/var/log/*
