@@ -1,3 +1,6 @@
+## 3.1.4
+- Log tiqr client version information (#147)
+
 ## 3.1.3
 - Setup Github Actions tag release workflow
 
