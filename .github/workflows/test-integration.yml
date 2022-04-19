@@ -36,16 +36,16 @@ jobs:
           docker-compose up -d
       - name: Install dependencies
         run: |
-          cd ci/docker && docker-compose exec -T tiqr.php.test.vm.openconext.org bash -lc '
+          cd ci/docker && docker-compose exec -T app.tiqr.stepup.example.com bash -lc '
           composer install
           yarn
           cp .env.ci .env
           cp config/legacy/parameters.yaml.dist config/legacy/parameters.yaml
           '
       - name: Build frontend assets
-        run: cd ci/docker && docker-compose exec -T tiqr.php.test.vm.openconext.org bash -lc 'yarn encore production'
+        run: cd ci/docker && docker-compose exec -T app.tiqr.stepup.example.com bash -lc 'yarn encore production'
       - name: Run test scripts
-        run: cd ci/docker && docker-compose exec -T tiqr.php.test.vm.openconext.org bash -lc ' composer test '
+        run: cd ci/docker && docker-compose exec -T app.tiqr.stepup.example.com bash -lc ' composer test '
       - name: Output log files on failure
         if: failure()
         run: tail -2000 /var/log/syslog
