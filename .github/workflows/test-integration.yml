@@ -37,10 +37,10 @@ jobs:
       - name: Install dependencies
         run: |
           cd ci/docker && docker-compose exec -T app.tiqr.stepup.example.com bash -lc '
-          composer install
-          yarn
           cp .env.ci .env
           cp config/legacy/parameters.yaml.dist config/legacy/parameters.yaml
+          composer install
+          yarn
           '
       - name: Build frontend assets
         run: cd ci/docker && docker-compose exec -T app.tiqr.stepup.example.com bash -lc 'yarn encore production'
