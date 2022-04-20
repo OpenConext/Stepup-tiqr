@@ -17,8 +17,12 @@
 
 namespace App\Tiqr\Legacy;
 
+use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\TiqrUserInterface;
 use Assert\Assertion;
+use ReadWriteException;
+use Tiqr_UserSecretStorage_Interface;
+use Tiqr_UserStorage_Interface;
 
 /**
  * Wrapper around the legacy Tiqr storage.
@@ -29,14 +33,24 @@ use Assert\Assertion;
 class TiqrUser implements TiqrUserInterface
 {
     /**
-     * @var \Tiqr_UserStorage_Interface
+     * @var Tiqr_UserStorage_Interface
      */
     private $userStorage;
+
+    /**
+     * @var Tiqr_UserSecretStorage_Interface
+     */
+    private $userSecretStorage;
+
     private $userId;
 
-    public function __construct($userStorage, $userId)
-    {
+    public function __construct(
+        Tiqr_UserStorage_Interface $userStorage,
+        Tiqr_UserSecretStorage_Interface $userSecretStorage,
+        $userId
+    ) {
         $this->userStorage = $userStorage;
+        $this->userSecretStorage = $userSecretStorage;
         $this->userId = $userId;
     }
 
@@ -57,22 +71,32 @@ class TiqrUser implements TiqrUserInterface
      */
     public function getSecret()
     {
-        return $this->userStorage->getSecret($this->userId);
+        return $this->userSecretStorage->getSecret($this->userId);
     }
 
     public function updateNotification($notificationType, $notificationAddress)
     {
-        if ($notificationType && $notificationAddress) {
-            $this->userStorage->setNotificationType($this->userId, $notificationType);
-            $this->userStorage->setNotificationAddress($this->userId, $notificationAddress);
+        try {
+            if ($notificationType && $notificationAddress) {
+                $this->userStorage->setNotificationType($this->userId, $notificationType);
+                $this->userStorage->setNotificationAddress($this->userId, $notificationAddress);
+            }
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     public function resetLoginAttempts()
     {
-        $this->userStorage->setLoginAttempts($this->userId, 0);
-        $this->userStorage->setTemporaryBlockAttempts($this->userId, 0);
-        $this->userStorage->setTemporaryBlockTimestamp($this->userId, null);
+        try {
+            $this->userStorage->setLoginAttempts($this->userId, 0);
+            $this->userStorage->setTemporaryBlockAttempts($this->userId, 0);
+            $this->userStorage->setTemporaryBlockTimestamp($this->userId, null);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -98,7 +122,12 @@ class TiqrUser implements TiqrUserInterface
      */
     public function addLoginAttempt()
     {
-        $this->userStorage->setLoginAttempts($this->userId, $this->getLoginAttempts() + 1);
+        try {
+            $this->userStorage->setLoginAttempts($this->userId, $this->getLoginAttempts() + 1);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -106,9 +135,14 @@ class TiqrUser implements TiqrUserInterface
      */
     public function block()
     {
-        $this->userStorage->setBlocked($this->userId, true);
-        $this->resetLoginAttempts();
-        $this->userStorage->setTemporaryBlockTimestamp($this->userId, null);
+        try {
+            $this->userStorage->setBlocked($this->userId, true);
+            $this->resetLoginAttempts();
+            $this->userStorage->setTemporaryBlockTimestamp($this->userId, null);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -126,7 +160,12 @@ class TiqrUser implements TiqrUserInterface
      */
     public function addTemporarilyLoginAttempt()
     {
-        $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporaryLoginAttempts() + 1);
+        try {
+            $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporaryLoginAttempts() + 1);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -137,10 +176,16 @@ class TiqrUser implements TiqrUserInterface
      */
     public function blockTemporarily(\DateTimeImmutable $blockDate)
     {
+
         // Order is important, with setting the BlockTimestamp we knows it's a temporarily block.
         $this->block();
-        $this->userStorage->setTemporaryBlockTimestamp($this->userId, $blockDate->format('Y-m-d H:i:s'));
-        $this->addTemporarilyLoginAttempt();
+        try {
+            $this->userStorage->setTemporaryBlockTimestamp($this->userId, $blockDate->format('Y-m-d H:i:s'));
+            $this->addTemporarilyLoginAttempt();
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**

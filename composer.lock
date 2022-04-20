@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d32d0586ce70c7d408d2c9396277f8f",
+    "content-hash": "0a1b6d3bbc36bc1b80c673e94678a7ec",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -38,12 +38,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Assert\\": "lib/Assert"
-                },
                 "files": [
                     "lib/Assert/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Assert\\": "lib/Assert"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -307,12 +307,12 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "src/functions_include.php"
-                ],
                 "psr-4": {
                     "GuzzleHttp\\Promise\\": "src/"
-                }
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1151,7 +1151,7 @@
             "version": "4.3.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:OpenConext/Stepup-saml-bundle.git",
+                "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
                 "reference": "add45ebea90b33e89f723239e77e7a9f0c018b27"
             },
             "dist": {
@@ -1188,15 +1188,16 @@
                     "Surfnet\\SamlBundle\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "description": "A Symfony 4 bundle that integrates the simplesamlphp\\saml2 library with Symfony.",
             "keywords": [
-                "SAML",
                 "SAML2",
-                "StepUp",
+                "saml",
                 "simplesamlphp",
+                "stepup",
                 "surfnet"
             ],
             "time": "2021-11-23T10:22:55+00:00"
@@ -2790,14 +2791,14 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "Resources/functions.php"
+                ],
                 "psr-4": {
                     "Symfony\\Component\\Intl\\": ""
                 },
                 "classmap": [
                     "Resources/stubs"
-                ],
-                "files": [
-                    "Resources/functions.php"
                 ],
                 "exclude-from-classmap": [
                     "/Tests/"
@@ -3184,12 +3185,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Grapheme\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Grapheme\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3264,12 +3265,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3346,12 +3347,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3504,12 +3505,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php72\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php72\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3577,12 +3578,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php73\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php73\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3653,12 +3654,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php80\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3733,12 +3734,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php81\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php81\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -5393,16 +5394,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "1.1.13",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "da54059241f23ee5004ace73c4ca5c302bff30d0"
+                "reference": "9e488e0e3f3f3fa847146561a3eebc7afb11ce8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/da54059241f23ee5004ace73c4ca5c302bff30d0",
-                "reference": "da54059241f23ee5004ace73c4ca5c302bff30d0",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/9e488e0e3f3f3fa847146561a3eebc7afb11ce8e",
+                "reference": "9e488e0e3f3f3fa847146561a3eebc7afb11ce8e",
                 "shasum": ""
             },
             "require": {
@@ -5410,15 +5411,44 @@
                 "ext-gd": "*",
                 "ext-json": "*",
                 "kairos/phpqrcode": "~1.0",
+                "php": ">=7.0",
+                "psr/log": "^1.1",
                 "zendframework/zendframework1": "~1.12"
             },
+            "require-dev": {
+                "ext-pdo_sqlite": "*",
+                "mockery/mockery": "^1.3",
+                "phpmd/phpmd": "^2.12",
+                "phpunit/phpunit": "^8.5",
+                "squizlabs/php_codesniffer": "^2.9.2",
+                "zendframework/zend-coding-standard": "^1.0"
+            },
             "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "test": [
+                    "@static-analysis",
+                    "@phpunit",
+                    "@security-tests"
+                ],
+                "static-analysis": [
+                    "./ci/qa/static-analysis"
+                ],
+                "phpunit": [
+                    "./ci/qa/phpunit"
+                ],
+                "security-tests": [
+                    "./ci/qa/security-tests"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
             "description": "php library for tiqr authentication.",
-            "time": "2021-11-23T13:26:50+00:00"
+            "support": {
+                "source": "https://github.com/SURFnet/tiqr-server-libphp/tree/2.0.0",
+                "issues": "https://github.com/SURFnet/tiqr-server-libphp/issues"
+            },
+            "time": "2022-04-20T07:18:05+00:00"
         },
         {
             "name": "twig/twig",
@@ -5648,10 +5678,10 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Behat\\Hook\\": "src/Behat/Hook/",
-                    "Behat\\Step\\": "src/Behat/Step/",
                     "Behat\\Behat\\": "src/Behat/Behat/",
-                    "Behat\\Testwork\\": "src/Behat/Testwork/"
+                    "Behat\\Testwork\\": "src/Behat/Testwork/",
+                    "Behat\\Step\\": "src/Behat/Step/",
+                    "Behat\\Hook\\": "src/Behat/Hook/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -6823,12 +6853,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
                 "files": [
                     "src/DeepCopy/deep_copy.php"
-                ]
+                ],
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -9139,6 +9169,7 @@
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
             "homepage": "https://github.com/theseer/fDOMDocument",
+            "abandoned": true,
             "time": "2017-06-30T11:53:12+00:00"
         },
         {

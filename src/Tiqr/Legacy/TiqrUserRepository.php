@@ -17,9 +17,12 @@
 
 namespace App\Tiqr\Legacy;
 
+use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\Legacy\TiqrUser;
 use App\Tiqr\TiqrUserRepositoryInterface;
+use ReadWriteException;
+use Tiqr_UserSecretStorage_Interface;
+use Tiqr_UserStorage_Interface;
 
 /**
  * Wrapper around the legacy Tiqr user repository.
@@ -31,15 +34,28 @@ final class TiqrUserRepository implements TiqrUserRepositoryInterface
      */
     private $userStorage;
 
-    public function __construct($userStorage)
-    {
+    /**
+     * @var \Tiqr_UserSecretStorage_Interface
+     */
+    private $userSecretStorage;
+
+    public function __construct(
+        Tiqr_UserStorage_Interface $userStorage,
+        Tiqr_UserSecretStorage_Interface $userSecretStorage
+    ) {
         $this->userStorage = $userStorage;
+        $this->userSecretStorage = $userSecretStorage;
     }
 
     public function createUser($userId, $secret)
     {
-        $this->userStorage->createUser($userId, 'anonymous');
-        $this->userStorage->setSecret($userId, $secret);
+        try {
+            $this->userStorage->createUser($userId, 'anonymous');
+            $this->userSecretStorage->setSecret($userId, $secret);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
         return $this->getUser($userId);
     }
 
@@ -48,6 +64,6 @@ final class TiqrUserRepository implements TiqrUserRepositoryInterface
         if (!$this->userStorage->userExists($userId)) {
             throw UserNotExistsException::createFromId($userId);
         }
-        return new TiqrUser($this->userStorage, $userId);
+        return new TiqrUser($this->userStorage, $this->userSecretStorage, $userId);
     }
 }
