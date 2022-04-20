@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5c2f9e030e46812f3c9f8f353e21210",
+    "content-hash": "0a1b6d3bbc36bc1b80c673e94678a7ec",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -5394,16 +5394,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "dev-feature/exception-throwing",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "2f1116763ac6ca907599a371fd699bb8f0e91883"
+                "reference": "9e488e0e3f3f3fa847146561a3eebc7afb11ce8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/2f1116763ac6ca907599a371fd699bb8f0e91883",
-                "reference": "2f1116763ac6ca907599a371fd699bb8f0e91883",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/9e488e0e3f3f3fa847146561a3eebc7afb11ce8e",
+                "reference": "9e488e0e3f3f3fa847146561a3eebc7afb11ce8e",
                 "shasum": ""
             },
             "require": {
@@ -5445,10 +5445,10 @@
             ],
             "description": "php library for tiqr authentication.",
             "support": {
-                "source": "https://github.com/SURFnet/tiqr-server-libphp/tree/feature/exception-throwing",
+                "source": "https://github.com/SURFnet/tiqr-server-libphp/tree/2.0.0",
                 "issues": "https://github.com/SURFnet/tiqr-server-libphp/issues"
             },
-            "time": "2022-04-12T11:14:05+00:00"
+            "time": "2022-04-20T07:18:05+00:00"
         },
         {
             "name": "twig/twig",
@@ -9221,9 +9221,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tiqr/tiqr-server-libphp": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
