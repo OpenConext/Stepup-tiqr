@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Tiqr_Service;
 use Tiqr_StateStorage;
+use Tiqr_UserSecretStorage;
 use Tiqr_UserStorage;
 
 class TiqrFactory
@@ -60,8 +61,8 @@ class TiqrFactory
         }
 
         return new TiqrService(
-            new Tiqr_Service($options),
-            Tiqr_StateStorage::getStorage($storageType, $storageOptions),
+            new Tiqr_Service($this->logger, $options),
+            Tiqr_StateStorage::getStorage($storageType, $storageOptions, $this->logger),
             $this->session,
             $this->logger,
             $options['name']
@@ -72,8 +73,18 @@ class TiqrFactory
     {
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
-        $userStorage = Tiqr_UserStorage::getStorage($options['userstorage']['type'], $options['userstorage']);
-        return new TiqrUserRepository($userStorage);
+        $userStorage = Tiqr_UserStorage::getStorage(
+            $options['userstorage']['type'],
+            $options['userstorage'],
+            $this->logger
+        );
+
+        $userSecretStorage = Tiqr_UserSecretStorage::getSecretStorage(
+            $options['usersecretstorage']['type'],
+            $this->logger,
+            $options['usersecretstorage']
+        );
+        return new TiqrUserRepository($userStorage, $userSecretStorage);
     }
 
     private function loadDependencies()

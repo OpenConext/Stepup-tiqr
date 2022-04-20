@@ -62,14 +62,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             Assertion::string($tiqrConfiguration['library']['apns']['environment']);
             $this->options['apns.environment'] = $tiqrConfiguration['library']['apns']['environment'];
         }
-
-        if (isset($tiqrConfiguration['library']['gcm'])) {
-            Assertion::string($tiqrConfiguration['library']['gcm']['apikey']);
-            $this->options['gcm.apikey'] = $tiqrConfiguration['library']['gcm']['apikey'];
-            Assertion::string($tiqrConfiguration['library']['gcm']['application']);
-            $this->options['gcm.application'] = $tiqrConfiguration['library']['gcm']['application'];
-        }
-
+        
         if (isset($tiqrConfiguration['library']['firebase'])) {
             Assertion::string($tiqrConfiguration['library']['firebase']['apikey']);
             $this->options['firebase.apikey'] = $tiqrConfiguration['library']['firebase']['apikey'];

@@ -137,24 +137,6 @@ TEXT
                 ->end()
             ->end()
         ->end()
-        ->arrayNode('gcm')
-            ->children()
-                ->scalarNode('apikey')
-                    ->isRequired()
-                    ->info(<<<TEXT
-The API key you use for your Google Cloud Messaging (GCM) account (android push notifications).
-TEXT
-                    )
-                ->end()
-                ->scalarNode('application')
-                    ->isRequired()
-                    ->info(<<<TEXT
-The application identifier of your custom android app, typically com.yourorganization.yourapp
-TEXT
-                    )
-                ->end()
-            ->end()
-        ->end()
         ->arrayNode('firebase')
             ->children()
                 ->scalarNode('apikey')
@@ -265,6 +247,7 @@ TEXT
                 ->end()
             ->end()
             ->arrayNode('usersecretstorage')
+                ->isRequired()
                 ->info(<<<TEXT
 Tiqr must store user secrets and other details for a user. By default secrets are stored together with other user data.
 This setting can be user to store the secrets separately in a database or on a separate host.

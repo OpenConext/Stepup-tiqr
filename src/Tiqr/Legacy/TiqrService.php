@@ -17,6 +17,7 @@
 
 namespace App\Tiqr\Legacy;
 
+use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\Response\AuthenticationErrorResponse;
 use App\Tiqr\Response\AuthenticationResponse;
 use App\Tiqr\Response\RejectedAuthenticationResponse;
@@ -24,10 +25,12 @@ use App\Tiqr\Response\ValidAuthenticationResponse;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserInterface;
 use Psr\Log\LoggerInterface;
+use ReadWriteException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
 use Tiqr_StateStorage_Abstract;
+use Tiqr_StateStorage_StateStorageInterface;
 
 /**
  * Wrapper around the legacy Tiqr service.
@@ -53,7 +56,7 @@ final class TiqrService implements TiqrServiceInterface
 
     public function __construct(
         Tiqr_Service $tiqrService,
-        Tiqr_StateStorage_Abstract $tiqrStateStorage,
+        Tiqr_StateStorage_StateStorageInterface $tiqrStateStorage,
         SessionInterface $session,
         LoggerInterface $logger,
         $accountName
@@ -74,7 +77,12 @@ final class TiqrService implements TiqrServiceInterface
 
     public function getEnrollmentSecret($key)
     {
-        return $this->tiqrService->getEnrollmentSecret($key);
+        try {
+            return $this->tiqrService->getEnrollmentSecret($key);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -92,12 +100,18 @@ final class TiqrService implements TiqrServiceInterface
         $this->session->set('userId', $userId);
         $sessionId = $this->session->getId();
         $this->logger->debug('Clearing the previous enrollment state(s)');
-        $this->clearPreviousEnrollmentState();
-        $this->logger->debug('Starting the new enrollment session');
-        $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $sessionId);
-        $this->logger->debug('Storing the enrollemnt key for future reference');
-        $this->storeEnrollmentKey($enrollmentKey);
-        $this->setSariForSessionIdentifier($enrollmentKey, $sari);
+
+        try {
+            $this->clearPreviousEnrollmentState();
+            $this->logger->debug('Starting the new enrollment session');
+            $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $sessionId);
+            $this->logger->debug('Storing the enrollemnt key for future reference');
+            $this->storeEnrollmentKey($enrollmentKey);
+            $this->setSariForSessionIdentifier($enrollmentKey, $sari);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
         $this->logger->debug('Returning the new enrollment key');
         return $enrollmentKey;
     }
@@ -129,9 +143,14 @@ final class TiqrService implements TiqrServiceInterface
         }
         $format = "Removing %d keys from the enrollment session states";
         $this->logger->debug(sprintf($format, count($keys)));
-        foreach ($keys as $key) {
-            $this->tiqrService->clearEnrollmentState($key);
-            unset($keys[$key]);
+        try {
+            foreach ($keys as $key) {
+                $this->tiqrService->clearEnrollmentState($key);
+                unset($keys[$key]);
+            }
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
         }
         $format = "Reset enroll session keys, remaining keys: %d";
         $this->logger->debug(sprintf($format, count($keys)));
@@ -146,26 +165,46 @@ final class TiqrService implements TiqrServiceInterface
 
     public function getEnrollmentMetadata($key, $loginUri, $enrollmentUrl)
     {
-        return $this->tiqrService->getEnrollmentMetadata($key, $loginUri, $enrollmentUrl);
+        try {
+            return $this->tiqrService->getEnrollmentMetadata($key, $loginUri, $enrollmentUrl);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     public function validateEnrollmentSecret($enrollmentSecret)
     {
-        return $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
+        try {
+            return $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     public function finalizeEnrollment($enrollmentSecret)
     {
-        $this->tiqrService->finalizeEnrollment($enrollmentSecret);
-        $this->unsetSariForSessionIdentifier($enrollmentSecret);
+        try {
+            $this->tiqrService->finalizeEnrollment($enrollmentSecret);
+            $this->unsetSariForSessionIdentifier($enrollmentSecret);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     public function startAuthentication($nameId, $sari)
     {
-        $sessionKey = $this->tiqrService->startAuthenticationSession($nameId, $this->session->getId());
-        $this->session->set('sessionKey', $sessionKey);
+        try {
+            $sessionKey = $this->tiqrService->startAuthenticationSession($nameId, $this->session->getId());
+            $this->session->set('sessionKey', $sessionKey);
 
-        $this->setSariForSessionIdentifier($sessionKey, $sari);
+            $this->setSariForSessionIdentifier($sessionKey, $sari);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
 
         return $this->tiqrService->generateAuthURL($sessionKey);
     }
@@ -215,22 +254,27 @@ final class TiqrService implements TiqrServiceInterface
      */
     public function authenticate(TiqrUserInterface $user, $response, $sessionKey)
     {
-        $result = $this->tiqrService->authenticate($user->getId(), $user->getSecret(), $sessionKey, $response);
-        switch ($result) {
-            case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
-                $this->unsetSariForSessionIdentifier($sessionKey);
+        try {
+            $result = $this->tiqrService->authenticate($user->getId(), $user->getSecret(), $sessionKey, $response);
+            switch ($result) {
+                case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
+                    $this->unsetSariForSessionIdentifier($sessionKey);
 
-                return new ValidAuthenticationResponse('OK');
-            case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
-                return new AuthenticationErrorResponse('INVALID_CHALLENGE');
-            case Tiqr_Service::AUTH_RESULT_INVALID_REQUEST:
-                return new AuthenticationErrorResponse('INVALID_REQUEST');
-            case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
-                return new RejectedAuthenticationResponse('INVALID_RESPONSE');
-            case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
-                return new AuthenticationErrorResponse('INVALID_USER');
-            default:
-                return new AuthenticationErrorResponse('ERROR');
+                    return new ValidAuthenticationResponse('OK');
+                case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
+                    return new AuthenticationErrorResponse('INVALID_CHALLENGE');
+                case Tiqr_Service::AUTH_RESULT_INVALID_REQUEST:
+                    return new AuthenticationErrorResponse('INVALID_REQUEST');
+                case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
+                    return new RejectedAuthenticationResponse('INVALID_RESPONSE');
+                case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
+                    return new AuthenticationErrorResponse('INVALID_USER');
+                default:
+                    return new AuthenticationErrorResponse('ERROR');
+            }
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
@@ -317,7 +361,12 @@ final class TiqrService implements TiqrServiceInterface
      */
     private function unsetSariForSessionIdentifier($identifier)
     {
-        $this->tiqrStateStorage->unsetValue('sari_' . $identifier);
+        try {
+            $this->tiqrStateStorage->unsetValue('sari_' . $identifier);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -326,6 +375,11 @@ final class TiqrService implements TiqrServiceInterface
      */
     private function setSariForSessionIdentifier($identifier, $sari)
     {
-        $this->tiqrStateStorage->setValue('sari_' . $identifier, $sari);
+        try {
+            $this->tiqrStateStorage->setValue('sari_' . $identifier, $sari);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 }

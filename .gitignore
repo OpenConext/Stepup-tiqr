@@ -10,6 +10,7 @@
 /config/legacy/parameters.yaml
 /build/
 /var/*
+/app/
 !/var/cache
 /var/cache/*
 !var/cache/.gitkeep
@@ -74,3 +75,5 @@ yarn-error.log
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+local-php-security-checker
