@@ -17,8 +17,10 @@
 
 namespace App\Tiqr\Legacy;
 
+use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\Exception\UserNotExistsException;
 use App\Tiqr\TiqrUserRepositoryInterface;
+use ReadWriteException;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 
@@ -47,8 +49,13 @@ final class TiqrUserRepository implements TiqrUserRepositoryInterface
 
     public function createUser($userId, $secret)
     {
-        $this->userStorage->createUser($userId, 'anonymous');
-        $this->userSecretStorage->setSecret($userId, $secret);
+        try {
+            $this->userStorage->createUser($userId, 'anonymous');
+            $this->userSecretStorage->setSecret($userId, $secret);
+        } catch (ReadWriteException $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
         return $this->getUser($userId);
     }
 

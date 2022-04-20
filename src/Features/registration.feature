@@ -68,7 +68,6 @@ Feature: When an user needs to register for a new token
       | notice | Unable to retrieve the state storage value, file not found | present |
       | info   | Start validating enrollment secret                                                                                            | present |
       | info   | Finalizing enrollment                                                                                                         | present |
-      | error | Unable to unlink the value from state storage, key not found on filesystem | present |
       | info   | Enrollment finalized                                                                                                          | present |
 
       # Tiqr page, finalized return to SP.
@@ -145,7 +144,6 @@ Feature: When an user needs to register for a new token
       | notice | Unable to retrieve the state storage value, file not found | present |
       | info   | Start validating enrollment secret                                                                                            | present |
       | info   | Finalizing enrollment                                                                                                         | present |
-      | error | Unable to unlink the value from state storage, key not found on filesystem | present |
       | info   | Enrollment finalized                                                                                                          | present |
 
       # Tiqr page, finalized return to SP.

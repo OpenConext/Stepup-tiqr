@@ -40,7 +40,7 @@
     "symfony/validator": "^4.3",
     "symfony/webpack-encore-bundle": "^1.6",
     "symfony/yaml": "^4.3",
-    "tiqr/tiqr-server-libphp": "dev-feature/state-storage-improvements"
+    "tiqr/tiqr-server-libphp": "dev-feature/exception-throwing"
   },
   "require-dev": {
     "behat/mink": "^1.7",

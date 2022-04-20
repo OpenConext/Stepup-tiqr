@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec5915cb87e1677108ad913fa026fe90",
+    "content-hash": "e5c2f9e030e46812f3c9f8f353e21210",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -38,12 +38,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Assert\\": "lib/Assert"
-                },
                 "files": [
                     "lib/Assert/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Assert\\": "lib/Assert"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1188,21 +1188,18 @@
                     "Surfnet\\SamlBundle\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "description": "A Symfony 4 bundle that integrates the simplesamlphp\\saml2 library with Symfony.",
             "keywords": [
-                "SAML",
                 "SAML2",
-                "StepUp",
+                "saml",
                 "simplesamlphp",
+                "stepup",
                 "surfnet"
             ],
-            "support": {
-                "source": "https://github.com/OpenConext/Stepup-saml-bundle/tree/4.3.2",
-                "issues": "https://github.com/OpenConext/Stepup-saml-bundle/issues"
-            },
             "time": "2021-11-23T10:22:55+00:00"
         },
         {
@@ -2794,14 +2791,14 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "Resources/functions.php"
+                ],
                 "psr-4": {
                     "Symfony\\Component\\Intl\\": ""
                 },
                 "classmap": [
                     "Resources/stubs"
-                ],
-                "files": [
-                    "Resources/functions.php"
                 ],
                 "exclude-from-classmap": [
                     "/Tests/"
@@ -3188,12 +3185,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Grapheme\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Grapheme\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3268,12 +3265,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3350,12 +3347,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3508,12 +3505,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php72\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php72\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3581,12 +3578,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php73\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php73\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3657,12 +3654,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php80\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -3737,12 +3734,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php81\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php81\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -4527,12 +4524,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\String\\": ""
-                },
                 "files": [
                     "Resources/functions.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Component\\String\\": ""
+                },
                 "exclude-from-classmap": [
                     "/Tests/"
                 ]
@@ -5397,16 +5394,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "dev-feature/state-storage-improvements",
+            "version": "dev-feature/exception-throwing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "dbbfcdb7a63ab0d20415662c959437ab501a37a7"
+                "reference": "2f1116763ac6ca907599a371fd699bb8f0e91883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/dbbfcdb7a63ab0d20415662c959437ab501a37a7",
-                "reference": "dbbfcdb7a63ab0d20415662c959437ab501a37a7",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/2f1116763ac6ca907599a371fd699bb8f0e91883",
+                "reference": "2f1116763ac6ca907599a371fd699bb8f0e91883",
                 "shasum": ""
             },
             "require": {
@@ -5448,10 +5445,10 @@
             ],
             "description": "php library for tiqr authentication.",
             "support": {
-                "source": "https://github.com/SURFnet/tiqr-server-libphp/tree/feature/state-storage-improvements",
+                "source": "https://github.com/SURFnet/tiqr-server-libphp/tree/feature/exception-throwing",
                 "issues": "https://github.com/SURFnet/tiqr-server-libphp/issues"
             },
-            "time": "2022-04-07T13:05:13+00:00"
+            "time": "2022-04-12T11:14:05+00:00"
         },
         {
             "name": "twig/twig",
@@ -6856,12 +6853,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
                 "files": [
                     "src/DeepCopy/deep_copy.php"
-                ]
+                ],
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
