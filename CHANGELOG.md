@@ -1,3 +1,15 @@
+## 3.3.0
+
+**Feature**
+* Tiqr server library upgrade #145
+* Remove GCM and always use FCM instead #144
+* Log tiqr client version information #147
+* Catch the tiqr-server-libphp ReadWriteExceptions #146
+
+**Chores**
+* Create state table #137
+* Update packages #142
+
 ## 3.2.1
 - Use github actions to automate tiqr builds
 
