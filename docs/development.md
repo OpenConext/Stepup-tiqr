@@ -49,7 +49,7 @@ Copy and configure:
 
 If everything goes as planned you can go to:
 
-[https://tiqr.test](https://tiqr.example.com)
+[https://tiqr.test](https://tiqr.stepup.example.com)
 
 ### Development
 

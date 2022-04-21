@@ -101,7 +101,7 @@ class WebContext implements Context, KernelAwareContext
     {
         /** @var RequestStack $stack */
         $stack = $this->kernel->getContainer()->get('request_stack');
-        $stack->push(Request::create('https://tiqr.example.com'));
+        $stack->push(Request::create('https://tiqr.stepup.example.com'));
         $ip = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
         $stack->pop();
 

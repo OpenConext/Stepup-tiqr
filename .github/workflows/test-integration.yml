@@ -29,7 +29,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Generate SSL key and certificate
-        run: sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ci/files/tiqr.example.com.key -out ./ci/files/tiqr.example.com.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=tiqr.example.com"
+        run: sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ci/files/tiqr.stepup.example.com.key -out ./ci/files/tiqr.stepup.example.com.crt -subj "/C=NL/ST=Netherlands/L=Amsterdam/O=TEST/CN=tiqr.example.com"
       - name: Init environment
         run: |
           cd ci/docker

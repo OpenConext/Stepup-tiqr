@@ -107,7 +107,7 @@ Feature: When an user needs to authenticate
       # GSSP bundle handling the AuthnRequest
       | notice   | Received sso request                                                                                                            |         |
       | info     | Processing AuthnRequest                                                                                                         |         |
-      | notice   | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice   | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
       | info     | AuthnRequest stored in state                                                                                                    | present |
       | notice   | Redirect user to the application authentication route /authentication                                                           | present |
 
@@ -132,7 +132,7 @@ Feature: When an user needs to authenticate
       | notice   | Received sso return request                                                                                                     | present |
       | info     | Create sso response                                                                                                             | present |
       | notice   | /Saml response created with id ".*?", request ID: ".*?"/                                                                        | present |
-      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.example.com/demo/sp/acs"    | present |
+      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"    | present |
 
 
   Scenario: An user can authenticate with a one time password
@@ -162,7 +162,7 @@ Feature: When an user needs to authenticate
       # GSSP bundle handling the AuthnRequest
       | notice | Received sso request                                                                                                            |         |
       | info   | Processing AuthnRequest                                                                                                         |         |
-      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                    | present |
       | notice | Redirect user to the application authentication route /authentication                                                           | present |
       | info | Creating a file state storage | present |
