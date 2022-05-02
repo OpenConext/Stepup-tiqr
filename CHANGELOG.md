@@ -1,3 +1,7 @@
+## 3.3.1
+**Maintenance**
+* TravisCI and Ant have been replaced with GithubActions workflow and Composer scripts #143
+
 ## 3.3.0
 
 **Feature**

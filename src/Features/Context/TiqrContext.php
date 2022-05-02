@@ -241,7 +241,7 @@ class TiqrContext implements Context, KernelAwareContext
             'notificationAddress' => $notificationAddress,
         ];
         // Internal request does not like an absolute path.
-        $authenticationUrl = str_replace('https://tiqr.example.com', '', $authenticationUrl);
+        $authenticationUrl = str_replace('https://tiqr.stepup.example.com', '', $authenticationUrl);
 
         $this->authenticatioResponse = $this->kernel->handle(
             Request::create($authenticationUrl, 'POST', $authenticationBody)

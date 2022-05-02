@@ -28,7 +28,7 @@ class HttpClientFactory
     {
         // TODO: make the hostname configurable.
         return new Client([
-            'base_uri' => 'https://tiqr.example.com',
+            'base_uri' => 'https://tiqr.stepup.example.com',
             'ssl.certificate_authority' => false,
             'verify' => false,
             'headers' => ['Accept' => 'application/json'],

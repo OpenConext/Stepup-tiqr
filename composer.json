@@ -56,7 +56,6 @@
     "phpmd/phpmd": "~2",
     "phpunit/phpcov": "~6",
     "phpunit/phpunit": "^8.5",
-    "sebastian/phpcpd": "~4",
     "squizlabs/php_codesniffer": "~3",
     "symfony/browser-kit": "^4.3",
     "symfony/css-selector": "^3",
@@ -71,42 +70,16 @@
       "@static-analysis",
       "@phpunit",
       "@behat",
-      "@security-tests",
-      "@jest"
+      "@jest",
+      "@security-tests"
     ],
-    "lint": [
-      "@lint-php",
-      "@lint-yml",
-      "@lint-composer",
-      "@lint-ts",
-      "@lint-tsc"
-    ],
-    "lint-php": "vendor/bin/parallel-lint dev src",
-    "lint-yml": "bin/console lint:yaml config",
-    "lint-ts": "yarn tslint --project tsconfig.json",
-    "lint-tsc": "yarn tsc --noEmit",
-    "lint-composer": "composer validate",
-    "static-analysis": [
-      "@license-headers",
-      "@phpmd",
-      "@phpcs",
-      "@phpcpd"
-    ],
-    "license-headers": "vendor/bin/docheader check src/ dev/ tests/",
-    "phpmd": "vendor/bin/phpmd ./src text phpmd.xml  --suffixes php",
-    "phpcs": [
-      "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./src",
-      "vendor/bin/phpcs --standard=phpcs.xml --report=full --warning-severity=0 ./dev"
-    ],
-    "phpcpd": [
-      "vendor/bin/phpcpd  ./src"
-    ],
-    "phpunit": "vendor/bin/phpunit",
-    "behat": "vendor/bin/behat --config behat.yml --tags=~skip",
-    "security-tests": [
-      "wget -q https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64 -O local-php-security-checker && chmod +x ./local-php-security-checker && ./local-php-security-checker",
-      "yarn audit"
-    ],
+      "lint": "./ci/qa/lint",
+      "static-analysis": "./ci/qa/static-analysis",
+      "phpunit": "./ci/qa/phpunit",
+      "behat": "./ci/qa/behat",
+      "jest": "./ci/qa/jest",
+      "security-tests": "./ci/qa/security-tests",
+
     "coverage": [
       "@phpunit-coverage",
       "mkdir -p coverage/reports",
@@ -115,9 +88,6 @@
     "phpunit-coverage": "vendor/bin/phpunit --coverage-php coverage/reports/unit.cov",
     "encore": [
       "yarn encore production"
-    ],
-    "jest": [
-      "yarn jest"
     ],
     "frontend-install": [
       "yarn install --frozen-lockfile",
@@ -129,7 +99,13 @@
     }
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/flex": true
+    },
+    "platform": {
+      "php": "7.2.5"
+    }
   },
   "archive": {
     "exclude": [
@@ -169,7 +145,7 @@
       "/docs",
       ".gitignore",
       ".travis.*",
-      "behat.yml"
+      "ci/qa/qa-config/behat.yml"
     ]
   }
 }

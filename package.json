@@ -9,6 +9,7 @@
     "css-loader": "^5",
     "import-glob-loader": "^1.1.0",
     "jest": "^27",
+    "jscpd": "^3.4.5",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
     "ts-jest": "^27",

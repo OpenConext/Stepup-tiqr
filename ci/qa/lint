@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/../../
+
+printf "\nStart application Linting\n"
+#Lints PHP,yml,ts,tsc and composer.json
+vendor/bin/parallel-lint dev src
+bin/console lint:yaml config
+yarn tslint --project tsconfig.json
+yarn tsc --noEmit
+composer validate

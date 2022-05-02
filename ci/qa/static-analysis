@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/../../
+
+printf "\nRunning DocHeader\n"
+#license-headers analysis
+./vendor/bin/docheader check src/ dev/ tests/
+
+printf "\nRunning PHP Mess Detector\n"
+#phpmd static analysis
+./vendor/bin/phpmd src text ci/qa/qa-config/phpmd.xml --suffixes php
+
+printf "\nRunning PHP Code Sniffer\n"
+#phpcs static analysis
+./vendor/bin/phpcs --standard=ci/qa/qa-config/phpcs.xml --report=full --warning-severity=0 ./src
+./vendor/bin/phpcs --standard=ci/qa/qa-config/phpcs.xml --report=full --warning-severity=0 ./dev
+
+printf "\nRunning jscpd Copy/Paste Detector\n"
+#jscpd static analysis
+# Run the JS CPD tool:
+# - ignoring the test files and public resources
+# - allowing for 40 lines of duplicate code
+# - and setting a total copy paste limit to 1% project wide
+# More info about jscpd usage: https://github.com/kucherenko/jscpd/tree/master/packages/jscpd#usage
+./node_modules/.bin/jscpd src public -l 40 -t 1

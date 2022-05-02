@@ -12,7 +12,7 @@ composer test
 
 ## Continuous integration
 
-Using Travis CI, the full test suite will be run against every pull request and has to pass before it can be merged.
+Using GitHub Actions, the full test suite will be run against every pull request and has to pass before it can be merged.
 Every commit on the master branch will be tested as well.
 
 ## Static analysis
@@ -59,9 +59,11 @@ Acceptance tests will be written for all command handlers and will be run as par
 
 You can run these tools manually with composer:
 
+> **Notice**: The behat test: [registration.feature](https://github.com/OpenConext/Stepup-tiqr/blob/develop/src/Features/registration.feature)
+sometimes gives a false positive, if the tests fail retry the tests before troubleshooting.
 ```bash
 composer behat
-``` 
+```
 
 ## Security testing
 

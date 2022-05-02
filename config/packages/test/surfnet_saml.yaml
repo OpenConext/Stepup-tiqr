@@ -20,6 +20,6 @@ surfnet_saml:
       - entity_id: "%saml_remote_sp_entity_id%"
         certificate_file: "%saml_remote_sp_certificate%"
         assertion_consumer_service_url: "%saml_remote_sp_acs%"
-      - entity_id: https://tiqr.example.com/saml/metadata
+      - entity_id: https://tiqr.stepup.example.com/saml/metadata
         certificate_file: "%saml_idp_publickey%"
-        assertion_consumer_service_url: https://tiqr.example.com/demo/sp/acs
+        assertion_consumer_service_url: https://tiqr.stepup.example.com/demo/sp/acs
