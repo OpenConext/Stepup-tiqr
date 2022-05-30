@@ -5442,16 +5442,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SURFnet/tiqr-server-libphp.git",
-                "reference": "9e488e0e3f3f3fa847146561a3eebc7afb11ce8e"
+                "reference": "35fb8a807491e7c4db6822bb6f0bc0c6ae3b880d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/9e488e0e3f3f3fa847146561a3eebc7afb11ce8e",
-                "reference": "9e488e0e3f3f3fa847146561a3eebc7afb11ce8e",
+                "url": "https://api.github.com/repos/SURFnet/tiqr-server-libphp/zipball/35fb8a807491e7c4db6822bb6f0bc0c6ae3b880d",
+                "reference": "35fb8a807491e7c4db6822bb6f0bc0c6ae3b880d",
                 "shasum": ""
             },
             "require": {
@@ -5477,7 +5477,11 @@
                 "BSD-3-Clause"
             ],
             "description": "php library for tiqr authentication.",
-            "time": "2022-04-20T07:18:05+00:00"
+            "support": {
+                "issues": "https://github.com/SURFnet/tiqr-server-libphp/issues",
+                "source": "https://github.com/SURFnet/tiqr-server-libphp/tree/2.1.0"
+            },
+            "time": "2022-05-30T12:31:49+00:00"
         },
         {
             "name": "twig/twig",
@@ -9285,5 +9289,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.3.0"
 }
