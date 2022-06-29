@@ -171,7 +171,7 @@ class TiqrAppApiController extends AbstractController
         $userId = $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
 
         if ($userId === false) {
-            $logger->info('Invalid enrollment secret');
+            $logger->error('Invalid enrollment secret');
 
             return new Response('Enrollment failed', Response::HTTP_FORBIDDEN);
         }
@@ -230,7 +230,7 @@ class TiqrAppApiController extends AbstractController
             return new Response($result->getMessage(), Response::HTTP_OK);
         }
 
-        $logger->info('User denied authenticated ' . $result->getMessage());
+        $logger->info('User denied ' . $result->getMessage());
 
         return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
     }
