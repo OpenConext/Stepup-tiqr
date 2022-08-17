@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -17,23 +18,27 @@
 
 namespace App\Tiqr;
 
+use App\Exception\TiqrServerRuntimeException;
+use App\Tiqr\Legacy\TiqrService;
 use App\Tiqr\Response\AuthenticationResponse;
+use Exception;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface TiqrServiceInterface
 {
     /**
-     * NOTE: this call will generate literal PNG data. This makes it harder to intercept the enrolment key
-     * This is also the reason why enrolment cannot be performed an the phone (by clicking the image, as with authN)
-     * as it would expose the enrolment key to the client in plaintext next to the "PNG-encoded" version.
+     * Return a stream with the PNG image data of a QR code with the enrollment url and enrollment key
+     *
+     * @see \Tiqr_Service::generateEnrollmentQR()
      *
      * @param string $metadataURL
      * @return StreamedResponse
      */
-    public function createRegistrationQRResponse($metadataURL);
+    public function createRegistrationQRResponse(string $metadataURL): StreamedResponse;
 
     /**
-     * Get a temporarily enrollment secret to be able to securely post a user
+     * Get a temporary enrollment secret to be able to securely post a user
      * secret.
      *
      * As part of the enrollment process the phone will send a user secret.
@@ -42,20 +47,28 @@ interface TiqrServiceInterface
      * required. This secret should be included in the enrollmentUrl that is
      * passed to the getMetadata function.
      *
-     * @param string $key
+     * @param string $enrollmentEnrollmentKey
      *      The enrollmentKey generated at the start of the enrollment process.
+     * @param string $sari The unique identifier of this enrollment
      * @return String The enrollment secret
+     * @throws TiqrServerRuntimeException
+     *@see \Tiqr_Service::getEnrollmentSecret()
+     *
      */
-    public function getEnrollmentSecret($key);
+    public function getEnrollmentSecret(string $enrollmentEnrollmentKey, string $sari): string;
 
     /**
-     * Starts and generates an enrollment key.
+     * Start a new enrollment session for enrolling a new tiqr user
+     * Generates an enrollment key and a tiqr userID
      *
-     * @param string $sari
+     * @see \Tiqr_Service::startEnrollmentSession()
      *
-     * @return string
+     * @param string $sari The unique identifier of this enrollment
+     *
+     * @return string the enrollment key
+     * @throws TiqrServerRuntimeException
      */
-    public function generateEnrollmentKey($sari);
+    public function generateEnrollmentKey(string $sari): string;
 
     /**
      * Retrieve the metadata for an enrollment session.
@@ -66,6 +79,8 @@ interface TiqrServiceInterface
      *
      * Note, you can call this function only once, as the enrollment session
      * data will be destroyed as soon as it is retrieved.
+     *
+     * @see \Tiqr_Service::getEnrollmentMetadata()
      *
      * @param string $key
      *      The enrollmentKey that the phone has
@@ -84,24 +99,29 @@ interface TiqrServiceInterface
      * @return array An array of metadata that the phone needs to complete
      *               enrollment. You must encode it in JSON before you send
      *               it to the phone.
+     *
+     * @throws TiqrServerRuntimeException
      */
-    public function getEnrollmentMetadata($key, $loginUri, $enrollmentUrl);
+    public function getEnrollmentMetadata(string $key, string $loginUri, string $enrollmentUrl): array;
 
     /**
      * Validate if an enrollmentSecret that was passed from the phone is valid.
      *
-     * @param $enrollmentSecret
+     * @see \Tiqr_Service::validateEnrollmentSecret()
+     *
+     * @param string $enrollmentSecret
      *      The secret that the phone posted; it must match
      *      the secret that was generated using
      *      getEnrollmentSecret earlier in the process.
      *
-     * @return string|false
+     * @return string
      *      The userId of the user that was being enrolled if the
      *      secret is valid. This userId should be used to store the
      *      user secret that the phone posted.
-     *      If the enrollmentSecret is invalid, false is returned.
+     *
+     * @throws TiqrServerRuntimeException
      */
-    public function validateEnrollmentSecret($enrollmentSecret);
+    public function validateEnrollmentSecret(string $enrollmentSecret): string;
 
     /**
      * Finalize the enrollment process.
@@ -110,12 +130,15 @@ interface TiqrServiceInterface
      * server, you should call finalizeEnrollment. This clears some enrollment
      * temporarily pieces of data, and sets the status of the enrollment to
      * finalized.
-     * @param String The enrollment secret that was posted by the phone. This
+     *
+     * @see \Tiqr_Service::finalizeEnrollment()
+     *
+     * @param string $enrollmentSecret The enrollment secret that was posted by the phone. This
      *               is the same secret used in the call to
      *               validateEnrollmentSecret.
-     * @return boolean True if succesful
+     * @throws TiqrServerRuntimeException
      */
-    public function finalizeEnrollment($enrollmentSecret);
+    public function finalizeEnrollment(string $enrollmentSecret): void;
 
     /**
      * Generate an authentication challenge URL.
@@ -123,24 +146,55 @@ interface TiqrServiceInterface
      * application, for example to create a link in a mobile website on the
      * same device as where the application is installed
      *
-     * @param string $nameId
+     * @see \Tiqr_Service::startAuthenticationSession()
+     * @see \Tiqr_Service::generateAuthURL()
+     *
+     * @param string $userId
      * @param string $sari
      *
-     * @return string
+     * @return string the generated authentication URL
+     * @throws TiqrServerRuntimeException
      */
-    public function startAuthentication($nameId, $sari);
+    public function startAuthentication(string $userId, string $sari): string;
 
     /**
-     * @return boolean
+     * @return bool true when there is an authenticated user in the current session,
+     *              false otherwise
+     *
+     * @see \Tiqr_Service::getAuthenticatedUser()
+     *
+     * Does not throw
      */
-    public function isAuthenticated();
+    public function isAuthenticated(): bool;
 
     /**
+     * Response with authentication challenge QR code.
+     *
+     * This URL can be used to link directly to the authentication
+     * application, for example to create a link in a mobile website on the
+     * same device as where the application is installed
+     *
+     * @see \Tiqr_Service::generateAuthQR()
+     *
      * @return StreamedResponse
+     * @throws TiqrServerRuntimeException
      */
-    public function createAuthenticationQRResponse();
+    public function createAuthenticationQRResponse(): StreamedResponse;
 
-    public function authenticationUrl();
+    /**
+     * Generate an authentication challenge URL.
+     *
+     * This URL can be used to link directly to the authentication
+     * application, for example to create a link in a mobile website on the
+     * same device as where the application is installed
+     *
+     * @see \Tiqr_Service::generateAuthURL()
+     *
+     * @return the generated URL
+     * @throws TiqrServerRuntimeException
+     *
+     */
+    public function authenticationUrl(): string;
 
     /**
      * @param TiqrUserInterface $user
@@ -148,63 +202,66 @@ interface TiqrServiceInterface
      * @param string $sessionKey
      *
      * @return AuthenticationResponse
+     * @throws TiqrServerRuntimeException
      */
-    public function authenticate(TiqrUserInterface $user, $response, $sessionKey);
+    public function authenticate(TiqrUserInterface $user, string $response, string $sessionKey): AuthenticationResponse;
 
     /**
      * Returns the current enrollment status.
+     * @see \Tiqr_Service::getEnrollmentStatus()
      *
-     * @return string
+     * @return int
+     * @throws TiqrServerRuntimeException
      */
-    public function getEnrollmentStatus();
+    public function getEnrollmentStatus(): int;
 
     /**
-     * If the user is enrolled
+     * Check the user's enrollment process is finalized
+     * @see \Tiqr_Service::finalizeEnrollment()
      *
-     * @return boolean
+     * @return bool true when the enrollment status is Tiqr_Service::ENROLLMENT_STATUS_FINALIZED
+     * @throws TiqrServerRuntimeException
      */
-    public function enrollmentFinalized();
+    public function enrollmentFinalized(): bool;
 
     /**
      * Returns the current id of the enrolled user.
      * @return string
+     *
+     * Does not throw
      */
-    public function getUserId();
+    public function getUserId(): string;
 
     /**
      * Return the authentication session id.
      *
      * @return string
+     *
+     * Does not throw
      */
-    public function getAuthenticationSessionKey();
+    public function getAuthenticationSessionKey(): string;
 
     /**
-     * Exchange a notificationToken for a deviceToken.
+     * Sent a push notification to a tiqr client to start an authentication
      *
-     * During enrollment, the phone will post a notificationAddress that can be
-     * used to send notifications. To actually send the notification,
-     * this address should be converted to the real device address.
+     * During enrollment, and after each successful authentication the tiqr client
+     * return the $notificationAddress and the $notificationType that are required
+     * to sent push notifications to the device.
      *
      * @param string $notificationType
      * @param string $notificationAddress
+     * @throws TiqrServerRuntimeException
      *
-     * @return string
      */
-    public function sendNotification($notificationType, $notificationAddress);
-
-
-    /**
-     * Return error information about the last failed push notification attempt.
-     *
-     * @return array
-     */
-    public function getNotificationError();
+    public function sendNotification(string $notificationType, string $notificationAddress): void;
 
     /**
      * @param string $identifier Enrollment key or session key
-     * @param string $sari
      *
-     * @return string
+     * @return string with the sari that was previously set for $identifier,
+     *                empty string when no sari could be found for $identifier
+     *
+     * Does not throw
      */
-    public function getSariForSessionIdentifier($identifier);
+    public function getSariForSessionIdentifier(string $identifier): string;
 }

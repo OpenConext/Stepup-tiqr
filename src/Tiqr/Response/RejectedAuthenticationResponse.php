@@ -24,21 +24,17 @@ class RejectedAuthenticationResponse implements AuthenticationResponse
 {
     private $error;
 
-    /**
-     *
-     * @param string $error
-     */
-    public function __construct($error)
+    public function __construct(string $error)
     {
         $this->error = $error;
     }
 
-    /**
+        /**
      * If the authentication is valid.
      *
      * @return boolean
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return false;
     }
@@ -48,7 +44,7 @@ class RejectedAuthenticationResponse implements AuthenticationResponse
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->error;
     }

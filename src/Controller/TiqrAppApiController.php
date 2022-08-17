@@ -18,11 +18,13 @@
 namespace App\Controller;
 
 use App\Service\UserAgentMatcherInterface;
+use App\Tiqr\Response\AuthenticationResponse;
 use App\WithContextLogger;
 use App\Tiqr\AuthenticationRateLimitServiceInterface;
 use App\Tiqr\Exception\UserNotExistsException;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserRepositoryInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,50 +61,54 @@ class TiqrAppApiController extends AbstractController
     /**
      * Metadata endpoint.
      *
-     * The endpoint where the Tiqr app get's it's registration information from.
+     * The endpoint where the Tiqr app gets it's registration information from during enrollment
      *
      * @Route("/tiqr.php", name="app_identity_registration_metadata", methods={"GET"})
      * @Route("/tiqr/tiqr.php", methods={"GET"})
-     *
-     * @throws \InvalidArgumentException
      */
     public function metadataAction(Request $request)
     {
-        $key = $request->get('key');
-        if (empty($key)) {
-            $this->logger->info('Without enrollment');
+        $enrollmentKey = $request->get('key');
+        if (empty($enrollmentKey)) {
+            $this->logger->error('Missing "key" parameter in GET request to metadata endpoint');
 
-            return new Response('Missing enrollment key', Response::HTTP_BAD_REQUEST);
+            return new Response('Missing enrollment key in GET request to the metadata endpoint', Response::HTTP_BAD_REQUEST);
         }
 
+        $sari = $this->tiqrService->getSariForSessionIdentifier($enrollmentKey);
         $logger = WithContextLogger::from($this->logger, [
-            'sari' => $this->tiqrService->getSariForSessionIdentifier($key),
+            'sari' => $sari,
         ]);
 
-        $logger->info('With enrollment key', ['key' => $key]);
+        $logger->notice('Got GET request to metadata endpoint with enrollment key', ['key' => $enrollmentKey]);
 
-        // Exchange the key submitted by the phone for a new, unique enrollment secret.
-        $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($key);
+        try {
+            // Exchange the key submitted by the phone for a new, unique enrollment secret.
+            $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($enrollmentKey, $sari);
 
-        $logger->info('Enrollment secret created', ['key' => $key]);
+            $logger->debug('Enrollment secret created', ['key' => $enrollmentKey]);
 
-        // $enrollmentSecret is a one time password that the phone is going to use later to post
-        // the shared secret of the user account on the phone.
-        $enrollmentUrl = $request->getUriForPath(sprintf('/tiqr.php?otp=%s', urlencode($enrollmentSecret)));
+            // $enrollmentSecret is a one time password that the phone is going to use later to post
+            // the shared secret of the user account on the phone.
+            $enrollmentUrl = $request->getUriForPath(sprintf('/tiqr.php?otp=%s', urlencode($enrollmentSecret)));
 
-        $logger->info('Enrollment url created for enrollment secret', ['key' => $key]);
+            $logger->debug('Enrollment url created for enrollment secret', ['key' => $enrollmentKey]);
 
-        // Note that for security reasons you can only ever call getEnrollmentMetadata once in an enrollment session,
-        // the data is destroyed after your first call.
-        $metadata = $this->tiqrService->getEnrollmentMetadata(
-            $key,
-            $request->getUriForPath('/tiqr.php'),
-            $enrollmentUrl
-        );
+            // Note that for security reasons you can only ever call getEnrollmentMetadata once in an enrollment session,
+            // the data is destroyed after your first call.
+            $metadata = $this->tiqrService->getEnrollmentMetadata(
+                $enrollmentKey,
+                $request->getUriForPath('/tiqr.php'),
+                $enrollmentUrl
+            );
 
-        $logger->info('Return metadata response', ['key' => $key]);
+            $logger->notice('Returned metadata response', ['key' => $enrollmentKey]);
 
-        return new JsonResponse($metadata);
+            return new JsonResponse($metadata);
+        } catch (Exception $e) {
+            $this->logger->error('Error handling metadata GET request, returning HTTP 500', array('exception' => $e));
+            return new Response('Error handling metadata GET request', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -114,21 +120,33 @@ class TiqrAppApiController extends AbstractController
      * @param UserAgentMatcherInterface $userAgentMatcher
      * @param Request $request
      * @return Response
-     * @throws \InvalidArgumentException
-     * @throws \Exception
      */
     public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request)
     {
         $operation = $request->get('operation');
+        if (empty($operation)) {
+            $this->logger->error('Missing "operation" parameter in POST request to the authentication/enrollment endpoint');
+            return new Response('Missing "operation" parameter in POST', Response::HTTP_BAD_REQUEST);
+        }
+
         $notificationType = $request->get('notificationType');
         $notificationAddress = $request->get('notificationAddress');
         if ($operation === 'register') {
+            $this->logger->notice(
+                'Got POST with registration response',
+                array('notificationType' => $notificationType, 'notificationAddress' => $notificationAddress)
+            );
             return $this->registerAction($userAgentMatcher, $request, $notificationType, $notificationAddress);
         }
         if ($operation === 'login') {
+            $this->logger->notice(
+                'Got POST with login response',
+                array('notificationType' => $notificationType, 'notificationAddress' => $notificationAddress)
+            );
             return $this->loginAction($request, $notificationType, $notificationAddress);
         }
 
+        $this->logger->error(sprintf('Unsupported operation: "%s"', $operation));
         return new Response('Operation not allowed', Response::HTTP_BAD_REQUEST);
     }
 
@@ -144,14 +162,23 @@ class TiqrAppApiController extends AbstractController
     private function registerAction(
         UserAgentMatcherInterface $userAgentMatcher,
         Request $request,
-        $notificationType,
-        $notificationAddress
+        string $notificationType,
+        string $notificationAddress
     ) {
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
+        if (empty($enrollmentSecret)) {
+            $this->logger->error('Missing "otp" parameter');
+            return new Response('Missing "otp" parameter', Response::HTTP_BAD_REQUEST);
+        }
         $secret = $request->get('secret');
+        if (empty($secret)) {
+            $this->logger->error('Missing "secret" parameter');
+            return new Response('Missing "secret" parameter', Response::HTTP_BAD_REQUEST);
+        }
+
 
         $logger = WithContextLogger::from($this->logger, [
-            'sari' => $this->tiqrService->getSariForSessionIdentifier($secret),
+            'sari' => $this->tiqrService->getSariForSessionIdentifier($enrollmentSecret),
         ]);
 
         if (!$userAgentMatcher->isOfficialTiqrMobileApp($request)) {
@@ -167,44 +194,87 @@ class TiqrAppApiController extends AbstractController
 
         $logger->info('Start validating enrollment secret');
 
-        // note: userId is never sent together with the secret! userId is retrieved from session
-        $userId = $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
+        try {
+            // note: userId is never sent together with the secret! userId is retrieved from session
+            $userId = $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
 
-        if ($userId === false) {
-            $logger->error('Invalid enrollment secret');
-
+            $logger = WithContextLogger::from($this->logger, [
+                'userId' => $userId,
+                'sari' => $this->tiqrService->getSariForSessionIdentifier($enrollmentSecret),
+            ]);
+        } catch (Exception $e) {
+            $logger->error(sprintf('Validation of the enrollment secret "%s" failed', $enrollmentSecret), array('exception' => $e));
             return new Response('Enrollment failed', Response::HTTP_FORBIDDEN);
         }
 
-        $this->userRepository
-            ->createUser($userId, $secret)
-            ->updateNotification($notificationType, $notificationAddress);
+        // The Tiqr client generates the shared secret that is used in the subsequent authentications
+        // Check whether the secret that the client sent looks sensible
+        // Note: historically both uppercase and lowercase hex strings are used
+
+        // 1. Assert that the secret is a valid hex string
+        $decoded_secret = hex2bin($secret);
+        if (false === $decoded_secret) {
+            $logger->error('Invalid secret, secret must be a hex string');
+            return new Response('Invalid secret', Response::HTTP_FORBIDDEN);
+        }
+         // 2. Assert that the secret has a minimum length of 32 bytes.
+        if (strlen($decoded_secret) < 32) {
+            $logger->error('Invalid secret, secret must be at least 32 bytes (64 hex digits) long');
+            return new Response('Invalid secret', Response::HTTP_FORBIDDEN);
+        }
+
+        $logger->info("Setting user secret and notification type and address");
+
+        try {
+            $this->userRepository
+                ->createUser($userId, $secret)
+                ->updateNotification($notificationType, $notificationAddress);
+        } catch (Exception $e) {
+            $logger->error('Error setting user secret and/or notification address and type', array('exception' => $e));
+            return new Response('Error creating user', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         $logger->info('Finalizing enrollment');
-
-        $this->tiqrService->finalizeEnrollment($enrollmentSecret);
-
-        $logger->info('Enrollment finalized');
+        try {
+            $this->tiqrService->finalizeEnrollment($enrollmentSecret);
+            $logger->notice('Enrollment finalized');
+        } catch (Exception $e) {
+            $logger->warning('Error finalizing enrollment', array('exception' => $e));
+        }
 
         return new Response('OK', Response::HTTP_OK);
     }
 
-    /**
+    /** Handle login operation from the app, returns response for the app
      * @param Request $request
      * @param string $notificationType
      * @param string $notificationAddress
      *
      * @return Response
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     *
+     * Does not throw
      */
-    private function loginAction(Request $request, $notificationType, $notificationAddress)
+    private function loginAction(Request $request, string $notificationType, string $notificationAddress): Response
     {
         $userId = $request->get('userId');
+        if (empty($userId)) {
+            $this->logger->error('Missing "userId" parameter');
+            return new Response('Missing "userId" parameter', Response::HTTP_BAD_REQUEST);
+        }
         $sessionKey = $request->get('sessionKey');
+        if (empty($sessionKey)) {
+            $this->logger->error('Missing "sessionKey" parameter');
+            return new Response('Missing "sessionKey" parameter', Response::HTTP_BAD_REQUEST);
+        }
+        $response = $request->get('response');
+        if (empty($response)) {
+            $this->logger->error('Missing "response" parameter');
+            return new Response('Missing "response" parameter', Response::HTTP_BAD_REQUEST);
+        }
 
         $logger = WithContextLogger::from($this->logger, [
             'userId' => $userId,
+            'sessionKey' =>  $sessionKey,
             'sari' => $this->tiqrService->getSariForSessionIdentifier($sessionKey),
         ]);
 
@@ -213,25 +283,35 @@ class TiqrAppApiController extends AbstractController
         try {
             $user = $this->userRepository->getUser($userId);
         } catch (UserNotExistsException $e) {
-            $logger->error('User does not exists');
-            return new Response('INVALID_USER', Response::HTTP_BAD_REQUEST);
+            $logger->error('User not found', array('exception' => $e));
+            return new Response('INVALID_USER', Response::HTTP_FORBIDDEN);
         }
 
-        $result = $this->authenticationRateLimitService->authenticate(
-            $sessionKey,
-            $user,
-            $request->get('response')
-        );
+        try {
+            $result = $this->authenticationRateLimitService->authenticate(
+                $sessionKey,
+                $user,
+                $response
+            );
 
-        if ($result->isValid()) {
-            $logger->info('User authenticated ' . $result->getMessage());
+            if ($result->isValid()) {
+                $logger->notice('User authenticated ' . $result->getMessage());
 
-            $user->updateNotification($notificationType, $notificationAddress);
-            return new Response($result->getMessage(), Response::HTTP_OK);
+                try {
+                    $user->updateNotification($notificationType, $notificationAddress);
+                } catch (Exception $e) {
+                    $this->logger->warning('Error updating notification type and address', array('exception' => $e));
+                    // Continue
+                }
+                return new Response($result->getMessage(), Response::HTTP_OK);
+            }
+
+            $logger->notice('User authentication denied: ' . $result->getMessage());
+            return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
+        } catch (Exception $e) {
+            $this->logger->error('Authentication failed', array('exception' => $e));
         }
 
-        $logger->info('User denied ' . $result->getMessage());
-
-        return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
+        return new Response('AUTHENTICATION_FAILED', Response::HTTP_FORBIDDEN);
     }
 }

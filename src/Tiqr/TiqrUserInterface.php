@@ -17,91 +17,126 @@
 
 namespace App\Tiqr;
 
+use App\Exception\TiqrServerRuntimeException;
+use DateTimeImmutable;
+
 interface TiqrUserInterface
 {
     /**
      * Get the display name of a user.
      *
      * @return String the display name of this user
-     */
-    public function getDisplayName();
-
-    /**
-     * Get the user's secret
      *
-     * @return String The user's secret
+     * @throws TiqrServerRuntimeException
      */
-    public function getSecret();
-
-    public function updateNotification($notificationType, $notificationAddress);
+    public function getDisplayName(): string;
 
     /**
-     * @return string
+     * Get the user's OCRA client secret
+     *
+     * @return String The user's OCRA client secret
+     *
+     * @throws TiqrServerRuntimeException
      */
-    public function getId();
+    public function getSecret(): string;
+
+    /** Update the user's notificationType and notificationAddress
+     * @param string $notificationType
+     * @param string $notificationAddress
+     *
+     * @throws TiqrServerRuntimeException when there was en error updating the user's account
+     */
+    public function updateNotification(string $notificationType, string $notificationAddress): void;
 
     /**
-     * Get the amount of unsuccessful login attempts.
+     * @return string The userId
+     */
+    public function getId(): string;
+
+    /**
+     * Get the user's number unsuccessful login attempts
+     *
+     * @throws TiqrServerRuntimeException
      *
      * @return int
      */
-    public function getLoginAttempts();
+    public function getLoginAttempts(): int;
 
     /**
-     * Increase the the amount of unsuccessful login attempts by one.
+     * Increase user's number of unsuccessful login attempts by one
+     *
+     * @throws TiqrServerRuntimeException
      */
     public function addLoginAttempt();
 
     /**
-     * Get the amount of unsuccessful login attempts.
+     * Get the user's number of unsuccessful temporary login attempts
      *
-     * @return int
-     */
-    public function getTemporarilyLoginAttempts();
-
-    /**
-     * Block the user forever.
-     */
-    public function block();
-
-    /**
-     * Block the user on the current date.
+     * @return int the number of temporary login attempts
      *
-     * @param \DateTimeImmutable $blockDate
-     *   The date the user is blocked.
+     * @throws TiqrServerRuntimeException
      */
-    public function blockTemporarily(\DateTimeImmutable $blockDate);
+    public function getTemporarilyLoginAttempts(): int;
 
     /**
-     * If the user is blocked.
-     */
-    public function isBlocked();
-
-    /**
-     * Resets all login attempts.
-     */
-    public function resetLoginAttempts();
-
-    /**
-     * If the user is blocked.
+     * Increase user's number of unsuccessful temporary login attempts by one
      *
-     * @param \DateTimeImmutable $now
-     *   The current date.
-     * @param int $maxDuration
-     *   The maximum duration on minutes
+     * @throws TiqrServerRuntimeException
      */
-    public function isBlockTemporarily(\DateTimeImmutable $now, $maxDuration);
+    public function addTemporarilyLoginAttempt(): void;
 
     /**
-     * Return push notification type.
+     * Block the user
+     * This permanently blocks the user's account, isBlocked() will not return true
+     *
+     * @throws TiqrServerRuntimeException when there was an error blocking the account
+     */
+    public function block(): void;
+
+    /**
+     * Temporarily block the user and set the time at which the temporary block starts
+     *
+     * @param DateTimeImmutable $blockDateTime
+     *   The date and time the user the temporary block starts, can later be used with $maxDuration>0 in
+     *   isBlocked() to check
+     *
+     * @throws TiqrServerRuntimeException when there was an error setting the temporary block
+     */
+    public function blockTemporarily(DateTimeImmutable $blockDateTime): void;
+
+    /**
+     * Check if the user is blocked.
+     * @param int $tempBlockDuration set to >0 to check for a temporary block in addition to a permanent block
+     *                         If >0 this is the time in minutes after which a temporary block expires
+     *                         The temporary block expiry
+     *                         If set to 0, not temporary block check is performed and only the permanent block
+     *                         status is checked.
+     * @return bool true when the user is blocked or has a temporary block that is not expired
+     *         false when the user is not blocked
+     * @throws TiqrServerRuntimeException when the block state could not be determined
+     */
+    public function isBlocked(int $tempBlockDuration = 0): bool;
+
+    /**
+     * Resets the login attempt counter, the temporary login attempt counter and clear any temporary block
+     * previously set using blockTemporarily()
+     *
+     * Does not affect a block set using block()
+     * @throws TiqrServerRuntimeException when the reset (partially) failed
+     */
+    public function resetLoginAttempts(): void;
+
+    /**
+     * Return push notification type previously set with updateNotification()
      *
      * @return string
      */
-    public function getNotificationType();
+    public function getNotificationType(): string;
 
     /**
+     * Return push notification address previously set with updateNotification()
      *
      * @return string
      */
-    public function getNotificationAddress();
+    public function getNotificationAddress(): string;
 }

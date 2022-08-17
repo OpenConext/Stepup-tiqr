@@ -21,6 +21,7 @@ use App\Exception\NoActiveAuthenrequestException;
 use App\Exception\UserNotFoundException;
 use App\Exception\UserPermanentlyBlockedException;
 use App\Exception\UserTemporarilyBlockedException;
+use App\Tiqr\Response\AuthenticationResponse;
 use App\WithContextLogger;
 use App\Tiqr\AuthenticationRateLimitServiceInterface;
 use App\Tiqr\Exception\UserNotExistsException;
@@ -28,6 +29,8 @@ use App\Tiqr\Response\RateLimitedAuthenticationResponse;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserInterface;
 use App\Tiqr\TiqrUserRepositoryInterface;
+use Exception;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
@@ -67,9 +70,12 @@ class AuthenticationController extends AbstractController
 
     /**
      * @Route("/authentication", name="app_identity_authentication", methods={"GET", "POST"})
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws NoActiveAuthenrequestException
+     * @throws UserNotFoundException
+     * @throws Exception
      */
-    public function authenticationAction(Request $request)
+    public function authenticationAction(Request $request): Response
     {
         $nameId = $this->authenticationService->getNameId();
         $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId]);
@@ -135,7 +141,7 @@ class AuthenticationController extends AbstractController
                 $nameId,
                 $this->stateHandler->getRequestId()
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $logger->error(sprintf(
                 'Failed to start authentication "%s"',
                 $e->getMessage()
@@ -155,9 +161,9 @@ class AuthenticationController extends AbstractController
 
     /**
      * @Route("/authentication/status", name="app_identity_authentication_status", methods={"GET"})
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function authenticationStatusAction()
+    public function authenticationStatusAction(): JsonResponse
     {
         $this->logger->info('Request for authentication status');
 
@@ -191,9 +197,17 @@ class AuthenticationController extends AbstractController
      *
      * @return bool
      */
-    private function authenticationChallengeIsExpired()
+    private function authenticationChallengeIsExpired(): bool
     {
-        return $this->tiqrService->authenticationUrl() === false;
+        // TODO: This is a hack
+        // Effectively this does a $this->_stateStorage->getValue(self::PREFIX_CHALLENGE . $sessionKey);
+        // To check that the session key still exists in the Tiqr_Service's state storage
+        try {
+            $this->tiqrService->authenticationUrl();
+        } catch (Exception $e) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -201,7 +215,7 @@ class AuthenticationController extends AbstractController
      *
      * @return JsonResponse
      */
-    private function scheduleNextPollOnAuthenticationPage()
+    private function scheduleNextPollOnAuthenticationPage(): JsonResponse
     {
         return $this->generateAuthenticationStatusResponse('pending');
     }
@@ -211,7 +225,7 @@ class AuthenticationController extends AbstractController
      *
      * @return JsonResponse
      */
-    private function timeoutNeedsManualRetry()
+    private function timeoutNeedsManualRetry(): JsonResponse
     {
         return $this->generateAuthenticationStatusResponse('challenge-expired');
     }
@@ -221,7 +235,7 @@ class AuthenticationController extends AbstractController
      *
      * @return JsonResponse
      */
-    private function refreshAuthenticationPage()
+    private function refreshAuthenticationPage(): JsonResponse
     {
         return $this->generateAuthenticationStatusResponse('needs-refresh');
     }
@@ -238,7 +252,7 @@ class AuthenticationController extends AbstractController
      * @param string $status
      * @return JsonResponse
      */
-    private function generateAuthenticationStatusResponse($status)
+    private function generateAuthenticationStatusResponse(string $status): JsonResponse
     {
         return new JsonResponse($status);
     }
@@ -255,7 +269,7 @@ class AuthenticationController extends AbstractController
      * @param string $status
      * @return JsonResponse
      */
-    private function generateNotificationResponse($status)
+    private function generateNotificationResponse(string $status): JsonResponse
     {
         return new JsonResponse($status);
     }
@@ -263,9 +277,9 @@ class AuthenticationController extends AbstractController
     /**
      *
      * @Route("/authentication/qr", name="app_identity_authentication_qr", methods={"GET"})
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function authenticationQrAction()
+    public function authenticationQrAction(): Response
     {
         $this->logger->info('Client request QR image');
 
@@ -284,9 +298,9 @@ class AuthenticationController extends AbstractController
     /**
      *
      * @Route("/authentication/notification", name="app_identity_authentication_notification", methods={"POST"})
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function authenticationNotificationAction()
+    public function authenticationNotificationAction(): Response
     {
         $this->logger->info('Client request QR image');
 
@@ -328,14 +342,18 @@ class AuthenticationController extends AbstractController
     }
 
 
-    private function handleInvalidResponse(TiqrUserInterface $user, $response, LoggerInterface $logger)
+    private function handleInvalidResponse(TiqrUserInterface $user, AuthenticationResponse $response, LoggerInterface $logger): Response
     {
-        $blockedTemporarily = $this->authenticationRateLimitService->isBlockedTemporarily($user);
-        $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
-        if ($blockedTemporarily || $blockedPermanently) {
-            $logger->info('User is blocked');
+        try {
+            $blockedTemporarily = $this->authenticationRateLimitService->isBlockedTemporarily($user);
+            $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
+            if ($blockedTemporarily || $blockedPermanently) {
+                $logger->notice('User is blocked');
 
-            return $this->showUserIsBlockedErrorPage($blockedPermanently);
+                return $this->showUserIsBlockedErrorPage($blockedPermanently);
+            }
+        } catch (Exception $e) {
+            $this->logger->error('Could not determine user (temporary) block state', array('exception' => $e));
         }
 
         return $this->render('default/authentication.html.twig', [
@@ -344,7 +362,7 @@ class AuthenticationController extends AbstractController
         ]);
     }
 
-    private function showUserIsBlockedErrorPage($isBlockedPermanently)
+    private function showUserIsBlockedErrorPage(bool $isBlockedPermanently): Response
     {
         $exception = new UserTemporarilyBlockedException();
 
@@ -355,17 +373,17 @@ class AuthenticationController extends AbstractController
         return $this->forward(
             'App\Controller\ExceptionController::showAction',
             [
-                'exception'=> $exception,
+                'exception' => $exception,
             ]
         );
     }
 
     /**
-     * @param $notificationType
-     * @param $notificationAddress
-     * @return bool
+     * @param string $notificationType
+     * @param string $notificationAddress
+     * @return bool True when the notification was successfully sent, false otherwise
      */
-    private function sendNotification($notificationType, $notificationAddress)
+    private function sendNotification(string $notificationType, string $notificationAddress): bool
     {
         $this->logger->notice(sprintf(
             'Sending client notification for type "%s" and address "%s"',
@@ -373,20 +391,9 @@ class AuthenticationController extends AbstractController
             $notificationAddress
         ));
 
-        // The GCM API has been replaced by FCM
-        if ($notificationType == 'GCM') {
-            $notificationType = 'FCM';
-
-            $this->logger->info(
-                sprintf(
-                    'Updating GCM notificationType to FCM',
-                    $notificationAddress
-                )
-            );
-        }
-
-        $result = $this->tiqrService->sendNotification($notificationType, $notificationAddress);
-        if (!$result) {
+        try {
+            $this->tiqrService->sendNotification($notificationType, $notificationAddress);
+        } catch (Exception $e) {
             $this->logger->warning(
                 sprintf(
                     'Failed to send push notification for type "%s" and address "%s"',
@@ -394,7 +401,7 @@ class AuthenticationController extends AbstractController
                     $notificationAddress
                 ),
                 [
-                    'error_info' => $this->tiqrService->getNotificationError(),
+                    'exception' => $e,
                 ]
             );
             return false;

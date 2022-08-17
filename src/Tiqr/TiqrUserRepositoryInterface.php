@@ -17,6 +17,10 @@
 
 namespace App\Tiqr;
 
+use App\Exception\TiqrServerRuntimeException;
+use App\Tiqr\Exception\UserNotExistsException;
+use App\Tiqr\Legacy\TiqrUser;
+
 /**
  * Wrapper around the legacy Tiqr user repository.
  */
@@ -29,15 +33,19 @@ interface TiqrUserRepositoryInterface
      * @param string $secret
      *
      * @return TiqrUserInterface
+     *
+     * @throws UserNotExistsException
+     * @throws TiqrServerRuntimeException
      */
-    public function createUser($userId, $secret);
+    public function createUser(string $userId, string $secret): TiqrUser;
 
     /**
      * @param string $userId
      *
      * @return TiqrUserInterface
      *
-     * @throws \App\Tiqr\Exception\UserNotExistsException
+     * @throws UserNotExistsException
+     * @throws TiqrServerRuntimeException
      */
-    public function getUser($userId);
+    public function getUser(string $userId): TiqrUser;
 }

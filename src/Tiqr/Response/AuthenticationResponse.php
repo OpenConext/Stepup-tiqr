@@ -24,7 +24,7 @@ interface AuthenticationResponse
      *
      * @return boolean
      */
-    public function isValid();
+    public function isValid(): bool;
 
     /**
      * The success or error message for the client app.
@@ -33,5 +33,5 @@ interface AuthenticationResponse
      *
      * @return string
      */
-    public function getMessage();
+    public function getMessage(): string;
 }
