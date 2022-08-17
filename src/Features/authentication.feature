@@ -40,36 +40,27 @@ Feature: When an user needs to authenticate
       | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                            | present |
       | notice | Redirect user to the application authentication route /authentication                                                                   | present |
-      | info   | Creating a file state storage                                                                                                           | present |
-      | info   | Creating a dummy device storage                                                                                                         | present |
-      | info   | Creating a tiqr ocra service                                                                                                            | present |
-      | info   | Using dummy as UserStorage encryption type                                                                                              | present |
+      | info   | Using dummy as UserStorage encryption type | present |
       | info   | Verifying if there is a pending authentication request from SP                                                                          | present |
       | info   | Verify if user is blocked                                                                                                               | present |
       | info   | Verifying if authentication is finalized                                                                                                | present |
       | notice | Unable to retrieve the state storage value, file not found                                                                              | present |
       | info   | Start authentication                                                                                                                    | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                              | present |
+      | info   | /Setting SARI '.*' for identifier '.*'/ | present |
       | info   | Return authentication page with QR code                                                                                                 | present |
-      | info   | Creating a file state storage                                                                                                           | present |
-      | info   | Creating a dummy device storage                                                                                                         | present |
-      | info   | Creating a tiqr ocra service                                                                                                            | present |
+      | info | Using dummy as UserStorage encryption type | present |
+      | info | Client request QR image | present |
+      | info | Return QR image response | present |
+      | notice | Got POST with login response | present |
+      | notice | Login attempt from app | present |
+      | info | Validating authentication response | present |
+      | notice | /Authenticated user ".*" in session ".*"/ | present |
+      | info | response is valid | present |
+      | notice | User authenticated OK | present |
+
       | info   | Using dummy as UserStorage encryption type                                                                                              | present |
-      | info   | Client request QR image                                                                                                                 | present |
-      | info   | Return QR image response                                                                                                                | present |
-      | notice | Login attempt from app                                                                                                                  | present |
-      | info   | Validate user login attempt                                                                                                             | present |
-      | info   | Verify the response is correct                                                                                                          | present |
-      | info   | Using Tiqr_OCRAWrapper as protocol                                                                                                      | present |
-      | info   | Authentication succeeded                                                                                                                | present |
-      | info   | User login attempt is valid                                                                                                             | present |
-      | info   | User authenticated OK                                                                                                                   | present |
-      | info   | Creating a file state storage                                                                                                           | present |
-      | info   | Creating a dummy device storage                                                                                                         | present |
-      | info   | Creating a tiqr ocra service                                                                                                            | present |
-      | info   | Using dummy as UserStorage encryption type                                                                                              | present |
-      | info   | Verifying if there is a pending authentication request from SP                                                                          | present |
-      | info   | Verify if user is blocked                                                                                                               | present |
+      | info | Verifying if there is a pending authentication request from SP | present |
+      | info | Verify if user is blocked | present |
       | info   | Verifying if authentication is finalized                                                                                                | present |
       | info   | Authentication is finalized, returning to SP                                                                                            | present |
       | notice | Application authenticates the user                                                                                                      | present |
@@ -112,16 +103,13 @@ Feature: When an user needs to authenticate
       | notice   | Redirect user to the application authentication route /authentication                                                                   | present |
 
       # Tiqr showing qr image
-      | info     | Creating a file state storage                                                                                                           | present |
-      | info     | Creating a dummy device storage                                                                                                         | present |
-      | info     | Creating a tiqr ocra service                                                                                                            | present |
       | info     | Using dummy as UserStorage encryption type                                                                                              | present |
       | info     | Verifying if there is a pending authentication request from SP                                                                          | present |
       | info     | Verify if user is blocked                                                                                                               | present |
       | info     | Verifying if authentication is finalized                                                                                                | present |
       | notice   | Unable to retrieve the state storage value, file not found                                                                              | present |
       | info     | Start authentication                                                                                                                    | present |
-      | notice   | Unable to retrieve the state storage value, file not found                                                                              | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
       | info     | Return authentication page with QR code                                                                                                 | present |
       | notice   | User cancelled the request                                                                                                              | present |
       | critical | User cancelled the request                                                                                                              | present |
@@ -165,35 +153,24 @@ Feature: When an user needs to authenticate
       | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                            | present |
       | notice | Redirect user to the application authentication route /authentication                                                                   | present |
-      | info   | Creating a file state storage                                                                                                           | present |
-      | info   | Creating a dummy device storage                                                                                                         | present |
-      | info   | Creating a tiqr ocra service                                                                                                            | present |
       | info   | Using dummy as UserStorage encryption type                                                                                              | present |
       | info   | Verifying if there is a pending authentication request from SP                                                                          | present |
       | info   | Verify if user is blocked                                                                                                               | present |
       | info   | Verifying if authentication is finalized                                                                                                | present |
       | notice | Unable to retrieve the state storage value, file not found                                                                              | present |
       | info   | Start authentication                                                                                                                    | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                              | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
       | info   | Return authentication page with QR code                                                                                                 | present |
-      | info   | Creating a file state storage                                                                                                           | present |
-      | info   | Creating a dummy device storage                                                                                                         | present |
-      | info   | Creating a tiqr ocra service                                                                                                            | present |
       | info   | Using dummy as UserStorage encryption type                                                                                              | present |
       | info   | Client request QR image                                                                                                                 | present |
       | info   | Return QR image response                                                                                                                | present |
-      | info   | Creating a file state storage                                                                                                           | present |
-      | info   | Creating a dummy device storage                                                                                                         | present |
-      | info   | Creating a tiqr ocra service                                                                                                            | present |
       | info   | Using dummy as UserStorage encryption type                                                                                              | present |
       | info   | Verifying if there is a pending authentication request from SP                                                                          | present |
       | info   | Verify if user is blocked                                                                                                               | present |
       | info   | Handling otp                                                                                                                            | present |
-      | info   | Validate user login attempt                                                                                                             | present |
-      | info   | Verify the response is correct                                                                                                          | present |
-      | info   | Using Tiqr_OCRAWrapper as protocol                                                                                                      | present |
-      | info   | Authentication succeeded                                                                                                                | present |
-      | info   | User login attempt is valid                                                                                                             | present |
+      | info | Validating authentication response | present |
+      | notice | /Authenticated user ".*" in session ".*"/ | present |
+      | info | response is valid | present |
       | info   | Verifying if authentication is finalized                                                                                                | present |
       | info   | Authentication is finalized, returning to SP                                                                                            | present |
       | notice | Application authenticates the user                                                                                                      | present |
