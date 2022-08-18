@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS user (
   secret varchar(128),
   loginattempts integer,
   tmpblocktimestamp BIGINT,
-  tmpblockattempts BIGINT,
+  tmpblockattempts integer,
   blocked tinyint(1),
   notificationtype varchar(10),
   notificationaddress varchar(64)
