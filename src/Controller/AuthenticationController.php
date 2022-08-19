@@ -78,7 +78,8 @@ class AuthenticationController extends AbstractController
     public function authenticationAction(Request $request): Response
     {
         $nameId = $this->authenticationService->getNameId();
-        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId]);
+        $sari = $this->stateHandler->getRequestId();
+        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
 
         $logger->info('Verifying if there is a pending authentication request from SP');
 
@@ -139,7 +140,7 @@ class AuthenticationController extends AbstractController
             $logger->info('Start authentication');
             $this->tiqrService->startAuthentication(
                 $nameId,
-                $this->stateHandler->getRequestId()
+                $sari
             );
         } catch (Exception $e) {
             $logger->error(sprintf(
@@ -165,17 +166,20 @@ class AuthenticationController extends AbstractController
      */
     public function authenticationStatusAction(): JsonResponse
     {
-        $this->logger->info('Request for authentication status');
+        $nameId = $this->authenticationService->getNameId();
+        $sari = $this->stateHandler->getRequestId();
+        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
+        $logger->info('Request for authentication status');
 
         if (!$this->authenticationService->authenticationRequired()) {
-            $this->logger->error('There is no pending authentication request from SP');
+            $logger->error('There is no pending authentication request from SP');
             return $this->refreshAuthenticationPage();
         }
 
         $isAuthenticated = $this->tiqrService->isAuthenticated();
 
         if ($isAuthenticated) {
-            $this->logger->info('Send json response is authenticated');
+            $logger->info('Send json response is authenticated');
 
             return $this->refreshAuthenticationPage();
         }
@@ -184,7 +188,7 @@ class AuthenticationController extends AbstractController
             return $this->timeoutNeedsManualRetry();
         }
 
-        $this->logger->info('Send json response is not authenticated');
+        $logger->info('Send json response is not authenticated');
 
         return $this->scheduleNextPollOnAuthenticationPage();
     }
@@ -281,16 +285,19 @@ class AuthenticationController extends AbstractController
      */
     public function authenticationQrAction(): Response
     {
-        $this->logger->info('Client request QR image');
+        $nameId = $this->authenticationService->getNameId();
+        $sari = $this->stateHandler->getRequestId();
+        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
+        $logger->info('Client request QR image');
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->authenticationService->authenticationRequired()) {
-            $this->logger->error('There is no pending authentication request from SP');
+            $logger->error('There is no pending authentication request from SP');
 
             return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('Return QR image response');
+        $logger->info('Return QR image response');
 
         return $this->tiqrService->createAuthenticationQRResponse();
     }
@@ -302,23 +309,25 @@ class AuthenticationController extends AbstractController
      */
     public function authenticationNotificationAction(): Response
     {
-        $this->logger->info('Client request QR image');
+        $nameId = $this->authenticationService->getNameId();
+        $sari = $this->stateHandler->getRequestId();
+        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
+        $logger->info('Client requests sending push notification');
 
         // Do have a valid sample AuthnRequest?.
         if (!$this->authenticationService->authenticationRequired()) {
-            $this->logger->error('There is no pending authentication request from SP');
+            $logger->error('There is no pending authentication request from SP');
 
             return new Response('No authentication required', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->info('Return QR image response');
+        $logger->info('Sending push notification');
 
         // Get user.
-        $nameId = $this->authenticationService->getNameId();
         try {
             $user = $this->userRepository->getUser($nameId);
         } catch (UserNotExistsException $exception) {
-            $this->logger->error(sprintf(
+            $logger->error(sprintf(
                 'User with nameId "%s" not found, error "%s"',
                 $nameId,
                 $exception->getMessage()
@@ -330,6 +339,13 @@ class AuthenticationController extends AbstractController
         // Send notification.
         $notificationType = $user->getNotificationType();
         $notificationAddress = $user->getNotificationAddress();
+        $this->logger->notice(sprintf(
+            'Sending push notification for user "%s" with type "%s" and (untranslated) address "%s"',
+            $nameId,
+            $notificationType,
+            $notificationAddress
+        ));
+
         if ($notificationType && $notificationAddress) {
             $result = $this->sendNotification($notificationType, $notificationAddress);
             if ($result) {
@@ -385,12 +401,6 @@ class AuthenticationController extends AbstractController
      */
     private function sendNotification(string $notificationType, string $notificationAddress): bool
     {
-        $this->logger->notice(sprintf(
-            'Sending client notification for type "%s" and address "%s"',
-            $notificationType,
-            $notificationAddress
-        ));
-
         try {
             $this->tiqrService->sendNotification($notificationType, $notificationAddress);
         } catch (Exception $e) {
