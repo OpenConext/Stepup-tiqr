@@ -203,7 +203,8 @@ class AuthenticationController extends AbstractController
      */
     private function authenticationChallengeIsExpired(): bool
     {
-        // TODO: This is a hack
+        // The use of authenticationUrl() here is a hack, because it depends on an implementation detail
+        // of this function.
         // Effectively this does a $this->_stateStorage->getValue(self::PREFIX_CHALLENGE . $sessionKey);
         // To check that the session key still exists in the Tiqr_Service's state storage
         try {
