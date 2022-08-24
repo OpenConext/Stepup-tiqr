@@ -29,7 +29,7 @@ class RejectedAuthenticationResponse implements AuthenticationResponse
         $this->error = $error;
     }
 
-        /**
+    /**
      * If the authentication is valid.
      *
      * @return boolean
