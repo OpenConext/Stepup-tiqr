@@ -18,8 +18,6 @@
 
 namespace App\Features\Context;
 
-require_once __DIR__ . '/../../../vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/OATH/OCRA.php';
-
 use App\Tiqr\TiqrConfiguration;
 use App\Tiqr\TiqrConfigurationInterface;
 use App\Tiqr\TiqrUserRepositoryInterface;
