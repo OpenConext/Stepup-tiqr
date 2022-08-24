@@ -19,10 +19,7 @@
 namespace App\Tiqr;
 
 use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Legacy\TiqrService;
 use App\Tiqr\Response\AuthenticationResponse;
-use Exception;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface TiqrServiceInterface

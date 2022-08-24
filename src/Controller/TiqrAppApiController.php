@@ -18,20 +18,18 @@
 namespace App\Controller;
 
 use App\Service\UserAgentMatcherInterface;
-use App\Tiqr\Response\AuthenticationResponse;
-use App\WithContextLogger;
 use App\Tiqr\AuthenticationRateLimitServiceInterface;
 use App\Tiqr\Exception\UserNotExistsException;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserRepositoryInterface;
+use App\WithContextLogger;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * The api that connects to the Tiqr app.

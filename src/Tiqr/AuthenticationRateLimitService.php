@@ -19,15 +19,12 @@
 namespace App\Tiqr;
 
 use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Response\AuthenticationErrorResponse;
-use App\WithContextLogger;
 use App\Tiqr\Response\AuthenticationResponse;
 use App\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
 use App\Tiqr\Response\RateLimitedAuthenticationResponse;
 use App\Tiqr\Response\RejectedAuthenticationResponse;
 use App\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
-use DateTimeImmutable;
-use mysql_xdevapi\Exception;
+use App\WithContextLogger;
 use Psr\Log\LoggerInterface;
 
 /**

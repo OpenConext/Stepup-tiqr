@@ -17,10 +17,10 @@
 
 namespace App\Features\Context;
 
+use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Behat\Behat\Context\Context;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;

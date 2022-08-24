@@ -21,7 +21,6 @@ use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\Exception\UserNotExistsException;
 use App\Tiqr\TiqrUserRepositoryInterface;
 use Exception;
-use ReadWriteException;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 

@@ -20,9 +20,7 @@ namespace App\Tiqr\Legacy;
 
 use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\TiqrUserInterface;
-use Assert\Assertion;
 use Exception;
-use ReadWriteException;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 

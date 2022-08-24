@@ -25,13 +25,10 @@ use App\Tiqr\Response\ValidAuthenticationResponse;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserInterface;
 use Exception;
-use PhpParser\Node\Scalar\String_;
 use Psr\Log\LoggerInterface;
-use ReadWriteException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
-use Tiqr_StateStorage_Abstract;
 use Tiqr_StateStorage_StateStorageInterface;
 
 /**
