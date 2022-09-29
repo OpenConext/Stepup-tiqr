@@ -7,7 +7,7 @@ stepup.error.generic_error:
     description: Er is iets mis gegaan. Probeer het opnieuw.
 stepup.error.no_active_authentrequest:
   title: Oeps!
-  description: Geen active authenticatie aanvraag.
+  description: Geen actieve authenticatie aanvraag.
 
 stepup.error.timestamp: Tijd
 stepup.error.hostname: Applicatie
