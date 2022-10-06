@@ -25,6 +25,6 @@ class TiqrServerRuntimeException extends RuntimeException
 {
     public static function fromOriginalException(Exception $e)
     {
-        return new self($e->getMessage());
+        return new self($e->getMessage(), (int)$e->getCode(), $e);
     }
 }

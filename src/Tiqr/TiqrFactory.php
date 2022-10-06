@@ -47,7 +47,8 @@ class TiqrFactory
         $this->logger = $logger;
     }
 
-    public function createService()
+    // Created from services.yaml
+    public function createService(): TiqrService
     {
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
@@ -69,7 +70,8 @@ class TiqrFactory
         );
     }
 
-    public function createUserRepository()
+    // Created from services.yaml
+    public function createUserRepository(): TiqrUserRepository
     {
         $this->loadDependencies();
         $options = $this->configuration->getTiqrOptions();
@@ -94,12 +96,12 @@ class TiqrFactory
         }
         $this->loaded = true;
         $projectDirectory = $this->container->getParameter('kernel.project_dir');
-        $vendorPath = $projectDirectory.'/vendor';
-        require_once $vendorPath.'/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
+        $vendorPath = $projectDirectory . '/vendor';
+        require_once $vendorPath . '/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
         $autoloader = \Tiqr_AutoLoader::getInstance([
-            'tiqr.path' => $vendorPath.'/tiqr/tiqr-server-libphp/library/tiqr',
-            'zend.path' => $vendorPath.'/zendframework/zendframework1/library',
-            'phpqrcode.path' => $vendorPath.'/kairos/phpqrcode',
+            'tiqr.path' => $vendorPath . '/tiqr/tiqr-server-libphp/library/tiqr',
+            'zend.path' => $vendorPath . '/zendframework/zendframework1/library',
+            'phpqrcode.path' => $vendorPath . '/kairos/phpqrcode',
         ]);
         $autoloader->setIncludePath();
     }

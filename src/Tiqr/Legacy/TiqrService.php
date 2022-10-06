@@ -24,12 +24,11 @@ use App\Tiqr\Response\RejectedAuthenticationResponse;
 use App\Tiqr\Response\ValidAuthenticationResponse;
 use App\Tiqr\TiqrServiceInterface;
 use App\Tiqr\TiqrUserInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
-use ReadWriteException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
-use Tiqr_StateStorage_Abstract;
 use Tiqr_StateStorage_StateStorageInterface;
 
 /**
@@ -68,31 +67,39 @@ final class TiqrService implements TiqrServiceInterface
         $this->accountName = $accountName;
     }
 
-    public function createRegistrationQRResponse($metadataURL)
-    {
-        return new StreamedResponse(function () use ($metadataURL) {
-            $this->tiqrService->generateEnrollmentQR($metadataURL);
-        });
-    }
-
-    public function getEnrollmentSecret($key)
+    /**
+     * @see TiqrServiceInterface::createRegistrationQRResponse()
+     */
+    public function createRegistrationQRResponse(string $metadataURL): StreamedResponse
     {
         try {
-            return $this->tiqrService->getEnrollmentSecret($key);
-        } catch (ReadWriteException $e) {
+            return new StreamedResponse(function () use ($metadataURL) {
+                $this->tiqrService->generateEnrollmentQR($metadataURL);
+            });
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::getEnrollmentSecret()
+     */
+    public function getEnrollmentSecret(string $enrollmentKey, string $sari): string
+    {
+        try {
+            $enrollmentSecret = $this->tiqrService->getEnrollmentSecret($enrollmentKey);
+            $this->setSariForSessionIdentifier($enrollmentSecret, $sari);
+            return $enrollmentSecret;
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     /**
-     * Starts and generates an enrollment key.
-     *
-     * @param string $sari
-     *
-     * @return string
+     * @see TiqrServiceInterface::generateEnrollmentKey()
      */
-    public function generateEnrollmentKey($sari)
+    public function generateEnrollmentKey(string $sari): string
     {
         $this->logger->debug('Generating userId');
         $userId = $this->generateId();
@@ -105,10 +112,10 @@ final class TiqrService implements TiqrServiceInterface
             $this->clearPreviousEnrollmentState();
             $this->logger->debug('Starting the new enrollment session');
             $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $sessionId);
-            $this->logger->debug('Storing the enrollemnt key for future reference');
+            $this->logger->debug('Storing the enrollment key for future reference');
             $this->storeEnrollmentKey($enrollmentKey);
             $this->setSariForSessionIdentifier($enrollmentKey, $sari);
-        } catch (ReadWriteException $e) {
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
@@ -117,7 +124,7 @@ final class TiqrService implements TiqrServiceInterface
     }
 
     /**
-     * When the registration key is generated (enrollemnt key), it
+     * When the registration key is generated (enrollment key), it
      * should be stored in session. This to be able to clear it when
      * a new registration starts (in another browser tab).
      */
@@ -129,6 +136,298 @@ final class TiqrService implements TiqrServiceInterface
         }
         $keys[] = $key;
         $this->session->set(self::ENROLL_KEYS_SESSION_NAME, $keys);
+    }
+
+    /**
+     * @see TiqrServiceInterface::getEnrollmentMetadata()
+     */
+    public function getEnrollmentMetadata(string $key, string $loginUri, string $enrollmentUrl): array
+    {
+        try {
+            return $this->tiqrService->getEnrollmentMetadata($key, $loginUri, $enrollmentUrl);
+        } catch (Exception $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::validateEnrollmentSecret()
+     */
+    public function validateEnrollmentSecret(string $enrollmentSecret): string
+    {
+        try {
+            return $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
+        } catch (Exception $e) {
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::finalizeEnrollment()
+     */
+    public function finalizeEnrollment(string $enrollmentSecret): void
+    {
+        try {
+            $this->tiqrService->finalizeEnrollment($enrollmentSecret);
+        } catch (Exception $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::startAuthentication()
+     */
+    public function startAuthentication(string $userId, string $sari): string
+    {
+        try {
+            $sessionKey = $this->tiqrService->startAuthenticationSession($userId, $this->session->getId());
+            $this->session->set('sessionKey', $sessionKey);
+
+            $this->setSariForSessionIdentifier($sessionKey, $sari);
+
+            return $this->tiqrService->generateAuthURL($sessionKey);
+        } catch (Exception $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::isAuthenticated()
+     */
+    public function isAuthenticated(): bool
+    {
+        return $this->tiqrService->getAuthenticatedUser($this->session->getId()) !== null;
+    }
+
+    /**
+     * Response with authentication challenge QR code.
+     *
+     * This URL can be used to link directly to the authentication
+     * application, for example to create a link in a mobile website on the
+     * same device as where the application is installed
+     */
+    public function createAuthenticationQRResponse(): StreamedResponse
+    {
+        $sessionKey = $this->getAuthenticationSessionKey();
+        try {
+            return new StreamedResponse(function () use ($sessionKey) {
+                $this->tiqrService->generateAuthQR($sessionKey);
+            });
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /***
+     * @see TiqrServiceInterface::authenticationUrl()
+     */
+    public function authenticationUrl(): string
+    {
+        try {
+            $sessionKey = $this->getAuthenticationSessionKey();
+
+            return $this->tiqrService->generateAuthURL($sessionKey);
+        } catch (Exception $e) {
+            $this->logger->error(
+                sprintf('Error generating authentication URL for sessionKey %s: %s', $sessionKey, $e->getMessage())
+            );
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::authenticate()
+     */
+    public function authenticate(TiqrUserInterface $user, string $response, string $sessionKey): AuthenticationResponse
+    {
+        try {
+            $result = $this->tiqrService->authenticate($user->getId(), $user->getSecret(), $sessionKey, $response);
+            switch ($result) {
+                case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
+                    return new ValidAuthenticationResponse('OK');
+                case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
+                    return new AuthenticationErrorResponse('INVALID_CHALLENGE');
+                case Tiqr_Service::AUTH_RESULT_INVALID_REQUEST:
+                    return new AuthenticationErrorResponse('INVALID_REQUEST');
+                case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
+                    return new RejectedAuthenticationResponse('INVALID_RESPONSE');
+                case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
+                    return new AuthenticationErrorResponse('INVALID_USER');
+                default:
+                    return new AuthenticationErrorResponse('ERROR');
+            }
+        } catch (Exception $e) {
+            $this->logger->error(
+                sprintf('Error authenticating user "%s": %s', $user->getId(), $e->getMessage())
+            );
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::getEnrollmentStatus()
+     */
+    public function getEnrollmentStatus(): int
+    {
+        try {
+            return $this->tiqrService->getEnrollmentStatus($this->session->getId());
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::enrollmentFinalized()
+     */
+    public function enrollmentFinalized(): bool
+    {
+        try {
+            return $this->getEnrollmentStatus() === Tiqr_Service::ENROLLMENT_STATUS_FINALIZED;
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrServiceInterface::enrollmentFinalized()
+     */
+    public function getUserId(): string
+    {
+        return $this->session->get('userId');
+    }
+
+    /**
+     * @see TiqrServiceInterface::getAuthenticationSessionKey()
+     */
+    public function getAuthenticationSessionKey(): string
+    {
+        return $this->session->get('sessionKey');
+    }
+
+    /**
+     * @see TiqrServiceInterface::sendNotification()
+     */
+    public function sendNotification(string $notificationType, string $notificationAddress): void
+    {
+        try {
+            $translatedAddress = $this->tiqrService->translateNotificationAddress($notificationType, $notificationAddress);
+            if (false === $translatedAddress) {
+                throw new TiqrServerRuntimeException(sprintf('Error translating address for "%s"', $notificationAddress));
+            }
+            $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, $translatedAddress);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+
+    //////////
+    // Private
+
+    /**
+     * Currently the legacy way to generate the user Tiqr id.
+     *
+     * TODO:maybe use something like UUID?
+     *
+     * @param int $length
+     *
+     * @return string
+     */
+    private function generateId(int $length = 4): string
+    {
+        return base_convert(time(), 10, 36) . '-' . base_convert(mt_rand(0, pow(36, $length)), 10, 36);
+    }
+
+    /** Create a stable hash from $identifier
+     * @param string $identifier
+     * @return string The hashed version of $identifier
+     */
+    private function getHashedIdentifier(string $identifier): string
+    {
+        // TODO: Use Symfony configuration system instead of accessing $_ENV directly
+        return hash_hmac('sha256', $identifier, $_ENV['APP_SECRET']);
+    }
+
+    public function getSariForSessionIdentifier(string $identifier): string
+    {
+        try {
+            $hashed_identifier = $this->getHashedIdentifier($identifier);
+            $res = $this->tiqrStateStorage->getValue('sari_' . $hashed_identifier);
+        } catch (Exception $e) {
+            $this->logger->error(sprintf('Error getting SARI for identifier "%s"', substr($identifier, 0, 8)));
+            return '';
+        }
+        if (!is_string($res)) {
+            $this->logger->info(sprintf('No SARI set for "%s"', substr($identifier, 0, 8)));
+            return '';
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param string $identifier Enrollment key or session key
+     * @return bool true on success, false otherwise
+     * Does not throw
+     */
+    private function unsetSariForSessionIdentifier(string $identifier): bool
+    {
+        $this->logger->info(
+            sprintf("Unsetting SARI for identifier '%s...'", substr($identifier, 0, 8))
+        );
+
+        try {
+            $hashed_identifier = $this->getHashedIdentifier($identifier);
+            $this->tiqrStateStorage->unsetValue('sari_' . $hashed_identifier);
+        } catch (Exception $e) {
+            $this->logger->error(
+                sprintf('unsetSariForSessionIdentifier failed for "%s"', substr($identifier, 0, 8))
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Associate $identifier with the provided stepup authentication request id (SARI)
+     * Associations expire after one hour
+     * Use getSariForSessionIdentifier($sari) later to retrieve the SARI for an $identifier
+     * Use unsetSariForSessionIdentifier($sari) to remove te association
+     *
+     * The goal of the *SariForSessionIdentifier family of functions is to keep track of the
+     * different identifiers that are used in the tiqr protocol with the tiqr client
+     * (3 for enrollment, 1 for authentication). This allows us to correlate the actions of the
+     * user's browser with those of the user's phone.
+     *
+     * Because the enrollment identifier are sensitive two measures are implemented:
+     * - Only the first 8 characters of the identifiers are logged
+     * - The identifiers are stored as a stable hash of the identifier to hide the rest of the identifier.
+     *
+     * Note that tiqr currently stores these identifiers in plain in its state storage
+     *
+     * @param string $identifier Session identifier: enrollment key or session key
+     * @param string $sari       The to associate with $identifier
+     * @throws TiqrServerRuntimeException
+     */
+    private function setSariForSessionIdentifier(string $identifier, string $sari): void
+    {
+        $this->logger->info(
+            sprintf("Setting SARI '%s' for identifier '%s...'", $sari, substr($identifier, 0, 8))
+        );
+        try {
+            $hashed_identifier = $this->getHashedIdentifier($identifier);
+            $this->tiqrStateStorage->setValue('sari_' . $hashed_identifier, $sari, 60 * 60);
+        } catch (Exception $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
@@ -148,7 +447,7 @@ final class TiqrService implements TiqrServiceInterface
                 $this->tiqrService->clearEnrollmentState($key);
                 unset($keys[$key]);
             }
-        } catch (ReadWriteException $e) {
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
@@ -156,230 +455,5 @@ final class TiqrService implements TiqrServiceInterface
         $this->logger->debug(sprintf($format, count($keys)));
 
         $this->session->set(self::ENROLL_KEYS_SESSION_NAME, $keys);
-    }
-
-    public function getUserId()
-    {
-        return $this->session->get('userId');
-    }
-
-    public function getEnrollmentMetadata($key, $loginUri, $enrollmentUrl)
-    {
-        try {
-            return $this->tiqrService->getEnrollmentMetadata($key, $loginUri, $enrollmentUrl);
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-    }
-
-    public function validateEnrollmentSecret($enrollmentSecret)
-    {
-        try {
-            return $this->tiqrService->validateEnrollmentSecret($enrollmentSecret);
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-    }
-
-    public function finalizeEnrollment($enrollmentSecret)
-    {
-        try {
-            $this->tiqrService->finalizeEnrollment($enrollmentSecret);
-            $this->unsetSariForSessionIdentifier($enrollmentSecret);
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-    }
-
-    public function startAuthentication($nameId, $sari)
-    {
-        try {
-            $sessionKey = $this->tiqrService->startAuthenticationSession($nameId, $this->session->getId());
-            $this->session->set('sessionKey', $sessionKey);
-
-            $this->setSariForSessionIdentifier($sessionKey, $sari);
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-
-        return $this->tiqrService->generateAuthURL($sessionKey);
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isAuthenticated()
-    {
-        return $this->tiqrService->getAuthenticatedUser($this->session->getId()) !== null;
-    }
-
-    /**
-     * Generate an authentication challenge URL.
-     *
-     * This URL can be used to link directly to the authentication
-     * application, for example to create a link in a mobile website on the
-     * same device as where the application is installed
-     */
-    public function authenticationUrl()
-    {
-        $sessionKey = $this->getAuthenticationSessionKey();
-
-        return $this->tiqrService->generateAuthURL($sessionKey);
-    }
-
-    /**
-     * Response with authentication challenge QR code.
-     *
-     * This URL can be used to link directly to the authentication
-     * application, for example to create a link in a mobile website on the
-     * same device as where the application is installed
-     */
-    public function createAuthenticationQRResponse()
-    {
-        $sessionKey = $this->getAuthenticationSessionKey();
-        return new StreamedResponse(function () use ($sessionKey) {
-            $this->tiqrService->generateAuthQR($sessionKey);
-        });
-    }
-
-    /**
-     * @param TiqrUserInterface $user
-     * @param string $response
-     *
-     * @return AuthenticationResponse
-     */
-    public function authenticate(TiqrUserInterface $user, $response, $sessionKey)
-    {
-        try {
-            $result = $this->tiqrService->authenticate($user->getId(), $user->getSecret(), $sessionKey, $response);
-            switch ($result) {
-                case Tiqr_Service::AUTH_RESULT_AUTHENTICATED:
-                    $this->unsetSariForSessionIdentifier($sessionKey);
-
-                    return new ValidAuthenticationResponse('OK');
-                case Tiqr_Service::AUTH_RESULT_INVALID_CHALLENGE:
-                    return new AuthenticationErrorResponse('INVALID_CHALLENGE');
-                case Tiqr_Service::AUTH_RESULT_INVALID_REQUEST:
-                    return new AuthenticationErrorResponse('INVALID_REQUEST');
-                case Tiqr_Service::AUTH_RESULT_INVALID_RESPONSE:
-                    return new RejectedAuthenticationResponse('INVALID_RESPONSE');
-                case Tiqr_Service::AUTH_RESULT_INVALID_USERID:
-                    return new AuthenticationErrorResponse('INVALID_USER');
-                default:
-                    return new AuthenticationErrorResponse('ERROR');
-            }
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-    }
-
-    /**
-     * Currently the legacy way to generate the user Tiqr id.
-     *
-     * TODO:maybe use something like UUID?
-     *
-     * @param int $length
-     *
-     * @return string
-     */
-    private function generateId($length = 4)
-    {
-        return base_convert(time(), 10, 36).'-'.base_convert(mt_rand(0, pow(36, $length)), 10, 36);
-    }
-
-    /**
-     * Returns the current enrollment status.
-     *
-     * @return string
-     */
-    public function getEnrollmentStatus()
-    {
-        return $this->tiqrService->getEnrollmentStatus($this->session->getId());
-    }
-
-    /**
-     * If the user is enrolled
-     *
-     * @return boolean
-     */
-    public function enrollmentFinalized()
-    {
-        return $this->getEnrollmentStatus() === Tiqr_Service::ENROLLMENT_STATUS_FINALIZED;
-    }
-
-    /**
-     * Return the authentication session id.
-     *
-     * @return string
-     */
-    public function getAuthenticationSessionKey()
-    {
-        return $this->session->get('sessionKey');
-    }
-
-    /**
-     * Send authentication notification.
-     *
-     * @param string $notificationType
-     * @param string $notificationAddress
-     * @return bool
-     */
-    public function sendNotification($notificationType, $notificationAddress)
-    {
-        $translatedAddress = $this->tiqrService->translateNotificationAddress($notificationType, $notificationAddress);
-        return $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, $translatedAddress);
-    }
-
-    /**
-     * Return error information about the last failed push notification attempt.
-     *
-     * @return array
-     */
-    public function getNotificationError()
-    {
-        return $this->tiqrService->getNotificationError();
-    }
-
-    /**
-     * @param string $identifier Enrollment key or session key
-     *
-     * @return string
-     */
-    public function getSariForSessionIdentifier($identifier)
-    {
-        return $this->tiqrStateStorage->getValue('sari_' . $identifier);
-    }
-
-
-    /**
-     * @param string $identifier Enrollment key or session key
-     */
-    private function unsetSariForSessionIdentifier($identifier)
-    {
-        try {
-            $this->tiqrStateStorage->unsetValue('sari_' . $identifier);
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-    }
-
-    /**
-     * @param string $identifier Session identifier: enrollment key or session key
-     * @param string $sari
-     */
-    private function setSariForSessionIdentifier($identifier, $sari)
-    {
-        try {
-            $this->tiqrStateStorage->setValue('sari_' . $identifier, $sari);
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
     }
 }

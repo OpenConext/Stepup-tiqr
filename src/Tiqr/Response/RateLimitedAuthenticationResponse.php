@@ -31,7 +31,7 @@ final class RateLimitedAuthenticationResponse implements AuthenticationResponse
      */
     private $attemptsLeft;
 
-    public function __construct(AuthenticationResponse $response, $attemptsLeft)
+    public function __construct(AuthenticationResponse $response, int $attemptsLeft)
     {
         $this->response = $response;
         $this->attemptsLeft = $attemptsLeft;
@@ -42,7 +42,7 @@ final class RateLimitedAuthenticationResponse implements AuthenticationResponse
      *
      * @return boolean
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return false;
     }
@@ -52,7 +52,7 @@ final class RateLimitedAuthenticationResponse implements AuthenticationResponse
      *
      * @return int
      */
-    public function getAttemptsLeft()
+    public function getAttemptsLeft(): int
     {
         return $this->attemptsLeft;
     }
@@ -62,7 +62,7 @@ final class RateLimitedAuthenticationResponse implements AuthenticationResponse
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->response->getMessage() . ':'  . $this->attemptsLeft;
     }

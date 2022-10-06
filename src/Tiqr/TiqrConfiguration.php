@@ -70,17 +70,20 @@ class TiqrConfiguration implements TiqrConfigurationInterface
 
         if (isset($tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS])) {
             Assertion::digit($tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS]);
+            Assertion::greaterThan($tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS], 0);
             $this->options[self::MAX_ATTEMPTS] = $tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS];
         }
 
         if (isset($tiqrConfiguration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION])) {
             Assertion::digit($tiqrConfiguration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION]);
+            Assertion::greaterThan($tiqrConfiguration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION], 0);
             $this->options[self::TEMPORARILY_BLOCK_DURATION] =
                 $tiqrConfiguration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION];
         }
 
         if (isset($tiqrConfiguration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS])) {
             Assertion::digit($tiqrConfiguration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS]);
+            Assertion::greaterThan($tiqrConfiguration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS], 0);
             $this->options[self::MAX_TEMPORARILY_BLOCKS] = $tiqrConfiguration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS];
         }
 
@@ -108,7 +111,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      *
      * @return array
      */
-    public function getTiqrOptions()
+    public function getTiqrOptions(): array
     {
         return $this->options;
     }
@@ -117,7 +120,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      * @return boolean
      *    TRUE if there is a maximum block duration.
      */
-    public function temporarilyBlockEnabled()
+    public function temporarilyBlockEnabled(): bool
     {
         return isset($this->options[self::TEMPORARILY_BLOCK_DURATION]);
     }
@@ -128,7 +131,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      *
      * @throws ConfigurationException
      */
-    public function getTemporarilyBlockDuration()
+    public function getTemporarilyBlockDuration(): int
     {
         if (!$this->temporarilyBlockEnabled()) {
             throw ConfigurationException::noMaximumDuration();
@@ -140,7 +143,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      * @return int
      * @throws \App\Tiqr\Exception\ConfigurationException
      */
-    public function getMaxAttempts()
+    public function getMaxAttempts(): int
     {
         if (!$this->hasMaxLoginAttempts()) {
             throw ConfigurationException::noMaxAttempts();
@@ -151,7 +154,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
     /**
      * @return boolean
      */
-    public function hasMaxLoginAttempts()
+    public function hasMaxLoginAttempts(): bool
     {
         return isset($this->options[self::MAX_ATTEMPTS]);
     }
@@ -159,7 +162,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
     /**
      * @param int $attempts
      */
-    public function setMaxLoginAttempts($attempts)
+    public function setMaxLoginAttempts(int $attempts): void
     {
         $this->options[self::MAX_ATTEMPTS] = $attempts;
     }
@@ -169,7 +172,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      *
      * @throws ConfigurationException
      */
-    public function getMaxTemporarilyLoginAttempts()
+    public function getMaxTemporarilyLoginAttempts(): int
     {
         if (!$this->hasMaxTemporarilyLoginAttempts()) {
             throw ConfigurationException::noMaxTemporarilyAttempts();
@@ -181,7 +184,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      *
      * @return bool
      */
-    public function hasMaxTemporarilyLoginAttempts()
+    public function hasMaxTemporarilyLoginAttempts(): int
     {
         return isset($this->options[self::MAX_TEMPORARILY_BLOCKS]);
     }

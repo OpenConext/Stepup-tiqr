@@ -33,9 +33,6 @@ Feature: When an user needs to register for a new token
       | notice | Redirect user to the application registration route /registration                                                                    | present |
 
       # Tiqr page with qr code.
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
       | info   | Verifying if there is a pending registration from SP                                                                                 | present |
       | info   | There is a pending registration                                                                                                      | present |
       | info   | Verifying if registration is finalized                                                                                               | present |
@@ -44,36 +41,25 @@ Feature: When an user needs to register for a new token
 
       # Generate qr img.
       | info   | Generating enrollment key                                                                                                            | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
       | info   | Request for registration QR img                                                                                                      | present |
       | info   | Returning registration QR response                                                                                                   | present |
 
-      # From Tiqr app (In prod there is no sari present, internal request .)
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
-      | info   | Using dummy as UserStorage encryption type                                                                                           | present |
-      | info   | With enrollment key                                                                                                                  | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
-      | info   | Enrollment secret created                                                                                                            | present |
-      | info   | Enrollment url created for enrollment secret                                                                                         | present |
-      | info   | Return metadata response                                                                                                             | present |
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
-      | info   | Using dummy as UserStorage encryption type                                                                                           | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
+      # Get metadata call from tiqr client
+      | info | Using dummy as UserStorage encryption type | present |
+      | notice | Got GET request to metadata endpoint with enrollment key | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
+      | notice | Returned metadata response | present |
+
+      # Post with user secret from tiqr client
+      | info | Using dummy as UserStorage encryption type | present |
+      | notice | Got POST with registration response | present |
       | info   | Start validating enrollment secret                                                                                                   | present |
+      | info | Setting user secret and notification type and address | present |
       | info   | Finalizing enrollment                                                                                                                | present |
-      | info   | Enrollment finalized                                                                                                                 | present |
+      | notice   | Enrollment finalized                                                                                                                 | present |
 
       # Tiqr page, finalized return to SP.
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
       | info   | Verifying if there is a pending registration from SP                                                                                 | present |
       | info   | There is a pending registration                                                                                                      | present |
       | info   | Verifying if registration is finalized                                                                                               | present |
@@ -116,40 +102,29 @@ Feature: When an user needs to register for a new token
       | notice | Redirect user to the application registration route /registration                                                                    | present |
 
       # Tiqr page with qr code.
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
       | info   | Verifying if there is a pending registration from SP                                                                                 | present |
       | info   | There is a pending registration                                                                                                      | present |
       | info   | Verifying if registration is finalized                                                                                               | present |
       | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
       | info   | Registration is not finalized return QR code                                                                                         | present |
       | info   | Generating enrollment key                                                                                                            | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
+      | info | Using dummy as UserStorage encryption type | present |
 
-      # From Tiqr app (In prod there is no sari present, internal request .)
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
-      | info   | Using dummy as UserStorage encryption type                                                                                           | present |
-      | info   | With enrollment key                                                                                                                  | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
-      | info   | Enrollment secret created                                                                                                            | present |
-      | info   | Enrollment url created for enrollment secret                                                                                         | present |
-      | info   | Return metadata response                                                                                                             | present |
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
-      | info   | Using dummy as UserStorage encryption type                                                                                           | present |
-      | notice | Unable to retrieve the state storage value, file not found                                                                           | present |
+      # Get metadata from Tiqr app
+      | notice | Got GET request to metadata endpoint with enrollment key | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
+      | notice   | Returned metadata response                                                                                                             | present |
+      | info | Using dummy as UserStorage encryption type | present |
+
+      # POST response from Tiqr app
+      | notice | Got POST with registration response | present |
       | info   | Start validating enrollment secret                                                                                                   | present |
+      | info | Setting user secret and notification type and address | present |
       | info   | Finalizing enrollment                                                                                                                | present |
-      | info   | Enrollment finalized                                                                                                                 | present |
+      | notice | Enrollment finalized                                                                                                                 | present |
 
       # Tiqr page, finalized return to SP.
-      | info   | Creating a file state storage                                                                                                        | present |
-      | info   | Creating a dummy device storage                                                                                                      | present |
-      | info   | Creating a tiqr ocra service                                                                                                         | present |
       | info   | Verifying if there is a pending registration from SP                                                                                 | present |
       | info   | There is a pending registration                                                                                                      | present |
       | info   | Verifying if registration is finalized                                                                                               | present |
@@ -192,16 +167,13 @@ Feature: When an user needs to register for a new token
       | notice   | Redirect user to the application registration route /registration                                                                    | present |
 
       # Tiqr registration endpoint
-      | info     | Creating a file state storage                                                                                                        | present |
-      | info     | Creating a dummy device storage                                                                                                      | present |
-      | info     | Creating a tiqr ocra service                                                                                                         | present |
       | info     | Verifying if there is a pending registration from SP                                                                                 | present |
       | info     | There is a pending registration                                                                                                      | present |
       | info     | Verifying if registration is finalized                                                                                               | present |
       | notice   | Unable to retrieve the state storage value, file not found                                                                           | present |
       | info     | Registration is not finalized return QR code                                                                                         | present |
       | info     | Generating enrollment key                                                                                                            | present |
-      | notice   | Unable to retrieve the state storage value, file not found                                                                           | present |
+      | info | /Setting SARI '.*' for identifier '.*'/ | present |
       | notice   | User cancelled the request                                                                                                           | present |
       | critical | User cancelled the request                                                                                                           | present |
       | info     | Redirect to sso return endpoint with registration reject response                                                                    | present |

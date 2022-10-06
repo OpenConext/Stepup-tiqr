@@ -27,7 +27,7 @@ final class PermanentlyBlockedAuthenticationResponse implements AuthenticationRe
      *
      * @return boolean
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return false;
     }
@@ -37,7 +37,7 @@ final class PermanentlyBlockedAuthenticationResponse implements AuthenticationRe
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return 'ACCOUNT_BLOCKED';
     }

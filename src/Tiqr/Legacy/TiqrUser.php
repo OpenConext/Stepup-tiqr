@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,8 +20,7 @@ namespace App\Tiqr\Legacy;
 
 use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\TiqrUserInterface;
-use Assert\Assertion;
-use ReadWriteException;
+use Exception;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 
@@ -42,6 +42,9 @@ class TiqrUser implements TiqrUserInterface
      */
     private $userSecretStorage;
 
+    /**
+     * @var string The userId
+     */
     private $userId;
 
     public function __construct(
@@ -55,195 +58,184 @@ class TiqrUser implements TiqrUserInterface
     }
 
     /**
-     * Get the display name of a user.
-     *
-     * @return String the display name of this user
+     * @see TiqrUserInterface::getDisplayName()
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
-        return $this->userStorage->getDisplayName($this->userId);
+        try {
+            return $this->userStorage->getDisplayName($this->userId);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
-     * Get the user's secret
-     *
-     * @return String The user's secret
+     * @see TiqrUserInterface::getSecret()
      */
-    public function getSecret()
+    public function getSecret(): string
     {
-        return $this->userSecretStorage->getSecret($this->userId);
+        try {
+            return $this->userSecretStorage->getSecret($this->userId);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
-    public function updateNotification($notificationType, $notificationAddress)
+    /**
+     * @see TiqrUserInterface::updateNotification()
+     */
+    public function updateNotification(string $notificationType, string $notificationAddress): void
     {
         try {
             if ($notificationType && $notificationAddress) {
                 $this->userStorage->setNotificationType($this->userId, $notificationType);
                 $this->userStorage->setNotificationAddress($this->userId, $notificationAddress);
             }
-        } catch (ReadWriteException $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
-            throw TiqrServerRuntimeException::fromOriginalException($e);
-        }
-    }
-
-    public function resetLoginAttempts()
-    {
-        try {
-            $this->userStorage->setLoginAttempts($this->userId, 0);
-            $this->userStorage->setTemporaryBlockAttempts($this->userId, 0);
-            $this->userStorage->setTemporaryBlockTimestamp($this->userId, null);
-        } catch (ReadWriteException $e) {
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     /**
-     * @return string
+     * @see TiqrUserInterface::resetLoginAttempts()
      */
-    public function getId()
+    public function resetLoginAttempts(): void
+    {
+        try {
+            $this->userStorage->setLoginAttempts($this->userId, 0);
+            $this->userStorage->setTemporaryBlockAttempts($this->userId, 0);
+            $this->userStorage->setTemporaryBlockTimestamp($this->userId, 0);
+        } catch (Exception $e) {
+            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrUserInterface::getId()
+     */
+    public function getId(): string
     {
         return $this->userId;
     }
 
     /**
-     * Get the amount of unsuccessful login attempts.
-     *
-     * @return int
+     * @see TiqrUserInterface::getLoginAttempts()
      */
-    public function getLoginAttempts()
+    public function getLoginAttempts(): int
     {
-        return $this->userStorage->getLoginAttempts($this->userId);
+        try {
+            return $this->userStorage->getLoginAttempts($this->userId);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 
     /**
-     * Increase the the amount of unsuccessful login attempts by one.
+     * @see TiqrUserInterface::addLoginAttempt()
      */
-    public function addLoginAttempt()
+    public function addLoginAttempt(): void
     {
         try {
-            $this->userStorage->setLoginAttempts($this->userId, $this->getLoginAttempts() + 1);
-        } catch (ReadWriteException $e) {
+            // Not this is not transactional and requires two SQL queries when using PDO driver
+            $this->userStorage->setLoginAttempts($this->userId,  $this->getLoginAttempts() + 1);
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     /**
-     * Block the user.
+     * @see TiqrUserInterface::block()
      */
-    public function block()
+    public function block(): void
     {
         try {
             $this->userStorage->setBlocked($this->userId, true);
             $this->resetLoginAttempts();
-            $this->userStorage->setTemporaryBlockTimestamp($this->userId, null);
-        } catch (ReadWriteException $e) {
+            $this->userStorage->setTemporaryBlockTimestamp($this->userId, 0);
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     /**
-     * Get the amount of unsuccessful login attempts.
-     *
-     * @return int
+     * @see TiqrUserInterface::getTemporarilyLoginAttempts()
      */
-    public function getTemporarilyLoginAttempts()
-    {
-        return $this->userStorage->getTemporaryBlockAttempts($this->userId);
-    }
-
-    /**
-     * Increase the the amount of unsuccessful login attempts by one.
-     */
-    public function addTemporarilyLoginAttempt()
+    public function getTemporarilyLoginAttempts(): int
     {
         try {
+            return $this->userStorage->getTemporaryBlockAttempts($this->userId);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
+    }
+
+    /**
+     * @see TiqrUserInterface::addTemporarilyLoginAttempt()
+     */
+    public function addTemporarilyLoginAttempt(): void
+    {
+        try {
+            // Note: this is not transactional and requires two SQL queries when using the PDO driver
             $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporaryLoginAttempts() + 1);
-        } catch (ReadWriteException $e) {
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     /**
-     * Block the user on the current date.
-     *
-     * @param \DateTimeImmutable $blockDate
-     *   The date the user is blocked.
+     * @see TiqrUserInterface::blockTemporarily()
      */
-    public function blockTemporarily(\DateTimeImmutable $blockDate)
+    public function blockTemporarily(\DateTimeImmutable $blockDateTime): void
     {
-
         // Order is important, with setting the BlockTimestamp we knows it's a temporarily block.
         $this->block();
         try {
-            $this->userStorage->setTemporaryBlockTimestamp($this->userId, $blockDate->format('Y-m-d H:i:s'));
+            $this->userStorage->setTemporaryBlockTimestamp($this->userId, $blockDateTime->getTimestamp());
             $this->addTemporarilyLoginAttempt();
-        } catch (ReadWriteException $e) {
+        } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
 
     /**
-     * If the user is blocked.
-     *
-     * @return boolean
+     * @see TiqrUserInterface::isBlocked()
      */
-    public function isBlocked()
+    public function isBlocked(int $tempBlockDuration = 0): bool
     {
-        return $this->userStorage->isBlocked($this->userId, false);
-    }
-
-    /**
-     * If the user is blocked.
-     *
-     * @param \DateTimeImmutable $now
-     *   The current date.
-     * @param int $maxDuration
-     *   The maximum duration on minutes
-     *
-     * @return boolean
-     * @throws \Assert\AssertionFailedException
-     */
-    public function isBlockTemporarily(\DateTimeImmutable $now, $maxDuration)
-    {
-        Assertion::digit($maxDuration);
-
-        if (!$this->isBlocked()) {
-            return false;
+        try {
+            return $this->userStorage->isBlocked($this->userId, $tempBlockDuration);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
         }
-        $timestamp = $this->userStorage->getTemporaryBlockTimestamp($this->userId);
+    }
 
-        // If the TemporarilyBlock Timestamp is empty, the use is blocked forever.
-        if (empty($timestamp)) {
-            return true;
+    /**
+     * @see TiqrUserInterface::getNotificationType()
+     */
+    public function getNotificationType(): string
+    {
+        try {
+            return $this->userStorage->getNotificationType($this->userId);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
         }
-
-        $timestamp = $this->userStorage->getTemporaryBlockTimestamp($this->userId);
-        return (strtotime($timestamp) + $maxDuration * 60) < $now->getTimestamp();
     }
 
     /**
-     * Return push notification type.
-     *
-     * @return string
+     * @see TiqrUserInterface::getNotificationAddress()
      */
-    public function getNotificationType()
+    public function getNotificationAddress(): string
     {
-        return $this->userStorage->getNotificationType($this->userId);
-    }
-
-    /**
-     * Return push notification address.
-     *
-     * @return string
-     */
-    public function getNotificationAddress()
-    {
-        return $this->userStorage->getNotificationAddress($this->userId);
+        try {
+            return $this->userStorage->getNotificationAddress($this->userId);
+        } catch (Exception $e) {
+            throw TiqrServerRuntimeException::fromOriginalException($e);
+        }
     }
 }

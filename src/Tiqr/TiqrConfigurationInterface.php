@@ -25,13 +25,13 @@ interface TiqrConfigurationInterface
      *
      * @return array
      */
-    public function getTiqrOptions();
+    public function getTiqrOptions(): array;
 
     /**
      * @return boolean
      *    TRUE if there is a maximum block duration.
      */
-    public function temporarilyBlockEnabled();
+    public function temporarilyBlockEnabled(): bool;
 
     /**
      * @return int
@@ -39,29 +39,29 @@ interface TiqrConfigurationInterface
      *
      * @throws ConfigurationException
      */
-    public function getTemporarilyBlockDuration();
+    public function getTemporarilyBlockDuration(): int;
 
     /**
      * @return int
      * @throws \App\Tiqr\Exception\ConfigurationException
      */
-    public function getMaxAttempts();
+    public function getMaxAttempts(): int;
 
     /**
      * @return boolean
      */
-    public function hasMaxLoginAttempts();
+    public function hasMaxLoginAttempts(): bool;
 
     /**
      * @return int
      *
      * @throws ConfigurationException
      */
-    public function getMaxTemporarilyLoginAttempts();
+    public function getMaxTemporarilyLoginAttempts(): int;
 
     /**
      *
      * @return bool
      */
-    public function hasMaxTemporarilyLoginAttempts();
+    public function hasMaxTemporarilyLoginAttempts(): int;
 }

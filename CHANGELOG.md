@@ -1,3 +1,18 @@
+## 3.4.1
+
+Update Tiqr library
+
+## 3.4.0
+
+**Feature**
+* Update Tiqr library to 3.0. This version has improved logging and error handling
+
+**Breaking changes**
+* This version requires an update to the user table when using the UserStorage PDO
+  See config/db/mysql-upgrade-user-table-3.4.sql
+* The usersecretstorage in config/legacy/parameters.yaml must now be explicitly configured,
+  it no longer implicitly uses the configuration from the userstorage.
+
 ## 3.3.1
 **Maintenance**
 * TravisCI and Ant have been replaced with GithubActions workflow and Composer scripts #143

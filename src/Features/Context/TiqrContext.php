@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -29,7 +30,6 @@ use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Dev\FileLogger;
 use GuzzleHttp\Client;
-use OCRA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -149,7 +149,7 @@ class TiqrContext implements Context, KernelAwareContext
     public function theAuthenticationQrCodeIsScanned()
     {
         /** @var Client $client */
-        $this->minkContext->visitPath('/authentication/qr/'.urlencode($this->metadata->identity->identifier).'/link');
+        $this->minkContext->visitPath('/authentication/qr/' . urlencode($this->metadata->identity->identifier) . '/link');
         // Should start with tiqrenroll://
         $content = $this->minkContext->getMink()->getSession()->getPage()->getText();
         Assertion::startsWith($content, 'tiqrauth://');
@@ -167,8 +167,8 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      */
     public function userRegisterTheService(
-        $notificationType = null,
-        $notificationAddress = null
+        string $notificationType = '',
+        string $notificationAddress = ''
     ) {
         $this->notificationType = $notificationType;
         $this->notificationAddress = $notificationAddress;
@@ -207,7 +207,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @param string $userAgent
      */
-    public function mobileAppUsesUserAgent($userAgent)
+    public function mobileAppUsesUserAgent(string $userAgent)
     {
         $this->userAgent = $userAgent;
     }
@@ -222,8 +222,8 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Exception
      */
     public function appAuthenticates(
-        $notificationType = null,
-        $notificationAddress = null
+        string $notificationType = '',
+        string $notificationAddress = ''
     ) {
         list($serviceId, $session, $challenge, $sp, $version) = explode('/', $this->authenticationUrl);
         list($userId, $serviceId) = explode('@', $serviceId);
@@ -231,7 +231,8 @@ class TiqrContext implements Context, KernelAwareContext
         $authenticationUrl = $service['authenticationUrl'];
         $ocraSuite = $service['ocraSuite'];
 
-        $response = OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
+
+        $response = \OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
         $authenticationBody = [
             'operation' => 'login',
             'sessionKey' => $session,
@@ -257,8 +258,8 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Exception
      */
     public function appAuthenticatesWithWrongPassword(
-        $notificationType = null,
-        $notificationAddress = null
+        $notificationType = '',
+        $notificationAddress = ''
     ) {
         $secret = $this->clientSecret;
         // We scramble the secret key, normally the user does this with his password
@@ -464,7 +465,14 @@ class TiqrContext implements Context, KernelAwareContext
                 if (preg_match('/^\/.*\/$/', $row['message']) === 1) {
                     Assertion::regex($message, $row['message']);
                 } else {
-                    Assertion::eq($row['message'], $message);
+                    Assertion::eq($message, $row['message'],
+                        "\n"
+                        . "At row:   " .  ($index+1) . "\n"
+                        . "Expected: " . $row['message'] . "\n"
+                        . "Got:      " . $message . "\n"
+                        . "If this message *is* expected include in the feature test by adding:\n"
+                        . "| " . $level . " | " . $message . " | present |\n\n"
+                    );
                 }
                 Assertion::eq($row['level'], $level, sprintf('Level does not match for %s', $row['message']));
                 Assertion::choice($row['sari'], ['', 'present']);
@@ -533,7 +541,7 @@ class TiqrContext implements Context, KernelAwareContext
         list($serviceId, $session, $challenge) = explode('/', $this->authenticationUrl);
         $service = (array)$this->metadata->service;
         $ocraSuite = $service['ocraSuite'];
-        $response = OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
+        $response = \OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
         $this->minkContext->visit('/authentication?otp=' . urlencode($response));
     }
 }

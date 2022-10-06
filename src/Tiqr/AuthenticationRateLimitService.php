@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -17,13 +18,13 @@
 
 namespace App\Tiqr;
 
-use App\WithContextLogger;
+use App\Exception\TiqrServerRuntimeException;
 use App\Tiqr\Response\AuthenticationResponse;
 use App\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
 use App\Tiqr\Response\RateLimitedAuthenticationResponse;
 use App\Tiqr\Response\RejectedAuthenticationResponse;
 use App\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
-use DateTimeImmutable;
+use App\WithContextLogger;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -31,7 +32,6 @@ use Psr\Log\LoggerInterface;
  */
 final class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
 {
-    private $now;
     private $tiqrService;
     private $configuration;
     private $logger;
@@ -51,17 +51,17 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         $this->tiqrService = $tiqrService;
         $this->configuration = $configuration;
         $this->logger = $logger;
-        $this->now = new DateTimeImmutable();
     }
 
     /**
      * @param TiqrUserInterface $user
      *
      * @return bool
+     * @throws TiqrServerRuntimeException
      */
-    public function isBlockedPermanently(TiqrUserInterface $user)
+    public function isBlockedPermanently(TiqrUserInterface $user): bool
     {
-        return !$this->configuration->temporarilyBlockEnabled() && $user->isBlocked();
+        return $user->isBlocked(0);
     }
 
     /**
@@ -69,11 +69,12 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
      *
      * @return bool
      * @throws Exception\ConfigurationException
+     * @throws TiqrServerRuntimeException
      */
-    public function isBlockedTemporarily(TiqrUserInterface $user)
+    public function isBlockedTemporarily(TiqrUserInterface $user): bool
     {
         return $this->configuration->temporarilyBlockEnabled() &&
-            $user->isBlockTemporarily($this->now, $this->configuration->getTemporarilyBlockDuration());
+            $user->isBlocked($this->configuration->getTemporarilyBlockDuration());
     }
 
     /**
@@ -85,33 +86,32 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
      * @throws \InvalidArgumentException
      * @throws Exception\ConfigurationException
      * @throws \Exception
-     * @throws \Assert\AssertionFailedException
      */
-    public function authenticate($sessionKey, TiqrUserInterface $user, $response)
+    public function authenticate(string $sessionKey, TiqrUserInterface $user, string $response): AuthenticationResponse
     {
         $logger = WithContextLogger::from(
             $this->logger,
             ['key' => $sessionKey, 'userId' => $user->getId(), 'sessionKey' => $sessionKey]
         );
 
-        if ($this->isBlockedTemporarily($user)) {
-            $logger->info('User is temporarily blocked');
-
-            return new TemporarilyBlockedAuthenticationResponse();
-        }
-
         if ($this->isBlockedPermanently($user)) {
-            $logger->info('User is blocked indefinitely');
+            $logger->notice('User is blocked indefinitely');
 
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
+        if ($this->isBlockedTemporarily($user)) {
+            $logger->notice('User is temporarily blocked');
+
+            return new TemporarilyBlockedAuthenticationResponse();
+        }
+
         // Verify the app's response.
-        $logger->info('Validate user login attempt');
+        $logger->info('Validating authentication response');
         $result = $this->tiqrService->authenticate($user, $response, $sessionKey);
         if ($result->isValid()) {
             $user->resetLoginAttempts();
-            $logger->info('User login attempt is valid');
+            $logger->info('response is valid');
 
             return $result;
         }
@@ -122,9 +122,8 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         }
 
         $logger->error(
-            'Unexpected error occurred '.$result->getMessage()
+            'Unexpected error occurred ' . $result->getMessage()
         );
-
         return $result;
     }
 
@@ -140,42 +139,46 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         LoggerInterface $logger,
         AuthenticationResponse $result,
         TiqrUserInterface $user
-    ) {
-        $logger->info('User login attempt is rejected');
+    ): AuthenticationResponse {
+        $logger->notice('User login attempt is rejected');
 
         // If there is no limit how many times the user can try to login.
         if (!$this->configuration->hasMaxLoginAttempts()) {
-            $logger->info('Ignore attempt');
+            $logger->warning('Ignoring failed login attempt because max login attempts is not configured');
 
             return $result;
         }
 
         // Does the user still have login attempts left?.
-        if ($user->getLoginAttempts() < ($this->configuration->getMaxAttempts() - 1)) {
+        $currentLoginAttempts = $user->getLoginAttempts();
+        if ($currentLoginAttempts < ($this->configuration->getMaxAttempts() - 1)) {
             $user->addLoginAttempt();
             $attemptsLeft = $this->configuration->getMaxAttempts() - $user->getLoginAttempts();
-            $logger->info(sprintf(
-                'Increase login attempt. Attempts left %s',
+            $logger->notice(sprintf(
+                'Increased failed login attempts to %s. Attempts left %s',
+                $currentLoginAttempts + 1,
                 $attemptsLeft
             ));
 
             return new RateLimitedAuthenticationResponse($result, $attemptsLeft);
         }
 
-        $logger->info('No login attempts left');
+        $logger->notice('No login attempts left');
 
         // If temporarily block functionality is not enabled, we block the user forever.
         if (!$this->configuration->temporarilyBlockEnabled()) {
             $user->block();
-            $logger->info('User is blocked indefinitely');
+            $logger->notice('User is blocked indefinitely');
 
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
+        $now = new \DateTimeImmutable();
         // Just block the user temporarily if we don't got a limit.
         if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
-            $user->blockTemporarily($this->now);
-            $logger->info('Increase temporarily block attempt');
+
+            $user->blockTemporarily($now);
+            $logger->notice('Increase temporarily block attempt');
 
             return new TemporarilyBlockedAuthenticationResponse();
         }
@@ -183,15 +186,15 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
         // Block the user for always, if he has reached the maximum login attempts.
         if ($user->getTemporarilyLoginAttempts() < ($this->configuration->getMaxTemporarilyLoginAttempts() - 1)) {
             $user->block();
-            $logger->info('User reached max login attempts, block user indefinitely');
+            $logger->notice('User reached max login attempts, user blocked indefinitely');
 
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
-        $user->blockTemporarily($this->now);
+        $user->blockTemporarily($now);
         $attemptsLeft = $this->configuration->getMaxTemporarilyLoginAttempts() - $user->getTemporarilyLoginAttempts();
 
-        $logger->info(sprintf('Increase temporarily login attempt. Attempts left %d', $attemptsLeft));
+        $logger->notice(sprintf('Increased temporarily login attempts. Attempts left %d', $attemptsLeft));
 
         return new RateLimitedAuthenticationResponse($result, $attemptsLeft);
     }

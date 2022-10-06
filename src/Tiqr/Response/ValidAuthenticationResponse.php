@@ -25,7 +25,7 @@ class ValidAuthenticationResponse implements AuthenticationResponse
      *
      * @param string $message
      */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         $this->message = $message;
     }
@@ -35,7 +35,7 @@ class ValidAuthenticationResponse implements AuthenticationResponse
      *
      * @return boolean
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return true;
     }
@@ -45,7 +45,7 @@ class ValidAuthenticationResponse implements AuthenticationResponse
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
