@@ -1,6 +1,9 @@
+# Stepup-tiqr
+
 ## 3.4.1
 
-Update Tiqr library
+* Update Tiqr library to 3.0.1
+* Re-add Logging of Tiqr client information introduced in 3.1.4
 
 ## 3.4.0
 
