@@ -52,7 +52,7 @@ Feature: When an user needs to authenticate
       | info | Client request QR image | present |
       | info | Return QR image response | present |
       | notice | Got POST with login response | present |
-      | notice | Login attempt from app | present |
+      | notice | Received login action from client with User-Agent "Symfony" and version "" | present |
       | info | Validating authentication response | present |
       | notice | /Authenticated user ".*" in session ".*"/ | present |
       | info | response is valid | present |
@@ -71,6 +71,7 @@ Feature: When an user needs to authenticate
       | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"     | present |
       | info   | /SAMLResponse with id ".*" was not signed at root level, not attempting to verify the signature of the reponse itself/                  |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                         |         |
+
 
 
   Scenario: When an user cancels it's authentication

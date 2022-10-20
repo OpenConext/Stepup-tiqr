@@ -54,6 +54,7 @@ Feature: When an user needs to register for a new token
       # Post with user secret from tiqr client
       | info | Using dummy as UserStorage encryption type | present |
       | notice | Got POST with registration response | present |
+      | notice | Received register action from client with User-Agent "Behat UA" and version ""                                                | present |
       | info   | Start validating enrollment secret                                                                                                   | present |
       | info | Setting user secret and notification type and address | present |
       | info   | Finalizing enrollment                                                                                                                | present |
@@ -119,6 +120,7 @@ Feature: When an user needs to register for a new token
 
       # POST response from Tiqr app
       | notice | Got POST with registration response | present |
+      | notice | Received register action from client with User-Agent "Behat UA" and version ""                                                | present |
       | info   | Start validating enrollment secret                                                                                                   | present |
       | info | Setting user secret and notification type and address | present |
       | info   | Finalizing enrollment                                                                                                                | present |
