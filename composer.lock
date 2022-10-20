@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77c981023e8f611ce6842f922f7b109b",
+    "content-hash": "d055590ba2bbe0b48424ae427f00f56c",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -6056,16 +6056,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "3.0-rc2",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Tiqr/tiqr-server-libphp.git",
-                "reference": "f1ff547efb2f31a2cae6e156191d2db35d0021a8"
+                "reference": "0c74710551c09e65d38b399ce79e4b93d1777cc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/f1ff547efb2f31a2cae6e156191d2db35d0021a8",
-                "reference": "f1ff547efb2f31a2cae6e156191d2db35d0021a8",
+                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/0c74710551c09e65d38b399ce79e4b93d1777cc3",
+                "reference": "0c74710551c09e65d38b399ce79e4b93d1777cc3",
                 "shasum": ""
             },
             "require": {
@@ -6095,9 +6095,9 @@
             "description": "php library for tiqr authentication.",
             "support": {
                 "issues": "https://github.com/Tiqr/tiqr-server-libphp/issues",
-                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/3.0-rc2"
+                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/3.0.1"
             },
-            "time": "2022-09-02T07:52:00+00:00"
+            "time": "2022-10-20T12:38:58+00:00"
         },
         {
             "name": "twig/twig",
@@ -10437,9 +10437,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tiqr/tiqr-server-libphp": 10
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
