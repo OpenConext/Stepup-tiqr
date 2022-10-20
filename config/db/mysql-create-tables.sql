@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS user (
 );
 
 CREATE TABLE IF NOT EXISTS tiqrstate (
-  key varchar(255) PRIMARY KEY,
+  `key` varchar(255) PRIMARY KEY,
   expire BIGINT,
-  value text
+  `value` text
 );
+
+CREATE INDEX IF NOT EXISTS index_tiqrstate_expire ON tiqrstate (expire);
