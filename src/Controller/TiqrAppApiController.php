@@ -179,10 +179,20 @@ class TiqrAppApiController extends AbstractController
             'sari' => $this->tiqrService->getSariForSessionIdentifier($enrollmentSecret),
         ]);
 
+        $version = $request->get('version');
+        $userAgent = $request->headers->get('User-Agent');
+        $logger->notice(
+            sprintf(
+                'Received register action from client with User-Agent "%s" and version "%s"',
+                $userAgent,
+                $version
+            )
+        );
+
         if (!$userAgentMatcher->isOfficialTiqrMobileApp($request)) {
             $message = sprintf(
                 'Received request from unsupported mobile app with user agent: "%s"',
-                $request->headers->get('User-Agent')
+                $userAgent
             );
 
             $logger->warning($message);
@@ -276,7 +286,15 @@ class TiqrAppApiController extends AbstractController
             'sari' => $this->tiqrService->getSariForSessionIdentifier($sessionKey),
         ]);
 
-        $logger->notice('Login attempt from app');
+        $version = $request->get('version');
+        $userAgent = $request->headers->get('User-Agent');
+        $logger->notice(
+            sprintf(
+                'Received login action from client with User-Agent "%s" and version "%s"',
+                $userAgent,
+                $version
+            )
+        );
 
         try {
             $user = $this->userRepository->getUser($userId);
