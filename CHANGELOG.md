@@ -1,9 +1,12 @@
 # Stepup-tiqr
 
-## 3.4.1
-
+## 3.4.5
 * Update Tiqr library to 3.0.1
-* Re-add Logging of Tiqr client information introduced in 3.1.4
+* Re-add Logging of Tiqr client information introduced in 3.1.4 (#155)
+* Update twig (#154)
+
+## 3.4.4
+* Update Tiqr library to 3.0-rc2
 
 ## 3.4.0
 
