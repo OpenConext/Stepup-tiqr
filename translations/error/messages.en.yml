@@ -30,5 +30,7 @@ page.route.description.sp_demo: |
   Demo service provider to test the tiqr application with.
   This is not part of the tiqr application and can only be used in development (app_dev.php) mode.
 
-
 stepup.error.unknown_service_provider.title: Unknown service provider
+
+stepup.error.signature_validation_failed.title: Invalid signature
+stepup.error.signature_validation_failed.description: Invalid signature
