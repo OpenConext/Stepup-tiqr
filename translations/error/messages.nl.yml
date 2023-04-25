@@ -1,7 +1,7 @@
 stepup.error.page_not_found:
     title: Pagina niet gevonden
     text: De pagina die je zocht kan niet gevonden worden.
-stepup.error.support_page.text: Bezoek <a href="%support_url%" target="_blank">de support pagina</a> als dit je probleem niet oplost. Op deze pagina vind je meer informatie over de mogelijk oorzaken en hoe je contact kan opnemen met het supportteam.
+stepup.error.support_page.text: Bezoek <a href="%support_url%" target="_blank">de support pagina</a> als dit je probleem niet oplost. Op deze pagina vind je meer informatie over de mogelijke oorzaken en hoe je contact kan opnemen met het supportteam.
 stepup.error.generic_error:
     title: Oeps!
     description: Er is iets mis gegaan. Probeer het opnieuw.
