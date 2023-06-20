@@ -4,7 +4,6 @@ RUN tar -xvjf /tmp/*.tar.bz2 -C /var/www/html/ && \
     rm -rf /tmp/*.tar.bz2
 
 # Add the application configuration files
-COPY .env .env
 COPY config/legacy/parameters.yaml.dist config/legacy/parameters.yaml
 
 # Add the config files for Apache2
