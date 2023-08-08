@@ -186,8 +186,78 @@ tiqr_library_options:
 # Release strategy
 Please read: https://github.com/OpenConext/Stepup-Deploy/wiki/Release-Management fro more information on the release strategy used in Stepup projects.
 
+# How the Stepup-tiqr uses the Tiqr library
+The Tiqr server's purpose is to facilitate Tiqr authentications. In doing so communicating with the Tiqr app. Details about this communication flow can be found in the flow above. Here you will find a communication diagram for enrollment and authentication.
+
+The following code examples show some of the concepts that are used during authentication from the web frontend. It does not include the communication with the Tiqr client (app).
+
+```php
+# 1. The name id (username) of the user is used to identify that specific user in Tiqr. 
+#    In the case of Stepup-Tiqr (SAML based) we get the NameId from the SAML 2.0 AuthnRequest
+#
+# Example below is pseudocode you might write in your controller dealing with an authentication request
+$nameId = $this->authenticationService->getNameId();
+
+# The request id of the SAML AuthnRequest message, used to match the originating authentication request with the Tiqr authentication
+$requestId = $this->authenticationService->getRequestId();
+```
+
+```php
+# 2. Next you can do some verifications on the user, is it found in tiqr-server user storage?
+#    Is it not locked out temporarily?
+#
+# Example below is pseudocode you might write in your controller dealing with an authentication request
+$user = $this->userRepository->getUser($nameId);
+if ($this->authenticationRateLimitService->isBlockedTemporarily($user)) {
+    throw new Exception('You are locked out of the system');
+}
+
+$this->startAuthentication($nameId, $requestId)
+public function startAuthentication($nameId, $requestId)
+{
+    # Authentication is started by providing the NameId and the PHP session id
+    $sessionKey = $this->tiqrService->startAuthenticationSession($nameId, $this->session->getId());
+    # The Service (Tiqr_Service) generates a session key which is stored in the state storage, but also returned to
+    # persist in the Tiqr server implementation. 
+    $this->session->set('sessionKey', $sessionKey);
+    $this->storeRequestIdForNameId($sessionKey, $requestId);
+    # Creates an authentication challenge URL. It links directly to the application 
+    return $this->tiqrService->generateAuthURL($sessionKey);
+}
+```
+
+```php
+# 3. The tiqr server implementation now must wait for the Tiqr App to finalize its authentication with the user.
+#    In the Stepup-Tiqr implementation, we do this by polling the tiqr server for the atuthentication status.
+# Example below is pseudocode
+
+# Javascript
+function pollTiqrStatus() {
+    getTiqrStatus()
+    setTimeout(refresh, 5000);
+}
+pollTiqrStatus();
+
+# In the PHP application:
+$isAuthenticated = $this->tiqrService->getAuthenticatedUser($this->session->getId());
+if ($isAuthenticated) {
+    # Your controller can now go to the next action, maybe send back a successful SamlResponse, or signal otherwise
+    # that the authentication succeeded. 
+    return $successResponse;
+}
+# And deal with the non happy flow
+
+if ($isExpired) {
+    return $errorResponse;
+}
+
+if ($otherErrorConddition) {
+    # ...
+}
+```
+
 Other resources
-======================
+===============
 
  - [Developer documentation](docs/index.md)
  - [Issue tracker](https://www.pivotaltracker.com/n/projects/1163646)
@@ -195,3 +265,4 @@ Other resources
  - [Tiqr library](https://github.com/SURFnet/tiqr-server-libphp)
  - [Library documentation](https://tiqr.org/documentation/) 
  - [Tiqr config parameters](https://github.com/SURFnet/simplesamlphp-module-authtiqr)
+
