@@ -5,6 +5,7 @@ RUN tar -xvjf /tmp/*.tar.bz2 -C /var/www/html/ && \
 
 # Add the application configuration files
 COPY config/legacy/parameters.yaml.dist config/legacy/parameters.yaml
+COPY config/packages/prod/monolog.yaml.docker config/packages/prod/monolog.yaml
 
 # TIQR needs some assests to be installed
 RUN bin/console assets:install
