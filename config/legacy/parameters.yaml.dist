@@ -12,18 +12,17 @@ parameters:
         - en_GB
 
     # SAML configuration
-    saml_idp_publickey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'
-    saml_idp_privatekey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem'
-    saml_metadata_publickey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'
-    saml_metadata_privatekey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem'
-    saml_remote_sp_entity_id: 'https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/metadata.php/default-sp'
-    saml_remote_sp_sso_url: '"https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/saml2-acs.php/default-sp"'
-    saml_remote_sp_certificate: '%kernel.root_dir%/../vendor/surfnet/stepup-gssp-bundle/src/Resources/keys/pieter.aai.surfnet.nl.pem'
-    saml_remote_sp_acs: 'https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/saml2-acs.php/default-sp'
+    saml_idp_publickey: '/config/tiqr/tiqr_idp.crt'
+    saml_idp_privatekey: '/config/tiqr/tiqr_idp.key'
+    saml_metadata_publickey: '/config/tiqr/tiqr_idp.crt'
+    saml_metadata_privatekey: '/config/tiqr/tiqr_idp.key'
+    saml_remote_sp_entity_id: 'https://gateway.dev.openconext.local/gssp/tiqr/metadata'
+    saml_remote_sp_certificate: '/config/gateway/gateway_gssp_sp.crt'
+    saml_remote_sp_acs: 'https://gateway.dev.openconext.local/gssp/tiqr/consume-assertion'
 
     # Hosting settings (own URL)
-    base_url: 'https://tiqr.stepup.example.com'
-    tiqr_identity: 'tiqr.stepup.example.com'
+    base_url: 'https://tiqr.dev.openconext.local'
+    tiqr_identity: 'tiqr.dev.openconext.local'
 
     # View parameters, 'en' entry was added as this is the default used by Translator. Was unable to configure it to
     # use en_GB. TODO: look into configuring this the right way.

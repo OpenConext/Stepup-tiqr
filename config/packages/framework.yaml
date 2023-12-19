@@ -10,7 +10,7 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
     assets: ~
-    #esi: true
+    esi: false
     fragments: false
     php_errors:
         log: "%kernel.debug%"

@@ -1,0 +1,22 @@
+FROM ghcr.io/openconext/openconext-basecontainers/php72-apache2:latest AS php-build
+COPY *.tar.bz2 /tmp/
+RUN tar -xvjf /tmp/*.tar.bz2 -C /var/www/html/ && \
+  rm -rf /tmp/*.tar.bz2
+
+# Add the application configuration files
+COPY config/legacy/parameters.yaml.dist config/legacy/parameters.yaml
+COPY config/packages/prod/monolog.yaml.docker config/packages/prod/monolog.yaml
+
+# TIQR needs some assests to be installed
+RUN bin/console assets:install
+
+# Add the config files for Apache2
+RUN rm -rf /etc/apache2/sites-enabled/*
+COPY ./docker/conf/tiqr-apache2.conf /etc/apache2/sites-enabled/tiqr.conf
+RUN rm -rf /var/www/html/var/cache/prod && chown -R www-data /var/www/html/var
+EXPOSE 80
+
+# Set the default workdir
+WORKDIR /var/www/html
+
+ENTRYPOINT ["apache2-foreground"]
