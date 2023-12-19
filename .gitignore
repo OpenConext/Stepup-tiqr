@@ -29,11 +29,6 @@
 /web/build
 .env
 
-# Vagrant files #
-#################
-.vagrant
-homestead/vendor
-
 # Code coverage reports #
 #################
 /coverage/*
