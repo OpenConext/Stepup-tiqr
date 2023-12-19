@@ -2,8 +2,10 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
+    app_env: prod
+    app_debug: false
     # A secret key that's used to generate certain security-related tokens
-    secret: ThisTokenIsNotSoSecretChangeIt
+    app_secret: ThisTokenIsNotSoSecretChangeIt
 
     # All locales supported by the application
     default_locale: en_GB
