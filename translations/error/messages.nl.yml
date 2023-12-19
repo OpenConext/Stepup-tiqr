@@ -31,3 +31,6 @@ page.route.description.sp_demo: |
   Dit is geen onderdeel van de tiqr-applicatie en kan alleen worden gebruikt in de ontwikkelingsmodus (app_dev.php).
 
 stepup.error.unknown_service_provider.title: Onbekende serviceprovider
+
+stepup.error.signature_validation_failed.title: Ongeldige handtekening
+stepup.error.signature_validation_failed.description: Ongeldige handtekening
