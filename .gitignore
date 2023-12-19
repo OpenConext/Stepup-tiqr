@@ -72,11 +72,15 @@ yarn-error.log
 
 ###> symfony/phpunit-bridge ###
 .phpunit
-.phpunit.result.cache
-/phpunit.xml
+ci/qa/.phpunit.result.cache
+ci/qa/phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 local-php-security-checker
 tiqr.stepup.example.com.crt
 tiqr.stepup.example.com.key
 ci/qa/.phpcs-cache
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

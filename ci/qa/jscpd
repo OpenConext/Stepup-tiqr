@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+#jscpd static analysis
+# Run the JS CPD tool:
+# - ignoring the test files and public resources
+# - allowing for 40 lines of duplicate code
+# - and setting a total copy paste limit to 1% project wide
+# More info about jscpd usage: https://github.com/kucherenko/jscpd/tree/master/packages/jscpd#usage
+./node_modules/.bin/jscpd src public -l 40 -t 1
