@@ -1,4 +1,4 @@
-name: Run QA tests (static analysis, lint and unit tests)
+name: Run acceptance tests (Behat)
 on: [pull_request]
 
 jobs:
@@ -16,8 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Copy certificate material
+        run: mkdir /config && cp -r ./ci/config/* /config/
+
       - name: Composer install
         run: composer install
 
-      - name: Run QA tests
-        run: composer check
+      - name: Yarn & Yarn Encore
+        run: yarn && yarn encore production
+      
+      - name: Run Behat tests
+        run: composer behat
