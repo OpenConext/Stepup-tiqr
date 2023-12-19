@@ -93,6 +93,12 @@
       "yarn install --frozen-lockfile",
       "yarn encore production"
     ],
+    "post-install-cmd": [
+        "@auto-scripts"
+    ],
+    "post-update-cmd": [
+        "@auto-scripts"
+    ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
