@@ -3,53 +3,21 @@ Development environment
 
 The purpose of the development environment is only for running the different test and metric tools.
 
-To get started, first setup the development environment. The development 'env' is a virtual machine. Every task described is run
-from that machine.  
+To get started, first setup the development environment. The development 'env' is a Docker container. 
+Every task described is run from that machine.  
 
 Requirements
 -------------------
-- Vagrant 2.2.x
-    - vagrant-hostsupdater (1.1.1.160, global, optional)
-    - vagrant-vbguest (0.19.0, global)
-- Virtualbox
-- Composer
+- Docker with Docker Compose
 
 Install
 -------------------
+The purpose of the development environment is only for running the different test and metric tools.
 
-### 1. Create virtual machine
+To get started, first setup the development environment. The development environment is a docker container. That is
+controlled via the [OpenConext-devconf](https://github.com/OpenConext/OpenConext-devconf/) project.
 
-``` cd homestead ``` 
- 
-``` composer install ```
-
-Go back to root of the project (```cd ..```) 
-
-``` vagrant up ```
-
-If everything goes as planned you can develop inside the virtual machine
-
-``` vagrant ssh ```
-
-### 2. Build frontend assets:
-
-``` yarn install ```
-
-``` yarn encore dev ```
-
-``` ./bin/console assets:install ```
-
-### 3. Create configuration files
-
-Copy and configure:
- 
-```cp .env.vm .env```
-
-```cp config/packages/parameters.yml.dist config/packages/parameters.yml```
-
-If everything goes as planned you can go to:
-
-[https://tiqr.test](https://tiqr.stepup.example.com)
+Every task described below should be run from that container.
 
 ### Development
 
