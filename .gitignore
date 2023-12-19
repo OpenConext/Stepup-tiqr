@@ -8,7 +8,6 @@
 /userdb.json
 /.web-server-pid
 /config/legacy/parameters.yaml
-/build/
 /var/*
 /app/
 !/var/cache
