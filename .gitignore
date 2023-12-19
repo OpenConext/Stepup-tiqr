@@ -28,10 +28,6 @@
 /web/build
 .env
 
-# Code coverage reports #
-#################
-/coverage/*
-
 # OS generated files #
 ######################
 .DS_Store
