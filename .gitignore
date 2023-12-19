@@ -7,9 +7,8 @@
 
 /userdb.json
 /.web-server-pid
-/config/legacy/parameters.yaml
+/config/openconext/parameters.yaml
 /var/*
-/app/
 !/var/cache
 /var/cache/*
 !var/cache/.gitkeep
