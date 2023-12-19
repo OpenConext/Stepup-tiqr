@@ -103,11 +103,12 @@
   },
   "config": {
     "sort-packages": true,
-    "allow-plugins": {
-      "symfony/flex": true
-    },
     "platform": {
-      "php": "7.2.5"
+      "php": "8.2"
+    },
+    "allow-plugins": {
+      "symfony/flex": true,
+      "symfony/runtime": true
     }
   },
   "archive": {
