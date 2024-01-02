@@ -2,13 +2,23 @@ var Encore = require('@symfony/webpack-encore');
 
 Encore
     .setOutputPath('public/build/')
+    .copyFiles([
+        {
+            from: './assets/images',
+            to: './images/[path][name].[ext]',
+        },
+        {
+            from: './assets/openconext/images',
+            to: './images/logo/[path][name].[ext]',
+        }
+    ])
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
     // Convert typescript files.
     .enableTypeScriptLoader()
-    .addStyleEntry('global', './public/scss/application.scss')
-    .addEntry('authentication', './public/typescript/authentication.ts')
-    .addEntry('registration', './public/typescript/registration.ts')
+    .addStyleEntry('global', './assets/scss/application.scss')
+    .addEntry('authentication', './assets/typescript/authentication.ts')
+    .addEntry('registration', './assets/typescript/registration.ts')
 
     // Convert sass files.
     .enableSassLoader(function (options) {
