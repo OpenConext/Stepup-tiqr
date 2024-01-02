@@ -18,3 +18,27 @@ framework:
     php_errors:
         log: "%kernel.debug%"
 
+when@dev:
+    framework:
+        router:
+            strict_requirements: true
+        profiler: { only_exceptions: false }
+
+        php_errors:
+            log: false
+        # To follow logs in real time, execute the following command:
+        # `bin/console server:log -vv`
+        server_log:
+            type: server_log
+            process_psr_3_messages: false
+            host: 127.0.0.1:9911
+
+when@test:
+    framework:
+        test: ~
+        session:
+            storage_id: session.storage.mock_file
+        profiler:
+            collect: false
+        router:
+            strict_requirements: true
