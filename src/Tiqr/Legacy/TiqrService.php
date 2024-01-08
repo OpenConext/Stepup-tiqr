@@ -129,6 +129,7 @@ final class TiqrService implements TiqrServiceInterface
 
     /**
      * @see TiqrServiceInterface::getEnrollmentMetadata()
+     * @return array<string, mixed>
      */
     public function getEnrollmentMetadata(string $key, string $loginUri, string $enrollmentUrl): array
     {
@@ -327,7 +328,7 @@ final class TiqrService implements TiqrServiceInterface
      */
     private function generateId(int $length = 4): string
     {
-        return base_convert(time(), 10, 36) . '-' . base_convert(mt_rand(0, 36 ** $length), 10, 36);
+        return base_convert((string) time(), 10, 36) . '-' . base_convert((string) mt_rand(0, 36 ** $length), 10, 36);
     }
 
     /** Create a stable hash from $identifier
@@ -353,30 +354,6 @@ final class TiqrService implements TiqrServiceInterface
         }
 
         return $res;
-    }
-
-    /**
-     * @param string $identifier Enrollment key or session key
-     * @return bool true on success, false otherwise
-     * Does not throw
-     */
-    private function unsetSariForSessionIdentifier(string $identifier): bool
-    {
-        $this->logger->info(
-            sprintf("Unsetting SARI for identifier '%s...'", substr($identifier, 0, 8))
-        );
-
-        try {
-            $hashed_identifier = $this->getHashedIdentifier($identifier);
-            $this->tiqrStateStorage->unsetValue('sari_' . $hashed_identifier);
-        } catch (Exception) {
-            $this->logger->error(
-                sprintf('unsetSariForSessionIdentifier failed for "%s"', substr($identifier, 0, 8))
-            );
-            return false;
-        }
-
-        return true;
     }
 
     /**

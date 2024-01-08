@@ -90,7 +90,7 @@ interface TiqrServiceInterface
      *      can be generated with the
      *      getEnrollmentSecret call.
      *
-     * @return array An array of metadata that the phone needs to complete
+     * @return array<string, mixed> An array of metadata that the phone needs to complete
      *               enrollment. You must encode it in JSON before you send
      *               it to the phone.
      *

@@ -28,8 +28,6 @@ use Tiqr_UserStorage;
 
 class TiqrFactory
 {
-    private static bool $loaded = false;
-
     // Created from services.yaml
     public static function createService(
         TiqrConfigurationInterface $configuration,

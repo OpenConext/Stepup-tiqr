@@ -1,6 +1,26 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createBlockingConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createGeneralConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createLibraryConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createStorageConfig\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: ../../src/DependencyInjection/Configuration.php
+
+		-
 			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
 			count: 1
 			path: ../../src/EventSubscriber/LocaleResponseListener.php

@@ -17,9 +17,11 @@
 
 namespace App\Tiqr\Exception;
 
-final class UserNotExistsException extends \Exception
+use Exception;
+
+final class UserNotExistsException extends Exception
 {
-    public static function createFromId($userId): self
+    public static function createFromId(string $userId): self
     {
         return new self(sprintf('User with id "%s"', $userId));
     }

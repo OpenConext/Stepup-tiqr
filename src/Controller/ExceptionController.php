@@ -78,7 +78,7 @@ final class ExceptionController extends BaseExceptionController
     }
 
     /**
-     * @return array View parameters 'title' and 'description'
+     * @return array<string, string> View parameters 'title' and 'description'
      */
     protected function getPageTitleAndDescription(\Throwable $exception): array
     {

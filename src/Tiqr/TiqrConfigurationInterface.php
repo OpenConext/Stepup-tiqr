@@ -22,6 +22,7 @@ interface TiqrConfigurationInterface
 {
     /**
      * Please don't use this to get individual options.
+     * @return array<string, mixed>
      */
     public function getTiqrOptions(): array;
 

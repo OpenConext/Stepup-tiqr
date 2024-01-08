@@ -22,6 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GlobalViewParameters
 {
+    /**
+     * @param array<string, string> $supportUrl
+     */
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly array $supportUrl
