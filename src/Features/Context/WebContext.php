@@ -20,12 +20,17 @@ namespace App\Features\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
+use Exception;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
 use SAML2\XML\saml\Issuer;
+use Surfnet\SamlBundle\Entity\IdentityProvider;
+use Surfnet\SamlBundle\Entity\ServiceProvider;
+use Surfnet\SamlBundle\Entity\StaticServiceProviderRepository;
+use Surfnet\SamlBundle\Exception\NotFound;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -92,10 +97,7 @@ class WebContext implements Context
         $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
     }
 
-    /**
-     * @return \Surfnet\SamlBundle\Entity\IdentityProvider
-     */
-    public function getIdentityProvider()
+    public function getIdentityProvider(): IdentityProvider
     {
         /** @var RequestStack $stack */
         $stack = $this->kernel->getContainer()->get('request_stack');
@@ -103,16 +105,19 @@ class WebContext implements Context
         $ip = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
         $stack->pop();
 
+        if (!$ip instanceof IdentityProvider) {
+            throw new Exception('No Hosted Identity Provider could be found');
+        }
+
         return $ip;
     }
 
     /**
-     * @return \Surfnet\SamlBundle\Entity\ServiceProvider
-     *
-     * @throws \Surfnet\SamlBundle\Exception\NotFound
+     * @throws NotFound
      */
-    public function getServiceProvider()
+    public function getServiceProvider(): ServiceProvider
     {
+        /** @var StaticServiceProviderRepository $serviceProviders */
         $serviceProviders = $this->kernel->getContainer()->get('surfnet_saml.remote.service_providers');
         return $serviceProviders->getServiceProvider(
             'https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/metadata.php/default-sp'
@@ -122,7 +127,7 @@ class WebContext implements Context
     /**
      * @Given /^a normal SAML 2.0 AuthnRequest form a unknown service provider$/
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider(): void
     {
@@ -146,7 +151,7 @@ class WebContext implements Context
 
     /**
      * @return XMLSecurityKey
-     * @throws \Exception
+     * @throws Exception
      */
     private function loadPrivateKey(PrivateKey $key): \RobRichards\XMLSecLibs\XMLSecurityKey
     {
