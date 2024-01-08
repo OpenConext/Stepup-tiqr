@@ -22,21 +22,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class UserAgentMatcher implements UserAgentMatcherInterface
 {
-    /**
-     * @param string $pattern
-     */
-    public function __construct(private $pattern)
+    public function __construct(private readonly string $pattern)
     {
     }
 
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    public function isOfficialTiqrMobileApp(Request $request): int|false
+    public function isOfficialTiqrMobileApp(Request $request): bool
     {
         $userAgent = $request->headers->get('User-Agent');
-
-        return preg_match($this->pattern, $userAgent);
+        $result = preg_match($this->pattern, $userAgent);
+        return $result === 1;
     }
 }

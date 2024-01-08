@@ -18,21 +18,14 @@
 
 namespace App\Service;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GlobalViewParameters
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator, private readonly array $locales, private array $supportUrl)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly array $supportUrl
+    ) {
     }
 
     /**

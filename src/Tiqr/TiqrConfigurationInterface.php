@@ -22,8 +22,6 @@ interface TiqrConfigurationInterface
 {
     /**
      * Please don't use this to get individual options.
-     *
-     * @return array
      */
     public function getTiqrOptions(): array;
 
@@ -42,26 +40,18 @@ interface TiqrConfigurationInterface
     public function getTemporarilyBlockDuration(): int;
 
     /**
-     * @return int
-     * @throws \App\Tiqr\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function getMaxAttempts(): int;
 
-    /**
-     * @return boolean
-     */
     public function hasMaxLoginAttempts(): bool;
 
+    public function setMaxLoginAttempts(int $attempts): void;
+
     /**
-     * @return int
-     *
      * @throws ConfigurationException
      */
     public function getMaxTemporarilyLoginAttempts(): int;
 
-    /**
-     *
-     * @return bool
-     */
-    public function hasMaxTemporarilyLoginAttempts(): int;
+    public function hasMaxTemporarilyLoginAttempts(): bool;
 }

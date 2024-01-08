@@ -22,9 +22,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface UserAgentMatcherInterface
 {
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    public function isOfficialTiqrMobileApp(Request $request);
+    public function isOfficialTiqrMobileApp(Request $request): bool;
 }

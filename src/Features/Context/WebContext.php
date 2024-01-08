@@ -20,7 +20,6 @@ namespace App\Features\Context;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
@@ -33,7 +32,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class WebContext implements Context, KernelAwareContext
+class WebContext implements Context
 {
     /**
      * @var MinkContext

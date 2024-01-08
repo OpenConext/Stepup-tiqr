@@ -28,20 +28,14 @@ interface TiqrUserRepositoryInterface
 {
     /**
      * Create new tiqr user.
-     *
-     *
-     * @return TiqrUserInterface
      * @throws UserNotExistsException
      * @throws TiqrServerRuntimeException
      */
-    public function createUser(string $userId, string $secret): TiqrUser;
+    public function createUser(string $userId, string $secret): TiqrUserInterface;
 
     /**
-     *
-     * @return TiqrUserInterface
-     *
      * @throws UserNotExistsException
      * @throws TiqrServerRuntimeException
      */
-    public function getUser(string $userId): TiqrUser;
+    public function getUser(string $userId): TiqrUserInterface;
 }
