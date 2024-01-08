@@ -22,15 +22,9 @@ namespace App\Tiqr\Response;
  */
 class AuthenticationErrorResponse implements AuthenticationResponse
 {
-    private $error;
-
-    /**
-     *
-     * @param string $error
-     */
-    public function __construct(string $error)
+    
+    public function __construct(private readonly string $error)
     {
-        $this->error = $error;
     }
 
     /**

@@ -39,32 +39,22 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TiqrAppApiController extends AbstractController
 {
-    private $tiqrService;
-    private $userRepository;
-    private $logger;
-    private $authenticationRateLimitService;
-
     public function __construct(
-        TiqrServiceInterface $tiqrService,
-        TiqrUserRepositoryInterface $userRepository,
-        AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
-        LoggerInterface $logger
+        private readonly TiqrServiceInterface $tiqrService,
+        private readonly TiqrUserRepositoryInterface $userRepository,
+        private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
+        private readonly LoggerInterface $logger
     ) {
-        $this->tiqrService = $tiqrService;
-        $this->userRepository = $userRepository;
-        $this->logger = $logger;
-        $this->authenticationRateLimitService = $authenticationRateLimitService;
     }
 
     /**
      * Metadata endpoint.
      *
      * The endpoint where the Tiqr app gets it's registration information from during enrollment
-     *
-     * @Route("/tiqr.php", name="app_identity_registration_metadata", methods={"GET"})
-     * @Route("/tiqr/tiqr.php", methods={"GET"})
      */
-    public function metadataAction(Request $request)
+    #[Route(path: '/tiqr.php', name: 'app_identity_registration_metadata', methods: ['GET'])]
+    #[Route(path: '/tiqr/tiqr.php', methods: ['GET'])]
+    public function metadata(Request $request): Response
     {
         $enrollmentKey = $request->get('key');
         if (empty($enrollmentKey)) {
@@ -104,7 +94,7 @@ class TiqrAppApiController extends AbstractController
 
             return new JsonResponse($metadata);
         } catch (Exception $e) {
-            $this->logger->error('Error handling metadata GET request, returning HTTP 500', array('exception' => $e));
+            $this->logger->error('Error handling metadata GET request, returning HTTP 500', ['exception' => $e]);
             return new Response('Error handling metadata GET request', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -112,13 +102,11 @@ class TiqrAppApiController extends AbstractController
     /**
      * This is the route where the app authenticates or registers.
      *
-     * @Route("/tiqr.php", name="app_identity_registration_authentication", methods={"POST"})
-     * @Route("/tiqr/tiqr.php", methods={"POST"})
      *
-     * @param UserAgentMatcherInterface $userAgentMatcher
-     * @param Request $request
      * @return Response
      */
+    #[Route(path: '/tiqr.php', name: 'app_identity_registration_authentication', methods: ['POST'])]
+    #[Route(path: '/tiqr/tiqr.php', methods: ['POST'])]
     public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request)
     {
         $operation = $request->get('operation');
@@ -132,14 +120,14 @@ class TiqrAppApiController extends AbstractController
         if ($operation === 'register') {
             $this->logger->notice(
                 'Got POST with registration response',
-                array('notificationType' => $notificationType, 'notificationAddress' => $notificationAddress)
+                ['notificationType' => $notificationType, 'notificationAddress' => $notificationAddress]
             );
             return $this->registerAction($userAgentMatcher, $request, $notificationType, $notificationAddress);
         }
         if ($operation === 'login') {
             $this->logger->notice(
                 'Got POST with login response',
-                array('notificationType' => $notificationType, 'notificationAddress' => $notificationAddress)
+                ['notificationType' => $notificationType, 'notificationAddress' => $notificationAddress]
             );
             return $this->loginAction($request, $notificationType, $notificationAddress);
         }
@@ -149,11 +137,8 @@ class TiqrAppApiController extends AbstractController
     }
 
     /**
-     * @param UserAgentMatcherInterface $userAgentMatcher
-     * @param Request $request
      * @param $notificationType
      * @param $notificationAddress
-     *
      * @return Response
      * @throws \InvalidArgumentException
      */
@@ -162,7 +147,8 @@ class TiqrAppApiController extends AbstractController
         Request $request,
         string $notificationType,
         string $notificationAddress
-    ) {
+    ): Response
+    {
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
         if (empty($enrollmentSecret)) {
             $this->logger->error('Missing "otp" parameter');
@@ -211,7 +197,7 @@ class TiqrAppApiController extends AbstractController
                 'sari' => $this->tiqrService->getSariForSessionIdentifier($enrollmentSecret),
             ]);
         } catch (Exception $e) {
-            $logger->error(sprintf('Validation of the enrollment secret "%s" failed', $enrollmentSecret), array('exception' => $e));
+            $logger->error(sprintf('Validation of the enrollment secret "%s" failed', $enrollmentSecret), ['exception' => $e]);
             return new Response('Enrollment failed', Response::HTTP_FORBIDDEN);
         }
 
@@ -220,7 +206,7 @@ class TiqrAppApiController extends AbstractController
         // Note: historically both uppercase and lowercase hex strings are used
 
         // 1. Assert that the secret is a valid hex string
-        $decoded_secret = hex2bin($secret);
+        $decoded_secret = hex2bin((string) $secret);
         if (false === $decoded_secret) {
             $logger->error('Invalid secret, secret must be a hex string');
             return new Response('Invalid secret', Response::HTTP_FORBIDDEN);
@@ -238,7 +224,7 @@ class TiqrAppApiController extends AbstractController
                 ->createUser($userId, $secret)
                 ->updateNotification($notificationType, $notificationAddress);
         } catch (Exception $e) {
-            $logger->error('Error setting user secret and/or notification address and type', array('exception' => $e));
+            $logger->error('Error setting user secret and/or notification address and type', ['exception' => $e]);
             return new Response('Error creating user', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -247,16 +233,13 @@ class TiqrAppApiController extends AbstractController
             $this->tiqrService->finalizeEnrollment($enrollmentSecret);
             $logger->notice('Enrollment finalized');
         } catch (Exception $e) {
-            $logger->warning('Error finalizing enrollment', array('exception' => $e));
+            $logger->warning('Error finalizing enrollment', ['exception' => $e]);
         }
 
         return new Response('OK', Response::HTTP_OK);
     }
 
     /** Handle login operation from the app, returns response for the app
-     * @param Request $request
-     * @param string $notificationType
-     * @param string $notificationAddress
      *
      * @return Response
      *
@@ -299,7 +282,7 @@ class TiqrAppApiController extends AbstractController
         try {
             $user = $this->userRepository->getUser($userId);
         } catch (UserNotExistsException $e) {
-            $logger->error('User not found', array('exception' => $e));
+            $logger->error('User not found', ['exception' => $e]);
             return new Response('INVALID_USER', Response::HTTP_FORBIDDEN);
         }
 
@@ -316,7 +299,7 @@ class TiqrAppApiController extends AbstractController
                 try {
                     $user->updateNotification($notificationType, $notificationAddress);
                 } catch (Exception $e) {
-                    $this->logger->warning('Error updating notification type and address', array('exception' => $e));
+                    $this->logger->warning('Error updating notification type and address', ['exception' => $e]);
                     // Continue
                 }
                 return new Response($result->getMessage(), Response::HTTP_OK);
@@ -325,7 +308,7 @@ class TiqrAppApiController extends AbstractController
             $logger->notice('User authentication denied: ' . $result->getMessage());
             return new Response($result->getMessage(), Response::HTTP_FORBIDDEN);
         } catch (Exception $e) {
-            $this->logger->error('Authentication failed', array('exception' => $e));
+            $this->logger->error('Authentication failed', ['exception' => $e]);
         }
 
         return new Response('AUTHENTICATION_FAILED', Response::HTTP_FORBIDDEN);

@@ -24,9 +24,9 @@ class TiqrConfiguration implements TiqrConfigurationInterface
 {
 
     private $options = [];
-    const TEMPORARILY_BLOCK_DURATION = 'temporarilyBlockDuration';
-    const MAX_ATTEMPTS = 'maxAttempts';
-    const MAX_TEMPORARILY_BLOCKS = 'maxTemporarilyBlocks';
+    final public const TEMPORARILY_BLOCK_DURATION = 'temporarilyBlockDuration';
+    final public const MAX_ATTEMPTS = 'maxAttempts';
+    final public const MAX_TEMPORARILY_BLOCKS = 'maxTemporarilyBlocks';
 
     /**
      * @param array[] $tiqrConfiguration
@@ -159,9 +159,6 @@ class TiqrConfiguration implements TiqrConfigurationInterface
         return isset($this->options[self::MAX_ATTEMPTS]);
     }
 
-    /**
-     * @param int $attempts
-     */
     public function setMaxLoginAttempts(int $attempts): void
     {
         $this->options[self::MAX_ATTEMPTS] = $attempts;
@@ -174,7 +171,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      */
     public function getMaxTemporarilyLoginAttempts(): int
     {
-        if (!$this->hasMaxTemporarilyLoginAttempts()) {
+        if ($this->hasMaxTemporarilyLoginAttempts() === 0) {
             throw ConfigurationException::noMaxTemporarilyAttempts();
         }
         return $this->options[self::MAX_TEMPORARILY_BLOCKS];

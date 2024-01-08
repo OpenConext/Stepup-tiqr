@@ -45,37 +45,18 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AuthenticationController extends AbstractController
 {
-    private $authenticationService;
-    private $tiqrService;
-    private $logger;
-    private $authenticationRateLimitService;
-    private $userRepository;
-    private $stateHandler;
-
-    public function __construct(
-        AuthenticationService $authenticationService,
-        StateHandlerInterface $stateHandler,
-        TiqrServiceInterface $tiqrService,
-        TiqrUserRepositoryInterface $userRepository,
-        AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
-        LoggerInterface $logger
-    ) {
-        $this->authenticationService = $authenticationService;
-        $this->stateHandler = $stateHandler;
-        $this->tiqrService = $tiqrService;
-        $this->logger = $logger;
-        $this->authenticationRateLimitService = $authenticationRateLimitService;
-        $this->userRepository = $userRepository;
+    public function __construct(private readonly AuthenticationService $authenticationService, private readonly StateHandlerInterface $stateHandler, private readonly TiqrServiceInterface $tiqrService, private readonly TiqrUserRepositoryInterface $userRepository, private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService, private readonly LoggerInterface $logger)
+    {
     }
 
     /**
-     * @Route("/authentication", name="app_identity_authentication", methods={"GET", "POST"})
      * @throws InvalidArgumentException
      * @throws NoActiveAuthenrequestException
      * @throws UserNotFoundException
      * @throws Exception
      */
-    public function authenticationAction(Request $request): Response
+    #[Route(path: '/authentication', name: 'app_identity_authentication', methods: ['GET', 'POST'])]
+    public function authentication(Request $request): Response
     {
         $nameId = $this->authenticationService->getNameId();
         $sari = $this->stateHandler->getRequestId();
@@ -83,7 +64,7 @@ class AuthenticationController extends AbstractController
 
         $logger->info('Verifying if there is a pending authentication request from SP');
 
-        // Do have a valid sample AuthnRequest?.
+        // Do have a valid sample AuthnRequest?
         if (!$this->authenticationService->authenticationRequired()) {
             $logger->error('There is no pending authentication request from SP');
 
@@ -161,10 +142,10 @@ class AuthenticationController extends AbstractController
     }
 
     /**
-     * @Route("/authentication/status", name="app_identity_authentication_status", methods={"GET"})
      * @throws InvalidArgumentException
      */
-    public function authenticationStatusAction(): JsonResponse
+    #[Route(path: '/authentication/status', name: 'app_identity_authentication_status', methods: ['GET'])]
+    public function authenticationStatus(): JsonResponse
     {
         $nameId = $this->authenticationService->getNameId();
         $sari = $this->stateHandler->getRequestId();
@@ -209,7 +190,7 @@ class AuthenticationController extends AbstractController
         // To check that the session key still exists in the Tiqr_Service's state storage
         try {
             $this->tiqrService->authenticationUrl();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return true;
         }
         return false;
@@ -254,7 +235,6 @@ class AuthenticationController extends AbstractController
      *  - needs-refresh: refresh the page (the /authentication page will handle the success or error)
      *  - challenge-expired: Message user challenge is expired, let the user give the option to retry.
      *
-     * @param string $status
      * @return JsonResponse
      */
     private function generateAuthenticationStatusResponse(string $status): JsonResponse
@@ -271,7 +251,6 @@ class AuthenticationController extends AbstractController
      *  - error: Notification was not send successfully
      *  - no-device: There was no device to send the notification
      *
-     * @param string $status
      * @return JsonResponse
      */
     private function generateNotificationResponse(string $status): JsonResponse
@@ -281,10 +260,10 @@ class AuthenticationController extends AbstractController
 
     /**
      *
-     * @Route("/authentication/qr", name="app_identity_authentication_qr", methods={"GET"})
      * @throws InvalidArgumentException
      */
-    public function authenticationQrAction(): Response
+    #[Route(path: '/authentication/qr', name: 'app_identity_authentication_qr', methods: ['GET'])]
+    public function authenticationQr(): Response
     {
         $nameId = $this->authenticationService->getNameId();
         $sari = $this->stateHandler->getRequestId();
@@ -305,10 +284,10 @@ class AuthenticationController extends AbstractController
 
     /**
      *
-     * @Route("/authentication/notification", name="app_identity_authentication_notification", methods={"POST"})
      * @throws InvalidArgumentException
      */
-    public function authenticationNotificationAction(): Response
+    #[Route(path: '/authentication/notification', name: 'app_identity_authentication_notification', methods: ['POST'])]
+    public function authenticationNotification(): Response
     {
         $nameId = $this->authenticationService->getNameId();
         $sari = $this->stateHandler->getRequestId();
@@ -370,7 +349,7 @@ class AuthenticationController extends AbstractController
                 return $this->showUserIsBlockedErrorPage($blockedPermanently);
             }
         } catch (Exception $e) {
-            $this->logger->error('Could not determine user (temporary) block state', array('exception' => $e));
+            $this->logger->error('Could not determine user (temporary) block state', ['exception' => $e]);
         }
 
         return $this->render('default/authentication.html.twig', [
@@ -388,7 +367,7 @@ class AuthenticationController extends AbstractController
         }
         // Forward to the exception controller to prevent an error being logged.
         return $this->forward(
-            'App\Controller\ExceptionController::showAction',
+            'App\Controller\ExceptionController::show',
             [
                 'exception' => $exception,
             ]
@@ -396,8 +375,6 @@ class AuthenticationController extends AbstractController
     }
 
     /**
-     * @param string $notificationType
-     * @param string $notificationAddress
      * @return bool True when the notification was successfully sent, false otherwise
      */
     private function sendNotification(string $notificationType, string $notificationAddress): bool

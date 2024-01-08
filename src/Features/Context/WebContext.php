@@ -54,10 +54,8 @@ class WebContext implements Context, KernelAwareContext
      * Sets HttpKernel instance.
      * This method will be automatically called by Symfony2Extension
      * ContextInitializer.
-     *
-     * @param KernelInterface $kernel
      */
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -67,7 +65,7 @@ class WebContext implements Context, KernelAwareContext
      *
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
         $this->minkContext = $environment->getContext(MinkContext::class);
@@ -78,7 +76,7 @@ class WebContext implements Context, KernelAwareContext
      *
      * @BeforeScenario @remote
      */
-    public function setGoutteDriver()
+    public function setGoutteDriver(): void
     {
         $this->previousMinkSession = $this->minkContext->getMink()->getDefaultSessionName();
         $this->minkContext->getMink()->setDefaultSessionName('goutte');
@@ -89,7 +87,7 @@ class WebContext implements Context, KernelAwareContext
      *
      * @AfterScenario @remote
      */
-    public function resetGoutteDriver()
+    public function resetGoutteDriver(): void
     {
         $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
     }
@@ -126,7 +124,7 @@ class WebContext implements Context, KernelAwareContext
      *
      * @throws \Exception
      */
-    public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider()
+    public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider(): void
     {
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://service_provider_unkown/saml/acs');
@@ -145,11 +143,10 @@ class WebContext implements Context, KernelAwareContext
     }
 
     /**
-     * @param PrivateKey $key
      * @return XMLSecurityKey
      * @throws \Exception
      */
-    private static function loadPrivateKey(PrivateKey $key)
+    private function loadPrivateKey(PrivateKey $key): \RobRichards\XMLSecLibs\XMLSecurityKey
     {
         $keyLoader = new PrivateKeyLoader();
         $privateKey = $keyLoader->loadPrivateKey($key);

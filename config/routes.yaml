@@ -1,6 +1,7 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+controllers:
+    resource: ../src/Controller/
+    type: attribute
+
 gssp_saml:
     resource: '@SurfnetGsspBundle/Resources/config/routing.yml'
 

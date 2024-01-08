@@ -22,16 +22,11 @@ use Psr\Log\LoggerInterface;
 
 final class WithContextLogger extends AbstractLogger
 {
-    private $logger;
-    private $context;
-
-    private function __construct(LoggerInterface $logger, array $context)
+    private function __construct(private readonly LoggerInterface $logger, private readonly array $context)
     {
-        $this->logger = $logger;
-        $this->context = $context;
     }
 
-    public static function from(LoggerInterface $logger, array $context)
+    public static function from(LoggerInterface $logger, array $context): self
     {
         return new self($logger, $context);
     }
@@ -44,7 +39,7 @@ final class WithContextLogger extends AbstractLogger
      *
      * @return void
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = []): void
     {
         $this->logger->log($level, $message, array_merge($this->context, $context));
     }

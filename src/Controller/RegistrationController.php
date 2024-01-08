@@ -29,31 +29,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    private $registrationService;
-    private $tiqrService;
-    private $logger;
-    private $stateHandler;
-
-    public function __construct(
-        RegistrationService $registrationService,
-        StateHandlerInterface $stateHandler,
-        TiqrServiceInterface $tiqrService,
-        LoggerInterface $logger
-    ) {
-        $this->registrationService = $registrationService;
-        $this->stateHandler = $stateHandler;
-        $this->tiqrService = $tiqrService;
-        $this->logger = $logger;
+    public function __construct(private readonly RegistrationService $registrationService, private readonly StateHandlerInterface $stateHandler, private readonly TiqrServiceInterface $tiqrService, private readonly LoggerInterface $logger)
+    {
     }
 
     /**
      * Returns the registration page with QR code that is generated in 'qrRegistrationAction'.
      *
-     * @Route("/registration", name="app_identity_registration", methods={"GET", "POST"})
      *
      * @throws \InvalidArgumentException
      */
-    public function registrationAction(Request $request)
+    #[Route(path: '/registration', name: 'app_identity_registration', methods: ['GET', 'POST'])]
+    public function registration(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $this->logger->info('Verifying if there is a pending registration from SP');
 
@@ -94,24 +81,21 @@ class RegistrationController extends AbstractController
     /**
      * For client-side polling retrieving the status.
      *
-     * @Route("/registration/status", name="app_identity_registration_status", methods={"GET"})
      *
      * @throws \InvalidArgumentException
      */
-    public function registrationStatusAction(Request $request)
+    #[Route(path: '/registration/status', name: 'app_identity_registration_status', methods: ['GET'])]
+    public function registrationStatus() : \Symfony\Component\HttpFoundation\Response
     {
         $this->logger->info('Request for registration status');
-
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->error('There is no pending registration request');
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
-
         $status = $this->tiqrService->getEnrollmentStatus();
         $this->logger->info(sprintf('Send json response status "%s"', $status));
-
         return new Response($this->tiqrService->getEnrollmentStatus());
     }
 
@@ -120,11 +104,11 @@ class RegistrationController extends AbstractController
      *
      * @see /registration/qr/link
      *
-     * @Route("/registration/qr/{enrollmentKey}", name="app_identity_registration_qr", methods={"GET"})
      *
      * @throws \InvalidArgumentException
      */
-    public function registrationQrAction(Request $request, $enrollmentKey)
+    #[Route(path: '/registration/qr/{enrollmentKey}', name: 'app_identity_registration_qr', methods: ['GET'])]
+    public function registrationQr(Request $request, $enrollmentKey): \Symfony\Component\HttpFoundation\Response
     {
         $this->logger->info('Request for registration QR img');
 
@@ -133,7 +117,7 @@ class RegistrationController extends AbstractController
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
-        $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($enrollmentKey)));
+        $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode((string) $enrollmentKey)));
         $this->logger->info('Returning registration QR response');
         return $this->tiqrService->createRegistrationQRResponse($metadataUrl);
     }

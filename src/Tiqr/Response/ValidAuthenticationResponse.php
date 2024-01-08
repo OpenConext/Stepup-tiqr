@@ -19,15 +19,9 @@ namespace App\Tiqr\Response;
 
 class ValidAuthenticationResponse implements AuthenticationResponse
 {
-    private $message;
-
-    /**
-     *
-     * @param string $message
-     */
-    public function __construct(string $message)
+    
+    public function __construct(private readonly string $message)
     {
-        $this->message = $message;
     }
 
     /**

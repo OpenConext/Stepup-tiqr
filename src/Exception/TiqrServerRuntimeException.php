@@ -23,7 +23,7 @@ use RuntimeException;
 
 class TiqrServerRuntimeException extends RuntimeException
 {
-    public static function fromOriginalException(Exception $e)
+    public static function fromOriginalException(Exception $e): self
     {
         return new self($e->getMessage(), (int)$e->getCode(), $e);
     }

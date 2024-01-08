@@ -22,18 +22,14 @@ use App\Tiqr\Response\AuthenticationResponse;
 interface AuthenticationRateLimitServiceInterface
 {
     /**
-     * @param string $sessionKey
-     * @param TiqrUserInterface $user
      * @param string $response
      *   The one time password.
-     *
      * @return AuthenticationResponse
      * @throws \Exception
      */
     public function authenticate(string $sessionKey, TiqrUserInterface $user, string $response): AuthenticationResponse;
 
     /**
-     * @param TiqrUserInterface $user
      *
      * @return bool
      * @throws \Exception
@@ -41,7 +37,6 @@ interface AuthenticationRateLimitServiceInterface
     public function isBlockedPermanently(TiqrUserInterface $user): bool;
 
     /**
-     * @param TiqrUserInterface $user
      *
      * @return bool
      * @throws \Exception

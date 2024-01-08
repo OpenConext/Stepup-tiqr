@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,36 @@
  * limitations under the License.
  */
 
+declare(strict_types = 1);
+
 namespace App\Service;
 
+use DateTime;
+use DateTimeInterface;
+use Surfnet\StepupBundle\Request\RequestId;
 use Symfony\Component\HttpFoundation\Request;
 
-final class UserAgentMatcher implements UserAgentMatcherInterface
+final readonly class ErrorPageHelper
 {
-    /**
-     * @param string $pattern
-     */
-    public function __construct(private $pattern)
+    public function __construct(private RequestId $requestId)
     {
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @return array<string, string|null>
      */
-    public function isOfficialTiqrMobileApp(Request $request): int|false
+    public function generateMetadata(Request $request): array
     {
+        $timestamp = (new DateTime)->format(DateTimeInterface::ATOM);
+        $hostname = $request->getHost();
         $userAgent = $request->headers->get('User-Agent');
-
-        return preg_match($this->pattern, $userAgent);
+        $ipAddress = $request->getClientIp();
+        return [
+            'timestamp' => $timestamp,
+            'hostname' => $hostname,
+            'request_id' => $this->requestId->get(),
+            'user_agent' => $userAgent,
+            'ip_address' => $ipAddress,
+        ];
     }
 }
