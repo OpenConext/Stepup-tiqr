@@ -29,18 +29,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private readonly RegistrationService $registrationService, private readonly StateHandlerInterface $stateHandler, private readonly TiqrServiceInterface $tiqrService, private readonly LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly RegistrationService $registrationService,
+        private readonly StateHandlerInterface $stateHandler,
+        private readonly TiqrServiceInterface $tiqrService,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
      * Returns the registration page with QR code that is generated in 'qrRegistrationAction'.
      *
-     *
      * @throws \InvalidArgumentException
      */
     #[Route(path: '/registration', name: 'app_identity_registration', methods: ['GET', 'POST'])]
-    public function registration(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function registration(Request $request): Response
     {
         $this->logger->info('Verifying if there is a pending registration from SP');
 
@@ -85,7 +88,7 @@ class RegistrationController extends AbstractController
      * @throws \InvalidArgumentException
      */
     #[Route(path: '/registration/status', name: 'app_identity_registration_status', methods: ['GET'])]
-    public function registrationStatus() : \Symfony\Component\HttpFoundation\Response
+    public function registrationStatus() : Response
     {
         $this->logger->info('Request for registration status');
         // Do have a valid sample AuthnRequest?.
@@ -96,7 +99,7 @@ class RegistrationController extends AbstractController
         }
         $status = $this->tiqrService->getEnrollmentStatus();
         $this->logger->info(sprintf('Send json response status "%s"', $status));
-        return new Response($this->tiqrService->getEnrollmentStatus());
+        return new Response((string) $this->tiqrService->getEnrollmentStatus());
     }
 
     /**
@@ -108,7 +111,7 @@ class RegistrationController extends AbstractController
      * @throws \InvalidArgumentException
      */
     #[Route(path: '/registration/qr/{enrollmentKey}', name: 'app_identity_registration_qr', methods: ['GET'])]
-    public function registrationQr(Request $request, $enrollmentKey): \Symfony\Component\HttpFoundation\Response
+    public function registrationQr(Request $request, string $enrollmentKey): Response
     {
         $this->logger->info('Request for registration QR img');
 
@@ -117,7 +120,7 @@ class RegistrationController extends AbstractController
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
-        $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode((string) $enrollmentKey)));
+        $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($enrollmentKey)));
         $this->logger->info('Returning registration QR response');
         return $this->tiqrService->createRegistrationQRResponse($metadataUrl);
     }

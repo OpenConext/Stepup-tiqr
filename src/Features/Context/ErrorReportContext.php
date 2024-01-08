@@ -21,12 +21,15 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\StepScope;
+use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Testwork\Tester\Result\TestResult;
+use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function is_string;
 
 /**
  * Generates a HTML/png error output report when a build fails.
@@ -56,7 +59,6 @@ final class ErrorReportContext implements Context
     /**
      * This will print the failed html result.
      *
-     *
      * @AfterStep
      */
     public function dumpInfoAfterFailedStep(AfterStepScope $scope): void
@@ -66,15 +68,16 @@ final class ErrorReportContext implements Context
         }
         try {
             $scenario = $this->getScenario($scope);
-            if (null !== $scenario) {
+            if ($scenario instanceof ScenarioInterface) {
                 $title = $scenario->getTitle();
-            }
-            if (null === $scenario) {
+            } else {
                 $step = $this->getBackGroundStep($scope);
                 $title = $step->getNodeType().'-'.$step->getText();
             }
             $filename = preg_replace('/[^a-zA-Z0-9]/', '-', $title);
-
+            if (!is_string($filename)) {
+                throw new Exception('Unable to parse the file name');
+            }
             $this->saveErrorFile($scope, $filename);
             $this->takeScreenShotAfterFailedStep($filename);
         } catch (DriverException) {
@@ -83,13 +86,13 @@ final class ErrorReportContext implements Context
     }
 
     /**
-     * Saves screen shot.
+     * Saves screenshot.
      *
      * @param string $fileName
      *
      * @throws \Behat\Mink\Exception\DriverException
      */
-    private function takeScreenShotAfterFailedStep(string|array|null $fileName): void
+    private function takeScreenShotAfterFailedStep(string $fileName): void
     {
         $session = $this->minkContext->getSession();
         if (!($session->getDriver() instanceof Selenium2Driver)) {
@@ -106,10 +109,8 @@ final class ErrorReportContext implements Context
 
     /**
      * Save the page result file to disk.
-     *
-     * @param string $fileName
      */
-    private function saveErrorFile(AfterStepScope $scope, string|array|null $fileName): void
+    private function saveErrorFile(AfterStepScope $scope, string $fileName): void
     {
         $session = $this->minkContext->getSession();
         $content = <<< TEXT
@@ -139,11 +140,8 @@ TEXT;
 
     /**
      * Returns the scenaro for a given step.
-     *
-     *
-     * @return \Behat\Gherkin\Node\ScenarioInterface
      */
-    private function getScenario(StepScope $scope)
+    private function getScenario(StepScope $scope): null|ScenarioInterface
     {
         $scenario = null;
         $feature = $scope->getFeature();

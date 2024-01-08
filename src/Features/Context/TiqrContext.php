@@ -29,8 +29,12 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Dev\FileLogger;
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use OCRA;
+use stdClass;
+use Surfnet\SamlBundle\Exception\NotFound;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -43,34 +47,26 @@ use Zxing\QrReader;
  */
 class TiqrContext implements Context
 {
-    /**
-     * @var MinkContext
-     */
-    protected $minkContext;
+    protected MinkContext $minkContext;
 
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
+    protected KernelInterface $kernel;
 
-    protected $metadataUrl;
+    protected string $metadataUrl;
 
-    protected $clientSecret;
+    protected string $clientSecret;
 
-    protected $userAgent;
+    protected string $userAgent;
 
     /**
      * The registration metadata.
      */
-    protected $metadata;
+    protected stdClass $metadata;
 
-    protected $notificationType;
-    protected $notificationAddress;
+    protected string $notificationType;
+    protected string $notificationAddress;
 
     /**
      * The scanned QR code with the '//tiqrauth' part.
-     *
-     * @var string
      */
     protected string $authenticationUrl;
 
@@ -120,12 +116,12 @@ class TiqrContext implements Context
     /**
      * We are not actually scanning the QR code, but downloading link from:
      *
-     * @see QrLinkController::qrRegistrationAction
+     * @throws NotFound
+     * @throws AssertionFailedException
+     *@see QrLinkController::qrRegistrationAction
      *
      * @Given the registration QR code is scanned
      *
-     * @throws \Surfnet\SamlBundle\Exception\NotFound
-     * @throws \Assert\AssertionFailedException
      */
     public function theRegistrationQrCodeIsScanned(): void
     {
@@ -140,12 +136,12 @@ class TiqrContext implements Context
     /**
      * We are not actually scanning the QR code, but downloading link from:
      *
-     * @see QrLinkController::qrRegistrationAction
+     * @throws NotFound
+     * @throws AssertionFailedException
+     *@see QrLinkController::qrRegistrationAction
      *
      * @Given the authentication QR code is scanned
      *
-     * @throws \Surfnet\SamlBundle\Exception\NotFound
-     * @throws \Assert\AssertionFailedException
      */
     public function theAuthenticationQrCodeIsScanned(): void
     {
@@ -162,7 +158,7 @@ class TiqrContext implements Context
      *
      * @When the user registers the service with notification type :notificationType address: :notificationAddress
      * @When the user registers the service
-     * @throws \Assert\AssertionFailedException
+     * @throws AssertionFailedException
      */
     public function userRegisterTheService(
         string $notificationType = '',
@@ -212,7 +208,7 @@ class TiqrContext implements Context
      *
      * @When the app authenticates to the service with notification type :notificationType address: :notificationAddress
      * @When the app authenticates to the service
-     * @throws \Exception
+     * @throws Exception
      */
     public function appAuthenticates(
         string $notificationType = '',
@@ -246,7 +242,7 @@ class TiqrContext implements Context
      * This does the app authentication logic.
      *
      * @When the app authenticates to the service with wrong password
-     * @throws \Exception
+     * @throws Exception
      */
     public function appAuthenticatesWithWrongPassword(
         string $notificationType = '',
@@ -262,8 +258,8 @@ class TiqrContext implements Context
     /**
      * @Then tiqr errors with a message telling the user agent was wrong
      *
-     * @throws \Assert\AssertionFailedException
-     * @throws \Exception
+     * @throws AssertionFailedException
+     * @throws Exception
      */
     public function userRegisteredWithWrongUserAgent(): void
     {
@@ -281,8 +277,8 @@ class TiqrContext implements Context
     /**
      * @Then we register with the same QR code it should not work anymore.
      *
-     * @throws \Assert\AssertionFailedException
-     * @throws \Exception
+     * @throws AssertionFailedException
+     * @throws Exception
      */
     public function userRegisterTheServiceWithSameQr(): void
     {
@@ -293,19 +289,19 @@ class TiqrContext implements Context
         // The second attempt should fail.
         try {
             $this->userRegisterTheService($this->notificationType, $this->notificationAddress);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Assertion::eq($exception->getMessage(), 'Metadata has expired');
 
             return;
         }
-        throw new \Exception('It should not be valid');
+        throw new Exception('It should not be valid');
     }
 
     /**
      * @Then we have a registered user
      *
      * @throws \App\Tiqr\Exception\UserNotExistsException
-     * @throws \Assert\AssertionFailedException
+     * @throws AssertionFailedException
      */
     public function weHaveARegisteredUser(): void
     {
@@ -323,7 +319,7 @@ class TiqrContext implements Context
      * @Then we have a authenticated user
      * @Then we have a authenticated app
      *
-     * @throws \Assert\AssertionFailedException
+     * @throws AssertionFailedException
      */
     public function weHaveAAuthenticatedUser(): void
     {
@@ -334,9 +330,9 @@ class TiqrContext implements Context
     /**
      * @Then we have the authentication error :error
      *
-     * @throws \Assert\AssertionFailedException
+     * @throws AssertionFailedException
      */
-    public function weHaveTheAuthenticationError($error): void
+    public function weHaveTheAuthenticationError(string $error): void
     {
         Assertion::eq($error, $this->authenticatioResponse->getContent());
         Assertion::eq($this->authenticatioResponse->getStatusCode(), Response::HTTP_FORBIDDEN);
@@ -344,7 +340,7 @@ class TiqrContext implements Context
 
     /**
      * @Given tiqr users is permanently blocked after :attempts attempts
-     * @throws \Assert\AssertionFailedException
+     * @throws AssertionFailedException
      */
     public function tiqrUserIsPermentlyBlockedConfiguration(int $attempts): void
     {
@@ -363,8 +359,8 @@ class TiqrContext implements Context
      *
      * @Then I scan the tiqr registration qrcode
      *
-     * @throws \Assert\AssertionFailedException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws AssertionFailedException
+     * @throws GuzzleException
      */
     public function iScanTheTiqrRegistrationQrcode(): void
     {
@@ -385,8 +381,8 @@ class TiqrContext implements Context
      *
      * @Then I click the tiqr registration qrcode
      *
-     * @throws \Assert\AssertionFailedException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws AssertionFailedException
+     * @throws GuzzleException
      */
     public function iClickTheTiqrRegistrationQrcode(): void
     {
@@ -401,8 +397,8 @@ class TiqrContext implements Context
      *
      * @Then I scan the tiqr authentication qrcode
      *
-     * @throws \Assert\AssertionFailedException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws AssertionFailedException
+     * @throws GuzzleException
      */
     public function iScanTheTiqrAuthenticationQrcode(): void
     {
@@ -429,8 +425,8 @@ class TiqrContext implements Context
     /**
      * @Given /^the logs are:$/
      *
-     * @throws \Assert\AssertionFailedException
-     * @throws \Exception
+     * @throws AssertionFailedException
+     * @throws Exception
      */
     public function theLogsAre(TableNode $table): void
     {
@@ -477,7 +473,7 @@ class TiqrContext implements Context
                 isset($log[2]['sari']) ? 'present' : ''
             ), $logs));
 
-            throw new \Exception($exception->getMessage() . PHP_EOL . $yml, $exception->getCode(), $exception);
+            throw new Exception($exception->getMessage() . PHP_EOL . $yml, $exception->getCode(), $exception);
         }
     }
 
@@ -486,7 +482,7 @@ class TiqrContext implements Context
      *
      * This support the strange way how tiqr sends the qr code.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function getFileContentsInsecure(string $src): string|false
     {

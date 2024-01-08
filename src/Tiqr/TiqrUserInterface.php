@@ -65,7 +65,7 @@ interface TiqrUserInterface
      *
      * @throws TiqrServerRuntimeException
      */
-    public function addLoginAttempt();
+    public function addLoginAttempt(): void;
 
     /**
      * Get the user's number of unsuccessful temporary login attempts

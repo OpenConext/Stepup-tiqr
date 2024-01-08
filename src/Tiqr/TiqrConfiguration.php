@@ -23,13 +23,14 @@ use Assert\Assertion;
 class TiqrConfiguration implements TiqrConfigurationInterface
 {
 
+    /** @var array<string, mixed> */
     private $options = [];
     final public const TEMPORARILY_BLOCK_DURATION = 'temporarilyBlockDuration';
     final public const MAX_ATTEMPTS = 'maxAttempts';
     final public const MAX_TEMPORARILY_BLOCKS = 'maxTemporarilyBlocks';
 
     /**
-     * @param array[] $tiqrConfiguration
+     * @param array<string, array<string, mixed>> $tiqrConfiguration
      *
      * @throws \Assert\AssertionFailedException
      */
@@ -108,6 +109,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
 
     /**
      * Please don't use this to get individual options.
+     * @return array<string, array<string, mixed>>
      */
     public function getTiqrOptions(): array
     {
@@ -161,7 +163,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      */
     public function getMaxTemporarilyLoginAttempts(): int
     {
-        if ($this->hasMaxTemporarilyLoginAttempts() === 0) {
+        if (!$this->hasMaxTemporarilyLoginAttempts()) {
             throw ConfigurationException::noMaxTemporarilyAttempts();
         }
         return $this->options[self::MAX_TEMPORARILY_BLOCKS];

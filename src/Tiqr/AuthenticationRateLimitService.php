@@ -65,11 +65,6 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
     }
 
     /**
-     * @param string $sessionKey
-     * @param TiqrUserInterface $user
-     * @param string $response
-     *
-     * @return AuthenticationResponse
      * @throws \InvalidArgumentException
      * @throws Exception\ConfigurationException
      * @throws \Exception
@@ -115,8 +110,6 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
     }
 
     /**
-     *
-     * @return AuthenticationResponse
      * @throws Exception\ConfigurationException
      */
     private function handleAuthenticationRejectResponse(
@@ -159,7 +152,7 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
 
         $now = new \DateTimeImmutable();
         // Just block the user temporarily if we don't got a limit.
-        if ($this->configuration->hasMaxTemporarilyLoginAttempts() === 0) {
+        if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
 
             $user->blockTemporarily($now);
             $logger->notice('Increase temporarily block attempt');
