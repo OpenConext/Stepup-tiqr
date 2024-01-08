@@ -29,6 +29,9 @@ final class UserAgentMatcher implements UserAgentMatcherInterface
     public function isOfficialTiqrMobileApp(Request $request): bool
     {
         $userAgent = $request->headers->get('User-Agent');
+        if (!$userAgent) {
+            return false;
+        }
         $result = preg_match($this->pattern, $userAgent);
         return $result === 1;
     }

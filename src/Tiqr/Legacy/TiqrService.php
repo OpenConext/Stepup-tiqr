@@ -309,7 +309,7 @@ final class TiqrService implements TiqrServiceInterface
             if (false === $translatedAddress) {
                 throw new TiqrServerRuntimeException(sprintf('Error translating address for "%s"', $notificationAddress));
             }
-            $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, $translatedAddress);
+            $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, (string) $translatedAddress);
         } catch (Exception $e) {
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
