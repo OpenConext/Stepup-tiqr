@@ -31,14 +31,14 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * Generates a HTML/png error output report when a build fails.
  */
-final class ErrorReportContext implements Context, KernelAwareContext
+final class ErrorReportContext implements Context
 {
 
     /**
      * @var MinkContext
      */
     private $minkContext;
-    private ?\Symfony\Component\HttpKernel\KernelInterface $kernel = null;
+    private ?KernelInterface $kernel = null;
 
     /**
      * Fetch the required contexts.

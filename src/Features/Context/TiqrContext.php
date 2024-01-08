@@ -30,6 +30,7 @@ use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Dev\FileLogger;
 use GuzzleHttp\Client;
+use OCRA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -40,7 +41,7 @@ use Zxing\QrReader;
  *
  * @SuppressWarnings(PHPMD)
  */
-class TiqrContext implements Context, KernelAwareContext
+class TiqrContext implements Context
 {
     /**
      * @var MinkContext
@@ -60,7 +61,6 @@ class TiqrContext implements Context, KernelAwareContext
 
     /**
      * The registration metadata.
-     * @var mixed
      */
     protected $metadata;
 
@@ -72,16 +72,17 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @var string
      */
-    protected $authenticationUrl;
+    protected string $authenticationUrl;
 
     /**
      * The authentication result.
-     *
-     * @var Response
      */
-    protected $authenticatioResponse;
-    public function __construct(private \App\Tiqr\TiqrUserRepositoryInterface $tiqrUserRepository, private \App\Tiqr\TiqrConfigurationInterface $tiqrConfiguration, private \Dev\FileLogger $fileLogger)
-    {
+    protected Response $authenticatioResponse;
+    public function __construct(
+        private readonly TiqrUserRepositoryInterface $tiqrUserRepository,
+        private readonly TiqrConfigurationInterface $tiqrConfiguration,
+        private readonly FileLogger $fileLogger
+    ) {
     }
 
     /**
@@ -128,7 +129,6 @@ class TiqrContext implements Context, KernelAwareContext
      */
     public function theRegistrationQrCodeIsScanned(): void
     {
-        /** @var Client $client */
         $this->minkContext->visitPath('/registration/qr/link');
         // Should start with tiqrenroll://
         $content = $this->minkContext->getMink()->getSession()->getPage()->getText();
@@ -149,7 +149,6 @@ class TiqrContext implements Context, KernelAwareContext
      */
     public function theAuthenticationQrCodeIsScanned(): void
     {
-        /** @var Client $client */
         $this->minkContext->visitPath('/authentication/qr/' . urlencode((string) $this->metadata->identity->identifier) . '/link');
         // Should start with tiqrenroll://
         $content = $this->minkContext->getMink()->getSession()->getPage()->getText();
@@ -188,7 +187,6 @@ class TiqrContext implements Context, KernelAwareContext
             'notificationAddress' => $notificationAddress,
         ];
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Client $client */
         $client = $this->minkContext->getSession()->getDriver()->getClient();
         $client->request(
             'POST',
@@ -227,7 +225,7 @@ class TiqrContext implements Context, KernelAwareContext
         $ocraSuite = $service['ocraSuite'];
 
 
-        $response = \OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
+        $response = OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
         $authenticationBody = [
             'operation' => 'login',
             'sessionKey' => $session,
@@ -351,15 +349,10 @@ class TiqrContext implements Context, KernelAwareContext
     public function tiqrUserIsPermentlyBlockedConfiguration(int $attempts): void
     {
         $container = $this->kernel->getContainer();
-        /** @var TiqrConfiguration $config */
         $config = $this->tiqrConfiguration;
         $config->setMaxLoginAttempts($attempts);
     }
 
-    /**
-     *
-     * @return string
-     */
     private function createClientSecret(): string
     {
         return bin2hex(openssl_random_pseudo_bytes(32));
@@ -376,7 +369,6 @@ class TiqrContext implements Context, KernelAwareContext
     public function iScanTheTiqrRegistrationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
-        /** @var Client $client */
         $page = $session->getPage();
         $img = $page->find('css', 'div.qr > a > img');
         $src = $img->getAttribute('src');
@@ -399,7 +391,6 @@ class TiqrContext implements Context, KernelAwareContext
     public function iClickTheTiqrRegistrationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
-        /** @var Client $client */
         $page = $session->getPage();
         $anchor = $page->find('css', 'div.qr > a');
         $this->metadataUrl = str_replace('tiqrenroll://', '', $anchor->getAttribute('href'));
@@ -416,7 +407,6 @@ class TiqrContext implements Context, KernelAwareContext
     public function iScanTheTiqrAuthenticationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
-        /** @var Client $client */
         $page = $session->getPage();
         $img = $page->find('css', 'div.qr img');
         $src = $img->getAttribute('src');
@@ -432,7 +422,6 @@ class TiqrContext implements Context, KernelAwareContext
      */
     public function clearTheLogs(): void
     {
-        /** @var FileLogger $logger */
         $logger = $this->fileLogger;
         $logger->cleanLogs();
     }
@@ -445,7 +434,6 @@ class TiqrContext implements Context, KernelAwareContext
      */
     public function theLogsAre(TableNode $table): void
     {
-        /** @var FileLogger $logger */
         $logger = $this->fileLogger;
         $logs = $logger->cleanLogs();
         $rows = array_values($table->getColumnsHash());
@@ -498,12 +486,9 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * This support the strange way how tiqr sends the qr code.
      *
-     * @param string $src
-     *
-     * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function getFileContentsInsecure($src): string|false
+    private function getFileContentsInsecure(string $src): string|false
     {
         $session = $this->minkContext->getMink()->getSession();
         $driver = $session->getDriver();
@@ -518,7 +503,7 @@ class TiqrContext implements Context, KernelAwareContext
     /**
      * @Given I fill in :field with my identifier
      */
-    public function iFillInWithMyIdentifier($field): void
+    public function iFillInWithMyIdentifier(string $field): void
     {
         $this->minkContext->fillField($field, $this->metadata->identity->identifier);
     }
@@ -526,12 +511,12 @@ class TiqrContext implements Context, KernelAwareContext
     /**
      * @Given I fill in :field with my one time password and press ok
      */
-    public function iFillInWithMyOTP($field): void
+    public function iFillInWithMyOTP(string $field): void
     {
         [$serviceId, $session, $challenge] = explode('/', $this->authenticationUrl);
         $service = (array)$this->metadata->service;
         $ocraSuite = $service['ocraSuite'];
-        $response = \OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
+        $response = OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
         $this->minkContext->visit('/authentication?otp=' . urlencode($response));
     }
 }

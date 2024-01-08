@@ -28,8 +28,6 @@ interface TiqrServiceInterface
      * Return a stream with the PNG image data of a QR code with the enrollment url and enrollment key
      *
      * @see \Tiqr_Service::generateEnrollmentQR()
-     *
-     * @return StreamedResponse
      */
     public function createRegistrationQRResponse(string $metadataURL): StreamedResponse;
 
@@ -156,8 +154,6 @@ interface TiqrServiceInterface
      *              false otherwise
      *
      * @see \Tiqr_Service::getAuthenticatedUser()
-     *
-     * Does not throw
      */
     public function isAuthenticated(): bool;
 
@@ -170,7 +166,6 @@ interface TiqrServiceInterface
      *
      * @see \Tiqr_Service::generateAuthQR()
      *
-     * @return StreamedResponse
      * @throws TiqrServerRuntimeException
      */
     public function createAuthenticationQRResponse(): StreamedResponse;
@@ -183,8 +178,6 @@ interface TiqrServiceInterface
      * same device as where the application is installed
      *
      * @see \Tiqr_Service::generateAuthURL()
-     *
-     * @return the generated URL
      * @throws TiqrServerRuntimeException
      *
      */
@@ -192,7 +185,6 @@ interface TiqrServiceInterface
 
     /**
      *
-     * @return AuthenticationResponse
      * @throws TiqrServerRuntimeException
      */
     public function authenticate(TiqrUserInterface $user, string $response, string $sessionKey): AuthenticationResponse;
@@ -201,7 +193,6 @@ interface TiqrServiceInterface
      * Returns the current enrollment status.
      * @see \Tiqr_Service::getEnrollmentStatus()
      *
-     * @return int
      * @throws TiqrServerRuntimeException
      */
     public function getEnrollmentStatus(): int;
@@ -217,18 +208,11 @@ interface TiqrServiceInterface
 
     /**
      * Returns the current id of the enrolled user.
-     * @return string
-     *
-     * Does not throw
      */
     public function getUserId(): string;
 
     /**
      * Return the authentication session id.
-     *
-     * @return string
-     *
-     * Does not throw
      */
     public function getAuthenticationSessionKey(): string;
 
