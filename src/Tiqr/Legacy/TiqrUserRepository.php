@@ -27,24 +27,10 @@ use Tiqr_UserStorage_Interface;
 /**
  * Wrapper around the legacy Tiqr user repository.
  */
-final class TiqrUserRepository implements TiqrUserRepositoryInterface
+final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
 {
-    /**
-     * @var \Tiqr_UserStorage_Interface
-     */
-    private $userStorage;
-
-    /**
-     * @var \Tiqr_UserSecretStorage_Interface
-     */
-    private $userSecretStorage;
-
-    public function __construct(
-        Tiqr_UserStorage_Interface $userStorage,
-        Tiqr_UserSecretStorage_Interface $userSecretStorage
-    ) {
-        $this->userStorage = $userStorage;
-        $this->userSecretStorage = $userSecretStorage;
+    public function __construct(private Tiqr_UserStorage_Interface $userStorage, private Tiqr_UserSecretStorage_Interface $userSecretStorage)
+    {
     }
 
     /**

@@ -10,6 +10,7 @@ monolog:
             type: stream
             path: "php://stderr"
             formatter: surfnet_stepup.monolog.json_formatter
+            channels: "!event"
 
 when@dev:
     monolog:
@@ -18,7 +19,7 @@ when@dev:
                 type: stream
                 path: php://stderr
                 level: debug
-                channels: ["!event"]
+                channels: "!event"
             console:
                 type: console
                 process_psr_3_messages: false
@@ -34,7 +35,7 @@ when@test:
                 action_level: error
                 handler: nested
                 excluded_http_codes: [404, 405]
-                channels: ["!event"]
+                channels: "!event"
             nested:
                 type: stream
                 path: php://stderr

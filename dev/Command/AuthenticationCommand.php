@@ -20,6 +20,7 @@ namespace Dev\Command;
 use GuzzleHttp\Client;
 use OCRA;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,20 +30,17 @@ use Zxing\QrReader;
 
 require_once __DIR__.'/../../vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/OATH/OCRA.php';
 
+#[AsCommand(name: 'test:authentication')]
 class AuthenticationCommand extends Command
 {
-    private $client;
-
-    public function __construct(Client $client)
+    public function __construct(private readonly Client $client)
     {
         parent::__construct();
-        $this->client = $client;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('test:authentication')
             ->setDescription('Register the app with authentication url.')
             ->addArgument('path', InputArgument::REQUIRED, 'Path to QR-code image')
             ->addOption(
@@ -82,14 +80,14 @@ class AuthenticationCommand extends Command
 
         $matches = [];
         if (preg_match('/^tiqrauth:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
-            throw new RuntimeException(sprintf('Expected url with tiqrauth://'));
+            throw new RuntimeException('Expected url with tiqrauth://');
         }
         $authn = $matches['url'];
-        list($serviceId, $session, $challenge, $sp, $version) = explode('/', $authn);
+        [$serviceId, $session, $challenge, $sp, $version] = explode('/', $authn);
 
         $userId = null;
         if (strpos($serviceId, '@') >= 0) {
-            list($userId, $serviceId) = explode('@', $serviceId);
+            [$userId, $serviceId] = explode('@', $serviceId);
         }
 
         $output->writeln([
@@ -165,14 +163,13 @@ class AuthenticationCommand extends Command
         ]);
     }
 
-    protected function decorateResult($text)
+    protected function decorateResult($text): string
     {
         return "<options=bold>$text</>";
     }
 
     /**
      * @param string $file
-     * @param OutputInterface $output
      *
      * @return string
      */

@@ -19,6 +19,7 @@ namespace Dev\Command;
 
 use GuzzleHttp\Client;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,20 +27,17 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zxing\QrReader;
 
+#[AsCommand(name: 'test:registration')]
 class RegistrationCommand extends Command
 {
-    private $client;
-
-    public function __construct(Client $client)
+    public function __construct(private readonly Client $client)
     {
         parent::__construct();
-        $this->client = $client;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('test:registration')
             ->setDescription('Register the app with registration url.')
             ->addArgument('path', InputArgument::REQUIRED, 'Path to QR-code image')
             ->addOption(
@@ -59,7 +57,7 @@ class RegistrationCommand extends Command
             ->setHelp('Give the url as argument.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         // Fetching the metadata from the Tiqr IDP.
         $path = $input->getArgument('path');
@@ -67,9 +65,12 @@ class RegistrationCommand extends Command
 
         $matches = [];
         if (preg_match('/^tiqrenroll:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
-            throw new RuntimeException(sprintf('Expected url with tiqrenroll://'));
+            throw new RuntimeException('Expected url with tiqrenroll://');
         }
         $url = $matches['url'];
+        // Route the internal curl request via port 80, the host does not
+        // listen on port 443
+        $url = str_replace('https', 'http', $url);
 
         $output->writeln("<comment>Fetch metadata endpoint from $url</comment>");
         $metadataResponse = $this->client->get($url);
@@ -100,6 +101,9 @@ class RegistrationCommand extends Command
             ),
             $this->decorateResult(json_encode($registrationBody, JSON_PRETTY_PRINT)),
         ]);
+        // Route the internal curl request via port 80, the host does not
+        // listen on port 443
+        $metadata->service->enrollmentUrl = str_replace('https', 'http', (string) $metadata->service->enrollmentUrl);
         $result = $this->client->post($metadata->service->enrollmentUrl, ['form_params' => $registrationBody]);
         $resultBody = $result->getBody()->getContents();
         $output->writeln([
@@ -118,14 +122,12 @@ class RegistrationCommand extends Command
         $this->storeIdentity($metadata, $secret, $output);
     }
 
-    protected function decorateResult($text)
+    protected function decorateResult($text): string
     {
         return "<options=bold>$text</>";
     }
 
     /**
-     * @param OutputInterface $output
-     *
      * @return string
      */
     protected function readRegistrationUrlFromFile($file, OutputInterface $output)
@@ -146,7 +148,7 @@ class RegistrationCommand extends Command
      *
      * @return string
      */
-    private function createClientSecret()
+    private function createClientSecret(): string
     {
         return bin2hex(openssl_random_pseudo_bytes(32));
     }

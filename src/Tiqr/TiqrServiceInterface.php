@@ -29,7 +29,6 @@ interface TiqrServiceInterface
      *
      * @see \Tiqr_Service::generateEnrollmentQR()
      *
-     * @param string $metadataURL
      * @return StreamedResponse
      */
     public function createRegistrationQRResponse(string $metadataURL): StreamedResponse;
@@ -146,8 +145,6 @@ interface TiqrServiceInterface
      * @see \Tiqr_Service::startAuthenticationSession()
      * @see \Tiqr_Service::generateAuthURL()
      *
-     * @param string $userId
-     * @param string $sari
      *
      * @return string the generated authentication URL
      * @throws TiqrServerRuntimeException
@@ -194,9 +191,6 @@ interface TiqrServiceInterface
     public function authenticationUrl(): string;
 
     /**
-     * @param TiqrUserInterface $user
-     * @param string $response
-     * @param string $sessionKey
      *
      * @return AuthenticationResponse
      * @throws TiqrServerRuntimeException
@@ -245,8 +239,6 @@ interface TiqrServiceInterface
      * return the $notificationAddress and the $notificationType that are required
      * to sent push notifications to the device.
      *
-     * @param string $notificationType
-     * @param string $notificationAddress
      * @throws TiqrServerRuntimeException
      *
      */

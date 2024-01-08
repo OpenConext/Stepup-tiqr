@@ -24,31 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GlobalViewParameters
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string[]
-     */
-    private $locales;
-
-    /**
-     * @var string[]
-     */
-    private $supportUrl;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $supportUrl
-     */
-    public function __construct(TranslatorInterface $translator, array $locales, array $supportUrl)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly array $locales, private array $supportUrl)
     {
-        $this->translator = $translator;
-        $this->locales = $locales;
-        $this->supportUrl = $supportUrl;
     }
 
     /**

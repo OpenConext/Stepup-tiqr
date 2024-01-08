@@ -22,11 +22,8 @@ namespace App\Tiqr\Response;
  */
 class RejectedAuthenticationResponse implements AuthenticationResponse
 {
-    private $error;
-
-    public function __construct(string $error)
+    public function __construct(private readonly string $error)
     {
-        $this->error = $error;
     }
 
     /**

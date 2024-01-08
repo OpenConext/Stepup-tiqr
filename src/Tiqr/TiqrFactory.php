@@ -20,8 +20,7 @@ namespace App\Tiqr;
 use App\Tiqr\Legacy\TiqrService;
 use App\Tiqr\Legacy\TiqrUserRepository;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Tiqr_Service;
 use Tiqr_StateStorage;
 use Tiqr_UserSecretStorage;
@@ -29,32 +28,19 @@ use Tiqr_UserStorage;
 
 class TiqrFactory
 {
-    private $configuration;
-    private $container;
-    private $session;
-    private $logger;
-    private $loaded = false;
-
-    public function __construct(
-        TiqrConfigurationInterface $configuration,
-        ContainerInterface $container,
-        SessionInterface $session,
-        LoggerInterface $logger
-    ) {
-        $this->configuration = $configuration;
-        $this->container = $container;
-        $this->session = $session;
-        $this->logger = $logger;
-    }
+    private static bool $loaded = false;
 
     // Created from services.yaml
-    public function createService(): TiqrService
-    {
-        $this->loadDependencies();
-        $options = $this->configuration->getTiqrOptions();
+    public static function createService(
+        TiqrConfigurationInterface $configuration,
+        RequestStack $requestStack,
+        LoggerInterface $logger,
+        string $appSecret
+    ): TiqrService {
+        $options = $configuration->getTiqrOptions();
 
         $storageType = "file";
-        $storageOptions = array();
+        $storageOptions = [];
 
         if (isset($options["statestorage"])) {
             $storageType = $options["statestorage"]["type"];
@@ -62,47 +48,33 @@ class TiqrFactory
         }
 
         return new TiqrService(
-            new Tiqr_Service($this->logger, $options),
-            Tiqr_StateStorage::getStorage($storageType, $storageOptions, $this->logger),
-            $this->session,
-            $this->logger,
+            new Tiqr_Service($logger, $options),
+            Tiqr_StateStorage::getStorage($storageType, $storageOptions, $logger),
+            $requestStack,
+            $logger,
+            $appSecret,
             $options['name']
         );
     }
 
     // Created from services.yaml
-    public function createUserRepository(): TiqrUserRepository
+    public static function createUserRepository(
+        TiqrConfigurationInterface $configuration,
+        LoggerInterface $logger
+    ): TiqrUserRepository
     {
-        $this->loadDependencies();
-        $options = $this->configuration->getTiqrOptions();
+        $options = $configuration->getTiqrOptions();
         $userStorage = Tiqr_UserStorage::getStorage(
             $options['userstorage']['type'],
             $options['userstorage'],
-            $this->logger
+            $logger
         );
 
         $userSecretStorage = Tiqr_UserSecretStorage::getSecretStorage(
             $options['usersecretstorage']['type'],
-            $this->logger,
+            $logger,
             $options['usersecretstorage']
         );
         return new TiqrUserRepository($userStorage, $userSecretStorage);
-    }
-
-    private function loadDependencies()
-    {
-        if ($this->loaded) {
-            return;
-        }
-        $this->loaded = true;
-        $projectDirectory = $this->container->getParameter('kernel.project_dir');
-        $vendorPath = $projectDirectory . '/vendor';
-        require_once $vendorPath . '/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/AutoLoader.php';
-        $autoloader = \Tiqr_AutoLoader::getInstance([
-            'tiqr.path' => $vendorPath . '/tiqr/tiqr-server-libphp/library/tiqr',
-            'zend.path' => $vendorPath . '/zendframework/zendframework1/library',
-            'phpqrcode.path' => $vendorPath . '/kairos/phpqrcode',
-        ]);
-        $autoloader->setIncludePath();
     }
 }

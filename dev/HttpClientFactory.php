@@ -24,7 +24,7 @@ use GuzzleHttp\Client;
  */
 class HttpClientFactory
 {
-    public static function create()
+    public static function create(): \GuzzleHttp\Client
     {
         // TODO: make the hostname configurable.
         return new Client([

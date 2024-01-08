@@ -26,25 +26,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CancelController extends AbstractController
 {
-    private $authenticationService;
-    private $registrationService;
-    private $logger;
-
     public function __construct(
-        AuthenticationService $authenticationService,
-        RegistrationService $registrationService,
-        LoggerInterface $logger
+        private readonly AuthenticationService $authenticationService,
+        private readonly RegistrationService $registrationService,
+        private readonly LoggerInterface $logger
     ) {
-        $this->authenticationService = $authenticationService;
-        $this->registrationService = $registrationService;
-        $this->logger = $logger;
     }
 
     /**
-     * @Route("/cancel", name="app_cancel", methods={"GET"})
      * @throws \InvalidArgumentException
      */
-    public function cancelAction()
+    #[Route(path: '/cancel', name: 'app_cancel', methods: ['GET'])]
+    public function cancel(): \Symfony\Component\HttpFoundation\Response
     {
         $this->logger->notice('User cancelled the request');
         if ($this->authenticationService->authenticationRequired()) {

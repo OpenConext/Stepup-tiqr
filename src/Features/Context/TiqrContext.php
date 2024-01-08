@@ -80,15 +80,16 @@ class TiqrContext implements Context, KernelAwareContext
      * @var Response
      */
     protected $authenticatioResponse;
+    public function __construct(private \App\Tiqr\TiqrUserRepositoryInterface $tiqrUserRepository, private \App\Tiqr\TiqrConfigurationInterface $tiqrConfiguration, private \Dev\FileLogger $fileLogger)
+    {
+    }
 
     /**
      * Sets HttpKernel instance.
      * This method will be automatically called by Symfony2Extension
      * ContextInitializer.
-     *
-     * @param KernelInterface $kernel
      */
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -98,7 +99,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
         $this->minkContext = $environment->getContext(MinkContext::class);
@@ -110,7 +111,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @BeforeScenario
      */
-    public function restore(BeforeScenarioScope $scope)
+    public function restore(BeforeScenarioScope $scope): void
     {
         $this->userAgent = 'Behat UA';
     }
@@ -125,7 +126,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      * @throws \Assert\AssertionFailedException
      */
-    public function theRegistrationQrCodeIsScanned()
+    public function theRegistrationQrCodeIsScanned(): void
     {
         /** @var Client $client */
         $this->minkContext->visitPath('/registration/qr/link');
@@ -146,10 +147,10 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Surfnet\SamlBundle\Exception\NotFound
      * @throws \Assert\AssertionFailedException
      */
-    public function theAuthenticationQrCodeIsScanned()
+    public function theAuthenticationQrCodeIsScanned(): void
     {
         /** @var Client $client */
-        $this->minkContext->visitPath('/authentication/qr/' . urlencode($this->metadata->identity->identifier) . '/link');
+        $this->minkContext->visitPath('/authentication/qr/' . urlencode((string) $this->metadata->identity->identifier) . '/link');
         // Should start with tiqrenroll://
         $content = $this->minkContext->getMink()->getSession()->getPage()->getText();
         Assertion::startsWith($content, 'tiqrauth://');
@@ -162,14 +163,12 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @When the user registers the service with notification type :notificationType address: :notificationAddress
      * @When the user registers the service
-     * @param string $notificationType
-     * @param string $notificationAddress
      * @throws \Assert\AssertionFailedException
      */
     public function userRegisterTheService(
         string $notificationType = '',
         string $notificationAddress = ''
-    ) {
+    ): void {
         $this->notificationType = $notificationType;
         $this->notificationAddress = $notificationAddress;
         $this->minkContext->visitPath($this->metadataUrl);
@@ -204,10 +203,8 @@ class TiqrContext implements Context, KernelAwareContext
 
     /**
      * @Given the mobile tiqr app identifies itself with the user agent :userAgent
-     *
-     * @param string $userAgent
      */
-    public function mobileAppUsesUserAgent(string $userAgent)
+    public function mobileAppUsesUserAgent(string $userAgent): void
     {
         $this->userAgent = $userAgent;
     }
@@ -217,16 +214,14 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @When the app authenticates to the service with notification type :notificationType address: :notificationAddress
      * @When the app authenticates to the service
-     * @param string $notificationType
-     * @param string $notificationAddress
      * @throws \Exception
      */
     public function appAuthenticates(
         string $notificationType = '',
         string $notificationAddress = ''
-    ) {
-        list($serviceId, $session, $challenge, $sp, $version) = explode('/', $this->authenticationUrl);
-        list($userId, $serviceId) = explode('@', $serviceId);
+    ): void {
+        [$serviceId, $session, $challenge, $sp, $version] = explode('/', $this->authenticationUrl);
+        [$userId, $serviceId] = explode('@', $serviceId);
         $service = (array)$this->metadata->service;
         $authenticationUrl = $service['authenticationUrl'];
         $ocraSuite = $service['ocraSuite'];
@@ -242,10 +237,10 @@ class TiqrContext implements Context, KernelAwareContext
             'notificationAddress' => $notificationAddress,
         ];
         // Internal request does not like an absolute path.
-        $authenticationUrl = str_replace('https://tiqr.stepup.example.com', '', $authenticationUrl);
+        $authenticationUrl = str_replace('https://tiqr.stepup.example.com', '', (string) $authenticationUrl);
 
         $this->authenticatioResponse = $this->kernel->handle(
-            Request::create($authenticationUrl, 'POST', $authenticationBody)
+            Request::create($authenticationUrl, \Symfony\Component\HttpFoundation\Request::METHOD_POST, $authenticationBody)
         );
     }
 
@@ -253,14 +248,12 @@ class TiqrContext implements Context, KernelAwareContext
      * This does the app authentication logic.
      *
      * @When the app authenticates to the service with wrong password
-     * @param string $notificationType
-     * @param string $notificationAddress
      * @throws \Exception
      */
     public function appAuthenticatesWithWrongPassword(
-        $notificationType = '',
-        $notificationAddress = ''
-    ) {
+        string $notificationType = '',
+        string $notificationAddress = ''
+    ): void {
         $secret = $this->clientSecret;
         // We scramble the secret key, normally the user does this with his password
         $this->clientSecret = $this->createClientSecret();
@@ -274,7 +267,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      * @throws \Exception
      */
-    public function userRegisteredWithWrongUserAgent()
+    public function userRegisteredWithWrongUserAgent(): void
     {
         $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
         Assertion::eq(
@@ -293,7 +286,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      * @throws \Exception
      */
-    public function userRegisterTheServiceWithSameQr()
+    public function userRegisterTheServiceWithSameQr(): void
     {
         // The first registration attempt should succeed.
         $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
@@ -316,13 +309,13 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \App\Tiqr\Exception\UserNotExistsException
      * @throws \Assert\AssertionFailedException
      */
-    public function weHaveARegisteredUser()
+    public function weHaveARegisteredUser(): void
     {
         $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
         Assertion::eq($resultBody, 'OK', 'Enrollment failed');
 
         /** @var TiqrUserRepositoryInterface $userRepository */
-        $userRepository = $this->kernel->getContainer()->get(TiqrUserRepositoryInterface::class);
+        $userRepository = $this->tiqrUserRepository;
         // we have a registered user
         $user = $userRepository->getUser($this->metadata->identity->identifier);
         Assertion::eq($user->getSecret(), $this->clientSecret);
@@ -334,7 +327,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @throws \Assert\AssertionFailedException
      */
-    public function weHaveAAuthenticatedUser()
+    public function weHaveAAuthenticatedUser(): void
     {
         Assertion::eq("OK", $this->authenticatioResponse->getContent());
         Assertion::eq($this->authenticatioResponse->getStatusCode(), 200);
@@ -345,7 +338,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @throws \Assert\AssertionFailedException
      */
-    public function weHaveTheAuthenticationError($error)
+    public function weHaveTheAuthenticationError($error): void
     {
         Assertion::eq($error, $this->authenticatioResponse->getContent());
         Assertion::eq($this->authenticatioResponse->getStatusCode(), Response::HTTP_FORBIDDEN);
@@ -353,14 +346,13 @@ class TiqrContext implements Context, KernelAwareContext
 
     /**
      * @Given tiqr users is permanently blocked after :attempts attempts
-     * @param int $attempts
      * @throws \Assert\AssertionFailedException
      */
-    public function tiqrUserIsPermentlyBlockedConfiguration($attempts)
+    public function tiqrUserIsPermentlyBlockedConfiguration(int $attempts): void
     {
         $container = $this->kernel->getContainer();
         /** @var TiqrConfiguration $config */
-        $config = $container->get(TiqrConfigurationInterface::class);
+        $config = $this->tiqrConfiguration;
         $config->setMaxLoginAttempts($attempts);
     }
 
@@ -368,7 +360,7 @@ class TiqrContext implements Context, KernelAwareContext
      *
      * @return string
      */
-    private function createClientSecret()
+    private function createClientSecret(): string
     {
         return bin2hex(openssl_random_pseudo_bytes(32));
     }
@@ -381,7 +373,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function iScanTheTiqrRegistrationQrcode()
+    public function iScanTheTiqrRegistrationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
         /** @var Client $client */
@@ -404,7 +396,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function iClickTheTiqrRegistrationQrcode()
+    public function iClickTheTiqrRegistrationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
         /** @var Client $client */
@@ -421,7 +413,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function iScanTheTiqrAuthenticationQrcode()
+    public function iScanTheTiqrAuthenticationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
         /** @var Client $client */
@@ -438,10 +430,10 @@ class TiqrContext implements Context, KernelAwareContext
     /**
      * @When /^I clear the logs$/
      */
-    public function clearTheLogs()
+    public function clearTheLogs(): void
     {
         /** @var FileLogger $logger */
-        $logger = $this->kernel->getContainer()->get(FileLogger::class);
+        $logger = $this->fileLogger;
         $logger->cleanLogs();
     }
 
@@ -451,18 +443,18 @@ class TiqrContext implements Context, KernelAwareContext
      * @throws \Assert\AssertionFailedException
      * @throws \Exception
      */
-    public function theLogsAre(TableNode $table)
+    public function theLogsAre(TableNode $table): void
     {
         /** @var FileLogger $logger */
-        $logger = $this->kernel->getContainer()->get(FileLogger::class);
+        $logger = $this->fileLogger;
         $logs = $logger->cleanLogs();
         $rows = array_values($table->getColumnsHash());
 
         try {
             foreach ($rows as $index => $row) {
                 Assertion::true(isset($logs[$index]), sprintf('Missing message %s', $row['message']));
-                list($level, $message, $context) = $logs[$index];
-                if (preg_match('/^\/.*\/$/', $row['message']) === 1) {
+                [$level, $message, $context] = $logs[$index];
+                if (preg_match('/^\/.*\/$/', (string) $row['message']) === 1) {
                     Assertion::regex($message, $row['message']);
                 } else {
                     Assertion::eq($message, $row['message'],
@@ -490,16 +482,14 @@ class TiqrContext implements Context, KernelAwareContext
             $logs = array_slice($logs, count($rows));
             Assertion::noContent($logs, var_export($logs, true));
         } catch (AssertionFailedException $exception) {
-            $yml = implode(PHP_EOL, array_map(function ($log) {
-                return sprintf(
-                    '| %s | %s | %s |',
-                    $log[0],
-                    $log[1],
-                    isset($log[2]['sari']) ? 'present' : ''
-                );
-            }, $logs));
+            $yml = implode(PHP_EOL, array_map(fn($log): string => sprintf(
+                '| %s | %s | %s |',
+                $log[0],
+                $log[1],
+                isset($log[2]['sari']) ? 'present' : ''
+            ), $logs));
 
-            throw new \Exception($exception->getMessage() . PHP_EOL . $yml);
+            throw new \Exception($exception->getMessage() . PHP_EOL . $yml, $exception->getCode(), $exception);
         }
     }
 
@@ -513,7 +503,7 @@ class TiqrContext implements Context, KernelAwareContext
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function getFileContentsInsecure($src)
+    private function getFileContentsInsecure($src): string|false
     {
         $session = $this->minkContext->getMink()->getSession();
         $driver = $session->getDriver();
@@ -528,7 +518,7 @@ class TiqrContext implements Context, KernelAwareContext
     /**
      * @Given I fill in :field with my identifier
      */
-    public function iFillInWithMyIdentifier($field)
+    public function iFillInWithMyIdentifier($field): void
     {
         $this->minkContext->fillField($field, $this->metadata->identity->identifier);
     }
@@ -536,9 +526,9 @@ class TiqrContext implements Context, KernelAwareContext
     /**
      * @Given I fill in :field with my one time password and press ok
      */
-    public function iFillInWithMyOTP($field)
+    public function iFillInWithMyOTP($field): void
     {
-        list($serviceId, $session, $challenge) = explode('/', $this->authenticationUrl);
+        [$serviceId, $session, $challenge] = explode('/', $this->authenticationUrl);
         $service = (array)$this->metadata->service;
         $ocraSuite = $service['ocraSuite'];
         $response = \OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');

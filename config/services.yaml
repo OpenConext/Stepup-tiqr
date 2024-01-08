@@ -18,6 +18,7 @@ services:
             $supportUrl: '%support_url%'
             $locales: '%locales%'
             $tiqrConfiguration: '%tiqr_library_options%'
+            $appSecret: '%app_secret%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -25,29 +26,22 @@ services:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
-
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    Symfony\Component\DependencyInjection\Container:
+      alias: 'service_container'
+
     App\Tiqr\Legacy\TiqrService:
-      public: true
-      factory: 'App\Tiqr\TiqrFactory:createService'
+      factory: ['App\Tiqr\TiqrFactory', 'createService']
 
     App\Tiqr\Legacy\TiqrUserRepository:
-      public: true
-      factory: 'App\Tiqr\TiqrFactory:createUserRepository'
+      factory: ['App\Tiqr\TiqrFactory', 'createUserRepository']
 
     App\Tiqr\TiqrUserRepositoryInterface:
-      public: true
       alias: App\Tiqr\Legacy\TiqrUserRepository
 
     surfnet_saml.saml2.bridge_container:
-      public: true
       class: Surfnet\SamlBundle\SAML2\BridgeContainer
       arguments:
           - '@logger'
@@ -57,12 +51,6 @@ services:
         $pattern: '%mobile_app_user_agent_pattern%'
 
     App\Controller\ExceptionController:
-        public: true
-        calls:
-          - method: setContainer
-            arguments:
-              - '@service_container'
-        tags:
-            # It is very important this listener has a priority higher than the default exception listener,
-            # and ideally lower than the profiler listener (so exceptions show up in the toolbar).
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -128 }
+      tags: ['controller.service_arguments']
+      arguments:
+        $errorPageHelper: '@App\Service\ErrorPageHelper'

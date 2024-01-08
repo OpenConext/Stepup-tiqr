@@ -30,27 +30,14 @@ use Psr\Log\LoggerInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-final class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
+final readonly class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
 {
-    private $tiqrService;
-    private $configuration;
-    private $logger;
-
     /**
      *
-     * @param TiqrServiceInterface $tiqrService
-     * @param TiqrConfigurationInterface $configuration
-     * @param LoggerInterface $logger
      * @throws \Exception
      */
-    public function __construct(
-        TiqrServiceInterface $tiqrService,
-        TiqrConfigurationInterface $configuration,
-        LoggerInterface $logger
-    ) {
-        $this->tiqrService = $tiqrService;
-        $this->configuration = $configuration;
-        $this->logger = $logger;
+    public function __construct(private TiqrServiceInterface $tiqrService, private TiqrConfigurationInterface $configuration, private LoggerInterface $logger)
+    {
     }
 
     /**
@@ -128,9 +115,6 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
     }
 
     /**
-     * @param LoggerInterface $logger
-     * @param AuthenticationResponse $result
-     * @param TiqrUserInterface $user
      *
      * @return AuthenticationResponse
      * @throws Exception\ConfigurationException
@@ -175,7 +159,7 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
 
         $now = new \DateTimeImmutable();
         // Just block the user temporarily if we don't got a limit.
-        if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
+        if ($this->configuration->hasMaxTemporarilyLoginAttempts() === 0) {
 
             $user->blockTemporarily($now);
             $logger->notice('Increase temporarily block attempt');

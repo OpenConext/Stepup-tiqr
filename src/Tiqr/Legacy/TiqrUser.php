@@ -33,28 +33,17 @@ use Tiqr_UserStorage_Interface;
 class TiqrUser implements TiqrUserInterface
 {
     /**
-     * @var Tiqr_UserStorage_Interface
+     * @param string $userId
      */
-    private $userStorage;
-
-    /**
-     * @var Tiqr_UserSecretStorage_Interface
-     */
-    private $userSecretStorage;
-
-    /**
-     * @var string The userId
-     */
-    private $userId;
-
     public function __construct(
-        Tiqr_UserStorage_Interface $userStorage,
-        Tiqr_UserSecretStorage_Interface $userSecretStorage,
-        $userId
-    ) {
-        $this->userStorage = $userStorage;
-        $this->userSecretStorage = $userSecretStorage;
-        $this->userId = $userId;
+        private readonly Tiqr_UserStorage_Interface $userStorage,
+        private readonly Tiqr_UserSecretStorage_Interface $userSecretStorage,
+        /**
+         * @var string The userId
+         */
+        private $userId
+    )
+    {
     }
 
     /**

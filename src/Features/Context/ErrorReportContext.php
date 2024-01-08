@@ -38,16 +38,15 @@ final class ErrorReportContext implements Context, KernelAwareContext
      * @var MinkContext
      */
     private $minkContext;
-    private $kernel;
+    private ?\Symfony\Component\HttpKernel\KernelInterface $kernel = null;
 
     /**
      * Fetch the required contexts.
      *
-     * @param \Behat\Behat\Hook\Scope\BeforeScenarioScope $scope
      *
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
 
         $environment = $scope->getEnvironment();
@@ -57,11 +56,10 @@ final class ErrorReportContext implements Context, KernelAwareContext
     /**
      * This will print the failed html result.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
      *
      * @AfterStep
      */
-    public function dumpInfoAfterFailedStep(AfterStepScope $scope)
+    public function dumpInfoAfterFailedStep(AfterStepScope $scope): void
     {
         if ($this->stepIsSuccessful($scope)) {
             return;
@@ -79,7 +77,7 @@ final class ErrorReportContext implements Context, KernelAwareContext
 
             $this->saveErrorFile($scope, $filename);
             $this->takeScreenShotAfterFailedStep($filename);
-        } catch (DriverException $exception) {
+        } catch (DriverException) {
             return;
         }
     }
@@ -91,7 +89,7 @@ final class ErrorReportContext implements Context, KernelAwareContext
      *
      * @throws \Behat\Mink\Exception\DriverException
      */
-    private function takeScreenShotAfterFailedStep($fileName)
+    private function takeScreenShotAfterFailedStep(string|array|null $fileName): void
     {
         $session = $this->minkContext->getSession();
         if (!($session->getDriver() instanceof Selenium2Driver)) {
@@ -109,10 +107,9 @@ final class ErrorReportContext implements Context, KernelAwareContext
     /**
      * Save the page result file to disk.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
      * @param string $fileName
      */
-    private function saveErrorFile(AfterStepScope $scope, $fileName)
+    private function saveErrorFile(AfterStepScope $scope, string|array|null $fileName): void
     {
         $session = $this->minkContext->getSession();
         $content = <<< TEXT
@@ -135,7 +132,7 @@ TEXT;
      * @return bool
      *   TRUE if it is successfully.
      */
-    private function stepIsSuccessful(AfterStepScope $scope)
+    private function stepIsSuccessful(AfterStepScope $scope): bool
     {
         return $scope->getTestResult()->getResultCode() !== TestResult::FAILED;
     }
@@ -143,7 +140,6 @@ TEXT;
     /**
      * Returns the scenaro for a given step.
      *
-     * @param \Behat\Behat\Hook\Scope\StepScope $scope
      *
      * @return \Behat\Gherkin\Node\ScenarioInterface
      */
@@ -166,7 +162,6 @@ TEXT;
     /**
      * Returns the scenario for a given step.
      *
-     * @param \Behat\Behat\Hook\Scope\StepScope $scope
      *
      * @return \Behat\Gherkin\Node\NodeInterface|null
      */
@@ -184,7 +179,7 @@ TEXT;
         return null;
     }
 
-    private function getOutputPath()
+    private function getOutputPath(): string
     {
         $root = $this->kernel->getProjectDir();
         return implode(DIRECTORY_SEPARATOR, [$root, 'var', 'log']);
@@ -192,10 +187,8 @@ TEXT;
 
     /**
      * Sets Kernel instance.
-     *
-     * @param KernelInterface $kernel
      */
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel): void
     {
         $this->kernel = $kernel;
     }

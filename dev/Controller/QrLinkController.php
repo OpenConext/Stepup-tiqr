@@ -28,21 +28,17 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class QrLinkController extends AbstractController
 {
-    private $tiqrService;
-
-    public function __construct(TiqrServiceInterface $tiqrService)
+    public function __construct(private readonly TiqrServiceInterface $tiqrService)
     {
-        $this->tiqrService = $tiqrService;
     }
 
     /**
      * Returns the QR for registration without an active authNRequest.
      *
-     * @Route("/registration/qr/dev", name="app_identity_registration_qr_dev", methods={"GET"})
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function registrationQrAction(Request $request)
+    #[Route(path: '/registration/qr/dev', name: 'app_identity_registration_qr_dev', methods: ['GET'])]
+    public function registrationQr(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $key = $this->tiqrService->generateEnrollmentKey('dev');
         $metadataURL = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
@@ -52,12 +48,11 @@ final class QrLinkController extends AbstractController
     /**
      * Returns the link for registration without an active authNRequest.
      *
-     * @Route("/registration/qr/link", name="app_identity_registration_qr_link", methods={"GET"})
-     * @param Request $request
      * @return Response
      * @throws \InvalidArgumentException
      */
-    public function registrationLinkAction(Request $request)
+    #[Route(path: '/registration/qr/link', name: 'app_identity_registration_qr_link', methods: ['GET'])]
+    public function registrationLink(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $key = $this->tiqrService->generateEnrollmentKey('dev');
         $metadataUrl = $request->getUriForPath(sprintf('/tiqr.php?key=%s', urlencode($key)));
@@ -74,11 +69,10 @@ final class QrLinkController extends AbstractController
     /**
      * Returns the QR without an active authNRequest.
      *
-     * @Route("/authentication/qr/{nameId}", name="app_identity_authentication_qr_dev", methods={"GET"})
-     * @param string $nameId
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function authenticationQrAction($nameId)
+    #[Route(path: '/authentication/qr/{nameId}', name: 'app_identity_authentication_qr_dev', methods: ['GET'])]
+    public function authenticationQr(string $nameId): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $this->tiqrService->startAuthentication($nameId, 'dev');
         return $this->tiqrService->createAuthenticationQRResponse();
@@ -87,11 +81,10 @@ final class QrLinkController extends AbstractController
     /**
      * Returns the link without an active authNRequest.
      *
-     * @Route("/authentication/qr/{nameId}/link", name="app_identity_authentication_qr_link", methods={"GET"})
-     * @param string $nameId
      * @return Response
      */
-    public function authenticationQrLinkAction($nameId)
+    #[Route(path: '/authentication/qr/{nameId}/link', name: 'app_identity_authentication_qr_link', methods: ['GET'])]
+    public function authenticationQrLink(string $nameId): \Symfony\Component\HttpFoundation\Response
     {
         $this->tiqrService->startAuthentication($nameId, 'dev');
         $challengeUrl = $this->tiqrService->authenticationUrl();

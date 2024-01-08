@@ -23,20 +23,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InfoController extends AbstractController
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
-    /**
-     * @Route("/info.html", name="app_info", methods={"GET"})
-     */
-    public function infoAction()
+    #[Route(path: '/info.html', name: 'app_info', methods: ['GET'])]
+    public function info(): \Symfony\Component\HttpFoundation\Response
     {
         $this->logger->notice('User requested the info.html page');
         return $this->render('default/info.html.twig', []);

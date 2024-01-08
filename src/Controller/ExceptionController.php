@@ -22,63 +22,69 @@ use App\Exception\NoActiveAuthenrequestException;
 use App\Exception\UserNotFoundException;
 use App\Exception\UserPermanentlyBlockedException;
 use App\Exception\UserTemporarilyBlockedException;
-use DateTime;
+use App\Service\ErrorPageHelper;
+use Error;
 use Exception;
 use Surfnet\GsspBundle\Exception\UnrecoverableErrorException;
 use Surfnet\StepupBundle\Controller\ExceptionController as BaseExceptionController;
 use Surfnet\StepupBundle\Exception\Art;
+use Surfnet\StepupBundle\Request\RequestId;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 final class ExceptionController extends BaseExceptionController
 {
-    public function onKernelException(ExceptionEvent $event)
-    {
-        $event->setResponse($this->showAction($event->getRequest(), $event->getException()));
+    public function __construct(
+        private readonly ErrorPageHelper $errorPageHelper,
+        TranslatorInterface $translator,
+        RequestId $requestId
+    ) {
+        parent::__construct($translator, $requestId);
     }
 
-    public function showAction(Request $request, Exception $exception)
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $statusCode = $this->getStatusCode($exception);
+        $event->setResponse($this->show($event->getRequest(), $event->getThrowable()));
+    }
 
-        $template = 'Exception\error.html.twig';
+    public function show(Request $request, Throwable $exception): Response
+    {
+        $statusCode = 500;
+        if ($exception instanceof Error) {
+            $statusCode = $this->getStatusCode($exception);
+        }
+
+        $template = '@default/bundles/TwigBundle/Exception/error.html.twig';
         if ($statusCode == 404) {
-            $template = 'Exception\error404.html.twig';
+            $template = '@default/bundles/TwigBundle/Exception/error404.html.twig';
         }
 
         $response = new Response('', $statusCode);
 
-        $timestamp = (new DateTime)->format(DateTime::ISO8601);
-        $hostname  = $request->getHost();
-        $requestId = $this->get('surfnet_stepup.request.request_id');
         $errorCode = Art::forException($exception);
-        $userAgent = $request->headers->get('User-Agent');
-        $ipAddress = $request->getClientIp();
+
+        $params = $this->errorPageHelper->generateMetadata($request) +
+            ['error_code' => $errorCode] +
+            $this->getPageTitleAndDescription($exception);
 
         return $this->render(
             $template,
-            [
-                'timestamp'   => $timestamp,
-                'hostname'    => $hostname,
-                'request_id'  => $requestId->get(),
-                'error_code'  => $errorCode,
-                'user_agent'  => $userAgent,
-                'ip_address'  => $ipAddress,
-            ] + $this->getPageTitleAndDescription($exception),
+            $params,
             $response
         );
     }
 
     /**
-     * @param Exception $exception
      * @return array View parameters 'title' and 'description'
      */
-    protected function getPageTitleAndDescription(Exception $exception)
+    protected function getPageTitleAndDescription(\Throwable $exception): array
     {
         $translator = $this->getTranslator();
 
-        if ($exception instanceof UnrecoverableErrorException && $exception->getPrevious() !== null) {
+        if ($exception instanceof UnrecoverableErrorException && $exception->getPrevious() instanceof \Throwable) {
             return $this->getPageTitleAndDescription($exception->getPrevious());
         } elseif ($exception instanceof UserNotFoundException) {
             $title = $translator->trans('login.error.user_not_found.title');
@@ -105,10 +111,9 @@ final class ExceptionController extends BaseExceptionController
     }
 
     /**
-     * @param Exception $exception
      * @return int HTTP status code
      */
-    protected function getStatusCode(Exception $exception)
+    protected function getStatusCode(Exception|\Throwable $exception): int
     {
         if ($exception instanceof UnrecoverableErrorException) {
             return Response::HTTP_NOT_ACCEPTABLE;

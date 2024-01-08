@@ -6,6 +6,11 @@ surfnet_saml:
       sso_route: gssp_saml_sso
       public_key: "%saml_idp_publickey%"
       private_key: "%saml_idp_privatekey%"
+    service_provider:
+      enabled: true
+      assertion_consumer_route: sp_demo_acs
+      public_key: "%saml_idp_publickey%"
+      private_key: "%saml_idp_privatekey%"
     metadata:
       entity_id_route: gssp_saml_metadata
       public_key: "%saml_metadata_publickey%"
@@ -15,19 +20,18 @@ surfnet_saml:
       - entity_id: "%saml_remote_sp_entity_id%"
         certificate_file: "%saml_remote_sp_certificate%"
         assertion_consumer_service_url: "%saml_remote_sp_acs%"
+      - entity_id: https://tiqr.dev.openconext.local/saml/metadata
+        certificate_file: "%saml_idp_publickey%"
+        assertion_consumer_service_url: https://tiqr.dev.openconext.local/demo/sp/acs
 
-when@test:
+when@prod:
   surfnet_saml:
+    enable_authentication: true
     hosted:
       identity_provider:
         enabled: true
         service_provider_repository: surfnet_saml.remote.service_providers
         sso_route: gssp_saml_sso
-        public_key: "%saml_idp_publickey%"
-        private_key: "%saml_idp_privatekey%"
-      service_provider:
-        enabled: true
-        assertion_consumer_route: sp_demo_acs
         public_key: "%saml_idp_publickey%"
         private_key: "%saml_idp_privatekey%"
       metadata:
@@ -39,33 +43,3 @@ when@test:
         - entity_id: "%saml_remote_sp_entity_id%"
           certificate_file: "%saml_remote_sp_certificate%"
           assertion_consumer_service_url: "%saml_remote_sp_acs%"
-        - entity_id: https://tiqr.stepup.example.com/saml/metadata
-          certificate_file: "%saml_idp_publickey%"
-          assertion_consumer_service_url: https://tiqr.stepup.example.com/demo/sp/acs
-
-when@dev:
-  surfnet_saml:
-    hosted:
-      identity_provider:
-        enabled: true
-        service_provider_repository: surfnet_saml.remote.service_providers
-        sso_route: gssp_saml_sso
-        public_key: "%saml_idp_publickey%"
-        private_key: "%saml_idp_privatekey%"
-      service_provider:
-        enabled: true
-        assertion_consumer_route: sp_demo_acs
-        public_key: "%saml_idp_publickey%"
-        private_key: "%saml_idp_privatekey%"
-      metadata:
-        entity_id_route: gssp_saml_metadata
-        public_key: "%saml_metadata_publickey%"
-        private_key: "%saml_metadata_privatekey%"
-    remote:
-      service_providers:
-        - entity_id: "%saml_remote_sp_entity_id%"
-          certificate_file: "%saml_remote_sp_certificate%"
-          assertion_consumer_service_url: "%saml_remote_sp_acs%"
-        - entity_id: https://tiqr.stepup.example.com/saml/metadata
-          certificate_file: "%saml_idp_publickey%"
-          assertion_consumer_service_url: https://tiqr.stepup.example.com/demo/sp/acs

@@ -41,8 +41,6 @@ interface TiqrUserInterface
     public function getSecret(): string;
 
     /** Update the user's notificationType and notificationAddress
-     * @param string $notificationType
-     * @param string $notificationAddress
      *
      * @throws TiqrServerRuntimeException when there was en error updating the user's account
      */
