@@ -169,7 +169,7 @@ class TiqrUser implements TiqrUserInterface
     {
         try {
             // Note: this is not transactional and requires two SQL queries when using the PDO driver
-            $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporaryLoginAttempts() + 1);
+            $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporarilyLoginAttempts() + 1);
         } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
