@@ -36,8 +36,11 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
      *
      * @throws \Exception
      */
-    public function __construct(private TiqrServiceInterface $tiqrService, private TiqrConfigurationInterface $configuration, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private TiqrServiceInterface $tiqrService,
+        private TiqrConfigurationInterface $configuration,
+        private LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -153,7 +156,6 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
         $now = new \DateTimeImmutable();
         // Just block the user temporarily if we don't got a limit.
         if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
-
             $user->blockTemporarily($now);
             $logger->notice('Increase temporarily block attempt');
 

@@ -45,8 +45,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AuthenticationController extends AbstractController
 {
-    public function __construct(private readonly AuthenticationService $authenticationService, private readonly StateHandlerInterface $stateHandler, private readonly TiqrServiceInterface $tiqrService, private readonly TiqrUserRepositoryInterface $userRepository, private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService, private readonly LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly AuthenticationService $authenticationService,
+        private readonly StateHandlerInterface $stateHandler,
+        private readonly TiqrServiceInterface $tiqrService,
+        private readonly TiqrUserRepositoryInterface $userRepository,
+        private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**

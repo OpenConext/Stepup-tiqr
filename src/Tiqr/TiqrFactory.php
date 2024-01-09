@@ -59,8 +59,7 @@ class TiqrFactory
     public static function createUserRepository(
         TiqrConfigurationInterface $configuration,
         LoggerInterface $logger
-    ): TiqrUserRepository
-    {
+    ): TiqrUserRepository {
         $options = $configuration->getTiqrOptions();
         $userStorage = Tiqr_UserStorage::getStorage(
             $options['userstorage']['type'],
