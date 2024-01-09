@@ -20,6 +20,7 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-zlib": "*",
+    "incenteev/composer-parameter-handler": "*",
     "openconext/monitor-bundle": "^4.0",
     "surfnet/stepup-bundle": "^6.0.9",
     "surfnet/stepup-gssp-bundle": "^5.0",
@@ -101,7 +102,15 @@
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
-    }
+    },
+    "post-install-cmd": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+      "@auto-scripts"
+    ]
   },
   "config": {
     "sort-packages": true,
@@ -121,7 +130,12 @@
     "symfony": {
       "allow-contrib": false,
       "require": "6.4.*"
-    }
+    },
+    "incenteev-parameters": [
+      {
+        "file": "config/openconext/parameters.yaml"
+      }
+    ]
   },
   "archive": {
     "exclude": [
