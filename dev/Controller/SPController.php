@@ -96,7 +96,6 @@ final class SPController extends AbstractController
         $xmlResponse = $request->request->get('SAMLResponse');
         $xml = base64_decode($xmlResponse);
         try {
-            /** @var Assertion $response */
             $response = $this->postBinding->processResponse($request, $this->identityProvider, $this->serviceProvider);
 
             $nameID = $response->getNameId();
@@ -104,10 +103,10 @@ final class SPController extends AbstractController
             return $this->render('dev/acs.html.twig', [
                 'requestId' => $response->getId(),
                 'nameId' => $nameID !== null ? [
-                    'value' => $nameID->value,
-                    'format' => $nameID->Format,
+                    'value' => $nameID->getValue(),
+                    'format' => $nameID->getFormat(),
                 ] : [],
-                'issuer' => $response->getIssuer(),
+                'issuer' => $response->getIssuer()->getValue(),
                 'relayState' => $request->get(AuthnRequest::PARAMETER_RELAY_STATE, ''),
                 'authenticatingAuthority' => $response->getAuthenticatingAuthority(),
                 'xml' => $this->toFormattedXml($xml),
@@ -119,7 +118,7 @@ final class SPController extends AbstractController
                 'error' => $e->getMessage(),
                 'status' => $samlResponse->getStatus(),
                 'requestId' => $samlResponse->getId(),
-                'issuer' => $samlResponse->getIssuer(),
+                'issuer' => $samlResponse->getIssuer()->getValue(),
                 'relayState' => $request->get(AuthnRequest::PARAMETER_RELAY_STATE, ''),
                 'xml' => $this->toFormattedXml($xml),
             ]);
@@ -128,9 +127,6 @@ final class SPController extends AbstractController
 
     /**
      * Formats xml.
-     *
-     *
-     * @return string
      */
     private function toFormattedXml(string|bool $xml): string|false
     {
@@ -144,8 +140,6 @@ final class SPController extends AbstractController
 
     /**
      * Sign AuthnRequest query parameters.
-     *
-     * @return string
      * @throws \Exception
      */
     private function signRequestQuery(array $queryParams): string
@@ -166,7 +160,7 @@ final class SPController extends AbstractController
      *
      * @throws \Exception
      */
-    private function loadServiceProviderPrivateKey(): \RobRichards\XMLSecLibs\XMLSecurityKey
+    private function loadServiceProviderPrivateKey(): XMLSecurityKey
     {
         $keyLoader = new PrivateKeyLoader();
         $privateKey = $keyLoader->loadPrivateKey(
@@ -183,12 +177,9 @@ final class SPController extends AbstractController
      * @return Message
      * @throws \Exception
      */
-    private function toUnsignedErrorResponse(string $xml): \SAML2\Message
+    private function toUnsignedErrorResponse(string $xml): Message
     {
-        $previous = libxml_disable_entity_loader(true);
         $asXml = DOMDocumentFactory::fromString($xml);
-        libxml_disable_entity_loader($previous);
-
         return Response::fromXML($asXml->documentElement);
     }
 }

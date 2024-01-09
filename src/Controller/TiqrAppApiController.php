@@ -101,13 +101,10 @@ class TiqrAppApiController extends AbstractController
 
     /**
      * This is the route where the app authenticates or registers.
-     *
-     *
-     * @return Response
      */
     #[Route(path: '/tiqr.php', name: 'app_identity_registration_authentication', methods: ['POST'])]
     #[Route(path: '/tiqr/tiqr.php', methods: ['POST'])]
-    public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request)
+    public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request): Response
     {
         $operation = $request->get('operation');
         if (empty($operation)) {
