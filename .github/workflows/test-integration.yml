@@ -19,5 +19,8 @@ jobs:
       - name: Composer install
         run: composer install
 
+      - name: Yarn install
+        run: yarn
+
       - name: Run QA tests
         run: composer check
