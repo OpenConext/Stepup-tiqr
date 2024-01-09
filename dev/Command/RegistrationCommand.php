@@ -57,7 +57,7 @@ class RegistrationCommand extends Command
             ->setHelp('Give the url as argument.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Fetching the metadata from the Tiqr IDP.
         $path = $input->getArgument('path');
@@ -68,9 +68,6 @@ class RegistrationCommand extends Command
             throw new RuntimeException('Expected url with tiqrenroll://');
         }
         $url = $matches['url'];
-        // Route the internal curl request via port 80, the host does not
-        // listen on port 443
-        $url = str_replace('https', 'http', $url);
 
         $output->writeln("<comment>Fetch metadata endpoint from $url</comment>");
         $metadataResponse = $this->client->get($url);
@@ -83,7 +80,7 @@ class RegistrationCommand extends Command
         if ($metadata === false) {
             $output->writeln('<error>Metadata has expired</error>');
 
-            return;
+            return 1;
         }
 
         // Doing the actual registration.
@@ -101,9 +98,7 @@ class RegistrationCommand extends Command
             ),
             $this->decorateResult(json_encode($registrationBody, JSON_PRETTY_PRINT)),
         ]);
-        // Route the internal curl request via port 80, the host does not
-        // listen on port 443
-        $metadata->service->enrollmentUrl = str_replace('https', 'http', (string) $metadata->service->enrollmentUrl);
+
         $result = $this->client->post($metadata->service->enrollmentUrl, ['form_params' => $registrationBody]);
         $resultBody = $result->getBody()->getContents();
         $output->writeln([
@@ -114,12 +109,13 @@ class RegistrationCommand extends Command
         if ($resultBody !== 'OK' || $result->getStatusCode() !== 200) {
             $output->writeln('<error>Enrollment failed</error>');
 
-            return;
+            return 1;
         }
         $output->writeln('<info>Enrollment succeeded</info>');
 
         // Storing result as a new identity.
         $this->storeIdentity($metadata, $secret, $output);
+        return 0;
     }
 
     protected function decorateResult($text): string

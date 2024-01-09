@@ -72,7 +72,7 @@ class AuthenticationCommand extends Command
             ->setHelp('Give the url as argument.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Fetching the metadata from the Tiqr IDP.
         $path = $input->getArgument('path');
@@ -133,7 +133,7 @@ class AuthenticationCommand extends Command
                 '<info>Please login manually:</info>',
                 $this->decorateResult($response),
             ]);
-            return;
+            return 1;
         }
 
         $authenticationBody = [
@@ -161,6 +161,7 @@ class AuthenticationCommand extends Command
             '<info>Authentication result:</info>',
             $this->decorateResult($result),
         ]);
+        return 0;
     }
 
     protected function decorateResult($text): string
