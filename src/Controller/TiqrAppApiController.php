@@ -144,8 +144,7 @@ class TiqrAppApiController extends AbstractController
         Request $request,
         string $notificationType,
         string $notificationAddress
-    ): Response
-    {
+    ): Response {
         $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
         if (empty($enrollmentSecret)) {
             $this->logger->error('Missing "otp" parameter');

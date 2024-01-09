@@ -441,7 +441,9 @@ class TiqrContext implements Context
                 if (preg_match('/^\/.*\/$/', (string) $row['message']) === 1) {
                     Assertion::regex($message, $row['message']);
                 } else {
-                    Assertion::eq($message, $row['message'],
+                    Assertion::eq(
+                        $message,
+                        $row['message'],
                         "\n"
                         . "At row:   " .  ($index+1) . "\n"
                         . "Expected: " . $row['message'] . "\n"

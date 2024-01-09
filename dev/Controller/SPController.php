@@ -45,8 +45,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SPController extends AbstractController
 {
-    public function __construct(private readonly ServiceProvider $serviceProvider, private readonly IdentityProvider $identityProvider, private readonly PostBinding $postBinding)
-    {
+    public function __construct(
+        private readonly ServiceProvider $serviceProvider,
+        private readonly IdentityProvider $identityProvider,
+        private readonly PostBinding $postBinding
+    ) {
     }
 
     /**
