@@ -36,6 +36,7 @@ use Tiqr_StateStorage_StateStorageInterface;
  * Wrapper around the legacy Tiqr service.
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * It's Legacy.
  */
 final class TiqrService implements TiqrServiceInterface
@@ -342,8 +343,8 @@ final class TiqrService implements TiqrServiceInterface
     public function getSariForSessionIdentifier(string $identifier): string
     {
         try {
-            $hashed_identifier = $this->getHashedIdentifier($identifier);
-            $res = $this->tiqrStateStorage->getValue('sari_' . $hashed_identifier);
+            $hashedIdentifier = $this->getHashedIdentifier($identifier);
+            $res = $this->tiqrStateStorage->getValue('sari_' . $hashedIdentifier);
         } catch (Exception) {
             $this->logger->error(sprintf('Error getting SARI for identifier "%s"', substr($identifier, 0, 8)));
             return '';
@@ -383,8 +384,8 @@ final class TiqrService implements TiqrServiceInterface
             sprintf("Setting SARI '%s' for identifier '%s...'", $sari, substr($identifier, 0, 8))
         );
         try {
-            $hashed_identifier = $this->getHashedIdentifier($identifier);
-            $this->tiqrStateStorage->setValue('sari_' . $hashed_identifier, $sari, 60 * 60);
+            $hashedIdentifier = $this->getHashedIdentifier($identifier);
+            $this->tiqrStateStorage->setValue('sari_' . $hashedIdentifier, $sari, 60 * 60);
         } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
