@@ -8,6 +8,7 @@
 /userdb.json
 /.web-server-pid
 /config/openconext/parameters.yaml
+/coverage/
 /var/*
 !/var/cache
 /var/cache/*
