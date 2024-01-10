@@ -134,9 +134,8 @@ class TiqrAppApiController extends AbstractController
     }
 
     /**
-     * @param $notificationType
-     * @param $notificationAddress
-     * @return Response
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @throws \InvalidArgumentException
      */
     private function registerAction(
@@ -202,13 +201,13 @@ class TiqrAppApiController extends AbstractController
         // Note: historically both uppercase and lowercase hex strings are used
 
         // 1. Assert that the secret is a valid hex string
-        $decoded_secret = hex2bin((string) $secret);
-        if (false === $decoded_secret) {
+        $decodedSecret = hex2bin((string) $secret);
+        if (false === $decodedSecret) {
             $logger->error('Invalid secret, secret must be a hex string');
             return new Response('Invalid secret', Response::HTTP_FORBIDDEN);
         }
          // 2. Assert that the secret has a minimum length of 32 bytes.
-        if (strlen($decoded_secret) < 32) {
+        if (strlen($decodedSecret) < 32) {
             $logger->error('Invalid secret, secret must be at least 32 bytes (64 hex digits) long');
             return new Response('Invalid secret', Response::HTTP_FORBIDDEN);
         }

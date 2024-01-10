@@ -25,6 +25,7 @@ use App\Tiqr\Response\RateLimitedAuthenticationResponse;
 use App\Tiqr\Response\RejectedAuthenticationResponse;
 use App\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
 use App\WithContextLogger;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -153,7 +154,7 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
-        $now = new \DateTimeImmutable();
+        $now = new DateTimeImmutable();
         // Just block the user temporarily if we don't got a limit.
         if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
             $user->blockTemporarily($now);
