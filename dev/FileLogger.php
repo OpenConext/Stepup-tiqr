@@ -61,11 +61,11 @@ final class FileLogger extends AbstractLogger
         }
         $csv = Reader::createFromStream(fopen($this->getCSVFile(), 'rb'));
         $csv->setDelimiter(';');
-        $csv = $csv->fetchAll();
+
         return array_map(function (array $line): array {
             $line[2] = json_decode((string) $line[2], true);
             return $line;
-        }, $csv);
+        }, $csv->jsonSerialize());
     }
 
     /**

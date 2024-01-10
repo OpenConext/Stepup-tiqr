@@ -126,11 +126,6 @@ parameters:
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: "#^Cannot call method getProjectDir\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\|null\\.$#"
-			count: 1
-			path: ../../src/Features/Context/ErrorReportContext.php
-
-		-
 			message: "#^Cannot call method getSteps\\(\\) on Behat\\\\Gherkin\\\\Node\\\\BackgroundNode\\|null\\.$#"
 			count: 1
 			path: ../../src/Features/Context/ErrorReportContext.php
@@ -229,11 +224,6 @@ parameters:
 			message: "#^Property App\\\\Features\\\\Context\\\\WebContext\\:\\:\\$previousMinkSession \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
-
-		-
-			message: "#^Generator expects value type Symfony\\\\Component\\\\HttpKernel\\\\Bundle\\\\BundleInterface, object given\\.$#"
-			count: 1
-			path: ../../src/Kernel.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"

@@ -3,22 +3,17 @@ default:
         progress:
             paths: false
     extensions:
-        Behat\Symfony2Extension:
+        FriendsOfBehat\SymfonyExtension:
+            bootstrap: config/bootstrap.php
             kernel:
-                bootstrap: config/bootstrap.php
+                environment: test
+                debug: true
                 class: App\Kernel
         Behat\MinkExtension:
-            base_url: https://tiqr.stepup.example.com
-            default_session: 'symfony2'
-            goutte:
-               guzzle_parameters:
-                    curl.CURLOPT_SSL_VERIFYPEER: false
-                    curl.CURLOPT_CERTINFO: false
-                    ssl.certificate_authority: false
-                    verify: false
+            base_url: https://tiqr.dev.openconext.local/
             sessions:
-                symfony2:
-                    symfony2: ~
+                symfony:
+                    symfony: ~
         Behatch\Extension: ~
     suites:
         default:

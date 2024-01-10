@@ -49,8 +49,6 @@ class TiqrContext implements Context
 {
     protected MinkContext $minkContext;
 
-    protected KernelInterface $kernel;
-
     protected string $metadataUrl;
 
     protected string $clientSecret;
@@ -76,20 +74,12 @@ class TiqrContext implements Context
     protected Response $authenticatioResponse;
     public function __construct(
         private readonly TiqrUserRepositoryInterface $tiqrUserRepository,
-        private readonly TiqrConfigurationInterface $tiqrConfiguration,
-        private readonly FileLogger $fileLogger
+        private readonly TiqrConfigurationInterface  $configuration,
+        private readonly FileLogger $fileLogger,
+        private readonly KernelInterface $kernel
     ) {
     }
 
-    /**
-     * Sets HttpKernel instance.
-     * This method will be automatically called by Symfony2Extension
-     * ContextInitializer.
-     */
-    public function setKernel(KernelInterface $kernel): void
-    {
-        $this->kernel = $kernel;
-    }
 
     /**
      * Fetch the required contexts.
@@ -231,10 +221,10 @@ class TiqrContext implements Context
             'notificationAddress' => $notificationAddress,
         ];
         // Internal request does not like an absolute path.
-        $authenticationUrl = str_replace('https://tiqr.stepup.example.com', '', (string) $authenticationUrl);
+        $authenticationUrl = str_replace('https://tiqr.dev.openconext.local', '', (string) $authenticationUrl);
 
         $this->authenticatioResponse = $this->kernel->handle(
-            Request::create($authenticationUrl, \Symfony\Component\HttpFoundation\Request::METHOD_POST, $authenticationBody)
+            Request::create($authenticationUrl, Request::METHOD_POST, $authenticationBody)
         );
     }
 
@@ -345,7 +335,7 @@ class TiqrContext implements Context
     public function tiqrUserIsPermentlyBlockedConfiguration(int $attempts): void
     {
         $container = $this->kernel->getContainer();
-        $config = $this->tiqrConfiguration;
+        $config = $this->configuration;
         $config->setMaxLoginAttempts($attempts);
     }
 
