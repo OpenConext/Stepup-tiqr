@@ -11,13 +11,13 @@ Locale user preference
 ----------------------
 
 The default locale is based on the user agent. When the user switches its locale the selected preference is stored inside a
-browser cookie (stepup_locale). The cookie is set on naked domain of the requested domain (for tiqr.stepup.example.com this is example.com).
+browser cookie (stepup_locale). The cookie is set on naked domain of the requested domain (for tiqr.dev.openconext.local this is dev.openconext.local).
 
 Authentication and registration flows
 -------------------------------------
 
 The application provides internal (SpBundle) and a remote service provider. Instructions for this are given 
-on the homepage of this Tiqr project [Homepage](https://tiqr.stepup.example.com/app_dev.php/).
+on the homepage of this Tiqr project [Homepage](https://tiqr.dev.openconext.local/).
 
 ![flow](docs/flow.png)
 <!---
@@ -106,7 +106,7 @@ Every part can be run separately. Check "scripts" section of the composer.json f
 Test Tiqr Api's
 ---------------
 
-Demo sp is available on  [https://tiqr.stepup.example.com/app_dev.php/demo/sp]()
+Demo sp is available on  [https://tiqr.dev.openconext.local/demo/sp]()
 
 Fetch registration link automatically from /app_dev.php/registration/qr/dev
 

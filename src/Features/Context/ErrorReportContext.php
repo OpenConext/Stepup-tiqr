@@ -36,12 +36,14 @@ use function is_string;
  */
 final class ErrorReportContext implements Context
 {
+    public function __construct(private readonly KernelInterface $kernel)
+    {
+    }
 
     /**
      * @var MinkContext
      */
     private $minkContext;
-    private ?KernelInterface $kernel = null;
 
     /**
      * Fetch the required contexts.
@@ -181,13 +183,5 @@ TEXT;
     {
         $root = $this->kernel->getProjectDir();
         return implode(DIRECTORY_SEPARATOR, [$root, 'var', 'log']);
-    }
-
-    /**
-     * Sets Kernel instance.
-     */
-    public function setKernel(KernelInterface $kernel): void
-    {
-        $this->kernel = $kernel;
     }
 }

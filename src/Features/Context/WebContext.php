@@ -46,23 +46,12 @@ class WebContext implements Context
     protected $minkContext;
 
     /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
      * @var string
      */
     protected $previousMinkSession;
 
-    /**
-     * Sets HttpKernel instance.
-     * This method will be automatically called by Symfony2Extension
-     * ContextInitializer.
-     */
-    public function setKernel(KernelInterface $kernel): void
+    public function __construct(private readonly KernelInterface $kernel)
     {
-        $this->kernel = $kernel;
     }
 
     /**
