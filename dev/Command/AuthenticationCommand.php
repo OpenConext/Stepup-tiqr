@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+declare(strict_types = 1);
+
 namespace Dev\Command;
 
 use GuzzleHttp\Client;

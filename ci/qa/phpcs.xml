@@ -3,7 +3,8 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="../../vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
-    <arg name="basepath" value="."/>
+    <arg name="basepath" value="../../"/>
+    <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
 
@@ -22,4 +23,6 @@
             <property name="absoluteLineLimit" value="150"/>
         </properties>
     </rule>
+    <rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/DeclareStrictTypesSniff.php" />
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly" />
 </ruleset>

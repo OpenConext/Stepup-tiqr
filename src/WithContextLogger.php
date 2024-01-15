@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,6 +22,7 @@ namespace App;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
+use Stringable;
 
 final class WithContextLogger extends AbstractLogger
 {
@@ -46,7 +50,7 @@ final class WithContextLogger extends AbstractLogger
      *
      * @return void
      */
-    public function log($level, string|\Stringable $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         $this->logger->log($level, $message, array_merge($this->context, $context));
     }

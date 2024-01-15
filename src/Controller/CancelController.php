@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,6 +26,7 @@ use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class CancelController extends AbstractController
 {
@@ -37,7 +41,7 @@ class CancelController extends AbstractController
      * @throws \InvalidArgumentException
      */
     #[Route(path: '/cancel', name: 'app_cancel', methods: ['GET'])]
-    public function cancel(): \Symfony\Component\HttpFoundation\Response
+    public function cancel(): Response
     {
         $this->logger->notice('User cancelled the request');
         if ($this->authenticationService->authenticationRequired()) {

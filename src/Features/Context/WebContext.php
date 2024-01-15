@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -31,6 +34,7 @@ use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Entity\StaticServiceProviderRepository;
 use Surfnet\SamlBundle\Exception\NotFound;
+use Surfnet\SamlBundle\SAML2\AuthnRequest as SamlAuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -133,7 +137,7 @@ class WebContext implements Context
             $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
         );
 
-        $request = \Surfnet\SamlBundle\SAML2\AuthnRequest::createNew($authnRequest);
+        $request = SamlAuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath('/saml/sso?' . $query);
     }
@@ -142,7 +146,7 @@ class WebContext implements Context
      * @return XMLSecurityKey
      * @throws Exception
      */
-    private function loadPrivateKey(PrivateKey $key): \RobRichards\XMLSecLibs\XMLSecurityKey
+    private function loadPrivateKey(PrivateKey $key): XMLSecurityKey
     {
         $keyLoader = new PrivateKeyLoader();
         $privateKey = $keyLoader->loadPrivateKey($key);

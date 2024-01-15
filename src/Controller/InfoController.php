@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,6 +23,7 @@ namespace App\Controller;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class InfoController extends AbstractController
 {
@@ -28,7 +32,7 @@ class InfoController extends AbstractController
     }
 
     #[Route(path: '/info.html', name: 'app_info', methods: ['GET'])]
-    public function info(): \Symfony\Component\HttpFoundation\Response
+    public function info(): Response
     {
         $this->logger->notice('User requested the info.html page');
         return $this->render('default/info.html.twig', []);
