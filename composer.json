@@ -166,6 +166,7 @@
       "/build",
       "/.github",
       "/docs",
+      "/src/Features",
       ".gitignore",
       ".travis.*",
       "ci/qa/behat.yml"
