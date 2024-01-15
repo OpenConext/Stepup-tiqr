@@ -18,10 +18,10 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Tiqr\Exception\ConfigurationException;
 use Assert\Assertion;
+use Surfnet\Tiqr\Tiqr\Exception\ConfigurationException;
 
 class TiqrConfiguration implements TiqrConfigurationInterface
 {
@@ -141,7 +141,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
     }
 
     /**
-     * @throws \App\Tiqr\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function getMaxAttempts(): int
     {

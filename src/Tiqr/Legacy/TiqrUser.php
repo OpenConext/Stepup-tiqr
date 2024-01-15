@@ -18,14 +18,14 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr\Legacy;
+namespace Surfnet\Tiqr\Tiqr\Legacy;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\TiqrUserInterface;
+use DateTimeImmutable;
 use Exception;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\TiqrUserInterface;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
-use DateTimeImmutable;
 
 /**
  * Wrapper around the legacy Tiqr storage.

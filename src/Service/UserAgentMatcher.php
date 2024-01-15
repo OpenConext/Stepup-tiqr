@@ -18,7 +18,7 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Service;
+namespace Surfnet\Tiqr\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 

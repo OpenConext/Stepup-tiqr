@@ -18,10 +18,10 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
 use DateTimeImmutable;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
 
 interface TiqrUserInterface
 {

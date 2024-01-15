@@ -5,4 +5,4 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        global_view_parameters: '@App\Service\GlobalViewParameters'
+        global_view_parameters: '@Surfnet\Tiqr\Service\GlobalViewParameters'

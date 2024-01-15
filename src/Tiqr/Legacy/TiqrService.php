@@ -18,17 +18,17 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr\Legacy;
+namespace Surfnet\Tiqr\Tiqr\Legacy;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Response\AuthenticationErrorResponse;
-use App\Tiqr\Response\AuthenticationResponse;
-use App\Tiqr\Response\RejectedAuthenticationResponse;
-use App\Tiqr\Response\ValidAuthenticationResponse;
-use App\Tiqr\TiqrServiceInterface;
-use App\Tiqr\TiqrUserInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationErrorResponse;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\RejectedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\ValidAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
+use Surfnet\Tiqr\Tiqr\TiqrUserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;

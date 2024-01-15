@@ -18,7 +18,7 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App;
+namespace Surfnet\Tiqr;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;

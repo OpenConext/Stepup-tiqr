@@ -18,28 +18,26 @@
 
 declare(strict_types = 1);
 
-namespace Dev\Controller;
+namespace Surfnet\Tiqr\Dev\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use DOMDocument;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
-use SAML2\Assertion;
 use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\DOMDocumentFactory;
 use SAML2\Message;
 use SAML2\Response;
-use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequest;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Demo SP.

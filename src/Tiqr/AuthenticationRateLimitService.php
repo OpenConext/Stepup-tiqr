@@ -18,17 +18,17 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Response\AuthenticationResponse;
-use App\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
-use App\Tiqr\Response\RateLimitedAuthenticationResponse;
-use App\Tiqr\Response\RejectedAuthenticationResponse;
-use App\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
-use App\WithContextLogger;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\RateLimitedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\RejectedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
+use Surfnet\Tiqr\WithContextLogger;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

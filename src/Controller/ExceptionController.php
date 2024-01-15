@@ -18,19 +18,19 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Controller;
+namespace Surfnet\Tiqr\Controller;
 
-use App\Exception\NoActiveAuthenrequestException;
-use App\Exception\UserNotFoundException;
-use App\Exception\UserPermanentlyBlockedException;
-use App\Exception\UserTemporarilyBlockedException;
-use App\Service\ErrorPageHelper;
 use Error;
 use Exception;
 use Surfnet\GsspBundle\Exception\UnrecoverableErrorException;
 use Surfnet\StepupBundle\Controller\ExceptionController as BaseExceptionController;
 use Surfnet\StepupBundle\Exception\Art;
 use Surfnet\StepupBundle\Request\RequestId;
+use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
+use Surfnet\Tiqr\Exception\UserNotFoundException;
+use Surfnet\Tiqr\Exception\UserPermanentlyBlockedException;
+use Surfnet\Tiqr\Exception\UserTemporarilyBlockedException;
+use Surfnet\Tiqr\Service\ErrorPageHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;

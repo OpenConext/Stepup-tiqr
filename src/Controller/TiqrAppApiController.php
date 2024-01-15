@@ -18,16 +18,16 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Controller;
+namespace Surfnet\Tiqr\Controller;
 
-use App\Service\UserAgentMatcherInterface;
-use App\Tiqr\AuthenticationRateLimitServiceInterface;
-use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\TiqrServiceInterface;
-use App\Tiqr\TiqrUserRepositoryInterface;
-use App\WithContextLogger;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Service\UserAgentMatcherInterface;
+use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
+use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
+use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
+use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

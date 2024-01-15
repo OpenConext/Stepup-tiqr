@@ -18,12 +18,12 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr\Legacy;
+namespace Surfnet\Tiqr\Tiqr\Legacy;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\TiqrUserRepositoryInterface;
 use Exception;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
+use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 

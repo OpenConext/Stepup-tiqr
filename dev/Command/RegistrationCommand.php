@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Dev\Command;
+namespace Surfnet\Tiqr\Dev\Command;
 
 use GuzzleHttp\Client;
 use RuntimeException;

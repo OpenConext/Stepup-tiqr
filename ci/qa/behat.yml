@@ -8,7 +8,7 @@ default:
             kernel:
                 environment: test
                 debug: true
-                class: App\Kernel
+                class: Surfnet\Tiqr\Kernel
         Behat\MinkExtension:
             base_url: https://tiqr.dev.openconext.local/
             sessions:
@@ -19,8 +19,8 @@ default:
         default:
             paths: [ src/Features ]
             contexts:
-                - App\Features\Context\WebContext
-                - App\Features\Context\ErrorReportContext
-                - App\Features\Context\TiqrContext
+                - Surfnet\Tiqr\Features\Context\WebContext
+                - Surfnet\Tiqr\Features\Context\ErrorReportContext
+                - Surfnet\Tiqr\Features\Context\TiqrContext
                 - Behat\MinkExtension\Context\MinkContext
                 - behatch:context:xml

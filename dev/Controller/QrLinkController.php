@@ -17,15 +17,15 @@
 
 declare(strict_types = 1);
 
-namespace Dev\Controller;
+namespace Surfnet\Tiqr\Dev\Controller;
 
-use App\Tiqr\TiqrServiceInterface;
 use InvalidArgumentException;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Exposes the qr codes as links.

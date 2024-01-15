@@ -18,11 +18,11 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Tiqr\Legacy\TiqrService;
-use App\Tiqr\Legacy\TiqrUserRepository;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
+use Surfnet\Tiqr\Tiqr\Legacy\TiqrUserRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Tiqr_Service;
 use Tiqr_StateStorage;

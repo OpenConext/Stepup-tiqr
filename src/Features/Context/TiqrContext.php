@@ -18,25 +18,24 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Features\Context;
+namespace Surfnet\Tiqr\Features\Context;
 
-use App\Tiqr\TiqrConfiguration;
-use App\Tiqr\TiqrConfigurationInterface;
-use App\Tiqr\TiqrUserRepositoryInterface;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
-use Dev\FileLogger;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use OCRA;
 use stdClass;
 use Surfnet\SamlBundle\Exception\NotFound;
+use Surfnet\Tiqr\Dev\FileLogger;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
+use Surfnet\Tiqr\Tiqr\TiqrConfigurationInterface;
+use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -110,7 +109,7 @@ class TiqrContext implements Context
      *
      * @throws NotFound
      * @throws AssertionFailedException
-     *@see QrLinkController::qrRegistrationAction
+     * @see QrLinkController::qrRegistrationAction
      *
      * @Given the registration QR code is scanned
      *
@@ -292,7 +291,7 @@ class TiqrContext implements Context
     /**
      * @Then we have a registered user
      *
-     * @throws \App\Tiqr\Exception\UserNotExistsException
+     * @throws UserNotExistsException
      * @throws AssertionFailedException
      */
     public function weHaveARegisteredUser(): void
