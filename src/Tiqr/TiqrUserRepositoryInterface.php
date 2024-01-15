@@ -18,11 +18,10 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\Legacy\TiqrUser;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 
 /**
  * Wrapper around the legacy Tiqr user repository.

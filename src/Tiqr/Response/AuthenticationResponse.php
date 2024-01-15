@@ -18,7 +18,7 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr\Response;
+namespace Surfnet\Tiqr\Tiqr\Response;
 
 interface AuthenticationResponse
 {

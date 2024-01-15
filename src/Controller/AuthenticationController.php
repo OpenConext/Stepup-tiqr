@@ -18,25 +18,25 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Controller;
+namespace Surfnet\Tiqr\Controller;
 
-use App\Exception\NoActiveAuthenrequestException;
-use App\Exception\UserNotFoundException;
-use App\Exception\UserPermanentlyBlockedException;
-use App\Exception\UserTemporarilyBlockedException;
-use App\Tiqr\AuthenticationRateLimitServiceInterface;
-use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\Response\AuthenticationResponse;
-use App\Tiqr\Response\RateLimitedAuthenticationResponse;
-use App\Tiqr\TiqrServiceInterface;
-use App\Tiqr\TiqrUserInterface;
-use App\Tiqr\TiqrUserRepositoryInterface;
-use App\WithContextLogger;
 use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
+use Surfnet\Tiqr\Exception\UserNotFoundException;
+use Surfnet\Tiqr\Exception\UserPermanentlyBlockedException;
+use Surfnet\Tiqr\Exception\UserTemporarilyBlockedException;
+use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\RateLimitedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
+use Surfnet\Tiqr\Tiqr\TiqrUserInterface;
+use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
+use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

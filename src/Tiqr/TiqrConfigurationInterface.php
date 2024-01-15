@@ -17,9 +17,9 @@ declare(strict_types = 1);
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Tiqr\Exception\ConfigurationException;
+use Surfnet\Tiqr\Tiqr\Exception\ConfigurationException;
 
 interface TiqrConfigurationInterface
 {

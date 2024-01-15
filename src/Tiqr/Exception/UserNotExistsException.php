@@ -18,7 +18,7 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr\Exception;
+namespace Surfnet\Tiqr\Tiqr\Exception;
 
 use Exception;
 

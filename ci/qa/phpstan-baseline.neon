@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#3 \\$response of method App\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/AuthenticationController.php
 
@@ -11,52 +11,52 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentEnrollmentKey of method App\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getEnrollmentSecret\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$enrollmentEnrollmentKey of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getEnrollmentSecret\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentSecret of method App\\\\Tiqr\\\\TiqrServiceInterface\\:\\:finalizeEnrollment\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$enrollmentSecret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:finalizeEnrollment\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentSecret of method App\\\\Tiqr\\\\TiqrServiceInterface\\:\\:validateEnrollmentSecret\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$enrollmentSecret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:validateEnrollmentSecret\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$identifier of method App\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getSariForSessionIdentifier\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$identifier of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getSariForSessionIdentifier\\(\\) expects string, mixed given\\.$#"
 			count: 4
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of method App\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getEnrollmentMetadata\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$key of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getEnrollmentMetadata\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$sessionKey of method App\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$sessionKey of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$userId of method App\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:getUser\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$userId of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:getUser\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$context of static method App\\\\WithContextLogger\\:\\:from\\(\\) expects array\\<string, string\\>, array\\<string, mixed\\> given\\.$#"
+			message: "#^Parameter \\#2 \\$context of static method Surfnet\\\\Tiqr\\\\WithContextLogger\\:\\:from\\(\\) expects array\\<string, string\\>, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$notificationType of method App\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$notificationType of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$secret of method App\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:createUser\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$secret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:createUser\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
@@ -66,17 +66,17 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\$notificationAddress of method App\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#3 \\$notificationAddress of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\$notificationType of method App\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#3 \\$notificationType of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\$response of method App\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
@@ -86,27 +86,27 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#4 \\$notificationAddress of method App\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
+			message: "#^Parameter \\#4 \\$notificationAddress of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createBlockingConfig\\(\\) has no return type specified\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createBlockingConfig\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createGeneralConfig\\(\\) has no return type specified\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createGeneralConfig\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createLibraryConfig\\(\\) has no return type specified\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createLibraryConfig\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method App\\\\DependencyInjection\\\\Configuration\\:\\:createStorageConfig\\(\\) has no return type specified\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createStorageConfig\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
@@ -186,7 +186,7 @@ parameters:
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Parameter \\#1 \\$src of method App\\\\Features\\\\Context\\\\TiqrContext\\:\\:getFileContentsInsecure\\(\\) expects string, string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$src of method Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\TiqrContext\\:\\:getFileContentsInsecure\\(\\) expects string, string\\|null given\\.$#"
 			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
@@ -206,7 +206,7 @@ parameters:
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Property App\\\\Features\\\\Context\\\\TiqrContext\\:\\:\\$metadata \\(stdClass\\) does not accept mixed\\.$#"
+			message: "#^Property Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\TiqrContext\\:\\:\\$metadata \\(stdClass\\) does not accept mixed\\.$#"
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
@@ -216,12 +216,12 @@ parameters:
 			path: ../../src/Features/Context/WebContext.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of method App\\\\Features\\\\Context\\\\WebContext\\:\\:loadPrivateKey\\(\\) expects SAML2\\\\Configuration\\\\PrivateKey, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$key of method Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\WebContext\\:\\:loadPrivateKey\\(\\) expects SAML2\\\\Configuration\\\\PrivateKey, mixed given\\.$#"
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
 
 		-
-			message: "#^Property App\\\\Features\\\\Context\\\\WebContext\\:\\:\\$previousMinkSession \\(string\\) does not accept string\\|null\\.$#"
+			message: "#^Property Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\WebContext\\:\\:\\$previousMinkSession \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
 
@@ -241,12 +241,12 @@ parameters:
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Method App\\\\Tiqr\\\\Legacy\\\\TiqrService\\:\\:getAuthenticationSessionKey\\(\\) should return string but returns mixed\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\Legacy\\\\TiqrService\\:\\:getAuthenticationSessionKey\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Method App\\\\Tiqr\\\\Legacy\\\\TiqrService\\:\\:getUserId\\(\\) should return string but returns mixed\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\Legacy\\\\TiqrService\\:\\:getUserId\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
@@ -286,22 +286,22 @@ parameters:
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method App\\\\Tiqr\\\\TiqrConfiguration\\:\\:getMaxAttempts\\(\\) should return int but returns mixed\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getMaxAttempts\\(\\) should return int but returns mixed\\.$#"
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method App\\\\Tiqr\\\\TiqrConfiguration\\:\\:getMaxTemporarilyLoginAttempts\\(\\) should return int but returns mixed\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getMaxTemporarilyLoginAttempts\\(\\) should return int but returns mixed\\.$#"
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method App\\\\Tiqr\\\\TiqrConfiguration\\:\\:getTemporarilyBlockDuration\\(\\) should return int but returns mixed\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getTemporarilyBlockDuration\\(\\) should return int but returns mixed\\.$#"
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method App\\\\Tiqr\\\\TiqrConfiguration\\:\\:getTiqrOptions\\(\\) should return array\\<string, array\\<string, mixed\\>\\> but returns array\\<string, mixed\\>\\.$#"
+			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getTiqrOptions\\(\\) should return array\\<string, array\\<string, mixed\\>\\> but returns array\\<string, mixed\\>\\.$#"
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
@@ -341,6 +341,6 @@ parameters:
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#6 \\$accountName of class App\\\\Tiqr\\\\Legacy\\\\TiqrService constructor expects string, mixed given\\.$#"
+			message: "#^Parameter \\#6 \\$accountName of class Surfnet\\\\Tiqr\\\\Tiqr\\\\Legacy\\\\TiqrService constructor expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php

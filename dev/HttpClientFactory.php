@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Dev;
+namespace Surfnet\Tiqr\Dev;
 
 use GuzzleHttp\Client;
 

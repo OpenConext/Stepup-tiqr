@@ -18,10 +18,10 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface TiqrServiceInterface

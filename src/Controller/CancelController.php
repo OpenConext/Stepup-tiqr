@@ -18,15 +18,15 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Controller;
+namespace Surfnet\Tiqr\Controller;
 
-use App\Exception\NoActiveAuthenrequestException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
+use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CancelController extends AbstractController
 {

@@ -7,13 +7,8 @@
   "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "App\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Dev\\": "dev",
-      "Tests\\": "tests/"
+      "Surfnet\\Tiqr\\": "src",
+      "Surfnet\\Tiqr\\Dev\\": "dev"
     }
   },
   "require": {

@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Dev\Twig;
+namespace Surfnet\Tiqr\Dev\Twig;
 
 use Surfnet\SamlBundle\Entity\HostedEntities;
 use Twig\Extension\AbstractExtension;

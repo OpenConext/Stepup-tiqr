@@ -18,7 +18,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Service;
+namespace Surfnet\Tiqr\Service;
 
 use DateTime;
 use DateTimeInterface;

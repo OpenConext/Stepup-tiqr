@@ -18,7 +18,7 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace App\Exception;
+namespace Surfnet\Tiqr\Exception;
 
 use RuntimeException as CoreRuntimeException;
 
