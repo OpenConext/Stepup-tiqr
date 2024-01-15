@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,6 +25,7 @@ use App\Tiqr\TiqrUserInterface;
 use Exception;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
+use DateTimeImmutable;
 
 /**
  * Wrapper around the legacy Tiqr storage.
@@ -178,7 +181,7 @@ class TiqrUser implements TiqrUserInterface
     /**
      * @see TiqrUserInterface::blockTemporarily()
      */
-    public function blockTemporarily(\DateTimeImmutable $blockDateTime): void
+    public function blockTemporarily(DateTimeImmutable $blockDateTime): void
     {
         // Order is important, with setting the BlockTimestamp we knows it's a temporarily block.
         $this->block();

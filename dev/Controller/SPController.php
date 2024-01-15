@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Dev\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use DOMDocument;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
@@ -58,7 +59,7 @@ final class SPController extends AbstractController
      */
     #[Route(path: '/demo/sp', name: 'sp_demo')]
     #[Route(path: '/', name: 'homepage')]
-    public function demoSp(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function demoSp(Request $request): SymfonyResponse
     {
         if (!$request->isMethod(Request::METHOD_POST)) {
             return $this->render('dev/sp.html.twig', ['nameId' => $request->get('nameId')]);
@@ -94,7 +95,7 @@ final class SPController extends AbstractController
     }
 
     #[Route(path: '/demo/sp/acs', name: 'sp_demo_acs')]
-    public function assertionConsumerService(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function assertionConsumerService(Request $request): SymfonyResponse
     {
         $xmlResponse = $request->request->get('SAMLResponse');
         $xml = base64_decode($xmlResponse);

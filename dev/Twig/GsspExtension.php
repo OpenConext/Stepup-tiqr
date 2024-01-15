@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+declare(strict_types = 1);
+
 namespace Dev\Twig;
 
 use Surfnet\SamlBundle\Entity\HostedEntities;

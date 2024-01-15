@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -17,7 +20,9 @@
 
 namespace App\Tiqr\Exception;
 
-final class ConfigurationException extends \Exception
+use Exception;
+
+final class ConfigurationException extends Exception
 {
     public static function noMaximumDuration(): self
     {

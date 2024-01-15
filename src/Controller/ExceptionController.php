@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -83,11 +85,11 @@ final class ExceptionController extends BaseExceptionController
     /**
      * @return array<string, string> View parameters 'title' and 'description'
      */
-    protected function getPageTitleAndDescription(\Throwable $exception): array
+    protected function getPageTitleAndDescription(Throwable $exception): array
     {
         $translator = $this->getTranslator();
 
-        if ($exception instanceof UnrecoverableErrorException && $exception->getPrevious() instanceof \Throwable) {
+        if ($exception instanceof UnrecoverableErrorException && $exception->getPrevious() instanceof Throwable) {
             return $this->getPageTitleAndDescription($exception->getPrevious());
         } elseif ($exception instanceof UserNotFoundException) {
             $title = $translator->trans('login.error.user_not_found.title');
@@ -116,7 +118,7 @@ final class ExceptionController extends BaseExceptionController
     /**
      * @return int HTTP status code
      */
-    protected function getStatusCode(Exception|\Throwable $exception): int
+    protected function getStatusCode(Exception|Throwable $exception): int
     {
         if ($exception instanceof UnrecoverableErrorException) {
             return Response::HTTP_NOT_ACCEPTABLE;

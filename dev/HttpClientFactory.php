@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+declare(strict_types = 1);
+
 namespace Dev;
 
 use GuzzleHttp\Client;
@@ -24,7 +26,7 @@ use GuzzleHttp\Client;
  */
 class HttpClientFactory
 {
-    public static function create(): \GuzzleHttp\Client
+    public static function create(): Client
     {
         // TODO: make the hostname configurable.
         return new Client([
