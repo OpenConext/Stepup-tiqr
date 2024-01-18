@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Dev\Command;
 
+use Exception;
 use GuzzleHttp\Client;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -28,6 +29,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zxing\QrReader;
+use function is_string;
 
 #[AsCommand(name: 'test:registration')]
 class RegistrationCommand extends Command
@@ -125,13 +127,14 @@ class RegistrationCommand extends Command
         return "<options=bold>$text</>";
     }
 
-    /**
-     * @return string
-     */
-    protected function readRegistrationUrlFromFile($file, OutputInterface $output)
+    protected function readRegistrationUrlFromFile($file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
+
+        if (!is_string($link)) {
+            throw new Exception('Unable to read a link from the QR code');
+        }
 
         $output->writeln([
             'Registration link result: ',
@@ -141,17 +144,12 @@ class RegistrationCommand extends Command
         return $link;
     }
 
-
-    /**
-     *
-     * @return string
-     */
     private function createClientSecret(): string
     {
         return bin2hex(openssl_random_pseudo_bytes(32));
     }
 
-    protected function storeIdentity($metadata, $secret, OutputInterface $output)
+    protected function storeIdentity($metadata, $secret, OutputInterface $output): void
     {
         $file = getcwd().'/userdb.json';
 
