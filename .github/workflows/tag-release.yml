@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: OpenConext/Stepup-Build
-          ref: master
+          ref: feature/php82_build
       - name: Output the semver tag to the tag variable
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
