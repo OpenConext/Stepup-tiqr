@@ -8,7 +8,7 @@ framework:
     csrf_protection: true
     handle_all_throwables: true
     http_method_override: true
-    error_controller: App\Controller\ExceptionController::show
+    error_controller: Surfnet\Tiqr\Controller\ExceptionController::show
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
