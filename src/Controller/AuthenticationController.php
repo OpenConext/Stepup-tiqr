@@ -376,7 +376,7 @@ class AuthenticationController extends AbstractController
         }
         // Forward to the exception controller to prevent an error being logged.
         return $this->forward(
-            'App\Controller\ExceptionController::show',
+            'Surfnet\Tiqr\Controller\ExceptionController::show',
             [
                 'exception' => $exception,
             ]
