@@ -335,9 +335,7 @@ class TiqrContext implements Context
      */
     public function tiqrUserIsPermentlyBlockedConfiguration(int $attempts): void
     {
-        $container = $this->kernel->getContainer();
-        $config = $this->configuration;
-        $config->setMaxLoginAttempts($attempts);
+        $this->configuration->setMaxLoginAttempts($attempts);
     }
 
     private function createClientSecret(): string
