@@ -135,7 +135,7 @@ class AuthenticationCommand extends Command
                 '<info>Please login manually:</info>',
                 $this->decorateResult($response),
             ]);
-            return 1;
+            return Command::FAILURE;
         }
 
         $authenticationBody = [
@@ -163,7 +163,7 @@ class AuthenticationCommand extends Command
             '<info>Authentication result:</info>',
             $this->decorateResult($result),
         ]);
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function decorateResult($text): string
@@ -171,12 +171,7 @@ class AuthenticationCommand extends Command
         return "<options=bold>$text</>";
     }
 
-    /**
-     * @param string $file
-     *
-     * @return string
-     */
-    protected function readAuthenticationLinkFromFile($file, OutputInterface $output)
+    protected function readAuthenticationLinkFromFile(string $file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
@@ -186,16 +181,13 @@ class AuthenticationCommand extends Command
             $this->decorateResult($link),
         ]);
 
-        return $link;
+        return $link->toString();
     }
 
     /**
-     * @param $serviceId
-     *
-     * @return mixed
      * @throws \RuntimeException
      */
-    protected function getService($serviceId)
+    protected function getService(string $serviceId): mixed
     {
         $file = getcwd().'/userdb.json';
         $userdb = json_decode(file_get_contents($file), true);
