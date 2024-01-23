@@ -407,8 +407,7 @@ class TiqrContext implements Context
      */
     public function clearTheLogs(): void
     {
-        $logger = $this->fileLogger;
-        $logger->cleanLogs();
+        $this->fileLogger->cleanLogs();
     }
 
     /**
@@ -419,8 +418,7 @@ class TiqrContext implements Context
      */
     public function theLogsAre(TableNode $table): void
     {
-        $logger = $this->fileLogger;
-        $logs = $logger->cleanLogs();
+        $logs = $this->fileLogger->cleanLogs();
         $rows = array_values($table->getColumnsHash());
 
         try {
