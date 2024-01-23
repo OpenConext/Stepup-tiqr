@@ -22,7 +22,6 @@ namespace Surfnet\Tiqr;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use function dirname;
 
 class Kernel extends BaseKernel
 {
