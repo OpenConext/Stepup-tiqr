@@ -84,7 +84,7 @@ class RegistrationCommand extends Command
         if ($metadata === false) {
             $output->writeln('<error>Metadata has expired</error>');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         // Doing the actual registration.
@@ -113,13 +113,13 @@ class RegistrationCommand extends Command
         if ($resultBody !== 'OK' || $result->getStatusCode() !== 200) {
             $output->writeln('<error>Enrollment failed</error>');
 
-            return 1;
+            return Command::FAILURE;
         }
         $output->writeln('<info>Enrollment succeeded</info>');
 
         // Storing result as a new identity.
         $this->storeIdentity($metadata, $secret, $output);
-        return 0;
+        return Command::SUCCESS;
     }
 
     protected function decorateResult($text): string
@@ -127,7 +127,7 @@ class RegistrationCommand extends Command
         return "<options=bold>$text</>";
     }
 
-    protected function readRegistrationUrlFromFile($file, OutputInterface $output): string
+    protected function readRegistrationUrlFromFile(string $file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
