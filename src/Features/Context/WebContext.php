@@ -95,14 +95,14 @@ class WebContext implements Context
         /** @var RequestStack $stack */
         $stack = $this->kernel->getContainer()->get('request_stack');
         $stack->push(Request::create('https://tiqr.stepup.example.com'));
-        $ip = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
+        $identityProvider = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
         $stack->pop();
 
-        if (!$ip instanceof IdentityProvider) {
+        if (!$identityProvider instanceof IdentityProvider) {
             throw new Exception('No Hosted Identity Provider could be found');
         }
 
-        return $ip;
+        return $identityProvider;
     }
 
     /**
