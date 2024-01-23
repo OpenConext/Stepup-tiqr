@@ -41,6 +41,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Demo SP.
+ * These controller actions aid developers and testers with adding a test/demo
+ * authentication and registration feature. This enables the tester/developer
+ * to test the GSSP component without installing an SP that interacts with the
+ * GSSP.
+ *
+ * Note that this controller should never be enabled in production.
  */
 final class SPController extends AbstractController
 {
