@@ -32,7 +32,6 @@ use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
-use function is_string;
 
 /**
  * Generates a HTML/png error output report when a build fails.
