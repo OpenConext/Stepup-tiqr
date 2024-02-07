@@ -1,5 +1,10 @@
 # Stepup-tiqr
 
+## 4.0.0
+* The tiqr code was upgraded to allow use of Symfony 6.4
+* Many other dependencies were upgraded in the process
+* We started to use the Openconext-devconf dev-env
+
 ## 3.4.6
 * Update Tiqr library to 3.0.2 (fixes #164)
 * Update dependencies
