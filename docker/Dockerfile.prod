@@ -1,4 +1,10 @@
 FROM ghcr.io/openconext/openconext-basecontainers/php82-apache2:latest
+ARG APP_VERSION
+ARG GIT_SHA
+ARG GIT_COMMIT_TIME
+ENV OPENCONEXT_APP_VERSION=${APP_VERSION}
+ENV OPENCONEXT_GIT_SHA=${GIT_SHA}
+ENV OPENCONEXT_COMMIT_DATE=${GIT_COMMIT_TIME}
 # Set the default workdir
 WORKDIR /var/www/html
 
