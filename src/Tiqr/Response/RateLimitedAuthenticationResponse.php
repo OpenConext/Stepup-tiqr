@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,26 +18,15 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Response;
+namespace Surfnet\Tiqr\Tiqr\Response;
 
 /**
  *
  */
-final class RateLimitedAuthenticationResponse implements AuthenticationResponse
+final readonly class RateLimitedAuthenticationResponse implements AuthenticationResponse
 {
-    /**
-     * @var AuthenticationResponse
-     */
-    private $response;
-    /**
-     * @var int
-     */
-    private $attemptsLeft;
-
-    public function __construct(AuthenticationResponse $response, int $attemptsLeft)
+    public function __construct(private AuthenticationResponse $response, private int $attemptsLeft)
     {
-        $this->response = $response;
-        $this->attemptsLeft = $attemptsLeft;
     }
 
     /**

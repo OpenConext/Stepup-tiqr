@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,25 +18,21 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 
 interface AuthenticationRateLimitServiceInterface
 {
     /**
-     * @param string $sessionKey
-     * @param TiqrUserInterface $user
      * @param string $response
      *   The one time password.
-     *
      * @return AuthenticationResponse
      * @throws \Exception
      */
     public function authenticate(string $sessionKey, TiqrUserInterface $user, string $response): AuthenticationResponse;
 
     /**
-     * @param TiqrUserInterface $user
      *
      * @return bool
      * @throws \Exception
@@ -41,7 +40,6 @@ interface AuthenticationRateLimitServiceInterface
     public function isBlockedPermanently(TiqrUserInterface $user): bool;
 
     /**
-     * @param TiqrUserInterface $user
      *
      * @return bool
      * @throws \Exception

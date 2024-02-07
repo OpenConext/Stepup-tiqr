@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,21 +18,23 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Exception;
+namespace Surfnet\Tiqr\Tiqr\Exception;
 
-final class ConfigurationException extends \Exception
+use Exception;
+
+final class ConfigurationException extends Exception
 {
-    public static function noMaximumDuration()
+    public static function noMaximumDuration(): self
     {
         return new self('There is no maximum duration to block an user');
     }
 
-    public static function noMaxAttempts()
+    public static function noMaxAttempts(): self
     {
         return new self('An user can have unlimited attempts');
     }
 
-    public static function noMaxTemporarilyAttempts()
+    public static function noMaxTemporarilyAttempts(): self
     {
         return new self('An user can have unlimited temporarily block attempts');
     }

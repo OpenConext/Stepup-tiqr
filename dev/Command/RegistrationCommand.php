@@ -15,10 +15,14 @@
  * limitations under the License.
  */
 
-namespace Dev\Command;
+declare(strict_types = 1);
 
+namespace Surfnet\Tiqr\Dev\Command;
+
+use Exception;
 use GuzzleHttp\Client;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,20 +30,17 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zxing\QrReader;
 
+#[AsCommand(name: 'test:registration')]
 class RegistrationCommand extends Command
 {
-    private $client;
-
-    public function __construct(Client $client)
+    public function __construct(private readonly Client $client)
     {
         parent::__construct();
-        $this->client = $client;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('test:registration')
             ->setDescription('Register the app with registration url.')
             ->addArgument('path', InputArgument::REQUIRED, 'Path to QR-code image')
             ->addOption(
@@ -59,7 +60,7 @@ class RegistrationCommand extends Command
             ->setHelp('Give the url as argument.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Fetching the metadata from the Tiqr IDP.
         $path = $input->getArgument('path');
@@ -67,7 +68,7 @@ class RegistrationCommand extends Command
 
         $matches = [];
         if (preg_match('/^tiqrenroll:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
-            throw new RuntimeException(sprintf('Expected url with tiqrenroll://'));
+            throw new RuntimeException('Expected url with tiqrenroll://');
         }
         $url = $matches['url'];
 
@@ -82,7 +83,7 @@ class RegistrationCommand extends Command
         if ($metadata === false) {
             $output->writeln('<error>Metadata has expired</error>');
 
-            return;
+            return Command::FAILURE;
         }
 
         // Doing the actual registration.
@@ -100,6 +101,7 @@ class RegistrationCommand extends Command
             ),
             $this->decorateResult(json_encode($registrationBody, JSON_PRETTY_PRINT)),
         ]);
+
         $result = $this->client->post($metadata->service->enrollmentUrl, ['form_params' => $registrationBody]);
         $resultBody = $result->getBody()->getContents();
         $output->writeln([
@@ -110,28 +112,28 @@ class RegistrationCommand extends Command
         if ($resultBody !== 'OK' || $result->getStatusCode() !== 200) {
             $output->writeln('<error>Enrollment failed</error>');
 
-            return;
+            return Command::FAILURE;
         }
         $output->writeln('<info>Enrollment succeeded</info>');
 
         // Storing result as a new identity.
         $this->storeIdentity($metadata, $secret, $output);
+        return Command::SUCCESS;
     }
 
-    protected function decorateResult($text)
+    protected function decorateResult($text): string
     {
         return "<options=bold>$text</>";
     }
 
-    /**
-     * @param OutputInterface $output
-     *
-     * @return string
-     */
-    protected function readRegistrationUrlFromFile($file, OutputInterface $output)
+    protected function readRegistrationUrlFromFile(string $file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
+
+        if (!is_string($link)) {
+            throw new Exception('Unable to read a link from the QR code');
+        }
 
         $output->writeln([
             'Registration link result: ',
@@ -141,17 +143,12 @@ class RegistrationCommand extends Command
         return $link;
     }
 
-
-    /**
-     *
-     * @return string
-     */
-    private function createClientSecret()
+    private function createClientSecret(): string
     {
         return bin2hex(openssl_random_pseudo_bytes(32));
     }
 
-    protected function storeIdentity($metadata, $secret, OutputInterface $output)
+    protected function storeIdentity($metadata, $secret, OutputInterface $output): void
     {
         $file = getcwd().'/userdb.json';
 

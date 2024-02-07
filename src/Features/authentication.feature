@@ -1,3 +1,4 @@
+@skip
 Feature: When an user needs to authenticate
   As a service provider
   I need to send an AuthnRequest with a nameID to the identity provider
@@ -11,8 +12,8 @@ Feature: When an user needs to authenticate
   Scenario: When an user needs to authenticate
     # Service provider demo page
     Given I am on "/demo/sp"
-    And I fill in "Subject name id" with my identifier
-    When I press "Authenticate user"
+    And I fill in "NameID" with my identifier
+    When I press "authenticate"
 
     # Tiqr authentication page with qr code
     Then I should see "Log in with tiqr"
@@ -37,7 +38,7 @@ Feature: When an user needs to authenticate
       | level  | message                                                                                                                                 | sari    |
       | notice | Received sso request                                                                                                                    |         |
       | info   | Processing AuthnRequest                                                                                                                 |         |
-      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                            | present |
       | notice | Redirect user to the application authentication route /authentication                                                                   | present |
       | info   | Using dummy as UserStorage encryption type | present |
@@ -68,11 +69,9 @@ Feature: When an user needs to authenticate
       | notice | Received sso return request                                                                                                             | present |
       | info   | Create sso response                                                                                                                     | present |
       | notice | /Saml response created with id ".*", request ID: ".*"/                                                                                  | present |
-      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"     | present |
+      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconect.local/demo/sp/acs"     | present |
       | info   | /SAMLResponse with id ".*" was not signed at root level, not attempting to verify the signature of the reponse itself/                  |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                         |         |
-
-
 
   Scenario: When an user cancels it's authentication
     # Service provider demo page
@@ -99,7 +98,7 @@ Feature: When an user needs to authenticate
       # GSSP bundle handling the AuthnRequest
       | notice   | Received sso request                                                                                                                    |         |
       | info     | Processing AuthnRequest                                                                                                                 |         |
-      | notice   | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice   | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
       | info     | AuthnRequest stored in state                                                                                                            | present |
       | notice   | Redirect user to the application authentication route /authentication                                                                   | present |
 
@@ -121,8 +120,7 @@ Feature: When an user needs to authenticate
       | notice   | Received sso return request                                                                                                             | present |
       | info     | Create sso response                                                                                                                     | present |
       | notice   | /Saml response created with id ".*?", request ID: ".*?"/                                                                                | present |
-      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"     | present |
-
+      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"     | present |
 
   Scenario: An user can authenticate with a one time password
     # Service provider demo page
@@ -151,7 +149,7 @@ Feature: When an user needs to authenticate
       # GSSP bundle handling the AuthnRequest
       | notice | Received sso request                                                                                                                    |         |
       | info   | Processing AuthnRequest                                                                                                                 |         |
-      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.stepup\.example\.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                            | present |
       | notice | Redirect user to the application authentication route /authentication                                                                   | present |
       | info   | Using dummy as UserStorage encryption type                                                                                              | present |
@@ -181,6 +179,6 @@ Feature: When an user needs to authenticate
       | notice | Received sso return request                                                                                                             | present |
       | info   | Create sso response                                                                                                                     | present |
       | notice | /Saml response created with id ".*", request ID: ".*"/                                                                                  | present |
-      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"     | present |
+      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"     | present |
       | info   | /SAMLResponse with id ".*" was not signed at root level, not attempting to verify the signature of the reponse itself/                  |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                         |         |

@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-namespace Dev;
+declare(strict_types = 1);
+
+namespace Surfnet\Tiqr\Dev;
 
 use GuzzleHttp\Client;
 
@@ -24,7 +26,7 @@ use GuzzleHttp\Client;
  */
 class HttpClientFactory
 {
-    public static function create()
+    public static function create(): Client
     {
         // TODO: make the hostname configurable.
         return new Client([

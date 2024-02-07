@@ -4,8 +4,8 @@ cd $(dirname $0)/../../
 
 printf "\nStart application Linting\n"
 #Lints PHP,yml,ts,tsc and composer.json
-vendor/bin/parallel-lint dev src
+./vendor/bin/phplint --no-ansi -n --no-progress --configuration=ci/qa/phplint.yaml $1
+
 bin/console lint:yaml config
-yarn tslint --project tsconfig.json
+yarn eslint -c ./.eslintrc.js
 yarn tsc --noEmit
-composer validate

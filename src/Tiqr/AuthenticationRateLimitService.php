@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -16,41 +18,32 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Response\AuthenticationResponse;
-use App\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
-use App\Tiqr\Response\RateLimitedAuthenticationResponse;
-use App\Tiqr\Response\RejectedAuthenticationResponse;
-use App\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
-use App\WithContextLogger;
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\RateLimitedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\RejectedAuthenticationResponse;
+use Surfnet\Tiqr\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
+use Surfnet\Tiqr\WithContextLogger;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-final class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
+final readonly class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
 {
-    private $tiqrService;
-    private $configuration;
-    private $logger;
-
     /**
      *
-     * @param TiqrServiceInterface $tiqrService
-     * @param TiqrConfigurationInterface $configuration
-     * @param LoggerInterface $logger
      * @throws \Exception
      */
     public function __construct(
-        TiqrServiceInterface $tiqrService,
-        TiqrConfigurationInterface $configuration,
-        LoggerInterface $logger
+        private TiqrServiceInterface $tiqrService,
+        private TiqrConfigurationInterface $configuration,
+        private LoggerInterface $logger
     ) {
-        $this->tiqrService = $tiqrService;
-        $this->configuration = $configuration;
-        $this->logger = $logger;
     }
 
     /**
@@ -78,11 +71,6 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
     }
 
     /**
-     * @param string $sessionKey
-     * @param TiqrUserInterface $user
-     * @param string $response
-     *
-     * @return AuthenticationResponse
      * @throws \InvalidArgumentException
      * @throws Exception\ConfigurationException
      * @throws \Exception
@@ -128,11 +116,6 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
     }
 
     /**
-     * @param LoggerInterface $logger
-     * @param AuthenticationResponse $result
-     * @param TiqrUserInterface $user
-     *
-     * @return AuthenticationResponse
      * @throws Exception\ConfigurationException
      */
     private function handleAuthenticationRejectResponse(
@@ -173,10 +156,9 @@ final class AuthenticationRateLimitService implements AuthenticationRateLimitSer
             return new PermanentlyBlockedAuthenticationResponse();
         }
 
-        $now = new \DateTimeImmutable();
+        $now = new DateTimeImmutable();
         // Just block the user temporarily if we don't got a limit.
         if (!$this->configuration->hasMaxTemporarilyLoginAttempts()) {
-
             $user->blockTemporarily($now);
             $logger->notice('Increase temporarily block attempt');
 

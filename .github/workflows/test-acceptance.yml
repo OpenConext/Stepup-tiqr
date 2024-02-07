@@ -1,0 +1,29 @@
+name: Run acceptance tests (Behat)
+on: [pull_request]
+
+jobs:
+  run-qa-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /var/www/html/
+    container:
+      image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
+      volumes:
+        - .:/var/www/html
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Copy certificate material
+        run: mkdir /config && cp -r ./ci/config/* /config/
+
+      - name: Composer install
+        run: composer install
+
+      - name: Yarn & Yarn Encore
+        run: yarn && yarn encore production
+      
+      - name: Run Behat tests
+        run: composer behat

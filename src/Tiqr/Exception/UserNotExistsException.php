@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,11 +18,13 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Exception;
+namespace Surfnet\Tiqr\Tiqr\Exception;
 
-final class UserNotExistsException extends \Exception
+use Exception;
+
+final class UserNotExistsException extends Exception
 {
-    public static function createFromId($userId)
+    public static function createFromId(string $userId): self
     {
         return new self(sprintf('User with id "%s"', $userId));
     }

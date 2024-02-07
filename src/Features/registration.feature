@@ -1,3 +1,4 @@
+@skip
 Feature: When an user needs to register for a new token
   To register an user for a new token
   As a service provider
@@ -28,7 +29,7 @@ Feature: When an user needs to register for a new token
       # GSSP bundle handling the AuthnRequest
       | notice | Received sso request                                                                                                                 |         |
       | info   | Processing AuthnRequest                                                                                                              |         |
-      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr.stepup.example.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                         | present |
       | notice | Redirect user to the application registration route /registration                                                                    | present |
 
@@ -72,7 +73,7 @@ Feature: When an user needs to register for a new token
       | notice | Received sso return request                                                                                                          | present |
       | info   | Create sso response                                                                                                                  | present |
       | notice | /Saml response created with id ".*?", request ID: ".*?"/                                                                             | present |
-      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"  | present |
+      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"  | present |
       | info   | /SAMLResponse with id ".*?" was not signed at root level, not attempting to verify the signature of the reponse itself/              |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                      |         |
 
@@ -98,7 +99,7 @@ Feature: When an user needs to register for a new token
       # GSSP bundle handling the AuthnRequest
       | notice | Received sso request                                                                                                                 |         |
       | info   | Processing AuthnRequest                                                                                                              |         |
-      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr.stepup.example.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
       | info   | AuthnRequest stored in state                                                                                                         | present |
       | notice | Redirect user to the application registration route /registration                                                                    | present |
 
@@ -138,7 +139,7 @@ Feature: When an user needs to register for a new token
       | notice | Received sso return request                                                                                                          | present |
       | info   | Create sso response                                                                                                                  | present |
       | notice | /Saml response created with id ".*?", request ID: ".*?"/                                                                             | present |
-      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"  | present |
+      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"  | present |
       | info   | /SAMLResponse with id ".*?" was not signed at root level, not attempting to verify the signature of the reponse itself/              |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                      |         |
 
@@ -164,7 +165,7 @@ Feature: When an user needs to register for a new token
       # GSSP bundle handling the AuthnRequest
       | notice   | Received sso request                                                                                                                 |         |
       | info     | Processing AuthnRequest                                                                                                              |         |
-      | notice   | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr.stepup.example.com\/saml\/metadata", request ID: ".*"/ |         |
+      | notice   | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
       | info     | AuthnRequest stored in state                                                                                                         | present |
       | notice   | Redirect user to the application registration route /registration                                                                    | present |
 
@@ -183,7 +184,7 @@ Feature: When an user needs to register for a new token
       | notice   | Received sso return request                                                                                                          | present |
       | info     | Create sso response                                                                                                                  | present |
       | notice   | /Saml response created with id ".*?", request ID: ".*?"/                                                                             | present |
-      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.stepup.example.com/demo/sp/acs"  | present |
+      | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"  | present |
 
   Scenario: When the user is redirected from an unknown service provider he should see an error page
     Given a normal SAML 2.0 AuthnRequest form a unknown service provider

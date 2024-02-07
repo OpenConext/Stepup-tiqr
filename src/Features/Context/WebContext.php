@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,17 +18,23 @@
  * limitations under the License.
  */
 
-namespace App\Features\Context;
+namespace Surfnet\Tiqr\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Exception;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\AuthnRequest;
 use SAML2\Certificate\PrivateKeyLoader;
 use SAML2\Configuration\PrivateKey;
 use SAML2\Constants;
+use SAML2\XML\saml\Issuer;
+use Surfnet\SamlBundle\Entity\IdentityProvider;
+use Surfnet\SamlBundle\Entity\ServiceProvider;
+use Surfnet\SamlBundle\Entity\StaticServiceProviderRepository;
+use Surfnet\SamlBundle\Exception\NotFound;
+use Surfnet\SamlBundle\SAML2\AuthnRequest as SamlAuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -33,7 +42,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class WebContext implements Context, KernelAwareContext
+class WebContext implements Context
 {
     /**
      * @var MinkContext
@@ -41,25 +50,12 @@ class WebContext implements Context, KernelAwareContext
     protected $minkContext;
 
     /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
      * @var string
      */
     protected $previousMinkSession;
 
-    /**
-     * Sets HttpKernel instance.
-     * This method will be automatically called by Symfony2Extension
-     * ContextInitializer.
-     *
-     * @param KernelInterface $kernel
-     */
-    public function setKernel(KernelInterface $kernel)
+    public function __construct(private readonly KernelInterface $kernel)
     {
-        $this->kernel = $kernel;
     }
 
     /**
@@ -67,7 +63,7 @@ class WebContext implements Context, KernelAwareContext
      *
      * @BeforeScenario
      */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
         $this->minkContext = $environment->getContext(MinkContext::class);
@@ -78,7 +74,7 @@ class WebContext implements Context, KernelAwareContext
      *
      * @BeforeScenario @remote
      */
-    public function setGoutteDriver()
+    public function setGoutteDriver(): void
     {
         $this->previousMinkSession = $this->minkContext->getMink()->getDefaultSessionName();
         $this->minkContext->getMink()->setDefaultSessionName('goutte');
@@ -89,32 +85,32 @@ class WebContext implements Context, KernelAwareContext
      *
      * @AfterScenario @remote
      */
-    public function resetGoutteDriver()
+    public function resetGoutteDriver(): void
     {
         $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
     }
 
-    /**
-     * @return \Surfnet\SamlBundle\Entity\IdentityProvider
-     */
-    public function getIdentityProvider()
+    public function getIdentityProvider(): IdentityProvider
     {
         /** @var RequestStack $stack */
         $stack = $this->kernel->getContainer()->get('request_stack');
         $stack->push(Request::create('https://tiqr.stepup.example.com'));
-        $ip = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
+        $identityProvider = $this->kernel->getContainer()->get('surfnet_saml.hosted.identity_provider');
         $stack->pop();
 
-        return $ip;
+        if (!$identityProvider instanceof IdentityProvider) {
+            throw new Exception('No Hosted Identity Provider could be found');
+        }
+
+        return $identityProvider;
     }
 
     /**
-     * @return \Surfnet\SamlBundle\Entity\ServiceProvider
-     *
-     * @throws \Surfnet\SamlBundle\Exception\NotFound
+     * @throws NotFound
      */
-    public function getServiceProvider()
+    public function getServiceProvider(): ServiceProvider
     {
+        /** @var StaticServiceProviderRepository $serviceProviders */
         $serviceProviders = $this->kernel->getContainer()->get('surfnet_saml.remote.service_providers');
         return $serviceProviders->getServiceProvider(
             'https://pieter.aai.surfnet.nl/simplesamlphp/module.php/saml/sp/metadata.php/default-sp'
@@ -124,14 +120,16 @@ class WebContext implements Context, KernelAwareContext
     /**
      * @Given /^a normal SAML 2.0 AuthnRequest form a unknown service provider$/
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider()
+    public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider(): void
     {
         $authnRequest = new AuthnRequest();
         $authnRequest->setAssertionConsumerServiceURL('https://service_provider_unkown/saml/acs');
         $authnRequest->setDestination($this->getIdentityProvider()->getSsoUrl());
-        $authnRequest->setIssuer('https://service_provider_unkown/saml/metadata');
+        $issuer = new Issuer();
+        $issuer->setValue('https://service_provider_unkown/saml/metadata');
+        $authnRequest->setIssuer($issuer);
         $authnRequest->setProtocolBinding(Constants::BINDING_HTTP_REDIRECT);
 
         // Sign with random key, does not mather for now.
@@ -139,17 +137,16 @@ class WebContext implements Context, KernelAwareContext
             $this->loadPrivateKey($this->getIdentityProvider()->getPrivateKey(PrivateKey::NAME_DEFAULT))
         );
 
-        $request = \Surfnet\SamlBundle\SAML2\AuthnRequest::createNew($authnRequest);
+        $request = SamlAuthnRequest::createNew($authnRequest);
         $query = $request->buildRequestQuery();
         $this->minkContext->visitPath('/saml/sso?' . $query);
     }
 
     /**
-     * @param PrivateKey $key
      * @return XMLSecurityKey
-     * @throws \Exception
+     * @throws Exception
      */
-    private static function loadPrivateKey(PrivateKey $key)
+    private function loadPrivateKey(PrivateKey $key): XMLSecurityKey
     {
         $keyLoader = new PrivateKeyLoader();
         $privateKey = $keyLoader->loadPrivateKey($key);

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -14,16 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Tiqr\Exception\ConfigurationException;
+use Surfnet\Tiqr\Tiqr\Exception\ConfigurationException;
 
 interface TiqrConfigurationInterface
 {
     /**
      * Please don't use this to get individual options.
-     *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getTiqrOptions(): array;
 
@@ -42,26 +44,18 @@ interface TiqrConfigurationInterface
     public function getTemporarilyBlockDuration(): int;
 
     /**
-     * @return int
-     * @throws \App\Tiqr\Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     public function getMaxAttempts(): int;
 
-    /**
-     * @return boolean
-     */
     public function hasMaxLoginAttempts(): bool;
 
+    public function setMaxLoginAttempts(int $attempts): void;
+
     /**
-     * @return int
-     *
      * @throws ConfigurationException
      */
     public function getMaxTemporarilyLoginAttempts(): int;
 
-    /**
-     *
-     * @return bool
-     */
-    public function hasMaxTemporarilyLoginAttempts(): int;
+    public function hasMaxTemporarilyLoginAttempts(): bool;
 }

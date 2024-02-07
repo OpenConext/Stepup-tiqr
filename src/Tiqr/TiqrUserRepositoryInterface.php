@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,11 +18,10 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\Legacy\TiqrUser;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 
 /**
  * Wrapper around the legacy Tiqr user repository.
@@ -28,24 +30,14 @@ interface TiqrUserRepositoryInterface
 {
     /**
      * Create new tiqr user.
-     *
-     * @param string $userId
-     * @param string $secret
-     *
-     * @return TiqrUserInterface
-     *
      * @throws UserNotExistsException
      * @throws TiqrServerRuntimeException
      */
-    public function createUser(string $userId, string $secret): TiqrUser;
+    public function createUser(string $userId, string $secret): TiqrUserInterface;
 
     /**
-     * @param string $userId
-     *
-     * @return TiqrUserInterface
-     *
      * @throws UserNotExistsException
      * @throws TiqrServerRuntimeException
      */
-    public function getUser(string $userId): TiqrUser;
+    public function getUser(string $userId): TiqrUserInterface;
 }

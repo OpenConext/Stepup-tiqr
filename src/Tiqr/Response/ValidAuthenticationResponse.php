@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,19 +18,13 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Response;
+namespace Surfnet\Tiqr\Tiqr\Response;
 
 class ValidAuthenticationResponse implements AuthenticationResponse
 {
-    private $message;
-
-    /**
-     *
-     * @param string $message
-     */
-    public function __construct(string $message)
+    
+    public function __construct(private readonly string $message)
     {
-        $this->message = $message;
     }
 
     /**

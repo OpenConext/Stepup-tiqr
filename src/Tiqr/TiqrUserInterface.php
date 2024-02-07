@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,10 +18,10 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
 use DateTimeImmutable;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
 
 interface TiqrUserInterface
 {
@@ -41,8 +44,6 @@ interface TiqrUserInterface
     public function getSecret(): string;
 
     /** Update the user's notificationType and notificationAddress
-     * @param string $notificationType
-     * @param string $notificationAddress
      *
      * @throws TiqrServerRuntimeException when there was en error updating the user's account
      */
@@ -67,7 +68,7 @@ interface TiqrUserInterface
      *
      * @throws TiqrServerRuntimeException
      */
-    public function addLoginAttempt();
+    public function addLoginAttempt(): void;
 
     /**
      * Get the user's number of unsuccessful temporary login attempts

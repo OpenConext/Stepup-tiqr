@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-namespace Dev;
+declare(strict_types = 1);
+
+namespace Surfnet\Tiqr\Dev;
 
 use League\Csv\Reader;
 use League\Csv\Writer;
@@ -24,14 +26,11 @@ use Symfony\Component\HttpKernel\Kernel;
 
 final class FileLogger extends AbstractLogger
 {
-    private $kernel;
-
-    public function __construct(Kernel $kernel)
+    public function __construct(private readonly Kernel $kernel)
     {
-        $this->kernel = $kernel;
     }
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = []): void
     {
         if ($level === 'debug') {
             return;
@@ -39,11 +38,14 @@ final class FileLogger extends AbstractLogger
         $file = fopen($this->getCSVFile(), 'ab+');
         $csv = Writer::createFromStream($file);
         $csv->setDelimiter(';');
-        $csv->insertOne(array($level, $message, json_encode($context)));
+        $csv->insertOne([$level, $message, json_encode($context)]);
         fclose($file);
     }
 
-    public function cleanLogs()
+    /**
+     * @return mixed[]
+     */
+    public function cleanLogs(): array
     {
         $logs = $this->getLogs();
         $filename = $this->getCSVFile();
@@ -53,7 +55,7 @@ final class FileLogger extends AbstractLogger
         return $logs;
     }
 
-    public function getLogs()
+    public function getLogs(): array
     {
         $filename = $this->getCSVFile();
         if (!is_file($filename)) {
@@ -61,18 +63,18 @@ final class FileLogger extends AbstractLogger
         }
         $csv = Reader::createFromStream(fopen($this->getCSVFile(), 'rb'));
         $csv->setDelimiter(';');
-        $csv = $csv->fetchAll();
-        return array_map(function ($line) {
-            $line[2] = json_decode($line[2], true);
+
+        return array_map(function (array $line): array {
+            $line[2] = json_decode((string) $line[2], true);
             return $line;
-        }, $csv);
+        }, $csv->jsonSerialize());
     }
 
     /**
      *
      * @return string
      */
-    protected function getCSVFile()
+    protected function getCSVFile(): string
     {
         $root = $this->kernel->getProjectDir();
 

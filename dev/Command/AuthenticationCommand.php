@@ -15,11 +15,14 @@
  * limitations under the License.
  */
 
-namespace Dev\Command;
+declare(strict_types = 1);
+
+namespace Surfnet\Tiqr\Dev\Command;
 
 use GuzzleHttp\Client;
 use OCRA;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,20 +32,17 @@ use Zxing\QrReader;
 
 require_once __DIR__.'/../../vendor/tiqr/tiqr-server-libphp/library/tiqr/Tiqr/OATH/OCRA.php';
 
+#[AsCommand(name: 'test:authentication')]
 class AuthenticationCommand extends Command
 {
-    private $client;
-
-    public function __construct(Client $client)
+    public function __construct(private readonly Client $client)
     {
         parent::__construct();
-        $this->client = $client;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('test:authentication')
             ->setDescription('Register the app with authentication url.')
             ->addArgument('path', InputArgument::REQUIRED, 'Path to QR-code image')
             ->addOption(
@@ -74,7 +74,7 @@ class AuthenticationCommand extends Command
             ->setHelp('Give the url as argument.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Fetching the metadata from the Tiqr IDP.
         $path = $input->getArgument('path');
@@ -82,14 +82,14 @@ class AuthenticationCommand extends Command
 
         $matches = [];
         if (preg_match('/^tiqrauth:\/\/(?P<url>.*)$/', $url, $matches) !== 1) {
-            throw new RuntimeException(sprintf('Expected url with tiqrauth://'));
+            throw new RuntimeException('Expected url with tiqrauth://');
         }
         $authn = $matches['url'];
-        list($serviceId, $session, $challenge, $sp, $version) = explode('/', $authn);
+        [$serviceId, $session, $challenge, $sp, $version] = explode('/', $authn);
 
         $userId = null;
         if (strpos($serviceId, '@') >= 0) {
-            list($userId, $serviceId) = explode('@', $serviceId);
+            [$userId, $serviceId] = explode('@', $serviceId);
         }
 
         $output->writeln([
@@ -135,7 +135,7 @@ class AuthenticationCommand extends Command
                 '<info>Please login manually:</info>',
                 $this->decorateResult($response),
             ]);
-            return;
+            return Command::FAILURE;
         }
 
         $authenticationBody = [
@@ -163,20 +163,15 @@ class AuthenticationCommand extends Command
             '<info>Authentication result:</info>',
             $this->decorateResult($result),
         ]);
+        return Command::SUCCESS;
     }
 
-    protected function decorateResult($text)
+    protected function decorateResult($text): string
     {
         return "<options=bold>$text</>";
     }
 
-    /**
-     * @param string $file
-     * @param OutputInterface $output
-     *
-     * @return string
-     */
-    protected function readAuthenticationLinkFromFile($file, OutputInterface $output)
+    protected function readAuthenticationLinkFromFile(string $file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
@@ -186,16 +181,13 @@ class AuthenticationCommand extends Command
             $this->decorateResult($link),
         ]);
 
-        return $link;
+        return $link->toString();
     }
 
     /**
-     * @param $serviceId
-     *
-     * @return mixed
      * @throws \RuntimeException
      */
-    protected function getService($serviceId)
+    protected function getService(string $serviceId): mixed
     {
         $file = getcwd().'/userdb.json';
         $userdb = json_decode(file_get_contents($file), true);

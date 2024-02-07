@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -16,15 +18,11 @@
  * limitations under the License.
  */
 
-namespace App\Service;
+namespace Surfnet\Tiqr\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 
 interface UserAgentMatcherInterface
 {
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    public function isOfficialTiqrMobileApp(Request $request);
+    public function isOfficialTiqrMobileApp(Request $request): bool;
 }

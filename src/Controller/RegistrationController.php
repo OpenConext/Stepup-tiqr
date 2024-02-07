@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,45 +18,35 @@
  * limitations under the License.
  */
 
-namespace App\Controller;
+namespace Surfnet\Tiqr\Controller;
 
-use App\Exception\NoActiveAuthenrequestException;
-use App\Tiqr\TiqrServiceInterface;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
+use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
-    private $registrationService;
-    private $tiqrService;
-    private $logger;
-    private $stateHandler;
-
     public function __construct(
-        RegistrationService $registrationService,
-        StateHandlerInterface $stateHandler,
-        TiqrServiceInterface $tiqrService,
-        LoggerInterface $logger
+        private readonly RegistrationService $registrationService,
+        private readonly StateHandlerInterface $stateHandler,
+        private readonly TiqrServiceInterface $tiqrService,
+        private readonly LoggerInterface $logger
     ) {
-        $this->registrationService = $registrationService;
-        $this->stateHandler = $stateHandler;
-        $this->tiqrService = $tiqrService;
-        $this->logger = $logger;
     }
 
     /**
      * Returns the registration page with QR code that is generated in 'qrRegistrationAction'.
      *
-     * @Route("/registration", name="app_identity_registration", methods={"GET", "POST"})
-     *
      * @throws \InvalidArgumentException
      */
-    public function registrationAction(Request $request)
+    #[Route(path: '/registration', name: 'app_identity_registration', methods: ['GET', 'POST'])]
+    public function registration(Request $request): Response
     {
         $this->logger->info('Verifying if there is a pending registration from SP');
 
@@ -94,25 +87,22 @@ class RegistrationController extends AbstractController
     /**
      * For client-side polling retrieving the status.
      *
-     * @Route("/registration/status", name="app_identity_registration_status", methods={"GET"})
      *
      * @throws \InvalidArgumentException
      */
-    public function registrationStatusAction(Request $request)
+    #[Route(path: '/registration/status', name: 'app_identity_registration_status', methods: ['GET'])]
+    public function registrationStatus() : Response
     {
         $this->logger->info('Request for registration status');
-
         // Do have a valid sample AuthnRequest?.
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->error('There is no pending registration request');
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
-
         $status = $this->tiqrService->getEnrollmentStatus();
         $this->logger->info(sprintf('Send json response status "%s"', $status));
-
-        return new Response($this->tiqrService->getEnrollmentStatus());
+        return new Response((string) $this->tiqrService->getEnrollmentStatus());
     }
 
     /**
@@ -120,11 +110,11 @@ class RegistrationController extends AbstractController
      *
      * @see /registration/qr/link
      *
-     * @Route("/registration/qr/{enrollmentKey}", name="app_identity_registration_qr", methods={"GET"})
      *
      * @throws \InvalidArgumentException
      */
-    public function registrationQrAction(Request $request, $enrollmentKey)
+    #[Route(path: '/registration/qr/{enrollmentKey}', name: 'app_identity_registration_qr', methods: ['GET'])]
+    public function registrationQr(Request $request, string $enrollmentKey): Response
     {
         $this->logger->info('Request for registration QR img');
 

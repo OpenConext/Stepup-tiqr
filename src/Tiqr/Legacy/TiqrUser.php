@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -16,11 +18,12 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Legacy;
+namespace Surfnet\Tiqr\Tiqr\Legacy;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\TiqrUserInterface;
+use DateTimeImmutable;
 use Exception;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\TiqrUserInterface;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 
@@ -33,28 +36,16 @@ use Tiqr_UserStorage_Interface;
 class TiqrUser implements TiqrUserInterface
 {
     /**
-     * @var Tiqr_UserStorage_Interface
+     * @param string $userId
      */
-    private $userStorage;
-
-    /**
-     * @var Tiqr_UserSecretStorage_Interface
-     */
-    private $userSecretStorage;
-
-    /**
-     * @var string The userId
-     */
-    private $userId;
-
     public function __construct(
-        Tiqr_UserStorage_Interface $userStorage,
-        Tiqr_UserSecretStorage_Interface $userSecretStorage,
-        $userId
+        private readonly Tiqr_UserStorage_Interface $userStorage,
+        private readonly Tiqr_UserSecretStorage_Interface $userSecretStorage,
+        /**
+         * @var string The userId
+         */
+        private $userId
     ) {
-        $this->userStorage = $userStorage;
-        $this->userSecretStorage = $userSecretStorage;
-        $this->userId = $userId;
     }
 
     /**
@@ -139,7 +130,7 @@ class TiqrUser implements TiqrUserInterface
     {
         try {
             // Not this is not transactional and requires two SQL queries when using PDO driver
-            $this->userStorage->setLoginAttempts($this->userId,  $this->getLoginAttempts() + 1);
+            $this->userStorage->setLoginAttempts($this->userId, $this->getLoginAttempts() + 1);
         } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
@@ -180,7 +171,7 @@ class TiqrUser implements TiqrUserInterface
     {
         try {
             // Note: this is not transactional and requires two SQL queries when using the PDO driver
-            $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporaryLoginAttempts() + 1);
+            $this->userStorage->setTemporaryBlockAttempts($this->userId, $this->getTemporarilyLoginAttempts() + 1);
         } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
@@ -190,7 +181,7 @@ class TiqrUser implements TiqrUserInterface
     /**
      * @see TiqrUserInterface::blockTemporarily()
      */
-    public function blockTemporarily(\DateTimeImmutable $blockDateTime): void
+    public function blockTemporarily(DateTimeImmutable $blockDateTime): void
     {
         // Order is important, with setting the BlockTimestamp we knows it's a temporarily block.
         $this->block();

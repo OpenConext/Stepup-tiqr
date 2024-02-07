@@ -1,0 +1,26 @@
+default:
+    formatters:
+        progress:
+            paths: false
+    extensions:
+        FriendsOfBehat\SymfonyExtension:
+            bootstrap: config/bootstrap.php
+            kernel:
+                environment: test
+                debug: true
+                class: Surfnet\Tiqr\Kernel
+        Behat\MinkExtension:
+            base_url: https://tiqr.dev.openconext.local/
+            sessions:
+                symfony:
+                    symfony: ~
+        Behatch\Extension: ~
+    suites:
+        default:
+            paths: [ src/Features ]
+            contexts:
+                - Surfnet\Tiqr\Features\Context\WebContext
+                - Surfnet\Tiqr\Features\Context\ErrorReportContext
+                - Surfnet\Tiqr\Features\Context\TiqrContext
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:context:xml

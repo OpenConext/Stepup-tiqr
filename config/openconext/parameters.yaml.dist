@@ -1,0 +1,80 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+    app_env: prod
+    app_debug: false
+    # A secret key that's used to generate certain security-related tokens
+    app_secret: ThisTokenIsNotSoSecretChangeIt
+
+    # All locales supported by the application
+    default_locale: en_GB
+    locales:
+        - nl_NL
+        - en_GB
+
+    # SAML configuration
+    saml_idp_publickey: '/config/tiqr/tiqr_idp.crt'
+    saml_idp_privatekey: '/config/tiqr/tiqr_idp.key'
+    saml_metadata_publickey: '/config/tiqr/tiqr_idp.crt'
+    saml_metadata_privatekey: '/config/tiqr/tiqr_idp.key'
+    saml_remote_sp_entity_id: 'https://gateway.dev.openconext.local/gssp/tiqr/metadata'
+    saml_remote_sp_certificate: '/config/gateway/gateway_gssp_sp.crt'
+    saml_remote_sp_acs: 'https://gateway.dev.openconext.local/gssp/tiqr/consume-assertion'
+
+    # Hosting settings (own URL)
+    base_url: 'https://tiqr.dev.openconext.local'
+    tiqr_identity: 'tiqr.dev.openconext.local'
+
+    # View parameters, 'en' entry was added as this is the default used by Translator. Was unable to configure it to
+    # use en_GB. TODO: look into configuring this the right way.
+    support_url:
+        en: "https://support.example.org/faq-strong-authentication"
+        en_GB: "https://support.example.org/faq-strong-authentication"
+        nl_NL: "https://support.example.org/faq-sterke-authenticatie"
+    support_email: support@support.nl
+
+    # Mobile Tiqr apps identify themselves with a user agent
+    # header. If the user agent does not match below pattern during
+    # registration, registration will fail. The default pattern (^.*$)
+    # will effectively allow any Tiqr app. The pattern must adhere to
+    # PCRE as accepted by preg_match (http://php.net/preg_match).
+    mobile_app_user_agent_pattern: "/^.*$/"
+
+    # Options for the tiqr library
+    tiqr_library_options:
+        general:
+            identifier: '%tiqr_identity%'
+            # The name of the service that uses tiqr for second factor authentication.
+            name: 'OpenConext Stepup'
+            auth_protocol: 'tiqrauth'
+            enroll_protocol: 'tiqrenroll'
+            ocra_suite: 'OCRA-1:HOTP-SHA1-6:QH10-S'
+            logoUrl: '%base_url%/tiqrRGB.png'
+            infoUrl: 'https://tiqr.org'
+        library:
+            # Configuration of the push notification clients.
+            apns:
+                certificate: 'absolute path to certificate'
+                environment: production
+            firebase:
+                apikey: 'Your Firebase API KEY'
+        accountblocking:
+            maxAttempts: 5
+        storage:
+            statestorage:
+              type: 'file'
+              arguments:
+                  path: '/tmp'
+            userstorage:
+                type: 'file'
+                arguments:
+                  path: '/tmp'
+                  encryption: 'dummy'
+            devicestorage:
+              type: 'dummy'
+              arguments: []
+            usersecretstorage:
+                type: 'file'
+                arguments:
+                    path: '/tmp'

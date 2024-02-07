@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,36 +18,30 @@
  * limitations under the License.
  */
 
-namespace App\Controller;
+namespace Surfnet\Tiqr\Controller;
 
-use App\Exception\NoActiveAuthenrequestException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
+use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 class CancelController extends AbstractController
 {
-    private $authenticationService;
-    private $registrationService;
-    private $logger;
-
     public function __construct(
-        AuthenticationService $authenticationService,
-        RegistrationService $registrationService,
-        LoggerInterface $logger
+        private readonly AuthenticationService $authenticationService,
+        private readonly RegistrationService $registrationService,
+        private readonly LoggerInterface $logger
     ) {
-        $this->authenticationService = $authenticationService;
-        $this->registrationService = $registrationService;
-        $this->logger = $logger;
     }
 
     /**
-     * @Route("/cancel", name="app_cancel", methods={"GET"})
      * @throws \InvalidArgumentException
      */
-    public function cancelAction()
+    #[Route(path: '/cancel', name: 'app_cancel', methods: ['GET'])]
+    public function cancel(): Response
     {
         $this->logger->notice('User cancelled the request');
         if ($this->authenticationService->authenticationRequired()) {

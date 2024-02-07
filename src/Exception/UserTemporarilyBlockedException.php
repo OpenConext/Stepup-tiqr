@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -16,7 +18,7 @@
  * limitations under the License.
  */
 
-namespace App\Exception;
+namespace Surfnet\Tiqr\Exception;
 
 use RuntimeException as CoreRuntimeException;
 

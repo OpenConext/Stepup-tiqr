@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,36 +18,22 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Legacy;
+namespace Surfnet\Tiqr\Tiqr\Legacy;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Exception\UserNotExistsException;
-use App\Tiqr\TiqrUserRepositoryInterface;
 use Exception;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
+use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 
 /**
  * Wrapper around the legacy Tiqr user repository.
  */
-final class TiqrUserRepository implements TiqrUserRepositoryInterface
+final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
 {
-    /**
-     * @var \Tiqr_UserStorage_Interface
-     */
-    private $userStorage;
-
-    /**
-     * @var \Tiqr_UserSecretStorage_Interface
-     */
-    private $userSecretStorage;
-
-    public function __construct(
-        Tiqr_UserStorage_Interface $userStorage,
-        Tiqr_UserSecretStorage_Interface $userSecretStorage
-    ) {
-        $this->userStorage = $userStorage;
-        $this->userSecretStorage = $userSecretStorage;
+    public function __construct(private Tiqr_UserStorage_Interface $userStorage, private Tiqr_UserSecretStorage_Interface $userSecretStorage)
+    {
     }
 
     /**

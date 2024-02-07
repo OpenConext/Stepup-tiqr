@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -16,10 +18,10 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr;
+namespace Surfnet\Tiqr\Tiqr;
 
-use App\Exception\TiqrServerRuntimeException;
-use App\Tiqr\Response\AuthenticationResponse;
+use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface TiqrServiceInterface
@@ -28,9 +30,6 @@ interface TiqrServiceInterface
      * Return a stream with the PNG image data of a QR code with the enrollment url and enrollment key
      *
      * @see \Tiqr_Service::generateEnrollmentQR()
-     *
-     * @param string $metadataURL
-     * @return StreamedResponse
      */
     public function createRegistrationQRResponse(string $metadataURL): StreamedResponse;
 
@@ -93,7 +92,7 @@ interface TiqrServiceInterface
      *      can be generated with the
      *      getEnrollmentSecret call.
      *
-     * @return array An array of metadata that the phone needs to complete
+     * @return array<string, mixed> An array of metadata that the phone needs to complete
      *               enrollment. You must encode it in JSON before you send
      *               it to the phone.
      *
@@ -146,8 +145,6 @@ interface TiqrServiceInterface
      * @see \Tiqr_Service::startAuthenticationSession()
      * @see \Tiqr_Service::generateAuthURL()
      *
-     * @param string $userId
-     * @param string $sari
      *
      * @return string the generated authentication URL
      * @throws TiqrServerRuntimeException
@@ -159,8 +156,6 @@ interface TiqrServiceInterface
      *              false otherwise
      *
      * @see \Tiqr_Service::getAuthenticatedUser()
-     *
-     * Does not throw
      */
     public function isAuthenticated(): bool;
 
@@ -173,7 +168,6 @@ interface TiqrServiceInterface
      *
      * @see \Tiqr_Service::generateAuthQR()
      *
-     * @return StreamedResponse
      * @throws TiqrServerRuntimeException
      */
     public function createAuthenticationQRResponse(): StreamedResponse;
@@ -186,19 +180,13 @@ interface TiqrServiceInterface
      * same device as where the application is installed
      *
      * @see \Tiqr_Service::generateAuthURL()
-     *
-     * @return the generated URL
      * @throws TiqrServerRuntimeException
      *
      */
     public function authenticationUrl(): string;
 
     /**
-     * @param TiqrUserInterface $user
-     * @param string $response
-     * @param string $sessionKey
      *
-     * @return AuthenticationResponse
      * @throws TiqrServerRuntimeException
      */
     public function authenticate(TiqrUserInterface $user, string $response, string $sessionKey): AuthenticationResponse;
@@ -207,7 +195,6 @@ interface TiqrServiceInterface
      * Returns the current enrollment status.
      * @see \Tiqr_Service::getEnrollmentStatus()
      *
-     * @return int
      * @throws TiqrServerRuntimeException
      */
     public function getEnrollmentStatus(): int;
@@ -223,18 +210,11 @@ interface TiqrServiceInterface
 
     /**
      * Returns the current id of the enrolled user.
-     * @return string
-     *
-     * Does not throw
      */
     public function getUserId(): string;
 
     /**
      * Return the authentication session id.
-     *
-     * @return string
-     *
-     * Does not throw
      */
     public function getAuthenticationSessionKey(): string;
 
@@ -245,8 +225,6 @@ interface TiqrServiceInterface
      * return the $notificationAddress and the $notificationType that are required
      * to sent push notifications to the device.
      *
-     * @param string $notificationType
-     * @param string $notificationAddress
      * @throws TiqrServerRuntimeException
      *
      */

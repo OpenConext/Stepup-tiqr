@@ -1,7 +1,14 @@
+imports:
+    - { resource: ../openconext/*.yaml }
+
 framework:
-    secret: '%env(APP_SECRET)%'
+    assets:
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
+    secret: '%app_secret%'
     csrf_protection: true
+    handle_all_throwables: true
     http_method_override: true
+    error_controller: Surfnet\Tiqr\Controller\ExceptionController::show
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
@@ -9,9 +16,27 @@ framework:
         handler_id: null
         cookie_secure: auto
         cookie_samesite: lax
-    assets: ~
+    router:
+        strict_requirements: null
+        utf8: true
     esi: false
     fragments: false
     php_errors:
         log: "%kernel.debug%"
+    validation:
+        email_validation_mode: html5
 
+when@dev:
+    framework:
+        profiler: { only_exceptions: false }
+        php_errors:
+            log: false
+    imports:
+        - { resource: ../services_dev.yaml }
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+        profiler:
+            collect: false

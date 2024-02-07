@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -16,37 +18,19 @@
  * limitations under the License.
  */
 
-namespace App\Service;
+namespace Surfnet\Tiqr\Service;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GlobalViewParameters
 {
     /**
-     * @var TranslatorInterface
+     * @param array<string, string> $supportUrl
      */
-    private $translator;
-
-    /**
-     * @var string[]
-     */
-    private $locales;
-
-    /**
-     * @var string[]
-     */
-    private $supportUrl;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $supportUrl
-     */
-    public function __construct(TranslatorInterface $translator, array $locales, array $supportUrl)
-    {
-        $this->translator = $translator;
-        $this->locales = $locales;
-        $this->supportUrl = $supportUrl;
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly array $supportUrl
+    ) {
     }
 
     /**

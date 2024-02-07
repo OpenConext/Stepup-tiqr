@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,7 +18,7 @@
  * limitations under the License.
  */
 
-namespace App\DependencyInjection;
+namespace Surfnet\Tiqr\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -26,7 +29,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('app');
         $rootNode = $treeBuilder->getRootNode();

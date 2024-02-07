@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
-namespace App\EventSubscriber;
+namespace Surfnet\Tiqr\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -28,15 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Handles the lang selection based on cookie.
  */
-final class LocaleResponseListener implements EventSubscriberInterface
+final readonly class LocaleResponseListener implements EventSubscriberInterface
 {
-    const STEPUP_LOCALE_COOKIE = 'stepup_locale';
+    public const STEPUP_LOCALE_COOKIE = 'stepup_locale';
 
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     public static function getSubscribedEvents()
@@ -48,10 +45,8 @@ final class LocaleResponseListener implements EventSubscriberInterface
 
     /**
      * Sets the application local based on stepup cookie.
-     *
-     * @param RequestEvent $event
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
         $local = $request->cookies->get(self::STEPUP_LOCALE_COOKIE, $request->getLocale());

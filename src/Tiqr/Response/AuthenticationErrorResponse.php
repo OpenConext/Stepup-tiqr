@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -15,22 +18,16 @@
  * limitations under the License.
  */
 
-namespace App\Tiqr\Response;
+namespace Surfnet\Tiqr\Tiqr\Response;
 
 /**
  * An error response that is not directly caused by the user.
  */
 class AuthenticationErrorResponse implements AuthenticationResponse
 {
-    private $error;
-
-    /**
-     *
-     * @param string $error
-     */
-    public function __construct(string $error)
+    
+    public function __construct(private readonly string $error)
     {
-        $this->error = $error;
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -16,14 +18,14 @@
  * limitations under the License.
  */
 
-namespace App\Exception;
+namespace Surfnet\Tiqr\Exception;
 
 use Exception;
 use RuntimeException;
 
 class TiqrServerRuntimeException extends RuntimeException
 {
-    public static function fromOriginalException(Exception $e)
+    public static function fromOriginalException(Exception $e): self
     {
         return new self($e->getMessage(), (int)$e->getCode(), $e);
     }

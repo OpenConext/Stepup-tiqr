@@ -2,5 +2,4 @@
 
 cd $(dirname $0)/../../
 
-printf "\nStart Behat tests\n"
-vendor/bin/behat --stop-on-failure --config ./ci/qa/qa-config/behat.yml --tags=~skip
+vendor/bin/behat --stop-on-failure --config ./ci/qa/behat.yml --tags=~skip  $1
