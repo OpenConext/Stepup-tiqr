@@ -62,9 +62,9 @@ final class ExceptionController extends BaseExceptionController
             $statusCode = $this->getStatusCode($exception);
         }
 
-        $template = '@default/bundles/TwigBundle/Exception/error.html.twig';
+        $template = 'bundles/TwigBundle/Exception/error.html.twig';
         if ($statusCode == 404) {
-            $template = '@default/bundles/TwigBundle/Exception/error404.html.twig';
+            $template = 'bundles/TwigBundle/Exception/error404.html.twig';
         }
 
         $response = new Response('', $statusCode);
