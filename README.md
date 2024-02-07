@@ -1,7 +1,7 @@
 Stepup-tiqr
 ===========
-
-[![Build Status](https://travis-ci.org/OpenConext/Stepup-tiqr.svg?branch=develop)](https://travis-ci.org/OpenConext/Stepup-tiqr)
+[![CI/CD quality assurance](https://github.com/OpenConext/Stepup-tiqr/actions/workflows/test-integration.yml/badge.svg)](https://github.com/OpenConext/Stepup-tiqr/actions/workflows/test-integration.yml)
+[![CI/CD functional tests](https://github.com/OpenConext/Stepup-tiqr/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/OpenConext/Stepup-tiqr/actions/workflows/test-acceptance.yml)
 
 GSSP implementation of Tiqr. [https://tiqr.org/documentation/](https://tiqr.org/documentation/)
 
