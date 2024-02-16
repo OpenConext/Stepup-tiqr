@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS user (
   tmpblockattempts integer,
   blocked tinyint(1),
   notificationtype varchar(10),
-  notificationaddress varchar(64)
+  notificationaddress varchar(256)
 );
 
 CREATE TABLE IF NOT EXISTS tiqrstate (
