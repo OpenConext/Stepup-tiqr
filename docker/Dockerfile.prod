@@ -17,6 +17,7 @@ RUN rm -rf /etc/apache2/sites-enabled/* /var/www/html/var/cache/prod/ && \
   chown -R www-data /var/www/html/var
 
 COPY ./docker/conf/tiqr-apache2.conf /etc/apache2/sites-enabled/tiqr.conf
+COPY ./docker/conf/zz-docker.ini  /usr/local/etc/php/conf.d/
 EXPOSE 80
 
 CMD ["apache2-foreground"]
