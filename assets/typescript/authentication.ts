@@ -42,5 +42,5 @@ window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: stri
 
 // Fallback for non-SVG supporting browsers (for the spinner)
 if (typeof SVGRect === 'undefined') {
-  jQuery('img.spinner').attr('src', '/images/spinner.gif').attr('height', '38');
+  jQuery('img.spinner').attr('src', '/build/images/spinner.gif').attr('height', '38');
 }
