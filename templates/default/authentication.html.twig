@@ -25,7 +25,7 @@
     <div class="spinner-container">
         {{ 'login.qr.message' | trans }}
 
-        <img class="img-rotate spinner" src="{{ asset('images/spinner.svg') }}">
+        <img class="img-rotate spinner" src="{{ asset('build/images/spinner.svg') }}">
 
         {% set link_start %}<a id="trigger-qr" onclick="authenticationPageService.switchToManual()">{% endset %}
             {% set link_end %}</a>{% endset %}
