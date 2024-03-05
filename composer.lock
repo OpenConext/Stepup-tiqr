@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b83a5958eebda4e8454e46f254100371",
+    "content-hash": "beb8355d954da2bf7badb8b4826dfe41",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -7644,16 +7644,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "4.2.0-beta1",
+            "version": "4.2.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Tiqr/tiqr-server-libphp.git",
-                "reference": "14796488fde75d8fad37f1eafa62204c1f21f7d2"
+                "reference": "4153596f49555c052f3574520b86987c5763bcd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/14796488fde75d8fad37f1eafa62204c1f21f7d2",
-                "reference": "14796488fde75d8fad37f1eafa62204c1f21f7d2",
+                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/4153596f49555c052f3574520b86987c5763bcd3",
+                "reference": "4153596f49555c052f3574520b86987c5763bcd3",
                 "shasum": ""
             },
             "require": {
@@ -7676,6 +7676,11 @@
                 "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
+            "extra": {
+                "google/apiclient-services": [
+                    ""
+                ]
+            },
             "autoload": {
                 "classmap": [
                     "library/tiqr/Tiqr"
@@ -7688,9 +7693,9 @@
             "description": "php library for tiqr authentication.",
             "support": {
                 "issues": "https://github.com/Tiqr/tiqr-server-libphp/issues",
-                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/4.2.0-beta1"
+                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/4.2.0-beta2"
             },
-            "time": "2024-03-05T07:05:34+00:00"
+            "time": "2024-03-05T14:12:43+00:00"
         },
         {
             "name": "twig/extra-bundle",
