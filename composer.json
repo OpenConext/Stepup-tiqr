@@ -15,7 +15,7 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-zlib": "*",
-    "incenteev/composer-parameter-handler": "*",
+    "incenteev/composer-parameter-handler": "^2.2",
     "openconext/monitor-bundle": "^4.1",
     "surfnet/stepup-bundle": "^6.0",
     "surfnet/stepup-gssp-bundle": "^5.0",
