@@ -173,7 +173,8 @@
       "/src/Features",
       ".gitignore",
       ".travis.*",
-      "ci/qa/behat.yml"
+      "ci/qa/behat.yml",
+      "/vendor/google/apiclient-services"
     ]
   }
 }
