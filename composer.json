@@ -174,7 +174,7 @@
       ".gitignore",
       ".travis.*",
       "ci/qa/behat.yml",
-      "/vendor/google/apiclient-services"
+      "/vendor/google/apiclient-services/src/*"
     ]
   }
 }
