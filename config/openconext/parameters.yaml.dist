@@ -58,7 +58,8 @@ parameters:
                 certificate: 'absolute path to certificate'
                 environment: production
             firebase:
-                apikey: 'Your Firebase API KEY'
+                projectId: 'FCM project ID'
+                credentialsFile: 'absolute path to file with service account key'
         accountblocking:
             maxAttempts: 5
         storage:

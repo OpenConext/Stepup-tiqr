@@ -68,8 +68,10 @@ class TiqrConfiguration implements TiqrConfigurationInterface
         }
         
         if (isset($tiqrConfiguration['library']['firebase'])) {
-            Assertion::string($tiqrConfiguration['library']['firebase']['apikey']);
-            $this->options['firebase.apikey'] = $tiqrConfiguration['library']['firebase']['apikey'];
+            Assertion::string($tiqrConfiguration['library']['firebase']['projectId']);
+            $this->options['firebase.projectId'] = $tiqrConfiguration['library']['firebase']['projectId'];
+            Assertion::string($tiqrConfiguration['library']['firebase']['credentialsFile']);
+            $this->options['firebase.credentialsFile'] = $tiqrConfiguration['library']['firebase']['credentialsFile'];
         }
 
         if (isset($tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS])) {
