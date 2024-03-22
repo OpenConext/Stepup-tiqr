@@ -4,6 +4,9 @@
 * The tiqr code was upgraded to allow use of Symfony 6.4
 * Many other dependencies were upgraded in the process
 * We started to use the Openconext-devconf dev-env
+* parameters.yaml was moved to config/openconext/parameters.yaml 
+* Requires php 8.2
+* Update tiqr-server-libphp to 4.1.0, this version uses the FCM HTTP v1 API for Google push notifications. See the FCM.md in tiqr-server-libphp included for instructions on how to set up FCM for Tiqr. Using an apikey is no longer supported.
 
 ## 3.4.6
 * Update Tiqr library to 3.0.2 (fixes #164)
