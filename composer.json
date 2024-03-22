@@ -35,7 +35,7 @@
     "symfony/validator": "^6.4",
     "symfony/webpack-encore-bundle": "^2.1",
     "symfony/yaml": "^6.4",
-    "tiqr/tiqr-server-libphp": "^4.2.0-beta2",
+    "tiqr/tiqr-server-libphp": "^4.2",
     "twig/extra-bundle": "^3.0",
     "twig/twig": "^3.0"
   },
