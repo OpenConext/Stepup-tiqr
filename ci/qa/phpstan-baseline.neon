@@ -271,6 +271,11 @@ parameters:
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
+			message: "#^Cannot access offset 'cacheTokens' on mixed\\.$#"
+			count: 1
+			path: ../../src/Tiqr/TiqrConfiguration.php
+
+		-
 			message: "#^Cannot access offset 'arguments' on mixed\\.$#"
 			count: 4
 			path: ../../src/Tiqr/TiqrConfiguration.php

@@ -60,6 +60,7 @@ parameters:
             firebase:
                 projectId: 'FCM project ID'
                 credentialsFile: 'absolute path to file with service account key'
+                cacheTokens: false
         accountblocking:
             maxAttempts: 5
         storage:
