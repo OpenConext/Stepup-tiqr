@@ -261,7 +261,17 @@ parameters:
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Cannot access offset 'apikey' on mixed\\.$#"
+			message: "#^Cannot access offset 'projectId' on mixed\\.$#"
+			count: 1
+			path: ../../src/Tiqr/TiqrConfiguration.php
+
+		-
+			message: "#^Cannot access offset 'credentialsFile' on mixed\\.$#"
+			count: 1
+			path: ../../src/Tiqr/TiqrConfiguration.php
+
+		-
+			message: "#^Cannot access offset 'cacheTokens' on mixed\\.$#"
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
