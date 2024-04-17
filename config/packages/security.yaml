@@ -8,7 +8,7 @@ security:
             security: false
 
         monitor:
-            pattern: ^/(info|health)$
+            pattern: ^/(internal/)?(info|health)$
             security: false
 
     # Easy way to control access for large sections of your site
