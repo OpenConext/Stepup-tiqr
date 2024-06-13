@@ -74,6 +74,8 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             $this->options['firebase.credentialsFile'] = $tiqrConfiguration['library']['firebase']['credentialsFile'];
             Assertion::boolean($tiqrConfiguration['library']['firebase']['cacheTokens']);
             $this->options['firebase.cacheTokens'] = $tiqrConfiguration['library']['firebase']['cacheTokens'];
+            Assertion::string($tiqrConfiguration['library']['firebase']['tokenCacheDir']);
+            $this->options['firebase.tokenCacheDir'] = $tiqrConfiguration['library']['firebase']['tokenCacheDir'];
         }
 
         if (isset($tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS])) {
