@@ -61,6 +61,7 @@ parameters:
                 projectId: 'FCM project ID'
                 credentialsFile: 'absolute path to file with service account key'
                 cacheTokens: false
+                tokenCacheDir: '/tmp'
         accountblocking:
             maxAttempts: 5
         storage:
