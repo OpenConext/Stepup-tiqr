@@ -23,6 +23,7 @@ namespace Surfnet\Tiqr\Tiqr\Legacy;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\HealthCheck\HealthCheckResultDto;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationErrorResponse;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Surfnet\Tiqr\Tiqr\Response\RejectedAuthenticationResponse;
@@ -32,6 +33,7 @@ use Surfnet\Tiqr\Tiqr\TiqrUserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Tiqr_HealthCheck_Interface;
 use Tiqr_Service;
 use Tiqr_StateStorage_StateStorageInterface;
 
@@ -427,5 +429,17 @@ final class TiqrService implements TiqrServiceInterface
     private function initSession(): void
     {
         $this->session = $this->requestStack->getSession();
+    }
+
+    public function stateStorageHealthCheck(): HealthCheckResultDto
+    {
+        assert($this->tiqrStateStorage instanceof  Tiqr_HealthCheck_Interface);
+
+        $message = '';
+        $result = new HealthCheckResultDto();
+        $result->isHealthy = $this->tiqrStateStorage->healthCheck($message);
+        $result->errorMessage = $message;
+
+        return $result;
     }
 }
