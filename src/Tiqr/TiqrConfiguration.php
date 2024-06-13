@@ -67,7 +67,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             $this->options['apns.environment'] = $tiqrConfiguration['library']['apns']['environment'];
         }
         
-        if (isset($tiqrConfiguration['library']['firebase'])) {
+        if (isset($tiqrConfiguration['library']['firebase']) && is_array($tiqrConfiguration['library']['firebase'])) {
             Assertion::string($tiqrConfiguration['library']['firebase']['projectId']);
             $this->options['firebase.projectId'] = $tiqrConfiguration['library']['firebase']['projectId'];
             Assertion::string($tiqrConfiguration['library']['firebase']['credentialsFile']);
