@@ -24,7 +24,9 @@ use Exception;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
+use Tiqr_UserSecretStorage_Abstract;
 use Tiqr_UserSecretStorage_Interface;
+use Tiqr_UserStorage_Abstract;
 use Tiqr_UserStorage_Interface;
 
 /**
@@ -66,5 +68,17 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
         }
 
         return new TiqrUser($this->userStorage, $this->userSecretStorage, $userId);
+    }
+
+    public function userStorageHealthCheck(string &$message = ''): bool
+    {
+        assert($this->userStorage instanceof Tiqr_UserStorage_Abstract);
+        return $this->userStorage->healthCheck($message);
+    }
+
+    public function userSecretStorageHealthCheck(string &$message = ''): bool
+    {
+        assert($this->userSecretStorage instanceof Tiqr_UserSecretStorage_Abstract);
+        return $this->userSecretStorage->healthCheck($message);
     }
 }

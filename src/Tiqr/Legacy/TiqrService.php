@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tiqr_Service;
+use Tiqr_StateStorage_Abstract;
 use Tiqr_StateStorage_StateStorageInterface;
 
 /**
@@ -427,5 +428,11 @@ final class TiqrService implements TiqrServiceInterface
     private function initSession(): void
     {
         $this->session = $this->requestStack->getSession();
+    }
+
+    public function stateStorageHealthCheck(string &$message = ''): bool
+    {
+        assert($this->tiqrStateStorage instanceof Tiqr_StateStorage_Abstract);
+        return $this->tiqrStateStorage->healthCheck($message);
     }
 }
