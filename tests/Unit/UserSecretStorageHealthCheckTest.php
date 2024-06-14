@@ -39,7 +39,7 @@ class UserSecretStorageHealthCheckTest extends TestCase
     public function testCheckReturnsStatusDownWhenStateStorageHealthCheckFails(): void
     {
         $tiqrUserRepository = $this->createMock(TiqrUserRepositoryInterface::class);
-        $tiqrUserRepository->method('userStorageHealthCheck')->willReturn(false);
+        $tiqrUserRepository->method('userSecretStorageHealthCheck')->willReturn(false);
 
         $report = $this->createMock(HealthReportInterface::class);
 
