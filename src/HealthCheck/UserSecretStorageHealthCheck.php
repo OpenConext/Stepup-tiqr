@@ -34,8 +34,6 @@ class UserSecretStorageHealthCheck implements HealthCheckInterface
 
     public function check(HealthReportInterface $report): HealthReportInterface
     {
-        assert($this->tiqrUserRepository instanceof TiqrUserRepository);
-
         $message = '';
         if (!$this->tiqrUserRepository->userSecretStorageHealthCheck($message)) {
             return $report::buildStatusDown($message);
