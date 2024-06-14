@@ -18,15 +18,12 @@
 namespace Unit;
 use OpenConext\MonitorBundle\HealthCheck\HealthReportInterface;
 use PHPUnit\Framework\TestCase;
-use Surfnet\Tiqr\HealthCheck\StateStorageHealthCheck;
 use Surfnet\Tiqr\HealthCheck\UserStorageHealthCheck;
-use Surfnet\Tiqr\Tiqr\Legacy\TiqrUserRepository;
-use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 
 class UserStorageHealthCheckTest extends TestCase
 {
-    public function testCheckReturnsReportWhenStateStorageHealthCheckPasses(): void
+    public function testCheckReturnsReportWhenUserStorageHealthCheckPasses(): void
     {
         $tiqrUserRepository = $this->createMock(TiqrUserRepositoryInterface::class);
         $tiqrUserRepository->method('userStorageHealthCheck')->willReturn(true);
@@ -39,7 +36,7 @@ class UserStorageHealthCheckTest extends TestCase
         $this->assertSame($report, $result);
     }
 
-    public function testCheckReturnsStatusDownWhenStateStorageHealthCheckFails(): void
+    public function testCheckReturnsStatusDownWhenUserStorageHealthCheckFails(): void
     {
         $tiqrUserRepository = $this->createMock(TiqrUserRepositoryInterface::class);
         $tiqrUserRepository->method('userStorageHealthCheck')->willReturn(false);

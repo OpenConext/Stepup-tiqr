@@ -23,7 +23,7 @@ use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 
 class UserSecretStorageHealthCheckTest extends TestCase
 {
-    public function testCheckReturnsReportWhenStateStorageHealthCheckPasses(): void
+    public function testCheckReturnsReportWhenUserSecretStorageHealthCheckPasses(): void
     {
         $tiqrUserRepository = $this->createMock(TiqrUserRepositoryInterface::class);
         $tiqrUserRepository->method('userSecretStorageHealthCheck')->willReturn(true);
@@ -36,7 +36,7 @@ class UserSecretStorageHealthCheckTest extends TestCase
         $this->assertSame($report, $result);
     }
 
-    public function testCheckReturnsStatusDownWhenStateStorageHealthCheckFails(): void
+    public function testCheckReturnsStatusDownWhenUserSecretStorageHealthCheckFails(): void
     {
         $tiqrUserRepository = $this->createMock(TiqrUserRepositoryInterface::class);
         $tiqrUserRepository->method('userSecretStorageHealthCheck')->willReturn(false);
