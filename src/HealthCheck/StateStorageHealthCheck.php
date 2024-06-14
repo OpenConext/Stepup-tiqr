@@ -22,12 +22,12 @@ namespace Surfnet\Tiqr\HealthCheck;
 
 use OpenConext\MonitorBundle\HealthCheck\HealthCheckInterface;
 use OpenConext\MonitorBundle\HealthCheck\HealthReportInterface;
-use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
+use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 
 class StateStorageHealthCheck implements HealthCheckInterface
 {
 
-    public function __construct(private readonly TiqrService $tiqrService)
+    public function __construct(private readonly TiqrServiceInterface $tiqrService)
     {
     }
 

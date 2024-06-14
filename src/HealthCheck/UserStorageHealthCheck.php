@@ -24,8 +24,6 @@ use OpenConext\MonitorBundle\HealthCheck\HealthCheckInterface;
 use OpenConext\MonitorBundle\HealthCheck\HealthReportInterface;
 use Surfnet\Tiqr\Tiqr\Legacy\TiqrUserRepository;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
-use Tiqr_UserStorage_File;
-use Tiqr_UserStorage_Interface;
 
 class UserStorageHealthCheck implements HealthCheckInterface
 {

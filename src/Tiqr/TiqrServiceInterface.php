@@ -239,4 +239,6 @@ interface TiqrServiceInterface
      * Does not throw
      */
     public function getSariForSessionIdentifier(string $identifier): string;
+
+    public function stateStorageHealthCheck(string &$message = ''): bool;
 }

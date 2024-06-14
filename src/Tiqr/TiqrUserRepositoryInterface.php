@@ -40,4 +40,9 @@ interface TiqrUserRepositoryInterface
      * @throws TiqrServerRuntimeException
      */
     public function getUser(string $userId): TiqrUserInterface;
+
+    public function userStorageHealthCheck(string &$message = ''): bool;
+
+    public function userSecretStorageHealthCheck(string &$message = ''): bool;
+
 }
