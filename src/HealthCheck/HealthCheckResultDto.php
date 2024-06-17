@@ -20,8 +20,22 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\HealthCheck;
 
+use Tiqr_HealthCheck_Interface;
+
 class HealthCheckResultDto
 {
     public bool $isHealthy = true;
     public string $errorMessage = '';
+
+    public static function fromHealthCheckInterface(Tiqr_HealthCheck_Interface $healthCheckInterface): self
+    {
+        $message = '';
+        $isHealthy = $healthCheckInterface->healthCheck($message);
+
+        $result = new self();
+        $result->isHealthy = $isHealthy;
+        $result->errorMessage = $message;
+
+        return $result;
+    }
 }

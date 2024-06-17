@@ -39,6 +39,7 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
     }
 
     /**
+     * @throws UserNotExistsException
      * @see TiqrUserRepositoryInterface::createUser()
      */
     public function createUser(string $userId, string $secret): TiqrUser
@@ -54,6 +55,7 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
     }
 
     /**
+     * @throws UserNotExistsException
      * @see TiqrUserRepositoryInterface::createUser()
      */
     public function getUser(string $userId): TiqrUser
@@ -74,23 +76,13 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
     {
         assert($this->userStorage instanceof  Tiqr_HealthCheck_Interface);
 
-        $message = '';
-        $result = new HealthCheckResultDto();
-        $result->isHealthy = $this->userStorage->healthCheck($message);
-        $result->errorMessage = $message;
-
-        return $result;
+        return HealthCheckResultDto::fromHealthCheckInterface($this->userStorage);
     }
 
-    public function userSecretStorageHealthCheck(string &$message = ''): HealthCheckResultDto
+    public function userSecretStorageHealthCheck(): HealthCheckResultDto
     {
         assert($this->userSecretStorage instanceof  Tiqr_HealthCheck_Interface);
 
-        $message = '';
-        $result = new HealthCheckResultDto();
-        $result->isHealthy = $this->userSecretStorage->healthCheck($message);
-        $result->errorMessage = $message;
-
-        return $result;
+        return HealthCheckResultDto::fromHealthCheckInterface($this->userSecretStorage);
     }
 }

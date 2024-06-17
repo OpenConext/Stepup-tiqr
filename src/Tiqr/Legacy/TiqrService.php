@@ -435,11 +435,6 @@ final class TiqrService implements TiqrServiceInterface
     {
         assert($this->tiqrStateStorage instanceof  Tiqr_HealthCheck_Interface);
 
-        $message = '';
-        $result = new HealthCheckResultDto();
-        $result->isHealthy = $this->tiqrStateStorage->healthCheck($message);
-        $result->errorMessage = $message;
-
-        return $result;
+        return HealthCheckResultDto::fromHealthCheckInterface($this->tiqrStateStorage);
     }
 }
