@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\Tiqr;
 
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\HealthCheck\HealthCheckResultDto;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -239,4 +240,6 @@ interface TiqrServiceInterface
      * Does not throw
      */
     public function getSariForSessionIdentifier(string $identifier): string;
+
+    public function stateStorageHealthCheck(): HealthCheckResultDto;
 }

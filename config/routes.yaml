@@ -5,6 +5,7 @@ controllers:
 gssp_saml:
     resource: '@SurfnetGsspBundle/Resources/config/routing.yml'
 
-openconext_monitor:
-    resource:   "@OpenConextMonitorBundle/Resources/config/routing.yml"
-    prefix:     /
+open_conext_monitor:
+    resource: "@OpenConextMonitorBundle/src/Controller"
+    type: attribute
+    prefix: /

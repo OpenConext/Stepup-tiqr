@@ -22,8 +22,10 @@ namespace Surfnet\Tiqr\Tiqr\Legacy;
 
 use Exception;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\HealthCheck\HealthCheckResultDto;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
+use Tiqr_HealthCheck_Interface;
 use Tiqr_UserSecretStorage_Interface;
 use Tiqr_UserStorage_Interface;
 
@@ -37,6 +39,7 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
     }
 
     /**
+     * @throws UserNotExistsException
      * @see TiqrUserRepositoryInterface::createUser()
      */
     public function createUser(string $userId, string $secret): TiqrUser
@@ -52,6 +55,7 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
     }
 
     /**
+     * @throws UserNotExistsException
      * @see TiqrUserRepositoryInterface::createUser()
      */
     public function getUser(string $userId): TiqrUser
@@ -66,5 +70,19 @@ final readonly class TiqrUserRepository implements TiqrUserRepositoryInterface
         }
 
         return new TiqrUser($this->userStorage, $this->userSecretStorage, $userId);
+    }
+
+    public function userStorageHealthCheck(): HealthCheckResultDto
+    {
+        assert($this->userStorage instanceof  Tiqr_HealthCheck_Interface);
+
+        return HealthCheckResultDto::fromHealthCheckInterface($this->userStorage);
+    }
+
+    public function userSecretStorageHealthCheck(): HealthCheckResultDto
+    {
+        assert($this->userSecretStorage instanceof  Tiqr_HealthCheck_Interface);
+
+        return HealthCheckResultDto::fromHealthCheckInterface($this->userSecretStorage);
     }
 }

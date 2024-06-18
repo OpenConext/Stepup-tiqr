@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\Tiqr;
 
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\HealthCheck\HealthCheckResultDto;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 
 /**
@@ -40,4 +41,8 @@ interface TiqrUserRepositoryInterface
      * @throws TiqrServerRuntimeException
      */
     public function getUser(string $userId): TiqrUserInterface;
+
+    public function userStorageHealthCheck(): HealthCheckResultDto;
+
+    public function userSecretStorageHealthCheck(): HealthCheckResultDto;
 }
