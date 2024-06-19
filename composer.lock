@@ -1620,16 +1620,16 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
-                "reference": "8a2d0b0915a699485d542f47d68950f4c7034c93"
+                "reference": "efcb68ff02243c60b16acb1394e0e78b33fc875a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/8a2d0b0915a699485d542f47d68950f4c7034c93",
-                "reference": "8a2d0b0915a699485d542f47d68950f4c7034c93",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/efcb68ff02243c60b16acb1394e0e78b33fc875a",
+                "reference": "efcb68ff02243c60b16acb1394e0e78b33fc875a",
                 "shasum": ""
             },
             "require": {
@@ -1669,9 +1669,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OpenConext/Monitor-bundle/issues",
-                "source": "https://github.com/OpenConext/Monitor-bundle/tree/4.3.0"
+                "source": "https://github.com/OpenConext/Monitor-bundle/tree/4.3.1"
             },
-            "time": "2024-05-30T11:10:17+00:00"
+            "time": "2024-06-17T08:59:20+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
