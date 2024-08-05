@@ -18,3 +18,8 @@ Feature: User
     And the mobile tiqr app identifies itself with the user agent "Bad UA"
     When the user registers the service
     Then tiqr errors with a message telling the user agent was wrong
+
+  Scenario: Registration without notification type and address is allowed
+    Given the registration QR code is scanned
+    When the user registers the service with notification type "NULL" address: "NULL"
+    Then we have a registered user

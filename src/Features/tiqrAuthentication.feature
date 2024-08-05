@@ -60,3 +60,8 @@ Feature: User
     # Try it with the actual correct password
     And the app authenticates to the service
     Then we have the authentication error 'ACCOUNT_BLOCKED'
+
+  Scenario: The app authenticats whithout updating notification address
+    Given the authentication QR code is scanned
+    When the app authenticates to the service with notification type "NULL" address: "NULL"
+    Then we have a authenticated user
