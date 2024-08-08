@@ -1,12 +1,32 @@
 # Stepup-tiqr
 
-## 4.0.0
+## 4.0.5
+* Handle tiqr clients that do not send a notificationAddress or notificationType or send a "null" like value (#197)
+  This fixes enrolling android clients without Google services enabled and prevents spurious calls to the push
+  notification service because the notificationAddress is null.
+* Update tiqr-server-libphp to 4.3.1. This adds authenticationTimeout to the push notification payload and allows
+  iOS clients to receive the push notification when the app is closed. (#198)
+* Update composer dependencies (#199)
+
+## 4.0.4
+* Update monitor bundle 4.3.1, fixes exceptions escaping the monitor bundle (#196)
+
+## 4.0.3
+* Update health check to use the health checks from the tiqr-server-libphp. This performs health checks on
+  the backends used by the StateStorage, userStorage and UserSecretStorage so that e.g. an unavailable database
+  is reported in the healthcheck (#193)
+
+## 4.0.2
+* Add tokenCacheDir option for the Google FCM HTTP v1 API
+
+## 4.0.1
 * The tiqr code was upgraded to allow use of Symfony 6.4
 * Many other dependencies were upgraded in the process
 * We started to use the Openconext-devconf dev-env
 * parameters.yaml was moved to config/openconext/parameters.yaml 
 * Requires php 8.2
 * Update tiqr-server-libphp to 4.1.0, this version uses the FCM HTTP v1 API for Google push notifications. See the FCM.md in tiqr-server-libphp included for instructions on how to set up FCM for Tiqr. Using an apikey is no longer supported.
+* make info and health endpoints available on /internal/info and /internal/health respectively
 
 ## 3.4.6
 * Update Tiqr library to 3.0.2 (fixes #164)
