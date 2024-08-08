@@ -143,8 +143,8 @@ class AuthenticationCommand extends Command
             'sessionKey' => $session,
             'userId' => $userId,
             'response' => $response,
-            'notificationType' => $input->getOption('notificationType'),
-            'notificationAddress' => $input->getOption('notificationAddress'),
+            'notificationType' => $input->getOption('notificationType', ''),
+            'notificationAddress' => $input->getOption('notificationAddress', ''),
         ];
 
         $output->writeln([

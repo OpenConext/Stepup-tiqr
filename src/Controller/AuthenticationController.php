@@ -328,20 +328,23 @@ class AuthenticationController extends AbstractController
         // Send notification.
         $notificationType = $user->getNotificationType();
         $notificationAddress = $user->getNotificationAddress();
-        $this->logger->notice(sprintf(
-            'Sending push notification for user "%s" with type "%s" and (untranslated) address "%s"',
-            $nameId,
-            $notificationType,
-            $notificationAddress
-        ));
 
         if ($notificationType && $notificationAddress) {
+            $this->logger->notice(sprintf(
+                'Sending push notification for user "%s" with type "%s" and (untranslated) address "%s"',
+                $nameId,
+                $notificationType,
+                $notificationAddress
+            ));
+
             $result = $this->sendNotification($notificationType, $notificationAddress);
             if ($result) {
                 return $this->generateNotificationResponse('success');
             }
             return $this->generateNotificationResponse('error');
         }
+
+        $this->logger->notice(sprintf('No notification address for user "%s", no notification was sent', $nameId));
 
         return $this->generateNotificationResponse('no-device');
     }

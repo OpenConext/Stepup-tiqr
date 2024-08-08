@@ -173,6 +173,12 @@ class TiqrContext implements Context
             'notificationType' => $notificationType,
             'notificationAddress' => $notificationAddress,
         ];
+        if ($notificationType == 'NULL') {
+            unset($registrationBody['notificationType']);
+        }
+        if ($notificationAddress == 'NULL') {
+            unset($registrationBody['notificationAddress']);
+        }
 
         $client = $this->minkContext->getSession()->getDriver()->getClient();
         $client->request(
@@ -221,6 +227,12 @@ class TiqrContext implements Context
             'notificationType' => $notificationType,
             'notificationAddress' => $notificationAddress,
         ];
+        if ($notificationType == 'NULL') {
+            unset($authenticationBody['notificationType']);
+        }
+        if ($notificationAddress == 'NULL') {
+            unset($authenticationBody['notificationAddress']);
+        }
         // Internal request does not like an absolute path.
         $authenticationUrl = str_replace('https://tiqr.dev.openconext.local', '', (string) $authenticationUrl);
 

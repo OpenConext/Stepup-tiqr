@@ -115,8 +115,8 @@ class TiqrAppApiController extends AbstractController
             return new Response('Missing "operation" parameter in POST', Response::HTTP_BAD_REQUEST);
         }
 
-        $notificationType = $request->get('notificationType');
-        $notificationAddress = $request->get('notificationAddress');
+        $notificationType = $request->get('notificationType', '');
+        $notificationAddress = $request->get('notificationAddress', '');
         if ($operation === 'register') {
             $this->logger->notice(
                 'Got POST with registration response',

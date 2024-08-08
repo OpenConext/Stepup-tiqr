@@ -224,7 +224,15 @@ class TiqrUser implements TiqrUserInterface
     public function getNotificationAddress(): string
     {
         try {
-            return $this->userStorage->getNotificationAddress($this->userId);
+            $notificationAddress=$this->userStorage->getNotificationAddress($this->userId);
+
+            // Filter bogus "null" and "(null)" entries that were put in the database by returning '' instead.
+            // There is no point in trying to send a notification to such addresses.
+            $notificationAddressLower = strtolower($notificationAddress);
+            if (($notificationAddressLower == 'null') || ($notificationAddressLower == '(null)')) {
+                return '';
+            }
+            return $notificationAddress;
         } catch (Exception $e) {
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
