@@ -7101,16 +7101,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Tiqr/tiqr-server-libphp.git",
-                "reference": "b91facd58df81c383d85dd054e481c38a5a85e66"
+                "reference": "148549b0a5f4a8bfe48674dae2b0c7c13fb0b169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/b91facd58df81c383d85dd054e481c38a5a85e66",
-                "reference": "b91facd58df81c383d85dd054e481c38a5a85e66",
+                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/148549b0a5f4a8bfe48674dae2b0c7c13fb0b169",
+                "reference": "148549b0a5f4a8bfe48674dae2b0c7c13fb0b169",
                 "shasum": ""
             },
             "require": {
@@ -7150,9 +7150,9 @@
             "description": "php library for tiqr authentication.",
             "support": {
                 "issues": "https://github.com/Tiqr/tiqr-server-libphp/issues",
-                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/4.3.0"
+                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/4.3.1"
             },
-            "time": "2024-06-13T07:07:28+00:00"
+            "time": "2024-08-06T10:46:58+00:00"
         },
         {
             "name": "twig/extra-bundle",
