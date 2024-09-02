@@ -106,6 +106,9 @@ export class AuthenticationPageService {
       case 'challenge-expired':
         this.switchToChallengeHasExpired();
         break;
+      case 'invalid-request':
+        this.switchToNotificationFailed();
+        break;
       case 'needs-refresh':
         this.reloadPage();
         break;
