@@ -46,41 +46,53 @@ class AuthenticationStatusController
     #[Route(path: '/authentication/status', name: 'app_identity_authentication_status', methods: ['GET'])]
     public function __invoke(): JsonResponse
     {
-        $nameId = $this->authenticationService->getNameId();
-        $sari = $this->stateHandler->getRequestId();
-        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
-        $logger->info('Request for authentication status');
+        try {
+            $nameId = $this->authenticationService->getNameId();
+            $sari = $this->stateHandler->getRequestId();
+            $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
+            $logger->info('Request for authentication status');
 
-        if (!$this->authenticationService->authenticationRequired()) {
-            $logger->error('There is no pending authentication request from SP');
-            return $this->refreshAuthenticationPage();
+            if (!$this->authenticationService->authenticationRequired()) {
+                $logger->error('There is no pending authentication request from SP');
+                return $this->refreshAuthenticationPage();
+            }
+
+            $isAuthenticated = $this->tiqrService->isAuthenticated();
+
+            if ($isAuthenticated) {
+                $logger->info('Send json response is authenticated');
+
+                return $this->refreshAuthenticationPage();
+            }
+
+            if ($this->authenticationChallengeIsExpired()) {
+                return $this->timeoutNeedsManualRetry();
+            }
+
+            $logger->info('Send json response is not authenticated');
+
+            return $this->scheduleNextPollOnAuthenticationPage();
+        } catch (Exception $e) {
+            $this->logger->error(
+                sprintf(
+                    'An unexpected authentication error occurred. Responding with "invalid-request", '.
+                    'original exception message: "%s"',
+                    $e->getMessage()
+                )
+            );
+            return $this->generateAuthenticationStatusResponse('invalid-request');
         }
-
-        $isAuthenticated = $this->tiqrService->isAuthenticated();
-
-        if ($isAuthenticated) {
-            $logger->info('Send json response is authenticated');
-
-            return $this->refreshAuthenticationPage();
-        }
-
-        if ($this->authenticationChallengeIsExpired()) {
-            return $this->timeoutNeedsManualRetry();
-        }
-
-        $logger->info('Send json response is not authenticated');
-
-        return $this->scheduleNextPollOnAuthenticationPage();
     }
 
     /**
      * Generate a status response for authentication.html.
      *
-     * The javascript in the authentication page expects one of three statuses:
+     * The javascript in the authentication page expects one of four statuses:
      *
      *  - pending: waiting for user action, schedule next poll
      *  - needs-refresh: refresh the page (the /authentication page will handle the success or error)
      *  - challenge-expired: Message user challenge is expired, let the user give the option to retry.
+     *  - invalid-request: There was a state issue, or another reason why authentication failed
      *
      * @return JsonResponse
      */

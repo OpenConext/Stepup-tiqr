@@ -157,6 +157,14 @@ describe('AuthenticationPageService', () => {
       successCallback('challenge-expired');
       expect(spy).toBeCalled();
     });
+    it('Should handle authn error (invalid request)', () => {
+      if (!successCallback || !errorCallback) {
+        throw new Error('Should have started status request');
+      }
+      const spy = jest.spyOn(context.authenticationPageService, 'switchToNotificationFailed');
+      successCallback('invalid-request');
+      expect(spy).toBeCalled();
+    });
 
     it('Should handle challenge expired', () => {
       if (!successCallback || !errorCallback) {
