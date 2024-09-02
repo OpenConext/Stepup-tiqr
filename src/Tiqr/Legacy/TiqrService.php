@@ -95,16 +95,22 @@ final class TiqrService implements TiqrServiceInterface
     {
         $this->initSession();
 
-        $this->logger->debug('Generating userId');
+        // We use a randomly generated user ID
+        $this->logger->debug('Generating tiqr userId');
         $userId = $this->generateId();
-        $this->logger->debug('Storing the userId to session state');
+        $this->logger->debug('Storing the userId=' . $userId . ' to session state');
         $this->session->set('userId', $userId);
+
+        // The session ID is used to link the tiqr library's enrollment session to the user's browser session
         $sessionId = $this->session->getId();
         $this->logger->debug('Clearing the previous enrollment state(s)');
 
         try {
             $this->clearPreviousEnrollmentState();
-            $this->logger->debug('Starting the new enrollment session');
+            $this->logger->notice('Starting new enrollment session with sessionId ' . $sessionId .
+                ' and userId ' . $userId);
+            // accountName is the display name of the account that is shown in the tiqr app
+            // However, we set it to the name of the tiqr service.
             $enrollmentKey = $this->tiqrService->startEnrollmentSession($userId, $this->accountName, $sessionId);
             $this->logger->debug('Storing the enrollment key for future reference');
             $this->storeEnrollmentKey($enrollmentKey);
@@ -373,11 +379,9 @@ final class TiqrService implements TiqrServiceInterface
      * (3 for enrollment, 1 for authentication). This allows us to correlate the actions of the
      * user's browser with those of the user's phone.
      *
-     * Because the enrollment identifier are sensitive two measures are implemented:
+     * Because the enrollment identifier is sensitive two measures are implemented:
      * - Only the first 8 characters of the identifiers are logged
      * - The identifiers are stored as a stable hash of the identifier to hide the rest of the identifier.
-     *
-     * Note that tiqr currently stores these identifiers in plain in its state storage
      *
      * @param string $identifier Session identifier: enrollment key or session key
      * @param string $sari       The to associate with $identifier
@@ -392,7 +396,7 @@ final class TiqrService implements TiqrServiceInterface
             $hashedIdentifier = $this->getHashedIdentifier($identifier);
             $this->tiqrStateStorage->setValue('sari_' . $hashedIdentifier, $sari, 60 * 60);
         } catch (Exception $e) {
-            // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
+            // Catch errors from the tiqr-server and up-cycle them to exceptions that are meaningful to our domain
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }
     }
@@ -436,5 +440,15 @@ final class TiqrService implements TiqrServiceInterface
         assert($this->tiqrStateStorage instanceof  Tiqr_HealthCheck_Interface);
 
         return HealthCheckResultDto::fromHealthCheckInterface($this->tiqrStateStorage);
+    }
+
+    protected function getAuthenticationTimeout(): int
+    {
+        return Tiqr_Service::CHALLENGE_EXPIRE;
+    }
+
+    protected function getEnrollmentTimeout(): int
+    {
+        return Tiqr_Service::ENROLLMENT_EXPIRE;
     }
 }

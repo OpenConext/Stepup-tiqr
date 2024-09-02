@@ -73,7 +73,7 @@ class AuthenticationController extends AbstractController
 
         $logger->info('Verifying if there is a pending authentication request from SP');
 
-        // Do have a valid sample AuthnRequest?
+        // Do we have a valid GSSP authentication AuthnRequest in this session?
         if (!$this->authenticationService->authenticationRequired()) {
             $logger->error('There is no pending authentication request from SP');
 
@@ -146,12 +146,15 @@ class AuthenticationController extends AbstractController
         $logger->info('Return authentication page with QR code');
 
         return $this->render('default/authentication.html.twig', [
+            // TODO: Add something identifying the authentication session to the authenticateUrl
             'authenticateUrl' => $this->tiqrService->authenticationUrl()
         ]);
     }
 
     /**
      * @throws InvalidArgumentException
+     *
+     * Requires session cookie to be set to a valid session.
      */
     #[Route(path: '/authentication/status', name: 'app_identity_authentication_status', methods: ['GET'])]
     public function authenticationStatus(): JsonResponse
@@ -161,11 +164,15 @@ class AuthenticationController extends AbstractController
         $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
         $logger->info('Request for authentication status');
 
+        // Do we have a valid GSSP authentication AuthnRequest in this session?
         if (!$this->authenticationService->authenticationRequired()) {
             $logger->error('There is no pending authentication request from SP');
             return $this->refreshAuthenticationPage();
         }
 
+        // Check if the user is authenticated. This check will work if the user has completed the authentication
+        // within the last Tiqr_Service::LOGIN_EXPIRE seconds (1 hour).
+        // Uses our SessionId.
         $isAuthenticated = $this->tiqrService->isAuthenticated();
 
         if ($isAuthenticated) {
@@ -197,6 +204,13 @@ class AuthenticationController extends AbstractController
         // of this function.
         // Effectively this does a $this->_stateStorage->getValue(self::PREFIX_CHALLENGE . $sessionKey);
         // To check that the session key still exists in the Tiqr_Service's state storage
+
+        // TODO: Refactor this so it does not depend on the implementation of the TiqrService
+        //       i.e. we should keep track of authentication timeout ourselves
+        //       Uses this method creates noise in the logs because it logs errors because keys are not found
+        //       in the StateStorage. But this is not an error here, it is expected bacause expired keys
+        //       cannot be found in the statestorage by definition.
+        //       If you were truly interested in the authenticationUrl(), then logging the errors is correct.
         try {
             $this->tiqrService->authenticationUrl();
         } catch (Exception) {
