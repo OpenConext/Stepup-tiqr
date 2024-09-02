@@ -26,7 +26,13 @@ services:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
-    # add more service definitions when explicit configuration is needed
+    Surfnet\Tiqr\Controller\:
+        tags: [ 'controller.service_arguments' ]
+        resource: '../src/Controller/'
+        autowire: true
+        autoconfigure: true
+
+  # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
     Symfony\Component\DependencyInjection\Container:
@@ -51,6 +57,5 @@ services:
         $pattern: '%mobile_app_user_agent_pattern%'
 
     Surfnet\Tiqr\Controller\ExceptionController:
-      tags: ['controller.service_arguments']
       arguments:
         $errorPageHelper: '@Surfnet\Tiqr\Service\ErrorPageHelper'
