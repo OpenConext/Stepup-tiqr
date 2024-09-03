@@ -15,7 +15,7 @@ framework:
     session:
         handler_id: null
         cookie_secure: auto
-        cookie_samesite: lax
+        cookie_samesite: none
     router:
         strict_requirements: null
         utf8: true
