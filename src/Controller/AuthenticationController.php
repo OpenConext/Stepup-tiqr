@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -54,7 +55,8 @@ class AuthenticationController extends AbstractController
         private readonly TiqrServiceInterface $tiqrService,
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -146,6 +148,7 @@ class AuthenticationController extends AbstractController
         $logger->info('Return authentication page with QR code');
 
         return $this->render('default/authentication.html.twig', [
+            'statusApiUrl' => $this->urlGenerator->generate('app_identity_authentication_status', ['correlation-id' => $sari]),
             // TODO: Add something identifying the authentication session to the authenticateUrl
             'authenticateUrl' => $this->tiqrService->authenticationUrl()
         ]);

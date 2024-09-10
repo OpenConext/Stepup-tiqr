@@ -15,7 +15,7 @@
          * @var {AuthenticationPageService} authenticationPageService
          */
         var authenticationPageService = window.bootstrapAuthentication(
-            "{{ path('app_identity_authentication_status') | escape('js') }}",
+            "{{ statusApiUrl }}",
             "{{ path('app_identity_authentication_notification') | escape('js') }}"
         );
     </script>
