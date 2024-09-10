@@ -26,28 +26,13 @@ parameters:
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
+			message: "#^Cannot access offset int\\|string\\|false on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
 			message: "#^Cannot access offset string on mixed\\.$#"
-			count: 2
-			path: ../../dev/Command/AuthenticationCommand.php
-
-		-
-			message: "#^Comparison operation \"\\>\\=\" between int\\<0, max\\>\\|false and 0 is always true\\.$#"
 			count: 1
-			path: ../../dev/Command/AuthenticationCommand.php
-
-		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\AuthenticationCommand\\:\\:decorateResult\\(\\) has parameter \\$text with no type specified\\.$#"
-			count: 1
-			path: ../../dev/Command/AuthenticationCommand.php
-
-		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\AuthenticationCommand\\:\\:readAuthenticationLinkFromFile\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: ../../dev/Command/AuthenticationCommand.php
-
-		-
-			message: "#^Method Symfony\\\\Component\\\\Console\\\\Input\\\\InputInterface\\:\\:getOption\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 2
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
@@ -86,11 +71,6 @@ parameters:
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
-			count: 1
-			path: ../../dev/Command/AuthenticationCommand.php
-
-		-
 			message: "#^Cannot access offset 'authenticationUrl' on mixed\\.$#"
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
@@ -113,11 +93,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$service on mixed\\.$#"
 			count: 2
-			path: ../../dev/Command/RegistrationCommand.php
-
-		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:decorateResult\\(\\) has parameter \\$text with no type specified\\.$#"
-			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
@@ -216,24 +191,9 @@ parameters:
 			path: ../../dev/FileLogger.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: ../../dev/FileLogger.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream of static method League\\\\Csv\\\\AbstractCsv\\:\\:createFromStream\\(\\) expects resource, resource\\|false given\\.$#"
-			count: 2
+			count: 1
 			path: ../../dev/FileLogger.php
-
-		-
-			message: "#^Cannot call method getEntityId\\(\\) on Surfnet\\\\SamlBundle\\\\Entity\\\\IdentityProvider\\|null\\.$#"
-			count: 1
-			path: ../../dev/Twig/GsspExtension.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: ../../dev/Twig/GsspExtension.php
 
 		-
 			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"

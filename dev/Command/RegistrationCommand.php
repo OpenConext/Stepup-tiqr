@@ -78,7 +78,7 @@ class RegistrationCommand extends Command
         $metadata = json_decode($metadataBody);
         $output->writeln([
             'Metadata result:',
-            $this->decorateResult(json_encode($metadata, JSON_PRETTY_PRINT)),
+            $this->decorateResult(json_encode($metadata, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)),
         ]);
         if ($metadata === false) {
             $output->writeln('<error>Metadata has expired</error>');
@@ -99,7 +99,7 @@ class RegistrationCommand extends Command
                 '<comment>Send registration data to enrollmentUrl "%s" with body:</comment>',
                 $metadata->service->enrollmentUrl
             ),
-            $this->decorateResult(json_encode($registrationBody, JSON_PRETTY_PRINT)),
+            $this->decorateResult(json_encode($registrationBody, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)),
         ]);
 
         $result = $this->client->post($metadata->service->enrollmentUrl, ['form_params' => $registrationBody]);
@@ -121,7 +121,7 @@ class RegistrationCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function decorateResult($text): string
+    protected function decorateResult(string $text): string
     {
         return "<options=bold>$text</>";
     }
