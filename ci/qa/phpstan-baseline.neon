@@ -1,6 +1,236 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Cannot access offset 'authenticationUrl' on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Cannot access offset 'id' on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Cannot access offset 'identities' on mixed\\.$#"
+			count: 2
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Cannot access offset 'ocraSuite' on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Cannot access offset 'secret' on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Cannot access offset string on mixed\\.$#"
+			count: 2
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Comparison operation \"\\>\\=\" between int\\<0, max\\>\\|false and 0 is always true\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\AuthenticationCommand\\:\\:decorateResult\\(\\) has parameter \\$text with no type specified\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Method Symfony\\\\Component\\\\Console\\\\Input\\\\InputInterface\\:\\:getOption\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 2
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_keys expects array, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$file of method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\AuthenticationCommand\\:\\:readAuthenticationLinkFromFile\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$ocraSuite of static method OCRA\\:\\:generateOCRA\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$uri of method GuzzleHttp\\\\Client\\:\\:post\\(\\) expects Psr\\\\Http\\\\Message\\\\UriInterface\\|string, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\$key of static method OCRA\\:\\:generateOCRA\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
+			message: "#^Cannot access offset 'authenticationUrl' on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Cannot access offset 'identities' on mixed\\.$#"
+			count: 2
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Cannot access offset 'ocraSuite' on mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Cannot access offset mixed on mixed\\.$#"
+			count: 5
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Cannot access property \\$service on mixed\\.$#"
+			count: 2
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:decorateResult\\(\\) has parameter \\$text with no type specified\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:storeIdentity\\(\\) has parameter \\$metadata with no type specified\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:storeIdentity\\(\\) has parameter \\$secret with no type specified\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$file of method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:readRegistrationUrlFromFile\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
+			count: 1
+			path: ../../dev/Command/RegistrationCommand.php
+
+		-
+			message: "#^Call to an undefined method SAML2\\\\Message\\:\\:getStatus\\(\\)\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Cannot call method getValue\\(\\) on SAML2\\\\XML\\\\saml\\\\Issuer\\|null\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Cannot cast mixed to string\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Controller\\\\SPController\\:\\:signRequestQuery\\(\\) has parameter \\$queryParams with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$securityKey\\)\\: Unexpected token \"\\$securityKey\", expected type at offset 10$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of method SAML2\\\\Certificate\\\\PrivateKeyLoader\\:\\:loadPrivateKey\\(\\) expects SAML2\\\\Configuration\\\\PrivateKey, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#1 \\$nameId of method Surfnet\\\\SamlBundle\\\\SAML2\\\\AuthnRequest\\:\\:setSubject\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#1 \\$source of method DOMDocument\\:\\:loadXML\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function base64_decode expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function base64_encode expects string, string\\|false given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#1 \\$xml of static method SAML2\\\\Message\\:\\:fromXML\\(\\) expects DOMElement, DOMElement\\|null given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Parameter \\#2 \\$values of method Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\:\\:set\\(\\) expects array\\<string\\>\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: ../../dev/Controller/SPController.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\FileLogger\\:\\:getLogs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../dev/FileLogger.php
+
+		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\FileLogger\\:\\:log\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../../dev/FileLogger.php
+
+		-
+			message: "#^Parameter \\#1 \\$record of method League\\\\Csv\\\\Writer\\:\\:insertOne\\(\\) expects array\\<float\\|int\\|string\\|Stringable\\|null\\>, array\\<int, mixed\\> given\\.$#"
+			count: 1
+			path: ../../dev/FileLogger.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
+			count: 1
+			path: ../../dev/FileLogger.php
+
+		-
+			message: "#^Parameter \\#1 \\$stream of static method League\\\\Csv\\\\AbstractCsv\\:\\:createFromStream\\(\\) expects resource, resource\\|false given\\.$#"
+			count: 2
+			path: ../../dev/FileLogger.php
+
+		-
+			message: "#^Cannot call method getEntityId\\(\\) on Surfnet\\\\SamlBundle\\\\Entity\\\\IdentityProvider\\|null\\.$#"
+			count: 1
+			path: ../../dev/Twig/GsspExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
+			count: 1
+			path: ../../dev/Twig/GsspExtension.php
+
+		-
 			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/AuthenticationController.php
