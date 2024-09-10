@@ -41,6 +41,11 @@ parameters:
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
+			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\AuthenticationCommand\\:\\:readAuthenticationLinkFromFile\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: ../../dev/Command/AuthenticationCommand.php
+
+		-
 			message: "#^Method Symfony\\\\Component\\\\Console\\\\Input\\\\InputInterface\\:\\:getOption\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 2
 			path: ../../dev/Command/AuthenticationCommand.php

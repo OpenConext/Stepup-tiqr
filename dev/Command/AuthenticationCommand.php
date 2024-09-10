@@ -174,6 +174,7 @@ class AuthenticationCommand extends Command
     protected function readAuthenticationLinkFromFile(string $file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
+        /** @phpstan-var mixed $link */
         $link = $qrcode->text();
 
         $output->writeln([
@@ -181,7 +182,7 @@ class AuthenticationCommand extends Command
             $this->decorateResult($link),
         ]);
 
-        return $link->toString();
+        return $link;
     }
 
     /**
