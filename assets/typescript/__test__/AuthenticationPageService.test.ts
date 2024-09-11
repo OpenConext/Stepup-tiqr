@@ -161,7 +161,7 @@ describe('AuthenticationPageService', () => {
       if (!successCallback || !errorCallback) {
         throw new Error('Should have started status request');
       }
-      const spy = jest.spyOn(context.authenticationPageService, 'switchToNotificationFailed');
+      const spy = jest.spyOn(context.authenticationPageService, 'switchToStatusRequestError');
       successCallback('invalid-request');
       expect(spy).toBeCalled();
     });
