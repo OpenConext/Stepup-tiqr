@@ -45,6 +45,10 @@
             {{ 'enrol.status.error' | trans }}
             <a href="{{ path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
         </div>
+        <div class="status timeout">
+            {{ 'enrol.status.timeout' | trans }}
+            <a href="{{ path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
+        </div>
     </div>
     <div class="content-container qr">
         <a href="{{ metadataUrl }}">

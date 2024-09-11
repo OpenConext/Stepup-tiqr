@@ -38,7 +38,7 @@ final class GsspExtension extends AbstractExtension
     {
         return sprintf(
             'https://pieter.aai.surfnet.nl/simplesamlphp/sp.php?idp=%s',
-            urlencode($this->hostedEntities->getIdentityProvider()->getEntityId())
+            urlencode($this->hostedEntities->getIdentityProvider()?->getEntityId() ?? '')
         );
     }
 }

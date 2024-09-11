@@ -242,4 +242,8 @@ interface TiqrServiceInterface
     public function getSariForSessionIdentifier(string $identifier): string;
 
     public function stateStorageHealthCheck(): HealthCheckResultDto;
+
+    public function isEnrollmentTimedOut(): bool;
+
+    public function isAuthenticationTimedOut(): bool;
 }

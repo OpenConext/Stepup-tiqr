@@ -57,6 +57,7 @@ class AuthenticationStatusController
                 return $this->refreshAuthenticationPage();
             }
 
+
             $isAuthenticated = $this->tiqrService->isAuthenticated();
 
             if ($isAuthenticated) {
@@ -65,7 +66,8 @@ class AuthenticationStatusController
                 return $this->refreshAuthenticationPage();
             }
 
-            if ($this->authenticationChallengeIsExpired()) {
+            if ($this->tiqrService->isAuthenticationTimedOut()) {
+                $this->logger->info('The authentication timed out');
                 return $this->timeoutNeedsManualRetry();
             }
 
@@ -109,28 +111,6 @@ class AuthenticationStatusController
     private function refreshAuthenticationPage(): JsonResponse
     {
         return $this->generateAuthenticationStatusResponse('needs-refresh');
-    }
-
-    /**
-     * Check if the authentication challenge is expired.
-     *
-     * If the challenge is expired, the page should be refreshed so a new
-     * challenge and QR code is generated.
-     *
-     * @return bool
-     */
-    private function authenticationChallengeIsExpired(): bool
-    {
-        // The use of authenticationUrl() here is a hack, because it depends on an implementation detail
-        // of this function.
-        // Effectively this does a $this->_stateStorage->getValue(self::PREFIX_CHALLENGE . $sessionKey);
-        // To check that the session key still exists in the Tiqr_Service's state storage
-        try {
-            $this->tiqrService->authenticationUrl();
-        } catch (Exception) {
-            return true;
-        }
-        return false;
     }
 
     /**

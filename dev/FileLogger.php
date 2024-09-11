@@ -36,6 +36,10 @@ final class FileLogger extends AbstractLogger
             return;
         }
         $file = fopen($this->getCSVFile(), 'ab+');
+        if (!$file) {
+            return;
+        }
+
         $csv = Writer::createFromStream($file);
         $csv->setDelimiter(';');
         $csv->insertOne([$level, $message, json_encode($context)]);

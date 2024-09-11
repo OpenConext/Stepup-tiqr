@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
+use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,6 +97,7 @@ class RegistrationController extends AbstractController
     public function registrationStatus() : Response
     {
         $this->logger->info('Request for registration status');
+
         // Do we have a valid GSSP registration AuthnRequest in this session?
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->error('There is no pending registration request');
@@ -103,7 +105,10 @@ class RegistrationController extends AbstractController
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
 
-        // TODO: Check whether enrollment is expired here?
+        if ($this->tiqrService->isEnrollmentTimedOut()) {
+            $this->logger->info('The registration timed out');
+            return new Response(TiqrService::ENROLLMENT_TIMEOUT_STATUS);
+        }
 
         $status = $this->tiqrService->getEnrollmentStatus();
         $this->logger->info(sprintf('Send json response status "%s"', $status));
