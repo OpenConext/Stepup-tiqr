@@ -24,6 +24,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +45,7 @@ class AuthenticationQrController
      * @throws InvalidArgumentException
      */
     #[Route(path: '/authentication/qr', name: 'app_identity_authentication_qr', methods: ['GET'])]
+    #[RequiresActiveSession]
     public function __invoke(): Response
     {
         $nameId = $this->authenticationService->getNameId();

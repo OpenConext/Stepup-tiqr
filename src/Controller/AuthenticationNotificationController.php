@@ -25,6 +25,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
@@ -52,6 +53,7 @@ class AuthenticationNotificationController extends AbstractController
      * @throws InvalidArgumentException
      */
     #[Route(path: '/authentication/notification', name: 'app_identity_authentication_notification', methods: ['POST'])]
+    #[RequiresActiveSession]
     public function __invoke(): Response
     {
         $nameId = $this->authenticationService->getNameId();

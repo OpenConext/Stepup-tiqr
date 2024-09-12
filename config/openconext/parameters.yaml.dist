@@ -7,6 +7,9 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     app_secret: ThisTokenIsNotSoSecretChangeIt
 
+    # A secret salt used to hash the correlationId for logging based on the session_id
+    correlation_id_salt: 'changeMeToAtLeast16CharsOfRandomString'
+
     # All locales supported by the application
     default_locale: en_GB
     locales:
