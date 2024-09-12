@@ -38,9 +38,11 @@ use Tiqr_HealthCheck_Interface;
 use Tiqr_Service;
 use Tiqr_StateStorage_StateStorageInterface;
 
+
 /**
  * Wrapper around the legacy Tiqr service.
  *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * It's Legacy.
@@ -57,11 +59,16 @@ final class TiqrService implements TiqrServiceInterface
     private const ENROLLMENT_STARTED_AT = 'enrollment-started-at';
 
     /**
+     * Unix timestamp when the authentication started
+     */
+    private const AUTHENTICATION_STARTED_AT = 'authentication-started-at';
+
+    /**
      * The time (in seconds) that is extracted from the timeout
      * to prevent timeout issues right before the hard timeout
      * time is reached.
      */
-    private const TIMEOUT_OFFSET = 296;
+    private const TIMEOUT_OFFSET = 2;
 
     private SessionInterface $session;
 
@@ -115,10 +122,8 @@ final class TiqrService implements TiqrServiceInterface
         $userId = $this->generateId();
         $this->logger->debug('Storing the userId=' . $userId . ' to session state');
         $this->session->set('userId', $userId);
-        $registrationStartedAt = time();
-        $this->logger->debug(sprintf('Storing the %s = %s', self::ENROLLMENT_STARTED_AT, $registrationStartedAt));
-        $this->session->set(self::ENROLLMENT_STARTED_AT, $registrationStartedAt);
 
+        $this->recordStartTime(self::ENROLLMENT_STARTED_AT);
         // The session ID is used to link the tiqr library's enrollment session to the user's browser session
         $sessionId = $this->session->getId();
         $this->logger->debug('Clearing the previous enrollment state(s)');
@@ -208,7 +213,7 @@ final class TiqrService implements TiqrServiceInterface
             $this->session->set('sessionKey', $sessionKey);
 
             $this->setSariForSessionIdentifier($sessionKey, $sari);
-
+            $this->recordStartTime(self::AUTHENTICATION_STARTED_AT);
             return $this->tiqrService->generateAuthURL($sessionKey);
         } catch (Exception $e) {
             // Catch errors from the tiqr-server and up-cycle them to  exceptions that are meaningful to our domain
@@ -470,15 +475,38 @@ final class TiqrService implements TiqrServiceInterface
         return Tiqr_Service::ENROLLMENT_EXPIRE;
     }
 
+    public function isAuthenticationTimedOut(): bool
+    {
+        $this->initSession();
+        $this->logger->debug('Checking if authentication timeout is reached');
+        $startedAt = $this->session->get(self::AUTHENTICATION_STARTED_AT);
+        assert(is_int($startedAt));
+        return TimeoutHelper::isTimedOut(
+            time(),
+            $startedAt,
+            $this->getAuthenticationTimeout(),
+            self::TIMEOUT_OFFSET
+        );
+    }
+
     public function isEnrollmentTimedOut(): bool
     {
         $this->initSession();
         $this->logger->debug('Checking if enrollment timeout is reached');
+        $startedAt = $this->session->get(self::ENROLLMENT_STARTED_AT);
+        assert(is_int($startedAt));
         return TimeoutHelper::isTimedOut(
             time(),
-            $this->session->get(self::ENROLLMENT_STARTED_AT),
+            $startedAt,
             $this->getEnrollmentTimeout(),
             self::TIMEOUT_OFFSET
         );
+    }
+
+    private function recordStartTime(string $sessionFieldIdentifier): void
+    {
+        $startedAt = time();
+        $this->logger->debug(sprintf('Storing the %s = %s', $sessionFieldIdentifier, $startedAt));
+        $this->session->set($sessionFieldIdentifier, $startedAt);
     }
 }
