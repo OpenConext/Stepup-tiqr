@@ -244,4 +244,6 @@ interface TiqrServiceInterface
     public function stateStorageHealthCheck(): HealthCheckResultDto;
 
     public function isEnrollmentTimedOut(): bool;
+
+    public function isAuthenticationTimedOut(): bool;
 }
