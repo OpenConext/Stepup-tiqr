@@ -24,6 +24,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
 use Surfnet\Tiqr\HealthCheck\HealthCheckResultDto;
+use Surfnet\Tiqr\Service\TimeoutHelper;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationErrorResponse;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Surfnet\Tiqr\Tiqr\Response\RejectedAuthenticationResponse;
@@ -47,6 +48,21 @@ use Tiqr_StateStorage_StateStorageInterface;
 final class TiqrService implements TiqrServiceInterface
 {
     public const ENROLL_KEYS_SESSION_NAME = 'enrollment-session-keys';
+
+    public const ENROLLMENT_TIMEOUT_STATUS = 'TIMEOUT';
+
+    /**
+     * Unix timestamp when the enrollment started
+     */
+    private const ENROLLMENT_STARTED_AT = 'enrollment-started-at';
+
+    /**
+     * The time (in seconds) that is extracted from the timeout
+     * to prevent timeout issues right before the hard timeout
+     * time is reached.
+     */
+    private const TIMEOUT_OFFSET = 296;
+
     private SessionInterface $session;
 
     public function __construct(
@@ -94,12 +110,14 @@ final class TiqrService implements TiqrServiceInterface
     public function generateEnrollmentKey(string $sari): string
     {
         $this->initSession();
-
         // We use a randomly generated user ID
         $this->logger->debug('Generating tiqr userId');
         $userId = $this->generateId();
         $this->logger->debug('Storing the userId=' . $userId . ' to session state');
         $this->session->set('userId', $userId);
+        $registrationStartedAt = time();
+        $this->logger->debug(sprintf('Storing the %s = %s', self::ENROLLMENT_STARTED_AT, $registrationStartedAt));
+        $this->session->set(self::ENROLLMENT_STARTED_AT, $registrationStartedAt);
 
         // The session ID is used to link the tiqr library's enrollment session to the user's browser session
         $sessionId = $this->session->getId();
@@ -450,5 +468,17 @@ final class TiqrService implements TiqrServiceInterface
     protected function getEnrollmentTimeout(): int
     {
         return Tiqr_Service::ENROLLMENT_EXPIRE;
+    }
+
+    public function isEnrollmentTimedOut(): bool
+    {
+        $this->initSession();
+        $this->logger->debug('Checking if enrollment timeout is reached');
+        return TimeoutHelper::isTimedOut(
+            time(),
+            $this->session->get(self::ENROLLMENT_STARTED_AT),
+            $this->getEnrollmentTimeout(),
+            self::TIMEOUT_OFFSET
+        );
     }
 }

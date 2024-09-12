@@ -12,6 +12,8 @@ export class RegistrationStateMachine {
    * Client-side only status.
    */
   public static readonly ERROR = 'ERROR';
+  public static readonly TIMEOUT = 'TIMEOUT';
+
   private previousStatus = RegistrationStateMachine.IDLE;
 
   constructor(private statusPollingService: StatusPollService,
@@ -61,6 +63,12 @@ export class RegistrationStateMachine {
         this.statusUi.showFinalized();
         this.qrCode.hide();
         document.location.replace(this.finalizedUrl);
+        break;
+      case RegistrationStateMachine.TIMEOUT:
+        this.qrCode.hide();
+        this.statusUi.showTimeoutHappened();
+        this.statusPollingService.stop();
+        this.previousStatus = RegistrationStateMachine.ERROR;
         break;
       default:
         this.unknownError();
