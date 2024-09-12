@@ -141,6 +141,28 @@ describe('RegistrationPageService', () => {
     });
   });
 
+  describe('When timeout', () => {
+    beforeEach(() => {
+      context.authenticationPageService.start();
+      if (!statusCallback || !errorCallback) {
+        throw new Error('Should have started status request');
+      }
+      statusCallback(RegistrationStateMachine.TIMEOUT);
+    });
+
+    it('The qr code should be hidden', () => {
+      expect(context.qrComponent.isVisible()).toBeFalsy();
+    });
+
+    it('Polling should be disabled', () => {
+      expect(context.pollingService.enabled).toBeFalsy();
+    });
+
+    it('Show finalized', () => {
+      expect(context.statusUi.showTimeoutHappened).toBeCalled();
+    });
+  });
+
   describe('When connection error occurred', () => {
     beforeEach(() => {
       context.authenticationPageService.start();
@@ -227,6 +249,7 @@ describe('RegistrationPageService', () => {
       showAccountActivationHelp:jest.fn(),
       showOneMomentPlease: jest.fn(),
       showFinalized: jest.fn(),
+      showTimeoutHappened: jest.fn(),
       showUnknownErrorHappened: jest.fn(),
     };
 
