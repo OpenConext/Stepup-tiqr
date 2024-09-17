@@ -41,6 +41,11 @@ parameters:
     # PCRE as accepted by preg_match (http://php.net/preg_match).
     mobile_app_user_agent_pattern: "/^.*$/"
 
+    # When logging authentication related messages, having a reference to the session id of the user
+    # makes auditing the logs much easier. We do not want to log the session_id for obvious reasons, that's why
+    # a salt is used to hash a part of the session id. Ensuring we do not disclose sensitive data in the logs.
+    session_correlation_salt: 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'
+
     # Options for the tiqr library
     tiqr_library_options:
         general:

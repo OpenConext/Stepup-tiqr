@@ -14,8 +14,9 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: null
-        cookie_secure: auto
-        cookie_samesite: none
+        name: sess_tiqr
+        cookie_httponly: true
+        cookie_secure: true
     router:
         strict_requirements: null
         utf8: true

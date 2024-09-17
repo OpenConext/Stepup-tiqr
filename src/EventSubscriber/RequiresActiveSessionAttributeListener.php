@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Service\SessionCorrelationIdService;
 use Surfnet\Tiqr\WithContextLogger;
@@ -37,10 +38,19 @@ use function is_array;
  */
 final readonly class RequiresActiveSessionAttributeListener implements EventSubscriberInterface
 {
+    private string $sessionName;
+
     public function __construct(
         private LoggerInterface             $logger,
-        private SessionCorrelationIdService $sessionCorrelationIdService
+        private SessionCorrelationIdService $sessionCorrelationIdService,
+        private array $sessionOptions,
     ) {
+        if (!array_key_exists('name', $this->sessionOptions)) {
+            throw new RuntimeException(
+                'The session name (PHP session cookie identifier) could not be found in the session configuration.'
+            );
+        }
+        $this->sessionName = $this->sessionOptions['name'];
     }
 
     public function onKernelControllerArguments(ControllerArgumentsEvent $event): void
@@ -56,7 +66,7 @@ final readonly class RequiresActiveSessionAttributeListener implements EventSubs
 
         try {
             $sessionId = $event->getRequest()->getSession()->getId();
-            $sessionCookieId = $event->getRequest()->cookies->get('PHPSESSID');
+            $sessionCookieId = $event->getRequest()->cookies->get($this->sessionName);
 
             if (!$sessionCookieId) {
                 $logger->error('Route requires active session. Active session wasn\'t found. No session cookie was set.');

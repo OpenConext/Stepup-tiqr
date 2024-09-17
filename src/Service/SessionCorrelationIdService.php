@@ -20,25 +20,38 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Service;
 
+use RuntimeException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final readonly class SessionCorrelationIdService
 {
-    private const SALT = 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ';
+    private string $sessionName;
 
     public function __construct(
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private array $sessionOptions,
+        private string $sessionCorrelationSalt,
     ) {
+        if (!array_key_exists('name', $this->sessionOptions)) {
+            throw new RuntimeException(
+                'The session name (PHP session cookie identifier) could not be found in the session configuration.'
+            );
+        }
+        if (empty($this->sessionCorrelationSalt)) {
+            throw new RuntimeException('Please configure a non empty session correlation salt.');
+        }
+
+        $this->sessionName = $this->sessionOptions['name'];
     }
 
     public function generateCorrelationId(): ?string
     {
-        $sessionCookie = $this->requestStack->getMainRequest()?->cookies->get('PHPSESSID');
+        $sessionCookie = $this->requestStack->getMainRequest()?->cookies->get($this->sessionName);
 
         if ($sessionCookie === null) {
             return null;
         }
 
-        return hash('sha256', self::SALT . substr($sessionCookie, 0, 10));
+        return hash('sha256', $this->sessionCorrelationSalt . substr($sessionCookie, 0, 10));
     }
 }
