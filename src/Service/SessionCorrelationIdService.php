@@ -29,6 +29,7 @@ final readonly class SessionCorrelationIdService
 
     public function __construct(
         private RequestStack $requestStack,
+        /** @var array<string, string> */
         private array $sessionOptions,
         private string $sessionCorrelationSalt,
     ) {

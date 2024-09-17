@@ -39,6 +39,7 @@ final readonly class SessionStateListener implements EventSubscriberInterface
     public function __construct(
         private LoggerInterface $logger,
         private SessionCorrelationIdService $sessionCorrelationIdService,
+        /** @var array<string, string> */
         private array $sessionOptions,
     ) {
         if (!array_key_exists('name', $this->sessionOptions)) {

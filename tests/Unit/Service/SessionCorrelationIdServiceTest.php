@@ -30,7 +30,7 @@ final class SessionCorrelationIdServiceTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $service = new SessionCorrelationIdService($requestStack);
+        $service = new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ');
 
         $this->assertNull($service->generateCorrelationId());
     }
@@ -41,7 +41,7 @@ final class SessionCorrelationIdServiceTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $service = new SessionCorrelationIdService($requestStack);
+        $service = new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ');
 
         $this->assertSame('f6e7cfb6f0861f577c48f171e27542236b1184f7a599dde82aca1640d86da961', $service->generateCorrelationId());
     }
