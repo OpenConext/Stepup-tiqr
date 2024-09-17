@@ -25,6 +25,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,6 +45,7 @@ class AuthenticationStatusController
      * @throws InvalidArgumentException
      */
     #[Route(path: '/authentication/status', name: 'app_identity_authentication_status', methods: ['GET'])]
+    #[RequiresActiveSession]
     public function __invoke(): JsonResponse
     {
         try {
@@ -56,7 +58,6 @@ class AuthenticationStatusController
                 $logger->error('There is no pending authentication request from SP');
                 return $this->refreshAuthenticationPage();
             }
-
 
             $isAuthenticated = $this->tiqrService->isAuthenticated();
 
