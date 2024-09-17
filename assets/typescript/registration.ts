@@ -7,12 +7,16 @@ import jQuery from 'jquery';
 
 declare global {
   interface Window {
-    bootstrapRegistration: (statusApiUrl: string, notificationApiUrl: string) => RegistrationStateMachine;
+    bootstrapRegistration: (
+      statusApiUrl: string,
+      notificationApiUrl: string,
+      correlationLoggingId: string
+    ) => RegistrationStateMachine;
   }
 }
 
-window.bootstrapRegistration = (statusApiUrl: string, finalizedUrl: string) => {
-  const statusClient = new StatusClient(statusApiUrl);
+window.bootstrapRegistration = (statusApiUrl: string, finalizedUrl: string, correlationLoggingId: string) => {
+  const statusClient = new StatusClient(statusApiUrl, correlationLoggingId);
   const pollingService = new StatusPollService(statusClient);
   const machine = new RegistrationStateMachine(
     pollingService,

@@ -66,7 +66,14 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         $mockLogger = Mockery::mock(LoggerInterface::class);
         $mockLogger->shouldNotReceive('log');
 
-        $listener = new RequiresActiveSessionAttributeListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new RequiresActiveSessionAttributeListener(
+            $mockLogger,
+            new SessionCorrelationIdService(
+                $requestStack,
+                ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'
+            ),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -103,7 +110,11 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
                 ['correlationId' => '', 'route' => '/route']
             );
 
-        $listener = new RequiresActiveSessionAttributeListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new RequiresActiveSessionAttributeListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -144,7 +155,11 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
                 ['correlationId' => '', 'route' => '/route']
             );
 
-        $listener = new RequiresActiveSessionAttributeListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new RequiresActiveSessionAttributeListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -185,7 +200,11 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
                 ['correlationId' => 'f6e7cfb6f0861f577c48f171e27542236b1184f7a599dde82aca1640d86da961', 'route' => '/route']
             );
 
-        $listener = new RequiresActiveSessionAttributeListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new RequiresActiveSessionAttributeListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -219,7 +238,11 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         $mockLogger = Mockery::mock(LoggerInterface::class);
         $mockLogger->shouldNotReceive('log');
 
-        $listener = new RequiresActiveSessionAttributeListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new RequiresActiveSessionAttributeListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);

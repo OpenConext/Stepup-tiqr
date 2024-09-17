@@ -56,7 +56,11 @@ final class SessionStateListenerTest extends KernelTestCase
             ->once()
             ->with(LogLevel::INFO, 'User made a request without a session cookie.', ['correlationId' => '', 'route' => '/route']);
 
-        $listener = new SessionStateListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new SessionStateListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSIONID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -85,7 +89,11 @@ final class SessionStateListenerTest extends KernelTestCase
             ->once()
             ->with(LogLevel::INFO, 'Session not found.', ['correlationId' => 'f6e7cfb6f0861f577c48f171e27542236b1184f7a599dde82aca1640d86da961', 'route' => '/route']);
 
-        $listener = new SessionStateListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new SessionStateListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -121,7 +129,11 @@ final class SessionStateListenerTest extends KernelTestCase
             ->once()
             ->with(LogLevel::ERROR, 'The session cookie does not match the session id.', ['correlationId' => 'f6e7cfb6f0861f577c48f171e27542236b1184f7a599dde82aca1640d86da961', 'route' => '/route']);
 
-        $listener = new SessionStateListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new SessionStateListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
@@ -158,7 +170,11 @@ final class SessionStateListenerTest extends KernelTestCase
             ->once()
             ->with(LogLevel::INFO, 'User session matches the session cookie.', ['correlationId' => 'f6e7cfb6f0861f577c48f171e27542236b1184f7a599dde82aca1640d86da961', 'route' => '/route']);
 
-        $listener = new SessionStateListener($mockLogger, new SessionCorrelationIdService($requestStack));
+        $listener = new SessionStateListener(
+            $mockLogger,
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
+            ['name' => 'PHPSESSID'],
+        );
 
         $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
         $dispatcher->dispatch($event, KernelEvents::REQUEST);

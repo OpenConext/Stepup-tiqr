@@ -38,7 +38,6 @@ use Tiqr_HealthCheck_Interface;
 use Tiqr_Service;
 use Tiqr_StateStorage_StateStorageInterface;
 
-
 /**
  * Wrapper around the legacy Tiqr service.
  *
