@@ -29,6 +29,7 @@ use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Surfnet\Tiqr\Exception\UserNotFoundException;
 use Surfnet\Tiqr\Exception\UserPermanentlyBlockedException;
 use Surfnet\Tiqr\Exception\UserTemporarilyBlockedException;
+use Surfnet\Tiqr\Service\SessionCorrelationIdService;
 use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
@@ -53,6 +54,7 @@ class AuthenticationController extends AbstractController
         private readonly TiqrServiceInterface $tiqrService,
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
+        private readonly SessionCorrelationIdService $correlationIdService,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -145,8 +147,8 @@ class AuthenticationController extends AbstractController
         $logger->info('Return authentication page with QR code');
 
         return $this->render('default/authentication.html.twig', [
-            // TODO: Add something identifying the authentication session to the authenticateUrl
-            'authenticateUrl' => $this->tiqrService->authenticationUrl()
+            'authenticateUrl' => $this->tiqrService->authenticationUrl(),
+            'correlationLoggingId' => $this->correlationIdService->generateCorrelationId(),
         ]);
     }
 

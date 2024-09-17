@@ -5,14 +5,17 @@ export interface PendingRequest {
 }
 
 export class StatusClient {
-  constructor(private apiUrl: string) {
-
+  constructor(
+    private apiUrl: string,
+    private correlationLoggingId: string,
+  ) {
   }
 
   /**
    * Request status form the API.
    */
   public request(callback: (status: string) => void, errorCallback: (error: unknown) => void): PendingRequest {
-    return jQuery.get(this.apiUrl, callback).fail(errorCallback);
+    console.log(this.correlationLoggingId);
+    return jQuery.get(this.apiUrl + '?correlation-id=' + this.correlationLoggingId, callback).fail(errorCallback);
   }
 }
