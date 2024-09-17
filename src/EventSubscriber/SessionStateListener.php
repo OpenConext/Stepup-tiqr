@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Surfnet\Tiqr\Service\SessionCorrelationIdService;
 use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,10 +34,19 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 final readonly class SessionStateListener implements EventSubscriberInterface
 {
+    private string $sessionName;
+
     public function __construct(
-        private LoggerInterface             $logger,
-        private SessionCorrelationIdService $sessionCorrelationIdService
+        private LoggerInterface $logger,
+        private SessionCorrelationIdService $sessionCorrelationIdService,
+        private array $sessionOptions,
     ) {
+        if (!array_key_exists('name', $this->sessionOptions)) {
+            throw new RuntimeException(
+                'The session name (PHP session cookie identifier) could not be found in the session configuration.'
+            );
+        }
+        $this->sessionName = $this->sessionOptions['name'];
     }
 
     public function onKernelRequest(RequestEvent $event): void
@@ -46,7 +56,7 @@ final readonly class SessionStateListener implements EventSubscriberInterface
             'route' => $event->getRequest()->getRequestUri(),
         ]);
 
-        $sessionCookieId = $event->getRequest()->cookies->get('PHPSESSID');
+        $sessionCookieId = $event->getRequest()->cookies->get($this->sessionName);
         if ($sessionCookieId === null) {
             $logger->info('User made a request without a session cookie.');
             return;
