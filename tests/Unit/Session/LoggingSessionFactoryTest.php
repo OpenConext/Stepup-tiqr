@@ -45,7 +45,7 @@ final class LoggingSessionFactoryTest extends TestCase
             $requestStack,
             $this->createStub(SessionStorageFactoryInterface::class),
             $mockLogger,
-            new SessionCorrelationIdService($requestStack),
+            new SessionCorrelationIdService($requestStack, ['name' => 'PHPSESSID'], 'Mr6LpJYtuWRDdVR2_7VgTChFhzQ'),
         );
 
         $this->assertInstanceOf(SessionInterface::class, $sessionFactory->createSession());

@@ -8,12 +8,12 @@ import jQuery from 'jquery';
 
 declare global {
   interface Window {
-    bootstrapAuthentication: (statusApiUrl: string, notificationApiUrl: string) => AuthenticationPageService;
+    bootstrapAuthentication: (statusApiUrl: string, notificationApiUrl: string, correlationLoggingId: string) => AuthenticationPageService;
   }
 }
 
-window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: string) => {
-  const statusClient = new StatusClient(statusApiUrl);
+window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: string, correlationLoggingId: string) => {
+  const statusClient = new StatusClient(statusApiUrl, correlationLoggingId);
   const notificationClient = new NotificationClient(notificationApiUrl);
   const pollingService = new StatusPollService(statusClient);
 

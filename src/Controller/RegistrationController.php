@@ -25,6 +25,7 @@ use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
+use Surfnet\Tiqr\Service\SessionCorrelationIdService;
 use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,7 @@ class RegistrationController extends AbstractController
         private readonly RegistrationService $registrationService,
         private readonly StateHandlerInterface $stateHandler,
         private readonly TiqrServiceInterface $tiqrService,
+        private readonly SessionCorrelationIdService $correlationIdService,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -81,6 +83,7 @@ class RegistrationController extends AbstractController
             'default/registration.html.twig',
             [
                 'metadataUrl' => sprintf("tiqrenroll://%s", $metadataUrl),
+                'correlationLoggingId' => $this->correlationIdService->generateCorrelationId(),
                 'enrollmentKey' => $key
             ]
         );
