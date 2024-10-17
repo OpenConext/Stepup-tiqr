@@ -1,5 +1,8 @@
 # Stepup-tiqr
 
+## 4.0.6
+* Set session.cookie_samesite to none
+
 ## 4.0.5
 * Handle tiqr clients that do not send a notificationAddress or notificationType or send a "null" like value (#197)
   This fixes enrolling android clients without Google services enabled and prevents spurious calls to the push
