@@ -176,12 +176,16 @@ class AuthenticationCommand extends Command
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
         $link = $qrcode->text();
 
+        if (!is_string($link)) {
+            throw new RuntimeException('QR code could not be read');
+        }
+
         $output->writeln([
             'Registration link result: ',
             $this->decorateResult($link),
         ]);
 
-        return $link->toString();
+        return $link;
     }
 
     /**
