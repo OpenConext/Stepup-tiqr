@@ -30,6 +30,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use OCRA;
+use RuntimeException;
 use stdClass;
 use Surfnet\SamlBundle\Exception\NotFound;
 use Surfnet\Tiqr\Dev\FileLogger;
@@ -121,7 +122,11 @@ class TiqrContext implements Context
         $content = $this->minkContext->getMink()->getSession()->getPage()->getText();
         Assertion::startsWith($content, 'tiqrenroll://');
         Assertion::eq(preg_match('/^tiqrenroll:\/\/(?P<url>.*)/', $content, $matches), 1);
-        $this->metadataUrl = $matches['url'];
+        if (isset($matches['url'])) {
+            $this->metadataUrl = $matches['url'];
+        } else {
+            throw new RuntimeException('Could not get url');
+        }
     }
 
     /**
@@ -141,7 +146,11 @@ class TiqrContext implements Context
         $content = $this->minkContext->getMink()->getSession()->getPage()->getText();
         Assertion::startsWith($content, 'tiqrauth://');
         Assertion::eq(preg_match('/^tiqrauth:\/\/(?P<url>.*)/', $content, $matches), 1);
-        $this->authenticationUrl = $matches['url'];
+        if (isset($matches['url'])) {
+            $this->authenticationUrl = $matches['url'];
+        } else {
+            throw new RuntimeException('Could not get url');
+        }
     }
 
     /**
@@ -374,7 +383,11 @@ class TiqrContext implements Context
         $content = $qrcode->text();
         Assertion::startsWith($content, 'tiqrenroll://');
         Assertion::eq(preg_match('/^tiqrenroll:\/\/(?P<url>.*)/', $content, $matches), 1);
-        $this->metadataUrl = $matches['url'];
+        if (isset($matches['url'])) {
+            $this->metadataUrl = $matches['url'];
+        } else {
+            throw new RuntimeException('Could not get url');
+        }
     }
 
     /**
@@ -411,7 +424,11 @@ class TiqrContext implements Context
         $content = $qrcode->text();
         Assertion::startsWith($content, 'tiqrauth://');
         Assertion::eq(preg_match('/^tiqrauth:\/\/(?P<url>.*)/', $content, $matches), 1);
-        $this->authenticationUrl = $matches['url'];
+        if (isset($matches['url'])) {
+            $this->authenticationUrl = $matches['url'];
+        } else {
+            throw new RuntimeException('Could not get url');
+        }
     }
 
     /**
