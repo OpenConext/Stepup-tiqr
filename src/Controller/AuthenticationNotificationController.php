@@ -56,6 +56,8 @@ class AuthenticationNotificationController extends AbstractController
     #[RequiresActiveSession]
     public function __invoke(): Response
     {
+
+
         $nameId = $this->authenticationService->getNameId();
         $sari = $this->stateHandler->getRequestId();
         $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
