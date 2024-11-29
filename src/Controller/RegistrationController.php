@@ -23,6 +23,7 @@ namespace Surfnet\Tiqr\Controller;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
@@ -90,9 +91,8 @@ class RegistrationController extends AbstractController
      *
      *
      * @throws \InvalidArgumentException
-     *
-     * Requires session cookie to be set to a valid session.
      */
+    #[RequiresActiveSession]
     #[Route(path: '/registration/status', name: 'app_identity_registration_status', methods: ['GET'])]
     public function registrationStatus() : Response
     {
@@ -123,6 +123,7 @@ class RegistrationController extends AbstractController
      *
      * @throws \InvalidArgumentException
      */
+    #[RequiresActiveSession]
     #[Route(path: '/registration/qr/{enrollmentKey}', name: 'app_identity_registration_qr', methods: ['GET'])]
     public function registrationQr(Request $request, string $enrollmentKey): Response
     {
