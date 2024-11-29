@@ -1,5 +1,12 @@
 # Stepup-tiqr
 
+## 4.1.0
+* Improve validation errors from the tiqr configuraton (#224)
+* Fail early when session (cookie) is missing (#226)
+* Show error in the webbrowser when the enrollment or authentication session is expired (#210)
+* Add a "correlation ID" to the polling requests from the webbrowser (#227)
+* 
+
 ## 4.0.6
 * Set session.cookie_samesite to none
 
