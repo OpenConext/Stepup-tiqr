@@ -88,7 +88,7 @@ class AuthenticationCommand extends Command
         [$serviceId, $session, $challenge, $sp, $version] = explode('/', $authn);
 
         $userId = null;
-        if (strpos($serviceId, '@') >= 0) {
+        if (str_contains($serviceId, '@')) {
             [$userId, $serviceId] = explode('@', $serviceId);
         }
 
@@ -101,7 +101,7 @@ class AuthenticationCommand extends Command
                 'sp' => $sp,
                 'version' => $version,
                 'userId' => $userId,
-            ], JSON_PRETTY_PRINT)),
+            ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)),
         ]);
 
         $service = $this->getService($serviceId);
@@ -126,7 +126,7 @@ class AuthenticationCommand extends Command
         $service['id'] = $serviceId;
         $output->writeln([
             '<comment>Generate OCRA for service:</comment>',
-            $this->decorateResult(json_encode($service, JSON_PRETTY_PRINT)),
+            $this->decorateResult(json_encode($service, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)),
         ]);
 
         $response = OCRA::generateOCRA($ocraSuite, $secret, '', $challenge, '', $session, '');
@@ -143,8 +143,8 @@ class AuthenticationCommand extends Command
             'sessionKey' => $session,
             'userId' => $userId,
             'response' => $response,
-            'notificationType' => $input->getOption('notificationType', ''),
-            'notificationAddress' => $input->getOption('notificationAddress', ''),
+            'notificationType' => $input->getOption('notificationType'),
+            'notificationAddress' => $input->getOption('notificationAddress'),
         ];
 
         $output->writeln([
@@ -152,7 +152,7 @@ class AuthenticationCommand extends Command
                 '<comment>Send authentication data to "%s" with body:</comment>',
                 $authenticationUrl
             ),
-            $this->decorateResult(json_encode($authenticationBody, JSON_PRETTY_PRINT)),
+            $this->decorateResult(json_encode($authenticationBody, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)),
         ]);
 
         $result = $this->client->post($authenticationUrl, [
@@ -166,7 +166,7 @@ class AuthenticationCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function decorateResult($text): string
+    protected function decorateResult(string $text): string
     {
         return "<options=bold>$text</>";
     }
@@ -174,10 +174,11 @@ class AuthenticationCommand extends Command
     protected function readAuthenticationLinkFromFile(string $file, OutputInterface $output): string
     {
         $qrcode = new QrReader(file_get_contents($file), QrReader::SOURCE_TYPE_BLOB);
+        /** @phpstan-var mixed $link */
         $link = $qrcode->text();
 
         if (!is_string($link)) {
-            throw new RuntimeException('QR code could not be read');
+            throw new RuntimeException('Unable to read a link from the QR code');
         }
 
         $output->writeln([

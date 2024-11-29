@@ -25,6 +25,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,43 +45,57 @@ class AuthenticationStatusController
      * @throws InvalidArgumentException
      */
     #[Route(path: '/authentication/status', name: 'app_identity_authentication_status', methods: ['GET'])]
+    #[RequiresActiveSession]
     public function __invoke(): JsonResponse
     {
-        $nameId = $this->authenticationService->getNameId();
-        $sari = $this->stateHandler->getRequestId();
-        $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
-        $logger->info('Request for authentication status');
+        try {
+            $nameId = $this->authenticationService->getNameId();
+            $sari = $this->stateHandler->getRequestId();
+            $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
+            $logger->info('Request for authentication status');
 
-        if (!$this->authenticationService->authenticationRequired()) {
-            $logger->error('There is no pending authentication request from SP');
-            return $this->refreshAuthenticationPage();
+            if (!$this->authenticationService->authenticationRequired()) {
+                $logger->error('There is no pending authentication request from SP');
+                return $this->refreshAuthenticationPage();
+            }
+
+            $isAuthenticated = $this->tiqrService->isAuthenticated();
+
+            if ($isAuthenticated) {
+                $logger->info('Send json response is authenticated');
+
+                return $this->refreshAuthenticationPage();
+            }
+
+            if ($this->tiqrService->isAuthenticationTimedOut()) {
+                $this->logger->info('The authentication timed out');
+                return $this->timeoutNeedsManualRetry();
+            }
+
+            $logger->info('Send json response is not authenticated');
+
+            return $this->scheduleNextPollOnAuthenticationPage();
+        } catch (Exception $e) {
+            $this->logger->error(
+                sprintf(
+                    'An unexpected authentication error occurred. Responding with "invalid-request", '.
+                    'original exception message: "%s"',
+                    $e->getMessage()
+                )
+            );
+            return $this->generateAuthenticationStatusResponse('invalid-request');
         }
-
-        $isAuthenticated = $this->tiqrService->isAuthenticated();
-
-        if ($isAuthenticated) {
-            $logger->info('Send json response is authenticated');
-
-            return $this->refreshAuthenticationPage();
-        }
-
-        if ($this->authenticationChallengeIsExpired()) {
-            return $this->timeoutNeedsManualRetry();
-        }
-
-        $logger->info('Send json response is not authenticated');
-
-        return $this->scheduleNextPollOnAuthenticationPage();
     }
 
     /**
      * Generate a status response for authentication.html.
      *
-     * The javascript in the authentication page expects one of three statuses:
+     * The javascript in the authentication page expects one of four statuses:
      *
      *  - pending: waiting for user action, schedule next poll
      *  - needs-refresh: refresh the page (the /authentication page will handle the success or error)
      *  - challenge-expired: Message user challenge is expired, let the user give the option to retry.
+     *  - invalid-request: There was a state issue, or another reason why authentication failed
      *
      * @return JsonResponse
      */
@@ -97,28 +112,6 @@ class AuthenticationStatusController
     private function refreshAuthenticationPage(): JsonResponse
     {
         return $this->generateAuthenticationStatusResponse('needs-refresh');
-    }
-
-    /**
-     * Check if the authentication challenge is expired.
-     *
-     * If the challenge is expired, the page should be refreshed so a new
-     * challenge and QR code is generated.
-     *
-     * @return bool
-     */
-    private function authenticationChallengeIsExpired(): bool
-    {
-        // The use of authenticationUrl() here is a hack, because it depends on an implementation detail
-        // of this function.
-        // Effectively this does a $this->_stateStorage->getValue(self::PREFIX_CHALLENGE . $sessionKey);
-        // To check that the session key still exists in the Tiqr_Service's state storage
-        try {
-            $this->tiqrService->authenticationUrl();
-        } catch (Exception) {
-            return true;
-        }
-        return false;
     }
 
     /**

@@ -23,7 +23,10 @@ namespace Surfnet\Tiqr\Controller;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
+use Surfnet\Tiqr\Service\SessionCorrelationIdService;
+use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +39,7 @@ class RegistrationController extends AbstractController
         private readonly RegistrationService $registrationService,
         private readonly StateHandlerInterface $stateHandler,
         private readonly TiqrServiceInterface $tiqrService,
+        private readonly SessionCorrelationIdService $correlationIdService,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -50,7 +54,7 @@ class RegistrationController extends AbstractController
     {
         $this->logger->info('Verifying if there is a pending registration from SP');
 
-        // Do have a valid sample AuthnRequest?.
+        // Do we have a valid GSSP registration AuthnRequest in this session?
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->warning('Registration is not required');
             throw new NoActiveAuthenrequestException();
@@ -79,6 +83,7 @@ class RegistrationController extends AbstractController
             'default/registration.html.twig',
             [
                 'metadataUrl' => sprintf("tiqrenroll://%s", $metadataUrl),
+                'correlationLoggingId' => $this->correlationIdService->generateCorrelationId(),
                 'enrollmentKey' => $key
             ]
         );
@@ -90,16 +95,24 @@ class RegistrationController extends AbstractController
      *
      * @throws \InvalidArgumentException
      */
+    #[RequiresActiveSession]
     #[Route(path: '/registration/status', name: 'app_identity_registration_status', methods: ['GET'])]
     public function registrationStatus() : Response
     {
         $this->logger->info('Request for registration status');
-        // Do have a valid sample AuthnRequest?.
+
+        // Do we have a valid GSSP registration AuthnRequest in this session?
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->error('There is no pending registration request');
 
             return new Response('No registration required', Response::HTTP_BAD_REQUEST);
         }
+
+        if ($this->tiqrService->isEnrollmentTimedOut()) {
+            $this->logger->info('The registration timed out');
+            return new Response(TiqrService::ENROLLMENT_TIMEOUT_STATUS);
+        }
+
         $status = $this->tiqrService->getEnrollmentStatus();
         $this->logger->info(sprintf('Send json response status "%s"', $status));
         return new Response((string) $this->tiqrService->getEnrollmentStatus());
@@ -113,11 +126,13 @@ class RegistrationController extends AbstractController
      *
      * @throws \InvalidArgumentException
      */
+    #[RequiresActiveSession]
     #[Route(path: '/registration/qr/{enrollmentKey}', name: 'app_identity_registration_qr', methods: ['GET'])]
     public function registrationQr(Request $request, string $enrollmentKey): Response
     {
         $this->logger->info('Request for registration QR img');
 
+        // Do we have a valid GSSP registration AuthnRequest in this session?
         if (!$this->registrationService->registrationRequired()) {
             $this->logger->error('There is no pending registration request');
 

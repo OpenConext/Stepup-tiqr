@@ -16,7 +16,8 @@
          */
         var authenticationPageService = window.bootstrapAuthentication(
             "{{ path('app_identity_authentication_status') | escape('js') }}",
-            "{{ path('app_identity_authentication_notification') | escape('js') }}"
+            "{{ path('app_identity_authentication_notification') | escape('js') }}",
+            "{{ correlationLoggingId }}"
         );
     </script>
 {% endblock %}

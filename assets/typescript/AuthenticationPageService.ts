@@ -109,6 +109,9 @@ export class AuthenticationPageService {
       case 'needs-refresh':
         this.reloadPage();
         break;
+      default:
+        this.switchToStatusRequestError();
+        break;
     }
   };
 

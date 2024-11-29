@@ -13,7 +13,8 @@
     <script>
         var registrationStateMachine = window.bootstrapRegistration(
             "{{ path('app_identity_registration_status') | escape('js') }}",
-            "{{ path('app_identity_registration') | escape('js') }}"
+            "{{ path('app_identity_registration') | escape('js') }}",
+            "{{ correlationLoggingId }}"
         );
     </script>
 {% endblock %}
@@ -43,6 +44,10 @@
         </div>
         <div class="status error">
             {{ 'enrol.status.error' | trans }}
+            <a href="{{ path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
+        </div>
+        <div class="status timeout">
+            {{ 'enrol.status.timeout' | trans }}
             <a href="{{ path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
         </div>
     </div>

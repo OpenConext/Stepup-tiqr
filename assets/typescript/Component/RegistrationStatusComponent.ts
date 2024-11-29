@@ -49,6 +49,12 @@ export class RegistrationStatusComponent {
   public showUnknownErrorHappened() {
     this.show('div.status.error');
   }
+  /**
+   * Unknown error happened. Please try again by refreshing your browser.
+   */
+  public showTimeoutHappened() {
+    this.show('div.status.timeout');
+  }
 
   private hideAll() {
     jQuery('.status-container >').hide();
