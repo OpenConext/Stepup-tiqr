@@ -126,7 +126,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             Assertion::greaterThan(
                 $tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS],
                 0,
-                'TiqrConfiguration: accountblocking -> maxAttempts must be greater that 0'
+                'TiqrConfiguration: accountblocking -> maxAttempts must be greater than 0'
             );
             $this->options[self::MAX_ATTEMPTS] = $tiqrConfiguration['accountblocking'][self::MAX_ATTEMPTS];
         }
@@ -139,7 +139,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             Assertion::greaterThan(
                 $tiqrConfiguration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION],
                 0,
-                'TiqrConfiguration: accountblocking -> temporarilyBlockDuration must be greater that 0'
+                'TiqrConfiguration: accountblocking -> temporarilyBlockDuration must be greater than 0'
             );
             $this->options[self::TEMPORARILY_BLOCK_DURATION] =
                 $tiqrConfiguration['accountblocking'][self::TEMPORARILY_BLOCK_DURATION];
@@ -153,7 +153,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             Assertion::greaterThan(
                 $tiqrConfiguration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS],
                 0,
-                'TiqrConfiguration: accountblocking -> maxTemporarilyBlocks must be greater that 0'
+                'TiqrConfiguration: accountblocking -> maxTemporarilyBlocks must be greater than 0'
             );
             $this->options[self::MAX_TEMPORARILY_BLOCKS] = $tiqrConfiguration['accountblocking'][self::MAX_TEMPORARILY_BLOCKS];
         }
