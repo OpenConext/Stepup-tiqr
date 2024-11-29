@@ -13,7 +13,8 @@
     <script>
         var registrationStateMachine = window.bootstrapRegistration(
             "{{ path('app_identity_registration_status') | escape('js') }}",
-            "{{ path('app_identity_registration') | escape('js') }}"
+            "{{ path('app_identity_registration') | escape('js') }}",
+            "{{ correlationLoggingId }}"
         );
     </script>
 {% endblock %}

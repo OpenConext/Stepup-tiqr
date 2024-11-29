@@ -48,7 +48,6 @@
     "khanamiryan/qrcode-detector-decoder": "^2.0",
     "league/csv": "^9.13",
     "malukenho/docheader": "^1",
-    "mockery/mockery": "^1.6",
     "overtrue/phplint": "*",
     "phpmd/phpmd": "^2.15",
     "phpstan/phpstan": "^1.10",

@@ -29,6 +29,7 @@ use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Surfnet\Tiqr\Exception\UserNotFoundException;
 use Surfnet\Tiqr\Exception\UserPermanentlyBlockedException;
 use Surfnet\Tiqr\Exception\UserTemporarilyBlockedException;
+use Surfnet\Tiqr\Service\SessionCorrelationIdService;
 use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
@@ -53,6 +54,7 @@ class AuthenticationController extends AbstractController
         private readonly TiqrServiceInterface $tiqrService,
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
+        private readonly SessionCorrelationIdService $correlationIdService,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -72,7 +74,6 @@ class AuthenticationController extends AbstractController
 
         $logger->info('Verifying if there is a pending authentication request from SP');
 
-        // Do have a valid sample AuthnRequest?
         if (!$this->authenticationService->authenticationRequired()) {
             $logger->error('There is no pending authentication request from SP');
 
@@ -145,7 +146,8 @@ class AuthenticationController extends AbstractController
         $logger->info('Return authentication page with QR code');
 
         return $this->render('default/authentication.html.twig', [
-            'authenticateUrl' => $this->tiqrService->authenticationUrl()
+            'authenticateUrl' => $this->tiqrService->authenticationUrl(),
+            'correlationLoggingId' => $this->correlationIdService->generateCorrelationId(),
         ]);
     }
 

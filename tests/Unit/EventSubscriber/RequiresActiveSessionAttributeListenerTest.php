@@ -17,7 +17,6 @@
 
 namespace Unit\EventSubscriber;
 
-use Mockery;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
