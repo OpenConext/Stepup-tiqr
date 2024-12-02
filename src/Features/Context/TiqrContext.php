@@ -506,12 +506,11 @@ class TiqrContext implements Context
     {
         $session = $this->minkContext->getMink()->getSession();
         $driver = $session->getDriver();
-        /** @var Client $client */
         $client = $driver->getClient();
-        ob_start();
         $client->request('get', $src);
 
-        return ob_get_clean();
+        // retrieving streamed content is pretty finicky, but this works: https://github.com/symfony/symfony/issues/25005#issuecomment-1564417224
+        return $client->getInternalResponse()->getContent();
     }
 
     /**
