@@ -24,10 +24,10 @@ use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use OCRA;
 use RuntimeException;
@@ -340,6 +340,19 @@ class TiqrContext implements Context
     }
 
     /**
+     * @Then we have a trusted cookie
+     *
+     * @throws AssertionFailedException
+     */
+    public function weHaveATrustedCookie(): void
+    {
+        // @TODO
+        // TrustedCookieService
+        // containsValidCookie($this->authenticatioResponse->headers->getCookies())
+        Assertion::false(true);
+    }
+
+    /**
      * @Then we have the authentication error :error
      *
      * @throws AssertionFailedException
@@ -506,12 +519,11 @@ class TiqrContext implements Context
     {
         $session = $this->minkContext->getMink()->getSession();
         $driver = $session->getDriver();
-        /** @var Client $client */
         $client = $driver->getClient();
-        ob_start();
         $client->request('get', $src);
 
-        return ob_get_clean();
+        // retrieving streamed content is pretty finicky, but this works: https://github.com/symfony/symfony/issues/25005#issuecomment-1564417224
+        return $client->getInternalResponse()->getContent();
     }
 
     /**
@@ -532,5 +544,56 @@ class TiqrContext implements Context
         $ocraSuite = $service['ocraSuite'];
         $response = OCRA::generateOCRA($ocraSuite, $this->clientSecret, '', $challenge, '', $session, '');
         $this->minkContext->visit('/authentication?otp=' . urlencode($response));
+    }
+
+    /**
+     * @When /^a push notification is sent$/
+     */
+    public function aPushNotificationIsSent(): void
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        $driver = $session->getDriver();
+        $client = $driver->getClient();
+        $client->request('POST', '/authentication/notification');
+    }
+
+    /**
+     * @Then /^it should fail with "([^"]*)"$/
+     */
+    public function itShouldFailWith(string $errorCode): void
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        $driver = $session->getDriver();
+        $client = $driver->getClient();
+        $response = $client->getResponse();
+        Assertion::eq($response->getStatusCode(), 200);
+        Assertion::eq($response->getContent(), '"' . $errorCode . '"');
+    }
+
+    /**
+     * @Then /^it should send a notification for the user with type "([^"]*)" and address "([^"]*)"$/
+     */
+    public function itShouldSendANotification(string $type, string $address): void
+    {
+        $id = $this->metadata->identity->identifier;
+        $session = $this->minkContext->getMink()->getSession();
+        $driver = $session->getDriver();
+        $client = $driver->getClient();
+        $response = $client->getResponse();
+        Assertion::eq($response->getStatusCode(), 200);
+
+        $this->logsContain('Sending push notification for user "' . $id . '" with type "' . $type . '" and (untranslated) address "' . $address .'"');
+    }
+
+    private function logsContain(string $string): void
+    {
+        $logs = $this->fileLogger->cleanLogs();
+        foreach ($logs as $log) {
+            if ($log[1] === $string) {
+                return;
+            }
+        }
+
+        Assertion::eq($string, '', sprintf('The logs do not contain %s', $string));
     }
 }
