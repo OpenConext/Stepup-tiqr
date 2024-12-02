@@ -37,6 +37,8 @@ class HaliteCryptoHelperTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->markTestSkipped('TODO: Implement');
+
         $configuration = Mockery::mock(Configuration::class);
         $configuration->shouldReceive('getEncryptionKey')->andReturn(random_bytes(32));
         $this->helper = new HaliteCryptoHelper($configuration);

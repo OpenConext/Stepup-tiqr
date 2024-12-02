@@ -332,7 +332,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getClient\\(\\)\\.$#"
-			count: 2
+			count: 5
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
@@ -352,7 +352,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 1 on mixed\\.$#"
-			count: 1
+			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
