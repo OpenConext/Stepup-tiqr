@@ -181,11 +181,6 @@ parameters:
 			path: ../../dev/FileLogger.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\FileLogger\\:\\:log\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: ../../dev/FileLogger.php
-
-		-
 			message: "#^Parameter \\#1 \\$record of method League\\\\Csv\\\\Writer\\:\\:insertOne\\(\\) expects array\\<float\\|int\\|string\\|Stringable\\|null\\>, array\\<int, mixed\\> given\\.$#"
 			count: 1
 			path: ../../dev/FileLogger.php

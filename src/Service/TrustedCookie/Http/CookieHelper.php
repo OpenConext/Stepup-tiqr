@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Service\TrustedCookie\Http;
 
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Service\TrustedCookie\Crypto\CryptoHelperInterface;
 use Surfnet\Tiqr\Service\TrustedCookie\Exception\CookieNotFoundException;
@@ -67,6 +68,9 @@ class CookieHelper implements CookieHelperInterface
             throw new CookieNotFoundException();
         }
         $cookie = $request->cookies->get($this->configuration->getName());
+        if (!is_string($cookie)) {
+            throw new InvalidArgumentException('Cookie payload must be string.');
+        }
         $fingerprint = $this->hashFingerprint($cookie);
         $this->logger->notice(sprintf('Reading a SSO on 2FA cookie with fingerprint %s', $fingerprint));
         return $this->encryptionHelper->decrypt($cookie);
@@ -78,6 +82,9 @@ class CookieHelper implements CookieHelperInterface
             throw new CookieNotFoundException();
         }
         $cookie = $request->cookies->get($this->configuration->getName());
+        if (!is_string($cookie)) {
+            throw new InvalidArgumentException('Cookie payload must be string.');
+        }
         return $this->hashFingerprint($cookie);
     }
 

@@ -88,6 +88,7 @@
     "unit-tests": "./ci/qa/phpunit",
     "behat": "./ci/qa/behat",
     "jest": "./ci/qa/jest",
+    "jscpd": "./ci/qa/jscpd",
     "encore": [
       "yarn encore production"
     ],

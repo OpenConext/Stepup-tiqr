@@ -59,11 +59,11 @@ class CookieValue implements CookieValueInterface
             throw new InvalidArgumentException('Invalid serialized data');
         }
 
-        if(!is_string($data['tokenId'])) {
+        if (!is_string($data['tokenId'])) {
             throw new InvalidArgumentException('tokenId is not a valid string');
         }
 
-        if(!is_string($data['identityId'])) {
+        if (!is_string($data['identityId'])) {
             throw new InvalidArgumentException('tokenId is not a valid string');
         }
 
