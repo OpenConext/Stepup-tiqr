@@ -22,6 +22,7 @@ namespace Surfnet\Tiqr\Dev;
 use League\Csv\Reader;
 use League\Csv\Writer;
 use Psr\Log\AbstractLogger;
+use Stringable;
 use Symfony\Component\HttpKernel\Kernel;
 
 final class FileLogger extends AbstractLogger
@@ -30,11 +31,17 @@ final class FileLogger extends AbstractLogger
     {
     }
 
-    public function log($level, $message, array $context = []): void
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         if ($level === 'debug') {
             return;
         }
+
+        if (!file_exists($this->getCSVFile())) {
+            touch($this->getCSVFile());
+            chmod($this->getCSVFile(), 0666);
+        }
+
         $file = fopen($this->getCSVFile(), 'ab+');
         if (!$file) {
             return;
