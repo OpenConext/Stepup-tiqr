@@ -40,5 +40,10 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+            handler_id: null
+            cookie_secure: true
+            cookie_samesite: none
+            name: MOCKSESSID
+            cookie_httponly: true
         profiler:
             collect: false
