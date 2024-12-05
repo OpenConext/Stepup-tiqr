@@ -32,8 +32,8 @@ class ExpirationHelper implements ExpirationHelperInterface
 
     public function __construct(
         /**
-         * The SSO on 2FA cookie lifetime in seconds
-         * See: config/openconext/parameters.yaml sso_cookie_lifetime
+         * The trusted device cookie lifetime in seconds
+         * See: config/openconext/parameters.yaml trusted_device_cookie_lifetime
          */
         readonly private int $cookieLifetime,
         /**

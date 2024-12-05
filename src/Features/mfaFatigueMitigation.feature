@@ -40,3 +40,11 @@ Feature: When an user needs to authenticate
     And I should be on "/authentication"
     When a push notification is sent
     Then it should send a notification for the user with type "APNS" and address "0000000000111111111122222222223333333333"
+
+
+#  @TODO Add a test somewhere, maybe not here, that tests the cookie get overwritten properly (or appended) if a new scan occurs?
+  Scenario: Handles multiple devices / userids
+#    Given the user with ID X scans qr code
+#    Then A cookie is set for the stored device id
+#    When the user with ID Y scans a qr code in the same browser
+#    Then A cookie is appended or new cookie is created for the new device id

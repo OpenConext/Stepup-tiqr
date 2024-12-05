@@ -35,14 +35,14 @@ class ConfigurationTest extends TestCase
     public function test_encryption_key_must_be_hexadecimal(): void
     {
         $this->expectException(InvalidEncryptionKeyException::class);
-        $this->expectExceptionMessage('The configured SSO on 2FA encryption key contains illegal characters. It should be a 64 digits long hexadecimal value. Example value: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f');
+        $this->expectExceptionMessage('The configured trusted device encryption key contains illegal characters. It should be a 64 digits long hexadecimal value. Example value: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f');
         new Configuration('name',  60, 'Monkey nut Mies');
     }
 
     public function test_encryption_key_must_be_amply_strong(): void
     {
         $this->expectException(InvalidEncryptionKeyException::class);
-        $this->expectExceptionMessage('The configured SSO on 2FA encryption key must be exactly 32 bytes. This comes down to 64 hex digits value, configured in the sso_encryption_key configuration option');
+        $this->expectExceptionMessage('The configured trusted device encryption key must be exactly 32 bytes. This comes down to 64 hex digits value, configured in the trusted_device_encryption_key configuration option');
         new Configuration('name', 60, '0f0f0f');
     }
 }

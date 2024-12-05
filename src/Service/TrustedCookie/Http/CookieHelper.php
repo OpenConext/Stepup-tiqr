@@ -52,7 +52,7 @@ class CookieHelper implements CookieHelperInterface
         // The CookieValue is encrypted
         $encryptedCookieValue = $this->encryptionHelper->encrypt($value);
         $fingerprint = $this->hashFingerprint($encryptedCookieValue);
-        $this->logger->notice(sprintf('Writing a SSO on 2FA cookie with fingerprint %s', $fingerprint));
+        $this->logger->notice(sprintf('Writing a trusted-device cookie with fingerprint %s', $fingerprint));
         // Create a Symfony HttpFoundation cookie object
         $cookie = $this->createCookieWithValue($encryptedCookieValue);
         // Which is added to the response headers
@@ -72,7 +72,7 @@ class CookieHelper implements CookieHelperInterface
             throw new InvalidArgumentException('Cookie payload must be string.');
         }
         $fingerprint = $this->hashFingerprint($cookie);
-        $this->logger->notice(sprintf('Reading a SSO on 2FA cookie with fingerprint %s', $fingerprint));
+        $this->logger->notice(sprintf('Reading a trusted-device cookie with fingerprint %s', $fingerprint));
         return $this->encryptionHelper->decrypt($cookie);
     }
 

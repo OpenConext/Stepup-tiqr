@@ -22,6 +22,7 @@ namespace Surfnet\Tiqr\Controller;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Service\TrustedCookie\TrustedCookieService;
 use Surfnet\Tiqr\Service\UserAgentMatcherInterface;
 use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
@@ -38,7 +39,9 @@ use Symfony\Component\Routing\Attribute\Route;
  * The api that connects to the Tiqr app.
  *
  * Keep in mind that the endpoint routers cannot change because of the 'old'
- * clients are depending on this.
+ * clients depend on this.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TiqrAppApiController extends AbstractController
 {
@@ -46,7 +49,8 @@ class TiqrAppApiController extends AbstractController
         private readonly TiqrServiceInterface $tiqrService,
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly TrustedCookieService $cookieService,
     ) {
     }
 
@@ -291,16 +295,24 @@ class TiqrAppApiController extends AbstractController
                 $response
             );
 
-            if ($result->isValid()) {
-                $logger->notice('User authenticated ' . $result->getMessage());
+            $this->logger->info('FOOOOOOOOOOOOOOOO: ' . $notificationAddress);
 
+            if ($result->isValid()) {
+                $logger->error('User authenticated ' . $result->getMessage());
+
+                $responseObject = new Response($result->getMessage(), Response::HTTP_OK);
                 try {
                     $user->updateNotification($notificationType, $notificationAddress);
+
+                    // save cookie
                 } catch (Exception $e) {
                     $this->logger->warning('Error updating notification type and address', ['exception' => $e]);
                     // Continue
                 }
-                return new Response($result->getMessage(), Response::HTTP_OK);
+                // @TODO add correct params
+                // @TODO add test to check no cookie is created when the notificationAddress is empty
+                $this->cookieService->registerTrustedAuthentication($responseObject);
+                return $responseObject;
             }
 
             $logger->notice('User authentication denied: ' . $result->getMessage());

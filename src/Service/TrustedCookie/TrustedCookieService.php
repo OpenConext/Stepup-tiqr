@@ -45,9 +45,9 @@ class TrustedCookieService
     ) {
     }
 
-    public function registerTrustedAuthentication(Response $response): void
+    public function registerTrustedAuthentication(Response $response, string $userId, string $notificationAddress): void
     {
-        $this->store($response, CookieValue::from('1', '2'));
+        $this->store($response, CookieValue::from($userId, $notificationAddress));
     }
 
     public function mayPerformPushNotificationAuthentications(
@@ -60,7 +60,7 @@ class TrustedCookieService
             return false;
         }
 
-        $this->logger->notice('Verified the current 2FA authentication can be given with the SSO on 2FA cookie');
+        $this->logger->notice('Push-notification MFA is allowed for the device based on the cookie.');
         return true;
     }
 
@@ -75,10 +75,10 @@ class TrustedCookieService
         try {
             return $this->cookieHelper->read($request);
         } catch (CookieNotFoundException $e) {
-            $this->logger->notice('The SSO on 2FA cookie is not found in the request header');
+            $this->logger->notice('A trusted-device cookie is not found');
             return new NullCookieValue();
         } catch (DecryptionFailedException $e) {
-            $this->logger->notice('Decryption of the SSO on 2FA cookie failed');
+            $this->logger->notice('Decryption of the trusted-device cookie failed');
             return new NullCookieValue();
         } catch (Exception $e) {
             $this->logger->notice(
@@ -96,11 +96,11 @@ class TrustedCookieService
             return false;
         }
         if ($cookie instanceof CookieValue && !$cookie->issuedTo($identityNameId)) {
-            $this->logger->notice(
+            $this->logger->error(
                 sprintf(
-                    'The SSO on 2FA cookie was not issued to %s, but to %s',
+                    'This trusted-device cookie was not issued to %s, but to %s',
                     $identityNameId,
-                    $cookie->getIdentityId()
+                    $cookie->getUserId()
                 )
             );
             return false;
@@ -109,12 +109,12 @@ class TrustedCookieService
             $isExpired = $this->expirationHelper->isExpired($cookie);
             if ($isExpired) {
                 $this->logger->notice(
-                    'The SSO on 2FA cookie has expired. Meaning [authentication time] + [cookie lifetime] is in the past'
+                    'The trusted-device cookie has expired. Meaning [authentication time] + [cookie lifetime] is in the past'
                 );
                 return false;
             }
         } catch (InvalidAuthenticationTimeException $e) {
-            $this->logger->notice('The SSO on 2FA cookie contained an invalid authentication time', [$e->getMessage()]);
+            $this->logger->error('The trusted-device cookie contained an invalid authentication time', [$e->getMessage()]);
             return false;
         }
         return true;

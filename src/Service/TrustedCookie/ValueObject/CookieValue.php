@@ -28,21 +28,21 @@ use function strtotime;
 
 class CookieValue implements CookieValueInterface
 {
-    private string $tokenId;
-    private string $identityId;
+    private string $notificationAddress;
+    private string $userId;
     private string $authenticationTime;
 
     /**
      * The cookie value consists of:
-     * - Token used: SecondFactorId from SecondFactor
-     * - Identifier: IdentityId from SecondFactor
+     * - User id
+     * - Notification address
      * - Authentication time (Atom formatted date time string)
      */
-    public static function from(string $identityId, string $secondFactorId): self
+    public static function from(string $userId, string $notificationAddress): self
     {
         $cookieValue = new self;
-        $cookieValue->tokenId = $secondFactorId;
-        $cookieValue->identityId = $identityId;
+        $cookieValue->notificationAddress = $notificationAddress;
+        $cookieValue->userId = $userId;
         $dateTime = new DateTime();
         $cookieValue->authenticationTime = $dateTime->format(DATE_ATOM);
         return $cookieValue;
@@ -68,8 +68,8 @@ class CookieValue implements CookieValueInterface
         }
 
         $cookieValue = new self;
-        $cookieValue->tokenId = $data['tokenId'];
-        $cookieValue->identityId = $data['identityId'];
+        $cookieValue->notificationAddress = $data['tokenId'];
+        $cookieValue->userId = $data['identityId'];
         $cookieValue->authenticationTime = (string) $data['authenticationTime'];
 
         return $cookieValue;
@@ -81,25 +81,25 @@ class CookieValue implements CookieValueInterface
     public function serialize(): string
     {
         return json_encode([
-            'tokenId' => $this->tokenId,
-            'identityId' => $this->identityId,
+            'tokenId' => $this->notificationAddress,
+            'identityId' => $this->userId,
             'authenticationTime' => $this->authenticationTime,
         ], JSON_THROW_ON_ERROR);
     }
 
-    public function getIdentityId(): string
+    public function getUserId(): string
     {
-        return $this->identityId;
+        return $this->userId;
     }
 
     public function secondFactorId(): string
     {
-        return $this->tokenId;
+        return $this->notificationAddress;
     }
 
     public function issuedTo(string $identityNameId): bool
     {
-        return strtolower($identityNameId) === strtolower($this->identityId);
+        return strtolower($identityNameId) === strtolower($this->userId);
     }
 
     public function authenticationTime(): int

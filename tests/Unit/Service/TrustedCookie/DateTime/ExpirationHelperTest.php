@@ -26,12 +26,6 @@ use Surfnet\Tiqr\Service\TrustedCookie\ValueObject\CookieValueInterface;
 
 class ExpirationHelperTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->markTestSkipped('TODO: Implement');
-    }
-
-
     /**
      * @dataProvider expirationExpectations
      */

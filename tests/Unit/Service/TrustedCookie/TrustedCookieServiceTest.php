@@ -266,31 +266,6 @@ class TrustedCookieServiceTest extends TestCase
         $this->service->handleSsoOn2faCookieStorage($this->responseContext, $request, $response);
     }
 
-    public function test_skipping_authentication_fails_when_no_sso_cookie_has_too_low_of_a_loa(): void
-    {
-        $this->buildService(
-            new Configuration(
-                'test-cookie',
-
-                60,
-                '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f'
-            )
-        );
-        $cookieValue = $this->cookieValue();
-
-        $this->logger
-            ->shouldReceive('notice')
-            ->with('The required LoA 4 did not match the LoA of the SSO cookie LoA 3');
-
-        self::assertFalse(
-            $this->service->maySkipAuthentication(
-                4.0, // LoA required by SP is 4.0, the one in the cookie is 3.0
-                'abcdef-1234',
-                $cookieValue
-            )
-        );
-    }
-
     public function test_skipping_authentication_fails_when_identity_id_doesnt_match(): void
     {
         $this->buildService(
@@ -305,7 +280,7 @@ class TrustedCookieServiceTest extends TestCase
 
         $this->logger
             ->shouldReceive('notice')
-            ->with('The SSO on 2FA cookie was not issued to Jane Doe, but to ident-1234');
+            ->with('The trusted device cookie was not issued to Jane Doe, but to ident-1234');
 
         self::assertFalse(
             $this->service->maySkipAuthentication(
@@ -334,7 +309,7 @@ class TrustedCookieServiceTest extends TestCase
 
         $this->logger
             ->shouldReceive('notice')
-            ->with('The SSO on 2FA cookie has expired. Meaning [authentication time] + [cookie lifetime] is in the past');
+            ->with('The trusted device cookie has expired. Meaning [authentication time] + [cookie lifetime] is in the past');
 
         self::assertFalse(
             $this->service->maySkipAuthentication(
