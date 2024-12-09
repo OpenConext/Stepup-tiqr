@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS user (
   tmpblocktimestamp BIGINT,
   tmpblockattempts integer,
   blocked tinyint(1),
-  notificationtype varchar(10),
+  notificationtype varchar(15),
   notificationaddress varchar(256)
 );
 
