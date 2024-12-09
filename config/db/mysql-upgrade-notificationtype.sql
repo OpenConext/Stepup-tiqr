@@ -1,6 +1,6 @@
 /*
- Initially the notificationtype column was created as varchar(10). That is 
- but too small for 'APNS_DIRECT'.
- */
+ Initially, the notificationtype column was created as VARCHAR(10). However,
+ this size is too small to accommodate the value 'APNS_DIRECT'.
+*/
 ALTER TABLE user MODIFY notificationtype VARCHAR (15);
 
