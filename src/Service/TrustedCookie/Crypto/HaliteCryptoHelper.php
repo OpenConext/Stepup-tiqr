@@ -41,7 +41,7 @@ class HaliteCryptoHelper implements CryptoHelperInterface
     public function __construct(Configuration $configuration)
     {
         // The configured encryption key is used to create a Halite EncryptionKey
-        $this->encryptionKey = new EncryptionKey(new HiddenString($configuration->getEncryptionKey()));
+        $this->encryptionKey = new EncryptionKey(new HiddenString($configuration->encryptionKey));
     }
 
     /**

@@ -123,8 +123,8 @@ class TrustedCookieServiceTest extends TestCase
         self::assertCount(1, $cookieJar);
         $cookie = reset($cookieJar);
         // The name and lifetime of the cookie should match the one we configured it to be
-        self::assertEquals($this->configuration->getName(), $cookie->getName());
-        self::assertEquals($this->configuration->getLifetimeInSeconds(), $cookie->getExpiresTime());
+        self::assertEquals($this->configuration->prefix, $cookie->getName());
+        self::assertEquals($this->configuration->lifetimeInSeconds, $cookie->getExpiresTime());
         // By default we set same-site header to none
         self::assertEquals(Cookie::SAMESITE_NONE, $cookie->getSameSite());
     }
@@ -179,8 +179,8 @@ class TrustedCookieServiceTest extends TestCase
         self::assertCount(1, $cookieJar);
         $cookie = reset($cookieJar);
         // The name and lifetime of the cookie should match the one we configured it to be
-        self::assertEquals($this->configuration->getName(), $cookie->getName());
-        self::assertEquals(time() + $this->configuration->getLifetimeInSeconds(), $cookie->getExpiresTime());
+        self::assertEquals($this->configuration->prefix, $cookie->getName());
+        self::assertEquals(time() + $this->configuration->lifetimeInSeconds, $cookie->getExpiresTime());
     }
 
     public function test_storing_a_session_cookie_new_authentication(): void
@@ -234,8 +234,8 @@ class TrustedCookieServiceTest extends TestCase
         self::assertCount(1, $cookieJar);
         $cookie = reset($cookieJar);
         // The name and lifetime of the cookie should match the one we configured it to be
-        self::assertEquals($this->configuration->getName(), $cookie->getName());
-        self::assertEquals($this->configuration->getLifetimeInSeconds(), $cookie->getExpiresTime());
+        self::assertEquals($this->configuration->prefix, $cookie->getName());
+        self::assertEquals($this->configuration->lifetimeInSeconds, $cookie->getExpiresTime());
     }
 
     public function test_storing_a_session_cookie_second_factor_not_found(): void

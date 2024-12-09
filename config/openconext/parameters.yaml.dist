@@ -51,6 +51,10 @@ parameters:
     # The prefix used for the trusted-device cookies
     trusted_device_cookie_prefix: 'tiqr-trusted-device'
 
+    # The same_site attribute of the trusted-device cookies
+    # Should be one of the strings in: \Surfnet\Tiqr\Service\TrustedCookie\Http\CookieSameSite: 'none', 'lax', 'strict'
+    trusted_device_cookie_same_site: 'none'
+
     # The secret key is used for the authenticated encryption (AE) of the trusted-device cookies, it is stored in the
     # parameters.yaml of Stepup-Tiqr. This secret may only be used for the AE of the trusted device cookies.
     #   The secret key size is fixed, it must be 256 bits (32 bytes (64 hex digits))

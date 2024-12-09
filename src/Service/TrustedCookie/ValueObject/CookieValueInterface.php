@@ -28,5 +28,7 @@ interface CookieValueInterface
 
     public function authenticationTime(): int;
 
-    public function secondFactorId(): string;
+    public function getNotificationAddress(): string;
+
+    public function getUserId(): string;
 }

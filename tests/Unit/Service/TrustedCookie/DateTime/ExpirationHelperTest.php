@@ -18,6 +18,7 @@
 
 namespace Unit\Service\TrustedCookie\DateTime;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Surfnet\Tiqr\Service\TrustedCookie\DateTime\ExpirationHelper;
 use Surfnet\Tiqr\Service\TrustedCookie\Exception\InvalidAuthenticationTimeException;
@@ -42,6 +43,32 @@ class ExpirationHelperTest extends TestCase
         self::assertEquals($isExpired, $helper->isExpired($cookieValue));
     }
 
+
+    public function invalidTimeExpectations(): array
+    {
+        $goodOldHelper = $this->makeExpirationHelper(3600, time());
+        return [
+            'from the future' => [$goodOldHelper, $this->makeCookieValue(time() + 42)],
+        ];
+    }
+
+    public function invalidTimeArgumentExpectations(): array
+    {
+        $goodOldHelper = $this->makeExpirationHelper(3600, time());
+        return [
+            'before epoch' => [$goodOldHelper, fn() => $this->makeCookieValue(-1)],
+            'invalid time input 1' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime('aint-no-time')],
+            'invalid time input 2' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime('9999-01-01')],
+            'invalid time input 3' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime('0001-01-01')],
+            'invalid time input 4' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(-1.0)],
+            'invalid time input 5' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(2.999)],
+            'invalid time input 6' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(42)],
+            'invalid time input 7' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(true)],
+            'invalid time input 8' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(false)],
+            'invalid time input 9' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(null)],
+        ];
+    }
+
     /**
      * @dataProvider invalidTimeExpectations
      */
@@ -49,6 +76,15 @@ class ExpirationHelperTest extends TestCase
     {
         $this->expectException(InvalidAuthenticationTimeException::class);
         $helper->isExpired($cookieValue);
+    }
+
+    /**
+     * @dataProvider invalidTimeArgumentExpectations
+     */
+    public function test_strange_authentication_time_arguments(ExpirationHelper $helper, callable $callback): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $callback();
     }
 
     public function expirationExpectations(): array
@@ -73,24 +109,6 @@ class ExpirationHelperTest extends TestCase
         ];
     }
 
-    public function invalidTimeExpectations(): array
-    {
-        $goodOldHelper = $this->makeExpirationHelper(3600, time());
-        return [
-            'before epoch' => [$goodOldHelper, $this->makeCookieValue(-1)],
-            'from the future' => [$goodOldHelper, $this->makeCookieValue(time() + 42)],
-            'invalid time input 1' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime('aint-no-time')],
-            'invalid time input 2' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime('9999-01-01')],
-            'invalid time input 3' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime('0001-01-01')],
-            'invalid time input 4' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime(-1.0)],
-            'invalid time input 5' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime(2.999)],
-            'invalid time input 6' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime(42)],
-            'invalid time input 7' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime(true)],
-            'invalid time input 8' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime(false)],
-            'invalid time input 9' => [$goodOldHelper, $this->makeCookieValueUnrestrictedAuthTime(null)],
-        ];
-    }
-
     private function makeExpirationHelper(int $expirationTime, int $now, int $gracePeriod = 0) : ExpirationHelper
     {
         $time = new \DateTime();
@@ -103,8 +121,8 @@ class ExpirationHelperTest extends TestCase
         $dateTime = new \DateTime();
         $dateTime->setTimestamp($authenticationTime);
         $data = [
-            'tokenId' => 'tokenId',
-            'identityId' => 'identityId',
+            'userId' => 'userId',
+            'notificationAddress' => 'notificationAddress',
             'authenticationTime' => $dateTime->format(DATE_ATOM),
         ];
         return CookieValue::deserialize(json_encode($data));
@@ -113,8 +131,8 @@ class ExpirationHelperTest extends TestCase
     private function makeCookieValueUnrestrictedAuthTime($authenticationTime) : CookieValueInterface
     {
         $data = [
-            'tokenId' => 'tokenId',
-            'identityId' => 'identityId',
+            'userId' => 'userId',
+            'notificationAddress' => 'notificationAddress',
             'authenticationTime' => $authenticationTime,
         ];
         return CookieValue::deserialize(json_encode($data));

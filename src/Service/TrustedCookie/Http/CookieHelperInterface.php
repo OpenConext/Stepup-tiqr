@@ -28,7 +28,9 @@ interface CookieHelperInterface
 {
     public function write(Response $response, CookieValueInterface $value): void;
 
-    public function read(Request $request): CookieValueInterface;
+    public function read(Request $request, string $userId, string $notificationAddress): CookieValueInterface;
 
-    public function fingerprint(Request $request): string;
+    public function fingerprint(Request $request, string $userId, string $notificationAddress): string;
+
+    public function buildCookieName(string $userId, string $notificationAddress): string;
 }

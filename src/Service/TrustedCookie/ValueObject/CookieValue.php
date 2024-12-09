@@ -23,29 +23,37 @@ namespace Surfnet\Tiqr\Service\TrustedCookie\ValueObject;
 use DateTime;
 use InvalidArgumentException;
 
+use Surfnet\Tiqr\Service\TrustedCookie\Exception\InvalidAuthenticationTimeException;
+
 use function strtolower;
 use function strtotime;
 
 class CookieValue implements CookieValueInterface
 {
-    private string $notificationAddress;
-    private string $userId;
-    private string $authenticationTime;
+    private function __construct(
+        private readonly string $userId,
+        private readonly string $notificationAddress,
+        /** Authentication time (Atom formatted date time string) */
+        private readonly string $authenticationTime
+    ) {
+        /* WAAROM strtotime? Waarom niet de ATOM? Want nu raak je precisie kwijt op timezone en strftime accepteerd bs */
+        if (strtotime($authenticationTime) === false || strtotime($authenticationTime) < 0) {
+            throw new InvalidArgumentException(
+                sprintf('authenticationTime "%s" is not a valid string', $this->authenticationTime)
+            );
+        }
 
-    /**
-     * The cookie value consists of:
-     * - User id
-     * - Notification address
-     * - Authentication time (Atom formatted date time string)
-     */
+        dump($authenticationTime, strtotime($authenticationTime));
+    }
+
+
     public static function from(string $userId, string $notificationAddress): self
     {
-        $cookieValue = new self;
-        $cookieValue->notificationAddress = $notificationAddress;
-        $cookieValue->userId = $userId;
-        $dateTime = new DateTime();
-        $cookieValue->authenticationTime = $dateTime->format(DATE_ATOM);
-        return $cookieValue;
+        if (trim($notificationAddress) === '') {
+            throw new InvalidArgumentException('Cannot create a trusted device cookie. NotificationAddress is empty.');
+        }
+
+        return new self($userId, $notificationAddress, (new DateTime())->format(DATE_ATOM));
     }
 
     /**
@@ -59,20 +67,19 @@ class CookieValue implements CookieValueInterface
             throw new InvalidArgumentException('Invalid serialized data');
         }
 
-        if (!is_string($data['tokenId'])) {
-            throw new InvalidArgumentException('tokenId is not a valid string');
+        if (!is_string($data['userId'])) {
+            throw new InvalidArgumentException('userId is not a valid string');
         }
 
-        if (!is_string($data['identityId'])) {
-            throw new InvalidArgumentException('tokenId is not a valid string');
+        if (!is_string($data['notificationAddress'])) {
+            throw new InvalidArgumentException('notificationAddress is not a valid string');
         }
 
-        $cookieValue = new self;
-        $cookieValue->notificationAddress = $data['tokenId'];
-        $cookieValue->userId = $data['identityId'];
-        $cookieValue->authenticationTime = (string) $data['authenticationTime'];
+        if (!is_string($data['authenticationTime'])) {
+            throw new InvalidArgumentException('authenticationTime is not a valid string');
+        }
 
-        return $cookieValue;
+        return new self($data['userId'], $data['notificationAddress'], $data['authenticationTime']);
     }
 
     /**
@@ -81,8 +88,8 @@ class CookieValue implements CookieValueInterface
     public function serialize(): string
     {
         return json_encode([
-            'tokenId' => $this->notificationAddress,
-            'identityId' => $this->userId,
+            'userId' => $this->userId,
+            'notificationAddress' => $this->notificationAddress,
             'authenticationTime' => $this->authenticationTime,
         ], JSON_THROW_ON_ERROR);
     }
@@ -92,14 +99,9 @@ class CookieValue implements CookieValueInterface
         return $this->userId;
     }
 
-    public function secondFactorId(): string
+    public function getNotificationAddress(): string
     {
         return $this->notificationAddress;
-    }
-
-    public function issuedTo(string $identityNameId): bool
-    {
-        return strtolower($identityNameId) === strtolower($this->userId);
     }
 
     public function authenticationTime(): int

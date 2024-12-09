@@ -120,7 +120,14 @@ class TiqrAppApiController extends AbstractController
         }
 
         $notificationType = $request->get('notificationType', '');
+        if (!is_string($notificationType)) {
+            $notificationType = '';
+        }
         $notificationAddress = $request->get('notificationAddress', '');
+        if (!is_string($notificationAddress)) {
+            $notificationAddress = '';
+        }
+
         if ($operation === 'register') {
             $this->logger->notice(
                 'Got POST with registration response',
@@ -295,8 +302,6 @@ class TiqrAppApiController extends AbstractController
                 $response
             );
 
-            $this->logger->info('FOOOOOOOOOOOOOOOO: ' . $notificationAddress);
-
             if ($result->isValid()) {
                 $logger->error('User authenticated ' . $result->getMessage());
 
@@ -309,9 +314,13 @@ class TiqrAppApiController extends AbstractController
                     $this->logger->warning('Error updating notification type and address', ['exception' => $e]);
                     // Continue
                 }
-                // @TODO add correct params
+
                 // @TODO add test to check no cookie is created when the notificationAddress is empty
-                $this->cookieService->registerTrustedAuthentication($responseObject);
+                // @TODO test the cookie is not created for non-qr logins
+                // @TODO Valideren bij Pieter / Michiel of deze fallback er wel in moet
+                $trustedNotificationAddress = $notificationAddress !== '' ? $notificationAddress : $user->getNotificationAddress();
+                $this->cookieService->registerTrustedAuthentication($responseObject, $user->getId(), $trustedNotificationAddress);
+
                 return $responseObject;
             }
 

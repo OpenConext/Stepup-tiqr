@@ -241,11 +241,6 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$notificationType of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
 			message: "#^Parameter \\#2 \\$secret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:createUser\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
@@ -256,16 +251,6 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\$notificationAddress of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: "#^Parameter \\#3 \\$notificationType of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
 			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
@@ -273,11 +258,6 @@ parameters:
 		-
 			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: "#^Parameter \\#4 \\$notificationAddress of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-

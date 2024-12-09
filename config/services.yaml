@@ -76,3 +76,5 @@ services:
         - "%trusted_device_cookie_prefix%"
         - "%trusted_device_cookie_lifetime%"
         - "%trusted_device_encryption_key%"
+        - "%env(enum:Surfnet\\Tiqr\\Service\\TrustedCookie\\Http\\CookieSameSite:trusted_device_cookie_same_site)%"
+

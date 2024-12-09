@@ -26,12 +26,14 @@ use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
+use Surfnet\Tiqr\Service\TrustedCookie\TrustedCookieService;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -45,7 +47,8 @@ class AuthenticationNotificationController extends AbstractController
         private readonly StateHandlerInterface $stateHandler,
         private readonly TiqrServiceInterface $tiqrService,
         private readonly TiqrUserRepositoryInterface $userRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly TrustedCookieService $trustedCookieService,
     ) {
     }
 
@@ -54,10 +57,8 @@ class AuthenticationNotificationController extends AbstractController
      */
     #[Route(path: '/authentication/notification', name: 'app_identity_authentication_notification', methods: ['POST'])]
     #[RequiresActiveSession]
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
-
-
         $nameId = $this->authenticationService->getNameId();
         $sari = $this->stateHandler->getRequestId();
         $logger = WithContextLogger::from($this->logger, ['nameId' => $nameId, 'sari' => $sari]);
@@ -89,24 +90,41 @@ class AuthenticationNotificationController extends AbstractController
         $notificationType = $user->getNotificationType();
         $notificationAddress = $user->getNotificationAddress();
 
-        if ($notificationType && $notificationAddress) {
-            $this->logger->notice(sprintf(
-                'Sending push notification for user "%s" with type "%s" and (untranslated) address "%s"',
-                $nameId,
-                $notificationType,
-                $notificationAddress
-            ));
+        if (!$notificationType || !$notificationAddress) {
+            $this->logger->notice(sprintf('No notification address for user "%s", no notification was sent', $nameId));
 
-            $result = $this->sendNotification($notificationType, $notificationAddress);
-            if ($result) {
-                return $this->generateNotificationResponse('success');
-            }
-            return $this->generateNotificationResponse('error');
+            return $this->generateNotificationResponse('no-device');
         }
 
-        $this->logger->notice(sprintf('No notification address for user "%s", no notification was sent', $nameId));
+        $cookie = $this->trustedCookieService->read($request, $nameId, $notificationAddress);
+        if ($cookie === null) {
+            $this->logger->notice(
+                sprintf(
+                    'No trusted device cookie stored for notification address "%s" and user "%s". No notification was sent',
+                    $notificationAddress,
+                    $nameId
+                )
+            );
+            return $this->generateNotificationResponse('no-trusted-device');
+        }
 
-        return $this->generateNotificationResponse('no-device');
+        if (!$this->trustedCookieService->isTrustedDevice($cookie, $nameId, $notificationAddress)) {
+            return $this->generateNotificationResponse('no-trusted-device');
+        }
+
+
+        $this->logger->notice(sprintf(
+            'Sending push notification for user "%s" with type "%s" and (untranslated) address "%s"',
+            $nameId,
+            $notificationType,
+            $notificationAddress
+        ));
+
+        $result = $this->sendNotification($notificationType, $notificationAddress);
+        if ($result) {
+            return $this->generateNotificationResponse('success');
+        }
+        return $this->generateNotificationResponse('error');
     }
 
     /**

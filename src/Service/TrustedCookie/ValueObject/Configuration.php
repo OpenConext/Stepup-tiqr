@@ -24,27 +24,28 @@ use Exception;
 use ParagonIE\ConstantTime\Binary;
 use Surfnet\Tiqr\Service\TrustedCookie\Exception\InvalidCookieLifetimeException;
 use Surfnet\Tiqr\Service\TrustedCookie\Exception\InvalidEncryptionKeyException;
+use Surfnet\Tiqr\Service\TrustedCookie\Http\CookieSameSite;
 
-class Configuration
+readonly class Configuration
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    private int $lifetimeInSeconds;
-
-    private string $encryptionKey;
-
-    public function __construct(string $name, int $lifetimeInSeconds, string $encryptionKey)
-    {
-        $this->name = $name;
+    public function __construct(
+        public string $prefix,
+        public int $lifetimeInSeconds,
+        public string $encryptionKey,
+        /**
+         * By default, we set the cookie with the SameSite: NONE attribute.
+         *
+         * SameSite: NONE ensures the browser sends the cookie on cross domain requests. Which are typically performed
+         * when doing SAML authentications. Using STRICT or LAX will cause the cookie not being sent in several scenarios.
+         */
+        public CookieSameSite $sameSite,
+    ) {
         if ($lifetimeInSeconds === 0) {
             throw new InvalidCookieLifetimeException(
                 'When using a persistent cookie, you must configure a non zero cookie lifetime'
             );
         }
-        $this->lifetimeInSeconds = $lifetimeInSeconds;
+
 
         // Convert the key from the configuration from hex to binary. sodium_hex2bin
         try {
@@ -68,21 +69,5 @@ class Configuration
                 )
             );
         }
-        $this->encryptionKey = $binaryKey;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getLifetimeInSeconds(): int
-    {
-        return $this->lifetimeInSeconds;
-    }
-
-    public function getEncryptionKey(): string
-    {
-        return $this->encryptionKey;
     }
 }

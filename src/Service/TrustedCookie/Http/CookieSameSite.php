@@ -18,37 +18,11 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\Tiqr\Service\TrustedCookie\ValueObject;
+namespace Surfnet\Tiqr\Service\TrustedCookie\Http;
 
-class NullCookieValue implements CookieValueInterface
+enum CookieSameSite: string
 {
-    public static function deserialize(string $serializedData): CookieValueInterface
-    {
-        return new self;
-    }
-
-    public function serialize(): string
-    {
-        return '';
-    }
-
-    public function meetsRequiredLoa(float $requiredLoa): bool
-    {
-        return false;
-    }
-
-    public function authenticationTime(): int
-    {
-        return -1;
-    }
-
-    public function secondFactorId(): string
-    {
-        return '';
-    }
-
-    public function getLoa(): float
-    {
-        return 0.0;
-    }
+    case SAMESITE_NONE = 'none';
+    case SAMESITE_LAX = 'lax';
+    case SAMESITE_STRICT = 'strict';
 }

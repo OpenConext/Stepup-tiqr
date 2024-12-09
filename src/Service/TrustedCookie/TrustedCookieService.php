@@ -29,7 +29,6 @@ use Surfnet\Tiqr\Service\TrustedCookie\Exception\InvalidAuthenticationTimeExcept
 use Surfnet\Tiqr\Service\TrustedCookie\Http\CookieHelperInterface;
 use Surfnet\Tiqr\Service\TrustedCookie\ValueObject\CookieValue;
 use Surfnet\Tiqr\Service\TrustedCookie\ValueObject\CookieValueInterface;
-use Surfnet\Tiqr\Service\TrustedCookie\ValueObject\NullCookieValue;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,7 +40,7 @@ class TrustedCookieService
     public function __construct(
         private readonly CookieHelperInterface $cookieHelper,
         private readonly ExpirationHelperInterface $expirationHelper,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -50,13 +49,14 @@ class TrustedCookieService
         $this->store($response, CookieValue::from($userId, $notificationAddress));
     }
 
-    public function mayPerformPushNotificationAuthentications(
-        string $identityNameId,
-        CookieValueInterface $ssoCookie
+    public function isTrustedDevice(
+        CookieValueInterface $cookie,
+        string $userId,
+        string $notificationAddress,
     ): bool {
 
         // Perform validation on the cookie and its contents
-        if (!$this->isCookieValid($ssoCookie, $identityNameId)) {
+        if (!$this->isCookieValid($cookie, $userId, $notificationAddress)) {
             return false;
         }
 
@@ -70,37 +70,35 @@ class TrustedCookieService
         $this->cookieHelper->write($response, $cookieValue);
     }
 
-    public function read(Request $request): CookieValueInterface
+    public function read(Request $request, string $userId, string $notificationAddress): ?CookieValueInterface
     {
         try {
-            return $this->cookieHelper->read($request);
+            return $this->cookieHelper->read($request, $userId, $notificationAddress);
         } catch (CookieNotFoundException $e) {
             $this->logger->notice('A trusted-device cookie is not found');
-            return new NullCookieValue();
+            return null;
         } catch (DecryptionFailedException $e) {
             $this->logger->notice('Decryption of the trusted-device cookie failed');
-            return new NullCookieValue();
+            return null;
         } catch (Exception $e) {
             $this->logger->notice(
                 'Decryption failed, see original message in context',
                 ['original-exception-message' => $e->getMessage()]
             );
-            return new NullCookieValue();
+            return null;
         }
     }
 
-    private function isCookieValid(CookieValueInterface $cookie, string $identityNameId): bool
+    private function isCookieValid(CookieValueInterface $cookie, string $userId, string $notificationAddress): bool
     {
-        // TODO Remove nullCookie?
-        if ($cookie instanceof NullCookieValue) {
-            return false;
-        }
-        if ($cookie instanceof CookieValue && !$cookie->issuedTo($identityNameId)) {
+        if ($cookie instanceof CookieValue && ($cookie->getUserId() !== $userId || $cookie->getNotificationAddress() !== $notificationAddress)) {
             $this->logger->error(
                 sprintf(
-                    'This trusted-device cookie was not issued to %s, but to %s',
-                    $identityNameId,
-                    $cookie->getUserId()
+                    'This trusted-device cookie was not issued to %s,%s, but to %s,%s',
+                    $userId,
+                    $notificationAddress,
+                    $cookie->getUserId(),
+                    $cookie->getNotificationAddress(),
                 )
             );
             return false;
