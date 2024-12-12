@@ -15,6 +15,6 @@ services:
         tags: ['controller.service_arguments']
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    GuzzleHttp\Client:
-        class: GuzzleHttp\Client
+    Symfony\Contracts\HttpClient\HttpClientInterface:
+        class: Symfony\Component\HttpClient\HttpClient
         factory: ['Surfnet\Tiqr\Dev\HttpClientFactory', 'create']

@@ -31,14 +31,10 @@ use Surfnet\Tiqr\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
 use Surfnet\Tiqr\WithContextLogger;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 final readonly class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
 {
-    /**
-     *
-     * @throws \Exception
-     */
     public function __construct(
         private TiqrServiceInterface $tiqrService,
         private TiqrConfigurationInterface $configuration,
