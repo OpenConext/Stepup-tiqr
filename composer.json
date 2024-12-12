@@ -17,6 +17,7 @@
     "ext-zlib": "*",
     "incenteev/composer-parameter-handler": "^2.2",
     "openconext/monitor-bundle": "^4.3.1",
+    "paragonie/halite": "^5.1",
     "surfnet/stepup-bundle": "^6.0.17",
     "surfnet/stepup-gssp-bundle": "^5.1",
     "surfnet/stepup-saml-bundle": "^6.1",
@@ -48,7 +49,6 @@
     "khanamiryan/qrcode-detector-decoder": "^2.0.2",
     "league/csv": "^9.18",
     "malukenho/docheader": "^1.1",
-    "mockery/mockery": "^1.6.12",
     "overtrue/phplint": ">=9.4.2",
     "phpmd/phpmd": "^2.15",
     "phpstan/phpstan": "^1.12.11",
@@ -87,6 +87,7 @@
     "unit-tests": "./ci/qa/phpunit",
     "behat": "./ci/qa/behat",
     "jest": "./ci/qa/jest",
+    "jscpd": "./ci/qa/jscpd",
     "encore": [
       "yarn encore production"
     ],

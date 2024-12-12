@@ -134,6 +134,7 @@ export class AuthenticationPageService {
         this.switchToNotificationFailed();
         break;
       case 'no-device':
+      case 'no-trusted-device':
         this.switchToNoDevice();
         break;
     }

@@ -17,5 +17,7 @@ services:
             - '/^Behat UA$/'
 
     surfnet_gssp.value_store.service:
-        class: Surfnet\GsspBundle\Service\ValueStore\InMemoryValueStore
+        class: Surfnet\Tiqr\Features\Framework\FileValueStore
         public: true
+        arguments:
+            $filePath: '/var/www/html/var/gssp_store.json'

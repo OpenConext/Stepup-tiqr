@@ -231,6 +231,15 @@ describe('AuthenticationPageService', () => {
       expect(spy).toBeCalled();
     });
 
+    it('Should show qr when there is no trusted-device cookie', () => {
+      if (!successCallback || !errorCallback) {
+        throw new Error('Should have started notification request');
+      }
+      const spy = jest.spyOn(context.authenticationPageService, 'switchToNoDevice');
+      successCallback('no-trusted-device');
+      expect(spy).toBeCalled();
+    });
+
     it('Should handle connection errors', () => {
       if (!successCallback || !errorCallback) {
         throw new Error('Should have started notification request');
