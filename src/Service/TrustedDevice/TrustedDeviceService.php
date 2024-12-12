@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) | Coupling is high as we are integrating logic into the infrastructure
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") | Coupling is high as we are integrating logic into the infrastructure
  */
 class TrustedDeviceService
 {

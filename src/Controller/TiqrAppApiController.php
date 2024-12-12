@@ -43,7 +43,7 @@ use Throwable;
  * Keep in mind that the endpoint routers cannot change because of the 'old'
  * clients are depending on this.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class TiqrAppApiController extends AbstractController
 {
@@ -150,7 +150,7 @@ class TiqrAppApiController extends AbstractController
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      *
      * @throws \InvalidArgumentException
      */

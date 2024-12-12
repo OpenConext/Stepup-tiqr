@@ -19,25 +19,21 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Dev;
 
-use GuzzleHttp\Client;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * !! This is not a safe http client, it ignores invalid SSL certificates. !!
  */
 class HttpClientFactory
 {
-    public static function create(): Client
+    public static function create(): HttpClientInterface
     {
-        // TODO: make the hostname configurable.
-        return new Client([
+        return HttpClient::create([
             'base_uri' => 'https://tiqr.stepup.example.com',
-            'ssl.certificate_authority' => false,
-            'verify' => false,
+            'verify_peer' => false,
+            'verify_host' => false,
             'headers' => ['Accept' => 'application/json'],
-            'curl.options' => [
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_SSL_VERIFYHOST => 0,
-            ],
         ]);
     }
 }

@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\Dev\Command;
 
 use Exception;
-use GuzzleHttp\Client;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -28,12 +27,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zxing\QrReader;
 
 #[AsCommand(name: 'test:registration')]
 class RegistrationCommand extends Command
 {
-    public function __construct(private readonly Client $client)
+    public function __construct(private readonly HttpClientInterface $client)
     {
         parent::__construct();
     }
@@ -73,8 +73,8 @@ class RegistrationCommand extends Command
         $url = $matches['url'];
 
         $output->writeln("<comment>Fetch metadata endpoint from $url</comment>");
-        $metadataResponse = $this->client->get($url);
-        $metadataBody = $metadataResponse->getBody()->getContents();
+        $metadataResponse = $this->client->request('GET', $url);
+        $metadataBody = $metadataResponse->getContent();
         $metadata = json_decode($metadataBody);
         $output->writeln([
             'Metadata result:',
@@ -102,8 +102,8 @@ class RegistrationCommand extends Command
             $this->decorateResult(json_encode($registrationBody, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)),
         ]);
 
-        $result = $this->client->post($metadata->service->enrollmentUrl, ['form_params' => $registrationBody]);
-        $resultBody = $result->getBody()->getContents();
+        $result = $this->client->request('POST', $metadata->service->enrollmentUrl, ['body' => $registrationBody]);
+        $resultBody = $result->getContent();
         $output->writeln([
             'Enrollment result:',
             $this->decorateResult($resultBody),

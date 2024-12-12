@@ -36,7 +36,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
      * @param array<string, array<string, mixed>> $tiqrConfiguration
      *
      * @throws \Assert\AssertionFailedException
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function __construct(array $tiqrConfiguration)
     {

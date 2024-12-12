@@ -1,511 +1,631 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot access offset 'authenticationUrl' on mixed\\.$#"
+			message: '#^Cannot access offset ''authenticationUrl'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset 'identities' on mixed\\.$#"
+			message: '#^Cannot access offset ''identities'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset 'ocraSuite' on mixed\\.$#"
+			message: '#^Cannot access offset ''ocraSuite'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset 'secret' on mixed\\.$#"
+			message: '#^Cannot access offset ''secret'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset int\\|string\\|false on mixed\\.$#"
+			message: '#^Cannot access offset int\|string\|false on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset string on mixed\\.$#"
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_keys expects array, mixed given\\.$#"
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$file of method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\AuthenticationCommand\\:\\:readAuthenticationLinkFromFile\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$file of method Surfnet\\Tiqr\\Dev\\Command\\AuthenticationCommand\:\:readAuthenticationLinkFromFile\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$ocraSuite of static method OCRA\\:\\:generateOCRA\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$ocraSuite of static method OCRA\:\:generateOCRA\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$uri of method GuzzleHttp\\\\Client\\:\\:post\\(\\) expects Psr\\\\Http\\\\Message\\\\UriInterface\\|string, mixed given\\.$#"
+			message: '#^Parameter \#2 \$key of static method OCRA\:\:generateOCRA\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#2 \\$key of static method OCRA\\:\\:generateOCRA\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#2 \$url of method Symfony\\Contracts\\HttpClient\\HttpClientInterface\:\:request\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/AuthenticationCommand.php
 
 		-
-			message: "#^Cannot access offset 'authenticationUrl' on mixed\\.$#"
+			message: '#^Cannot access offset ''authenticationUrl'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Cannot access offset 'identities' on mixed\\.$#"
+			message: '#^Cannot access offset ''identities'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Cannot access offset 'ocraSuite' on mixed\\.$#"
+			message: '#^Cannot access offset ''ocraSuite'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Cannot access offset mixed on mixed\\.$#"
+			message: '#^Cannot access offset mixed on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Cannot access property \\$service on mixed\\.$#"
+			message: '#^Cannot access property \$service on mixed\.$#'
+			identifier: property.nonObject
 			count: 2
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:storeIdentity\\(\\) has parameter \\$metadata with no type specified\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Dev\\Command\\RegistrationCommand\:\:storeIdentity\(\) has parameter \$metadata with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:storeIdentity\\(\\) has parameter \\$secret with no type specified\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Dev\\Command\\RegistrationCommand\:\:storeIdentity\(\) has parameter \$secret with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$file of method Surfnet\\\\Tiqr\\\\Dev\\\\Command\\\\RegistrationCommand\\:\\:readRegistrationUrlFromFile\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$file of method Surfnet\\Tiqr\\Dev\\Command\\RegistrationCommand\:\:readRegistrationUrlFromFile\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Command/RegistrationCommand.php
 
 		-
-			message: "#^Call to an undefined method SAML2\\\\Message\\:\\:getStatus\\(\\)\\.$#"
+			message: '#^Call to an undefined method SAML2\\Message\:\:getStatus\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Cannot call method getValue\\(\\) on SAML2\\\\XML\\\\saml\\\\Issuer\\|null\\.$#"
+			message: '#^Cannot call method getValue\(\) on SAML2\\XML\\saml\\Issuer\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Cannot cast mixed to string\\.$#"
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\Controller\\\\SPController\\:\\:signRequestQuery\\(\\) has parameter \\$queryParams with no value type specified in iterable type array\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Dev\\Controller\\SPController\:\:signRequestQuery\(\) has parameter \$queryParams with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$securityKey\\)\\: Unexpected token \"\\$securityKey\", expected type at offset 10$#"
+			message: '#^PHPDoc tag @var has invalid value \(\$securityKey\)\: Unexpected token "\$securityKey", expected type at offset 10 on line 1$#'
+			identifier: phpDoc.parseError
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of method SAML2\\\\Certificate\\\\PrivateKeyLoader\\:\\:loadPrivateKey\\(\\) expects SAML2\\\\Configuration\\\\PrivateKey, mixed given\\.$#"
+			message: '#^Parameter \#1 \$key of method SAML2\\Certificate\\PrivateKeyLoader\:\:loadPrivateKey\(\) expects SAML2\\Configuration\\PrivateKey, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#1 \\$nameId of method Surfnet\\\\SamlBundle\\\\SAML2\\\\AuthnRequest\\:\\:setSubject\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$nameId of method Surfnet\\SamlBundle\\SAML2\\AuthnRequest\:\:setSubject\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#1 \\$source of method DOMDocument\\:\\:loadXML\\(\\) expects string, bool\\|string given\\.$#"
+			message: '#^Parameter \#1 \$source of method DOMDocument\:\:loadXML\(\) expects string, bool\|string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function base64_decode expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			message: '#^Parameter \#1 \$string of function base64_decode expects string, bool\|float\|int\|string\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function base64_encode expects string, string\\|false given\\.$#"
+			message: '#^Parameter \#1 \$string of function base64_encode expects string, string\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#1 \\$xml of static method SAML2\\\\Message\\:\\:fromXML\\(\\) expects DOMElement, DOMElement\\|null given\\.$#"
+			message: '#^Parameter \#1 \$xml of static method SAML2\\Message\:\:fromXML\(\) expects DOMElement, DOMElement\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Parameter \\#2 \\$values of method Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\:\\:set\\(\\) expects array\\<string\\>\\|string\\|null, mixed given\\.$#"
+			message: '#^Parameter \#2 \$values of method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag\:\:set\(\) expects array\<string\>\|string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\FileLogger\\:\\:getLogs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Dev\\FileLogger\:\:getLogs\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: ../../dev/FileLogger.php
 
 		-
-			message: "#^Parameter \\#1 \\$record of method League\\\\Csv\\\\Writer\\:\\:insertOne\\(\\) expects array\\<float\\|int\\|string\\|Stringable\\|null\\>, array\\<int, mixed\\> given\\.$#"
+			message: '#^Parameter \#1 \$record of method League\\Csv\\Writer\:\:insertOne\(\) expects array\<float\|int\|string\|Stringable\|null\>, array\<int, mixed\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/FileLogger.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of static method League\\\\Csv\\\\AbstractCsv\\:\\:createFromStream\\(\\) expects resource, resource\\|false given\\.$#"
+			message: '#^Parameter \#1 \$stream of static method League\\Csv\\AbstractCsv\:\:createFromStream\(\) expects resource, resource\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../dev/FileLogger.php
 
 		-
-			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/AuthenticationController.php
 
 		-
-			message: "#^Cannot cast mixed to string\\.$#"
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentEnrollmentKey of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getEnrollmentSecret\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$enrollmentEnrollmentKey of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getEnrollmentSecret\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentSecret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:finalizeEnrollment\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$enrollmentSecret of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:finalizeEnrollment\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentSecret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:validateEnrollmentSecret\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$enrollmentSecret of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:validateEnrollmentSecret\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$identifier of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getSariForSessionIdentifier\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$identifier of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getSariForSessionIdentifier\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 4
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrServiceInterface\\:\\:getEnrollmentMetadata\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$key of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getEnrollmentMetadata\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$sessionKey of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$sessionKey of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#1 \\$userId of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:getUser\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$userId of method Surfnet\\Tiqr\\Tiqr\\TiqrUserRepositoryInterface\:\:getUser\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$context of static method Surfnet\\\\Tiqr\\\\WithContextLogger\\:\\:from\\(\\) expects array\\<string, string\\>, array\\<string, mixed\\> given\\.$#"
+			message: '#^Parameter \#2 \$context of static method Surfnet\\Tiqr\\WithContextLogger\:\:from\(\) expects array\<string, string\>, array\<string, mixed\> given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$secret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:createUser\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#2 \$secret of method Surfnet\\Tiqr\\Tiqr\\TiqrUserRepositoryInterface\:\:createUser\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 2
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 2
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createBlockingConfig\\(\\) has no return type specified\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\DependencyInjection\\Configuration\:\:createBlockingConfig\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createGeneralConfig\\(\\) has no return type specified\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\DependencyInjection\\Configuration\:\:createGeneralConfig\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createLibraryConfig\\(\\) has no return type specified\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\DependencyInjection\\Configuration\:\:createLibraryConfig\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\DependencyInjection\\\\Configuration\\:\\:createStorageConfig\\(\\) has no return type specified\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\DependencyInjection\\Configuration\:\:createStorageConfig\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: ../../src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: ../../src/EventSubscriber/LocaleResponseListener.php
 
 		-
-			message: "#^Call to an undefined method Behat\\\\Testwork\\\\Environment\\\\Environment\\:\\:getContext\\(\\)\\.$#"
+			message: '#^Call to an undefined method Behat\\Testwork\\Environment\\Environment\:\:getContext\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: "#^Cannot call method getNodeType\\(\\) on Behat\\\\Gherkin\\\\Node\\\\NodeInterface\\|null\\.$#"
+			message: '#^Cannot call method getNodeType\(\) on Behat\\Gherkin\\Node\\NodeInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: "#^Cannot call method getSteps\\(\\) on Behat\\\\Gherkin\\\\Node\\\\BackgroundNode\\|null\\.$#"
+			message: '#^Cannot call method getSteps\(\) on Behat\\Gherkin\\Node\\BackgroundNode\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: "#^Cannot call method getText\\(\\) on Behat\\\\Gherkin\\\\Node\\\\NodeInterface\\|null\\.$#"
+			message: '#^Cannot call method getText\(\) on Behat\\Gherkin\\Node\\NodeInterface\|null\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
+			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: "#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getClient\\(\\)\\.$#"
+			message: '#^Binary operation "\." between ''\| '' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../../src/Features/Context/TiqrContext.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 4
+			path: ../../src/Features/Context/TiqrContext.php
+
+		-
+			message: '#^Call to an undefined method Behat\\Mink\\Driver\\DriverInterface\:\:getClient\(\)\.$#'
+			identifier: method.notFound
 			count: 5
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Call to an undefined method Behat\\\\Testwork\\\\Environment\\\\Environment\\:\\:getContext\\(\\)\\.$#"
+			message: '#^Call to an undefined method Behat\\Testwork\\Environment\\Environment\:\:getContext\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot access offset 'sari' on mixed\\.$#"
+			message: '#^Cannot access offset ''sari'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot access offset 0 on mixed\\.$#"
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot access offset 1 on mixed\\.$#"
+			message: '#^Cannot access offset 1 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot access offset 2 on mixed\\.$#"
+			message: '#^Cannot access offset 2 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot access property \\$service on mixed\\.$#"
+			message: '#^Cannot access property \$service on mixed\.$#'
+			identifier: property.nonObject
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot call method getAttribute\\(\\) on Behat\\\\Mink\\\\Element\\\\NodeElement\\|null\\.$#"
+			message: '#^Cannot call method getAttribute\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
+			identifier: method.nonObject
 			count: 3
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Cannot use array destructuring on mixed\\.$#"
+			message: '#^Cannot use array destructuring on mixed\.$#'
+			identifier: offsetAccess.nonArray
 			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Parameter \\#1 \\$src of method Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\TiqrContext\\:\\:getFileContentsInsecure\\(\\) expects string, string\\|null given\\.$#"
+			message: '#^Parameter \#1 \$src of method Surfnet\\Tiqr\\Features\\Context\\TiqrContext\:\:getFileContentsInsecure\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
 			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Property Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\TiqrContext\\:\\:\\$metadata \\(stdClass\\) does not accept mixed\\.$#"
+			message: '#^Property Surfnet\\Tiqr\\Features\\Context\\TiqrContext\:\:\$metadata \(stdClass\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: "#^Call to an undefined method Behat\\\\Testwork\\\\Environment\\\\Environment\\:\\:getContext\\(\\)\\.$#"
+			message: '#^Call to an undefined method Behat\\Testwork\\Environment\\Environment\:\:getContext\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of method Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\WebContext\\:\\:loadPrivateKey\\(\\) expects SAML2\\\\Configuration\\\\PrivateKey, mixed given\\.$#"
+			message: '#^Parameter \#1 \$key of method Surfnet\\Tiqr\\Features\\Context\\WebContext\:\:loadPrivateKey\(\) expects SAML2\\Configuration\\PrivateKey, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
 
 		-
-			message: "#^Property Surfnet\\\\Tiqr\\\\Features\\\\Context\\\\WebContext\\:\\:\\$previousMinkSession \\(string\\) does not accept string\\|null\\.$#"
+			message: '#^Property Surfnet\\Tiqr\\Features\\Context\\WebContext\:\:\$previousMinkSession \(string\) does not accept string\|null\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
 
 		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Cannot access an offset on mixed\\.$#"
+			message: '#^Cannot access an offset on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Cannot access offset mixed on mixed\\.$#"
+			message: '#^Cannot access offset mixed on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\Legacy\\\\TiqrService\\:\\:getAuthenticationSessionKey\\(\\) should return string but returns mixed\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Tiqr\\Legacy\\TiqrService\:\:getAuthenticationSessionKey\(\) should return string but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\Legacy\\\\TiqrService\\:\\:getUserId\\(\\) should return string but returns mixed\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Tiqr\\Legacy\\TiqrService\:\:getUserId\(\) should return string but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Parameter \\#1 \\$enrollmentKey of method Tiqr_Service\\:\\:clearEnrollmentState\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$enrollmentKey of method Tiqr_Service\:\:clearEnrollmentState\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
+			identifier: argument.type
 			count: 2
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: "#^Cannot access offset 'arguments' on mixed\\.$#"
+			message: '#^Binary operation "\+\=" between mixed and array results in an error\.$#'
+			identifier: assignOp.invalid
 			count: 4
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Cannot access offset 'certificate' on mixed\\.$#"
+			message: '#^Cannot access offset ''arguments'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: ../../src/Tiqr/TiqrConfiguration.php
+
+		-
+			message: '#^Cannot access offset ''certificate'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Cannot access offset 'environment' on mixed\\.$#"
+			message: '#^Cannot access offset ''environment'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Cannot access offset 'type' on mixed\\.$#"
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 8
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getMaxAttempts\\(\\) should return int but returns mixed\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Tiqr\\TiqrConfiguration\:\:getMaxAttempts\(\) should return int but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getMaxTemporarilyLoginAttempts\\(\\) should return int but returns mixed\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Tiqr\\TiqrConfiguration\:\:getMaxTemporarilyLoginAttempts\(\) should return int but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getTemporarilyBlockDuration\\(\\) should return int but returns mixed\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Tiqr\\TiqrConfiguration\:\:getTemporarilyBlockDuration\(\) should return int but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrConfiguration\\:\\:getTiqrOptions\\(\\) should return array\\<string, array\\<string, mixed\\>\\> but returns array\\<string, mixed\\>\\.$#"
+			message: '#^Method Surfnet\\Tiqr\\Tiqr\\TiqrConfiguration\:\:getTiqrOptions\(\) should return array\<string, array\<string, mixed\>\> but returns array\<string, mixed\>\.$#'
+			identifier: return.type
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
-			message: "#^Cannot access offset 'type' on mixed\\.$#"
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of static method Tiqr_StateStorage\\:\\:getStorage\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$type of static method Tiqr_StateStorage\:\:getStorage\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of static method Tiqr_UserSecretStorage\\:\\:getSecretStorage\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$type of static method Tiqr_UserSecretStorage\:\:getSecretStorage\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of static method Tiqr_UserStorage\\:\\:getStorage\\(\\) expects string, mixed given\\.$#"
+			message: '#^Parameter \#1 \$type of static method Tiqr_UserStorage\:\:getStorage\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#2 \\$options of static method Tiqr_StateStorage\\:\\:getStorage\\(\\) expects array, mixed given\\.$#"
+			message: '#^Parameter \#2 \$options of static method Tiqr_StateStorage\:\:getStorage\(\) expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#2 \\$options of static method Tiqr_UserStorage\\:\\:getStorage\\(\\) expects array, mixed given\\.$#"
+			message: '#^Parameter \#2 \$options of static method Tiqr_UserStorage\:\:getStorage\(\) expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#3 \\$options of static method Tiqr_UserSecretStorage\\:\\:getSecretStorage\\(\\) expects array, mixed given\\.$#"
+			message: '#^Parameter \#3 \$options of static method Tiqr_UserSecretStorage\:\:getSecretStorage\(\) expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php
 
 		-
-			message: "#^Parameter \\#6 \\$accountName of class Surfnet\\\\Tiqr\\\\Tiqr\\\\Legacy\\\\TiqrService constructor expects string, mixed given\\.$#"
+			message: '#^Parameter \#6 \$accountName of class Surfnet\\Tiqr\\Tiqr\\Legacy\\TiqrService constructor expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../src/Tiqr/TiqrFactory.php

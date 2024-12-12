@@ -62,7 +62,7 @@ final class ErrorReportContext implements Context
 
     /**
      * This will print the failed html result.
-     * @SuppressWarnings(PHPMD.ElseExpression)
+     * @SuppressWarnings("PHPMD.ElseExpression")
      * @AfterStep
      */
     public function dumpInfoAfterFailedStep(AfterStepScope $scope): void

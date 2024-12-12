@@ -53,7 +53,7 @@ use Symfony\Component\BrowserKit\Cookie;
 /**
  * With this context Tiqr can be tested without an active Saml AuthnNRequest.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
 class TiqrContext implements Context
 {
