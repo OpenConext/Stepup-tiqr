@@ -20,17 +20,15 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Service\TrustedDevice\Http;
 
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
+use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 interface CookieHelperInterface
 {
-    public function write(Response $response, CookieValueInterface $value): void;
+    public function write(Response $response, CookieValue $value): void;
 
-    public function read(Request $request, string $userId, string $notificationAddress): CookieValueInterface;
+    public function read(Request $request, string $userId, string $notificationAddress): CookieValue;
 
     public function fingerprint(Request $request, string $userId, string $notificationAddress): string;
-
-    public function buildCookieName(string $userId, string $notificationAddress): string;
 }

@@ -20,7 +20,7 @@ Feature: When an user needs to authenticate
     Then we have a authenticated app
     And we have a trusted cookie for address: "0000000000111111111122222222223333333333"
 
-  Scenario: When a user authenticates without a trusted cookie, a notification should not be sent
+  Scenario: When a user authenticates without a trusted cookie, a push notification should not be sent
     Given I am on "/demo/sp"
     And I fill in "NameID" with my identifier
     When I press "authenticate"

@@ -108,7 +108,7 @@ class AuthenticationNotificationController extends AbstractController
             return $this->generateNotificationResponse('no-trusted-device');
         }
 
-        if (!$this->trustedDeviceService->isTrustedDevice($cookie, $nameId, $notificationAddress)) {
+        if ($this->trustedDeviceService->isTrustedDevice($cookie, $nameId, $notificationAddress) === false) {
             $this->logger->notice(
                 sprintf(
                     'A trusted device cookie is found for notification address "%s" and user "%s", but has signature mismatch',

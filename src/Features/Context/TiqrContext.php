@@ -40,7 +40,6 @@ use Surfnet\Tiqr\Service\TrustedDevice\Http\CookieHelper;
 use Surfnet\Tiqr\Service\TrustedDevice\TrustedDeviceService;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrConfigurationInterface;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
@@ -361,7 +360,7 @@ class TiqrContext implements Context
             $request->cookies->set($cookie->getName(), $cookie->getValue());
         }
         $cookieValue = $this->trustedDeviceService->read($request, $userId, $notificationAddress);
-        Assertion::isInstanceOf($cookieValue, CookieValueInterface::class);
+        Assertion::isInstanceOf($cookieValue, CookieValue::class);
         Assertion::true($this->trustedDeviceService->isTrustedDevice($cookieValue, $userId, $notificationAddress));
     }
 
@@ -603,8 +602,7 @@ class TiqrContext implements Context
         $cryptoHelper = new HaliteCryptoHelper($config);
 
         $cookieValue = CookieValue::from($cookieUserId, $notificationAddress);
-        $helper = new CookieHelper($config, $cryptoHelper, new NullLogger());
-        $cookieName = $helper->buildCookieName($userId, $notificationAddress);
+        $cookieName = 'tiqr-trusted-device' . hash('sha256', $userId . '_' . $notificationAddress);
 
         $encryptedValue = $cryptoHelper->encrypt($cookieValue);
 

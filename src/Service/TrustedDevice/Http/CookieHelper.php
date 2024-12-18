@@ -25,7 +25,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Service\TrustedDevice\Crypto\CryptoHelperInterface;
 use Surfnet\Tiqr\Service\TrustedDevice\Exception\CookieNotFoundException;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
+use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +40,7 @@ class CookieHelper implements CookieHelperInterface
     ) {
     }
 
-    public function write(Response $response, CookieValueInterface $value): void
+    public function write(Response $response, CookieValue $value): void
     {
         $cookieName = $this->buildCookieName($value->getUserId(), $value->getNotificationAddress());
 
@@ -57,7 +57,7 @@ class CookieHelper implements CookieHelperInterface
     /**
      * Retrieve the current cookie from the Request if it exists.
      */
-    public function read(Request $request, string $userId, string $notificationAddress): CookieValueInterface
+    public function read(Request $request, string $userId, string $notificationAddress): CookieValue
     {
         $cookieName = $this->buildCookieName($userId, $notificationAddress);
         if (!$request->cookies->has($cookieName)) {
@@ -111,7 +111,7 @@ class CookieHelper implements CookieHelperInterface
         return $currentTimestamp + $expiresInSeconds;
     }
 
-    public function buildCookieName(string $userId, string $notificationAddress): string
+    private function buildCookieName(string $userId, string $notificationAddress): string
     {
         return $this->configuration->prefix . hash('sha256', $userId . '_' . $notificationAddress);
     }

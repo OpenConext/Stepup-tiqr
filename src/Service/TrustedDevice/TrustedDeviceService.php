@@ -28,7 +28,6 @@ use Surfnet\Tiqr\Service\TrustedDevice\Exception\DecryptionFailedException;
 use Surfnet\Tiqr\Service\TrustedDevice\Exception\InvalidAuthenticationTimeException;
 use Surfnet\Tiqr\Service\TrustedDevice\Http\CookieHelperInterface;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,7 +49,7 @@ class TrustedDeviceService
     }
 
     public function isTrustedDevice(
-        CookieValueInterface $cookie,
+        CookieValue $cookie,
         string $userId,
         string $notificationAddress,
     ): bool {
@@ -58,17 +57,10 @@ class TrustedDeviceService
             return false;
         }
 
-        $this->logger->notice('Push-notification MFA is allowed for the device based on the cookie.');
         return true;
     }
 
-
-    private function store(Response $response, CookieValueInterface $cookieValue): void
-    {
-        $this->cookieHelper->write($response, $cookieValue);
-    }
-
-    public function read(Request $request, string $userId, string $notificationAddress): ?CookieValueInterface
+    public function read(Request $request, string $userId, string $notificationAddress): ?CookieValue
     {
         try {
             return $this->cookieHelper->read($request, $userId, $notificationAddress);
@@ -87,7 +79,12 @@ class TrustedDeviceService
         }
     }
 
-    private function isCookieValid(CookieValueInterface $cookie, string $userId, string $notificationAddress): bool
+    private function store(Response $response, CookieValue $cookieValue): void
+    {
+        $this->cookieHelper->write($response, $cookieValue);
+    }
+
+    private function isCookieValid(CookieValue $cookie, string $userId, string $notificationAddress): bool
     {
         if ($cookie instanceof CookieValue && ($cookie->getUserId() !== $userId || $cookie->getNotificationAddress() !== $notificationAddress)) {
             $this->logger->error(

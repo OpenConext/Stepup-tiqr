@@ -22,8 +22,8 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Surfnet\Tiqr\Service\TrustedDevice\DateTime\ExpirationHelper;
 use Surfnet\Tiqr\Service\TrustedDevice\Exception\InvalidAuthenticationTimeException;
+use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
 
 class ExpirationHelperTest extends TestCase
 {
@@ -99,24 +99,30 @@ class ExpirationHelperTest extends TestCase
 
     public function gracePeriodExpectations(): array
     {
-        // Cookie lifetime 3600 with a grace period of 5 seconds
-        $helper = $this->makeExpirationHelper(3600, time(), 5);
+        // Cookie lifetime 3600
+        $helper = $this->makeExpirationHelper(3600, time());
         return [
-            'within grace period (outer bound)' => [false, $helper, $this->makeCookieValue(time() - 3605)],
-            'within grace period' => [false, $helper, $this->makeCookieValue(time() - 3601)],
             'within grace period (lower bound)' => [false, $helper, $this->makeCookieValue(time() - 3600)],
-            'outside grace period' => [true, $helper, $this->makeCookieValue(time() - 3606)],
+            'outside grace period' => [true, $helper, $this->makeCookieValue(time() - 3601)],
         ];
     }
 
-    private function makeExpirationHelper(int $expirationTime, int $now, int $gracePeriod = 0) : ExpirationHelper
+    private function makeExpirationHelper(int $expirationTime, int $now) : ExpirationHelper
     {
         $time = new \DateTime();
         $time->setTimestamp($now);
-        return new ExpirationHelper($expirationTime, $gracePeriod, $time);
+
+        $config = new Configuration(
+            '',
+            $expirationTime,
+            '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f',
+            'none',
+        );
+
+        return new ExpirationHelper($config, $time);
     }
 
-    private function makeCookieValue(int $authenticationTime) : CookieValueInterface
+    private function makeCookieValue(int $authenticationTime) : CookieValue
     {
         $dateTime = new \DateTime();
         $dateTime->setTimestamp($authenticationTime);
@@ -128,7 +134,7 @@ class ExpirationHelperTest extends TestCase
         return CookieValue::deserialize(json_encode($data));
     }
 
-    private function makeCookieValueUnrestrictedAuthTime($authenticationTime) : CookieValueInterface
+    private function makeCookieValueUnrestrictedAuthTime($authenticationTime) : CookieValue
     {
         $data = [
             'userId' => 'userId',

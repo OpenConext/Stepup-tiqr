@@ -52,7 +52,7 @@ class TrustedDeviceServiceTest extends TestCase
     {
         $this->configuration = $configuration;
         $encryptionHelper = new HaliteCryptoHelper($configuration);
-        $expirationHelper = new ExpirationHelper($this->configuration->lifetimeInSeconds, 1, $now);
+        $expirationHelper = new ExpirationHelper($this->configuration, $now);
         $cookieHelper = new CookieHelper($this->configuration, $encryptionHelper, $this->logger);
         $this->service = new TrustedDeviceService(
             $cookieHelper,
@@ -127,7 +127,7 @@ class TrustedDeviceServiceTest extends TestCase
                 '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f',
                 CookieSameSite::SAMESITE_STRICT->value
             ),
-            new DateTime('+2592001 seconds') // lifetime + 1 second grace
+            new DateTime('+2592000 seconds')
         );
 
         $cookieValue = CookieValue::from('userId#123', 'notAddr#321');
@@ -148,7 +148,7 @@ class TrustedDeviceServiceTest extends TestCase
                 2592000,
                 '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f',
                 CookieSameSite::SAMESITE_STRICT->value
-            ), new DateTime('+2592002 seconds') // lifetime + 1 second grace + 1
+            ), new DateTime('+2592001 seconds') // lifetime + 1 second
         );
 
         $cookieValue = CookieValue::from('userId#123', 'notAddr#321');

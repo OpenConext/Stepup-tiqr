@@ -21,11 +21,10 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\Service\TrustedDevice\Crypto;
 
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
 
 interface CryptoHelperInterface
 {
-    public function encrypt(CookieValueInterface $cookieValue): string;
+    public function encrypt(CookieValue $cookieValue): string;
 
-    public function decrypt(string $cookieData): CookieValueInterface;
+    public function decrypt(string $cookieData): CookieValue;
 }

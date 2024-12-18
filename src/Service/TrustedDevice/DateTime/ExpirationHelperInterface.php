@@ -20,7 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Service\TrustedDevice\DateTime;
 
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
+use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
 
 /**
  * Used to verify if the authentication time from the CookieValue
@@ -34,5 +34,5 @@ use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
  */
 interface ExpirationHelperInterface
 {
-    public function isExpired(CookieValueInterface $cookieValue): bool;
+    public function isExpired(CookieValue $cookieValue): bool;
 }

@@ -23,12 +23,11 @@ namespace Surfnet\Tiqr\Service\TrustedDevice\ValueObject;
 use DateTime;
 use InvalidArgumentException;
 
-use Surfnet\Tiqr\Service\TrustedDevice\Exception\InvalidAuthenticationTimeException;
+use JsonException;
 
-use function strtolower;
 use function strtotime;
 
-readonly class CookieValue implements CookieValueInterface
+readonly class CookieValue
 {
     private function __construct(
         private string $userId,
@@ -49,9 +48,9 @@ readonly class CookieValue implements CookieValueInterface
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public static function deserialize(string $serializedData): CookieValueInterface
+    public static function deserialize(string $serializedData): CookieValue
     {
         $data = json_decode($serializedData, true, 512, JSON_THROW_ON_ERROR);
 
@@ -75,7 +74,7 @@ readonly class CookieValue implements CookieValueInterface
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function serialize(): string
     {

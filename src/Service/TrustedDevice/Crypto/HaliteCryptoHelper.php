@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\Tiqr\Service\TrustedDevice\Crypto;
 
 use Exception;
+use JsonException;
 use ParagonIE\Halite\Alerts\InvalidKey;
 use ParagonIE\Halite\Symmetric\Crypto;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
@@ -29,7 +30,6 @@ use Surfnet\Tiqr\Service\TrustedDevice\Exception\DecryptionFailedException;
 use Surfnet\Tiqr\Service\TrustedDevice\Exception\EncryptionFailedException;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
 
 class HaliteCryptoHelper implements CryptoHelperInterface
 {
@@ -53,8 +53,11 @@ class HaliteCryptoHelper implements CryptoHelperInterface
      * HKDF using a salt This means that learning either derived key cannot lead to learning the other
      * derived key, or the secret key input in the HKDF. Encrypting many messages using the same
      * secret key is not a problem in this design.
+     *
+     * @throws EncryptionFailedException
+     * @throws JsonException
      */
-    public function encrypt(CookieValueInterface $cookieValue): string
+    public function encrypt(CookieValue $cookieValue): string
     {
         try {
             $plainTextCookieValue = new HiddenString($cookieValue->serialize());
@@ -76,8 +79,11 @@ class HaliteCryptoHelper implements CryptoHelperInterface
      * Decrypt the cookie ciphertext back to plain text.
      * Again using the encryption key, used to encrypt the data.
      * The decrypt method will return a deserialized CookieValue value object
+     *
+     * @throws DecryptionFailedException
+     * @throws JsonException
      */
-    public function decrypt(string $cookieData): CookieValueInterface
+    public function decrypt(string $cookieData): CookieValue
     {
         try {
             // Decryption: (we use the default encoding: Halite::DECODE_BASE64URLSAFE)

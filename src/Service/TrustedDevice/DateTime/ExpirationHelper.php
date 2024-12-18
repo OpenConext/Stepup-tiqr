@@ -23,7 +23,8 @@ namespace Surfnet\Tiqr\Service\TrustedDevice\DateTime;
 use DateTime as CoreDateTime;
 use Surfnet\StepupBundle\DateTime\DateTime;
 use Surfnet\Tiqr\Service\TrustedDevice\Exception\InvalidAuthenticationTimeException;
-use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValueInterface;
+use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration;
+use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
 use TypeError;
 
 class ExpirationHelper implements ExpirationHelperInterface
@@ -31,17 +32,7 @@ class ExpirationHelper implements ExpirationHelperInterface
     private CoreDateTime $now;
 
     public function __construct(
-        /**
-         * The trusted device cookie lifetime in seconds
-         * See: config/openconext/parameters.yaml trusted_device_cookie_lifetime
-         */
-        readonly private int $cookieLifetime,
-        /**
-         * The period in seconds that we still acknowledge the
-         * cookie even tho the expiration was reached. This accounts
-         * for server time/sync differences that may occur.
-         */
-        readonly private int $gracePeriod,
+        private readonly Configuration $configuration,
         ?CoreDateTime $now = null
     ) {
         if ($now === null) {
@@ -50,7 +41,7 @@ class ExpirationHelper implements ExpirationHelperInterface
         $this->now = $now;
     }
 
-    public function isExpired(CookieValueInterface $cookieValue): bool
+    public function isExpired(CookieValue $cookieValue): bool
     {
         try {
             $authenticationTimestamp = $cookieValue->authenticationTime();
@@ -75,7 +66,7 @@ class ExpirationHelper implements ExpirationHelperInterface
             );
         }
 
-        $expirationTimestamp = $authenticationTimestamp + $this->cookieLifetime + $this->gracePeriod;
+        $expirationTimestamp = $authenticationTimestamp + $this->configuration->lifetimeInSeconds;
         $currentTimestamp = $this->now->getTimestamp();
 
         // Is the current time greater than the expiration time?

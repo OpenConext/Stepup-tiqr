@@ -62,11 +62,6 @@ services:
       arguments:
         $errorPageHelper: '@Surfnet\Tiqr\Service\ErrorPageHelper'
 
-    Surfnet\Tiqr\Service\TrustedDevice\DateTime\ExpirationHelper:
-      arguments:
-        $cookieLifetime: "%trusted_device_cookie_lifetime%"
-        $gracePeriod: 60
-
     Surfnet\Tiqr\Service\TrustedDevice\Crypto\CryptoHelperInterface:
       class: Surfnet\Tiqr\Service\TrustedDevice\Crypto\HaliteCryptoHelper
 
