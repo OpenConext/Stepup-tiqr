@@ -36,13 +36,22 @@ class ExpirationHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider gracePeriodExpectations
+     * @dataProvider expirationValues
      */
-    public function test_grace_period(bool $isExpired, ExpirationHelper $helper, CookieValue $cookieValue): void
+    public function test_expiration_period(bool $isExpired, ExpirationHelper $helper, CookieValue $cookieValue): void
     {
         self::assertEquals($isExpired, $helper->isExpired($cookieValue));
     }
 
+    public function expirationValues(): array
+    {
+        // Cookie lifetime 3600
+        $helper = $this->makeExpirationHelper(3600, time());
+        return [
+            'within period' => [false, $helper, $this->makeCookieValue(time() - 3600)],
+            'outside period' => [true, $helper, $this->makeCookieValue(time() - 3601)],
+        ];
+    }
 
     public function invalidTimeExpectations(): array
     {
@@ -94,16 +103,6 @@ class ExpirationHelperTest extends TestCase
             'not expired but about to be' => [false, $this->makeExpirationHelper(3600, time() + 3600), $this->makeCookieValue(time())],
             'expired' => [true, $this->makeExpirationHelper(3600, time() + 3601), $this->makeCookieValue(time())],
             'expired more' => [true, $this->makeExpirationHelper(3600, time() + 36000), $this->makeCookieValue(time())],
-        ];
-    }
-
-    public function gracePeriodExpectations(): array
-    {
-        // Cookie lifetime 3600
-        $helper = $this->makeExpirationHelper(3600, time());
-        return [
-            'within grace period (lower bound)' => [false, $helper, $this->makeCookieValue(time() - 3600)],
-            'outside grace period' => [true, $helper, $this->makeCookieValue(time() - 3601)],
         ];
     }
 

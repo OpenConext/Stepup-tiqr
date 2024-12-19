@@ -48,7 +48,7 @@ parameters:
     # For example, 30 days is 2592000 seconds
     trusted_device_cookie_lifetime: 2592000
 
-    # The prefix used for the trusted-device cookies
+    # The name used for the trusted-device cookies
     trusted_device_cookie_name: 'tiqr-trusted-device'
 
     # The same_site attribute of the trusted-device cookies
