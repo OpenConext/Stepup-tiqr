@@ -18,7 +18,7 @@
     "file-loader": "^6.0.0",
     "jest": "^27",
     "jscpd": "^3.4.5",
-    "sass": "^1.43.4",
+    "sass": "^1.83.0",
     "sass-loader": "^13",
     "ts-jest": "^27",
     "ts-loader": "^9.0",
