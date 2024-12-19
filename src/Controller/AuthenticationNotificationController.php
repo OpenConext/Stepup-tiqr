@@ -96,7 +96,7 @@ class AuthenticationNotificationController extends AbstractController
             return $this->generateNotificationResponse('no-device');
         }
 
-        $cookie = $this->trustedDeviceService->read($request, $nameId, $notificationAddress);
+        $cookie = $this->trustedDeviceService->read($request);
         if ($cookie === null) {
             $this->logger->notice(
                 sprintf(

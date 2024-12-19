@@ -49,7 +49,7 @@ parameters:
     trusted_device_cookie_lifetime: 2592000
 
     # The prefix used for the trusted-device cookies
-    trusted_device_cookie_prefix: 'tiqr-trusted-device'
+    trusted_device_cookie_name: 'tiqr-trusted-device'
 
     # The same_site attribute of the trusted-device cookies
     # Should be one of the strings in: \Surfnet\Tiqr\Service\TrustedDevice\Http\CookieSameSite: 'none', 'lax', 'strict'

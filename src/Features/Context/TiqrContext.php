@@ -30,13 +30,11 @@ use Behat\MinkExtension\Context\MinkContext;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use OCRA;
-use Psr\Log\NullLogger;
 use RuntimeException;
 use stdClass;
 use Surfnet\SamlBundle\Exception\NotFound;
 use Surfnet\Tiqr\Dev\FileLogger;
 use Surfnet\Tiqr\Service\TrustedDevice\Crypto\HaliteCryptoHelper;
-use Surfnet\Tiqr\Service\TrustedDevice\Http\CookieHelper;
 use Surfnet\Tiqr\Service\TrustedDevice\TrustedDeviceService;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration;
 use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
@@ -359,7 +357,7 @@ class TiqrContext implements Context
         foreach ($cookieJar as $cookie) {
             $request->cookies->set($cookie->getName(), $cookie->getValue());
         }
-        $cookieValue = $this->trustedDeviceService->read($request, $userId, $notificationAddress);
+        $cookieValue = $this->trustedDeviceService->read($request);
         Assertion::isInstanceOf($cookieValue, CookieValue::class);
         Assertion::true($this->trustedDeviceService->isTrustedDevice($cookieValue, $userId, $notificationAddress));
     }
@@ -602,7 +600,7 @@ class TiqrContext implements Context
         $cryptoHelper = new HaliteCryptoHelper($config);
 
         $cookieValue = CookieValue::from($cookieUserId, $notificationAddress);
-        $cookieName = 'tiqr-trusted-device' . hash('sha256', $userId . '_' . $notificationAddress);
+        $cookieName = 'tiqr-trusted-device';
 
         $encryptedValue = $cryptoHelper->encrypt($cookieValue);
 

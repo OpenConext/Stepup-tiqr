@@ -60,10 +60,10 @@ class TrustedDeviceService
         return true;
     }
 
-    public function read(Request $request, string $userId, string $notificationAddress): ?CookieValue
+    public function read(Request $request): ?CookieValue
     {
         try {
-            return $this->cookieHelper->read($request, $userId, $notificationAddress);
+            return $this->cookieHelper->read($request);
         } catch (CookieNotFoundException $e) {
             $this->logger->notice('A trusted-device cookie is not found');
             return null;

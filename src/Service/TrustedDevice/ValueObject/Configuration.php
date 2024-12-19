@@ -35,7 +35,7 @@ readonly class Configuration
     public CookieSameSite $sameSite;
 
     public function __construct(
-        public string $prefix,
+        public string $cookieName,
         public int $lifetimeInSeconds,
         #[SensitiveParameter] string $encryptionKey,
         string $sameSite,

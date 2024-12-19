@@ -65,7 +65,7 @@ class TrustedDeviceServiceTest extends TestCase
     {
         $this->buildService(
             new Configuration(
-                'tiqr-trusted-device-cookie_',
+                'tiqr-trusted-device-cookie',
                 60,
                 '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f',
                 CookieSameSite::SAMESITE_STRICT->value,
@@ -79,7 +79,7 @@ class TrustedDeviceServiceTest extends TestCase
         self::assertCount(1, $cookieJar);
         $cookie = reset($cookieJar);
         // The name and lifetime of the cookie should match the one we configured it to be
-        self::assertEquals($this->configuration->prefix . hash('sha256', 'userId#1_'.'01011001'), $cookie->getName());
+        self::assertEquals($this->configuration->cookieName, $cookie->getName());
         self::assertEquals(time() + $this->configuration->lifetimeInSeconds, $cookie->getExpiresTime());
         // By default, we set same-site header to none
         self::assertEquals(Cookie::SAMESITE_STRICT, $cookie->getSameSite());
@@ -165,7 +165,7 @@ class TrustedDeviceServiceTest extends TestCase
     {
         $this->buildService(
             new Configuration(
-                'tiqr-trusted-device-cookie_',
+                'tiqr-trusted-device-cookie',
                 60,
                 '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f',
                 CookieSameSite::SAMESITE_STRICT->value,
@@ -186,7 +186,7 @@ class TrustedDeviceServiceTest extends TestCase
             $request->cookies->set($cookie->getName(), $cookie->getValue());
         }
 
-        $readCookie = $this->service->read($request, $userId, $notificationAddress);
+        $readCookie = $this->service->read($request);
         $this->assertTrue($this->service->isTrustedDevice($readCookie, $userId, $notificationAddress));
     }
 
@@ -194,7 +194,7 @@ class TrustedDeviceServiceTest extends TestCase
     {
         $this->buildService(
             new Configuration(
-                'tiqr-trusted-device-cookie_',
+                'tiqr-trusted-device-cookie',
                 60,
                 '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f',
                 CookieSameSite::SAMESITE_STRICT->value,
@@ -215,14 +215,11 @@ class TrustedDeviceServiceTest extends TestCase
             $request->cookies->set($cookie->getName(), $cookie->getValue() . '1');
         }
 
-        $readCookie = $this->service->read($request, $userId, $notificationAddress);
+        $readCookie = $this->service->read($request);
         $this->assertNull($readCookie);
     }
 
-    /**
-     * This test is to make sure multiple users and users with multiple devices can use the same browser without issues
-     */
-    public function test_it_handles_all_valid_cookies_from_browser(): void
+    public function test_it_overwrites_existing_cookies(): void
     {
         $this->buildService(
             new Configuration(
@@ -266,7 +263,7 @@ class TrustedDeviceServiceTest extends TestCase
         }
 
         $cookieJar = $response->headers->getCookies();
-        self::assertCount(5, $cookieJar);
+        self::assertCount(1, $cookieJar);
 
         $request = new Request();
         foreach ($cookieJar as $cookie) {
@@ -275,10 +272,8 @@ class TrustedDeviceServiceTest extends TestCase
 
         shuffle($store);
 
-        foreach ($store as $storedDevice){
-            $readCookie = $this->service->read($request, $storedDevice['userId'], $storedDevice['notificationAddress']);
-            $this->assertTrue($this->service->isTrustedDevice($readCookie, $storedDevice['userId'], $storedDevice['notificationAddress']));
-        }
+        $readCookie = $this->service->read($request);
+        $this->assertTrue($this->service->isTrustedDevice($readCookie, 'userId#1', '1'));
     }
 
 

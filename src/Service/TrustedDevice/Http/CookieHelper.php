@@ -42,14 +42,12 @@ class CookieHelper implements CookieHelperInterface
 
     public function write(Response $response, CookieValue $value): void
     {
-        $cookieName = $this->buildCookieName($value->getUserId(), $value->getNotificationAddress());
-
         // The CookieValue is encrypted
         $encryptedCookieValue = $this->encryptionHelper->encrypt($value);
         $fingerprint = $this->hashFingerprint($encryptedCookieValue);
         $this->logger->notice(sprintf('Writing a trusted-device cookie with fingerprint %s', $fingerprint));
         // Create a Symfony HttpFoundation cookie object
-        $cookie = $this->createCookieWithValue($encryptedCookieValue, $cookieName);
+        $cookie = $this->createCookieWithValue($encryptedCookieValue, $this->configuration->cookieName);
         // Which is added to the response headers
         $response->headers->setCookie($cookie);
     }
@@ -57,13 +55,12 @@ class CookieHelper implements CookieHelperInterface
     /**
      * Retrieve the current cookie from the Request if it exists.
      */
-    public function read(Request $request, string $userId, string $notificationAddress): CookieValue
+    public function read(Request $request): CookieValue
     {
-        $cookieName = $this->buildCookieName($userId, $notificationAddress);
-        if (!$request->cookies->has($cookieName)) {
+        if (!$request->cookies->has($this->configuration->cookieName)) {
             throw new CookieNotFoundException();
         }
-        $cookie = $request->cookies->get($cookieName);
+        $cookie = $request->cookies->get($this->configuration->cookieName);
         if (!is_string($cookie)) {
             throw new InvalidArgumentException('Cookie payload must be string.');
         }
@@ -72,13 +69,12 @@ class CookieHelper implements CookieHelperInterface
         return $this->encryptionHelper->decrypt($cookie);
     }
 
-    public function fingerprint(Request $request, string $userId, string $notificationAddress): string
+    public function fingerprint(Request $request): string
     {
-        $cookieName = $this->buildCookieName($userId, $notificationAddress);
-        if (!$request->cookies->has($cookieName)) {
+        if (!$request->cookies->has($this->configuration->cookieName)) {
             throw new CookieNotFoundException();
         }
-        $cookie = $request->cookies->get($cookieName);
+        $cookie = $request->cookies->get($this->configuration->cookieName);
         if (!is_string($cookie)) {
             throw new InvalidArgumentException('Cookie payload must be string.');
         }
@@ -109,10 +105,5 @@ class CookieHelper implements CookieHelperInterface
     {
         $currentTimestamp = time();
         return $currentTimestamp + $expiresInSeconds;
-    }
-
-    private function buildCookieName(string $userId, string $notificationAddress): string
-    {
-        return $this->configuration->prefix . hash('sha256', $userId . '_' . $notificationAddress);
     }
 }
