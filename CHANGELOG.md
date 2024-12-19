@@ -1,5 +1,9 @@
 # Stepup-tiqr
 
+## 4.2.0
+* Require a user to authenticate using the QR code instead of sending a push notification when the webbrowser
+  has not been used recently to authenticate (#316)
+
 ## 4.1.0
 * Improve validation errors from the tiqr configuraton (#224)
 * Fail early when session (cookie) is missing (#226)
