@@ -338,13 +338,11 @@ class TiqrAppApiController extends AbstractController
         TiqrUserInterface $user,
         Response $responseObject
     ): void {
-        // @TODO Valideren bij Pieter / Michiel of deze fallback er wel in moet
-        $trustedNotificationAddress = $notificationAddress !== '' ? $notificationAddress : $user->getNotificationAddress();
-        if (trim($trustedNotificationAddress) !== '') {
+        if (trim($notificationAddress) !== '') {
             $this->cookieService->registerTrustedDevice(
                 $responseObject,
                 $user->getId(),
-                $trustedNotificationAddress
+                $notificationAddress
             );
         }
     }

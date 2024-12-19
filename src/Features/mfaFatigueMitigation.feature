@@ -16,7 +16,7 @@ Feature: When an user needs to authenticate
     And I should be on "/authentication"
 
     Then I scan the tiqr authentication qrcode
-    And the app authenticates to the service
+    And the app authenticates to the service with notification type "APNS" address: "0000000000111111111122222222223333333333"
     Then we have a authenticated app
     And we have a trusted cookie for address: "0000000000111111111122222222223333333333"
 

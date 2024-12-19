@@ -78,7 +78,6 @@ Feature: When an user needs to authenticate
       | notice | /Authenticated user ".*" in session ".*"/                                                                                                 | present |
       | info   | response is valid                                                                                                                         | present |
       | notice | User authenticated OK                                                                                                                     | present |
-      | info   | Unable to find notification address for user                                                                                              | present |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User made a request with a session cookie.                                                                                                | present |
       | info   | Created new session.                                                                                                                      |         |
