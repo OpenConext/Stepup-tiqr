@@ -61,3 +61,15 @@ services:
     Surfnet\Tiqr\Controller\ExceptionController:
       arguments:
         $errorPageHelper: '@Surfnet\Tiqr\Service\ErrorPageHelper'
+
+    Surfnet\Tiqr\Service\TrustedDevice\Crypto\CryptoHelperInterface:
+      class: Surfnet\Tiqr\Service\TrustedDevice\Crypto\HaliteCryptoHelper
+
+    Surfnet\Tiqr\Service\TrustedDevice\ValueObject\Configuration:
+      public: false
+      arguments:
+        - "%trusted_device_cookie_name%"
+        - "%trusted_device_cookie_lifetime%"
+        - "%trusted_device_encryption_key%"
+        - "%trusted_device_cookie_same_site%"
+

@@ -181,7 +181,7 @@ parameters:
 			path: ../../dev/FileLogger.php
 
 		-
-			message: "#^Method Surfnet\\\\Tiqr\\\\Dev\\\\FileLogger\\:\\:log\\(\\) has parameter \\$message with no type specified\\.$#"
+			message: "#^Parameter \\#1 \\$record of method League\\\\Csv\\\\Writer\\:\\:insertOne\\(\\) expects array\\<float\\|int\\|string\\|Stringable\\|null\\>, array\\<int, mixed\\> given\\.$#"
 			count: 1
 			path: ../../dev/FileLogger.php
 
@@ -241,11 +241,6 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#2 \\$notificationType of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
 			message: "#^Parameter \\#2 \\$secret of method Surfnet\\\\Tiqr\\\\Tiqr\\\\TiqrUserRepositoryInterface\\:\\:createUser\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
@@ -256,16 +251,6 @@ parameters:
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: "#^Parameter \\#3 \\$notificationAddress of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:loginAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: "#^Parameter \\#3 \\$notificationType of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
 			message: "#^Parameter \\#3 \\$response of method Surfnet\\\\Tiqr\\\\Tiqr\\\\AuthenticationRateLimitServiceInterface\\:\\:authenticate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
@@ -273,11 +258,6 @@ parameters:
 		-
 			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 2
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: "#^Parameter \\#4 \\$notificationAddress of method Surfnet\\\\Tiqr\\\\Controller\\\\TiqrAppApiController\\:\\:registerAction\\(\\) expects string, mixed given\\.$#"
-			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
@@ -332,7 +312,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getClient\\(\\)\\.$#"
-			count: 2
+			count: 6
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
@@ -342,7 +322,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'sari' on mixed\\.$#"
-			count: 2
+			count: 3
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
@@ -352,12 +332,12 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 1 on mixed\\.$#"
-			count: 1
+			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
 			message: "#^Cannot access offset 2 on mixed\\.$#"
-			count: 1
+			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
@@ -372,7 +352,7 @@ parameters:
 
 		-
 			message: "#^Cannot use array destructuring on mixed\\.$#"
-			count: 1
+			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
