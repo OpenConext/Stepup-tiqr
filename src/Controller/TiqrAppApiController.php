@@ -151,6 +151,8 @@ class TiqrAppApiController extends AbstractController
 
     /**
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @throws \InvalidArgumentException
      */
@@ -247,7 +249,15 @@ class TiqrAppApiController extends AbstractController
             $logger->warning('Error finalizing enrollment', ['exception' => $e]);
         }
 
-        return new Response('OK', Response::HTTP_OK);
+        $okResponse = new Response('OK', Response::HTTP_OK);
+
+        try {
+            $this->registerTrustedDevice($notificationAddress, $userId, $okResponse);
+        } catch (Throwable $e) {
+            $logger->warning('Could not register trusted device on registration', ['exception' => $e]);
+        }
+
+        return $okResponse;
     }
 
     /** Handle login operation from the app, returns response for the app
@@ -316,7 +326,7 @@ class TiqrAppApiController extends AbstractController
                 }
 
                 try {
-                    $this->registerTrustedDevice($notificationAddress, $user, $responseObject);
+                    $this->registerTrustedDevice($notificationAddress, $user->getId(), $responseObject);
                 } catch (Throwable $e) {
                     $this->logger->warning('Could not create trusted device cookie.', ['exception' => $e]);
                 }
@@ -335,13 +345,13 @@ class TiqrAppApiController extends AbstractController
 
     private function registerTrustedDevice(
         string $notificationAddress,
-        TiqrUserInterface $user,
+        string $userId,
         Response $responseObject
     ): void {
         if (trim($notificationAddress) !== '') {
             $this->cookieService->registerTrustedDevice(
                 $responseObject,
-                $user->getId(),
+                $userId,
                 $notificationAddress
             );
         }

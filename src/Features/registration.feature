@@ -74,6 +74,7 @@ Feature: When an user needs to register for a new token
       | info    | Setting user secret and notification type and address                                                                                     | present |
       | info    | Finalizing enrollment                                                                                                                     | present |
       | notice  | Enrollment finalized                                                                                                                      | present |
+      | notice  | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
       | info    | User made a request with a session cookie.                                                                                                | present |
       | info    | Created new session.                                                                                                                      |         |
       | info    | User has a session.                                                                                                                       | present |
@@ -161,6 +162,7 @@ Feature: When an user needs to register for a new token
       | info   | Setting user secret and notification type and address                                                                                     | present |
       | info   | Finalizing enrollment                                                                                                                     | present |
       | notice | Enrollment finalized                                                                                                                      | present |
+      | notice | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
       | info   | User made a request with a session cookie.                                                                                                | present |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User has a session.                                                                                                                       | present |

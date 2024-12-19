@@ -312,7 +312,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getClient\\(\\)\\.$#"
-			count: 5
+			count: 6
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-

@@ -6,7 +6,9 @@ Feature: When an user needs to authenticate
     Given the registration QR code is scanned
     And the user registers the service with notification type "APNS" address: "0000000000111111111122222222223333333333"
     Then we have a registered user
+    And the logs should mention: Writing a trusted-device cookie with fingerprint
     And I clear the logs
+    And the trusted device cookie is cleared
 
   Scenario: When a user authenticates using a qr code it should set a trusted cookie
     Given I am on "/demo/sp"

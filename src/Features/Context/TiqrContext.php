@@ -666,6 +666,19 @@ class TiqrContext implements Context
         Assertion::eq($string, '', sprintf('The logs do not contain %s', $string));
     }
 
+    private function logsContainLineStartingWith(string $string): void
+    {
+        /** @var array<array<string>> $logs */
+        $logs = $this->fileLogger->cleanLogs();
+        foreach ($logs as $log) {
+            if (str_contains($log[1], $string)) {
+                return;
+            }
+        }
+
+        Assertion::eq($string, '', sprintf('The logs do not contain a line starting with "%s"', $string));
+    }
+
     /**
      * @Then /^the logs should say: no trusted cookie for address "([^"]*)"$/
      */
@@ -689,6 +702,14 @@ class TiqrContext implements Context
     }
 
     /**
+     * @Given /^the logs should mention: Writing a trusted\-device cookie with fingerprint$/
+     */
+    public function theLogsShouldMentionWritingATrustedDeviceCookieWithFingerprint(): void
+    {
+        $this->logsContainLineStartingWith('Writing a trusted-device cookie with fingerprint ');
+    }
+
+    /**
      * @Then /^I dump the page$/
      */
     public function iDumpThePage(): void
@@ -708,5 +729,13 @@ class TiqrContext implements Context
     public function iDumpTheAuthResponse(): void
     {
         dump($this->authenticatioResponse);
+    }
+
+    /**
+     * @When /^the trusted device cookie is cleared$/
+     */
+    public function theTrustedDeviceCookieIsCleared(): void
+    {
+        $this->minkContext->getSession()->getDriver()->getClient()->getCookieJar()->expire('tiqr-trusted-device');
     }
 }
