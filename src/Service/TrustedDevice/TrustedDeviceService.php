@@ -43,21 +43,16 @@ class TrustedDeviceService
     ) {
     }
 
-    public function registerTrustedDevice(Response $response, string $userId, string $notificationAddress): void
+    public function registerTrustedDevice(Response $response, string $notificationAddress): void
     {
-        $this->store($response, CookieValue::from($userId, $notificationAddress));
+        $this->store($response, CookieValue::from($notificationAddress));
     }
 
     public function isTrustedDevice(
         CookieValue $cookie,
-        string $userId,
         string $notificationAddress,
     ): bool {
-        if (!$this->isCookieValid($cookie, $userId, $notificationAddress)) {
-            return false;
-        }
-
-        return true;
+        return $this->isCookieValid($cookie, $notificationAddress);
     }
 
     public function read(Request $request): ?CookieValue
@@ -84,15 +79,13 @@ class TrustedDeviceService
         $this->cookieHelper->write($response, $cookieValue);
     }
 
-    private function isCookieValid(CookieValue $cookie, string $userId, string $notificationAddress): bool
+    private function isCookieValid(CookieValue $cookie, string $notificationAddress): bool
     {
-        if ($cookie instanceof CookieValue && ($cookie->getUserId() !== $userId || $cookie->getNotificationAddress() !== $notificationAddress)) {
+        if ($cookie->getNotificationAddress() !== $notificationAddress) {
             $this->logger->error(
                 sprintf(
-                    'This trusted-device cookie was not issued to %s,%s, but to %s,%s',
-                    $userId,
+                    'Trusted device cookie "%s" does not match: "%s"',
                     $notificationAddress,
-                    $cookie->getUserId(),
                     $cookie->getNotificationAddress(),
                 )
             );

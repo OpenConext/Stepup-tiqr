@@ -30,7 +30,6 @@ use function strtotime;
 readonly class CookieValue
 {
     private function __construct(
-        private string $userId,
         private string $notificationAddress,
         /** Authentication time (Atom formatted date time string) */
         private string $authenticationTime
@@ -38,13 +37,13 @@ readonly class CookieValue
     }
 
 
-    public static function from(string $userId, string $notificationAddress): self
+    public static function from(string $notificationAddress): self
     {
         if (trim($notificationAddress) === '') {
             throw new InvalidArgumentException('Cannot create a trusted device cookie. NotificationAddress is empty.');
         }
 
-        return new self($userId, $notificationAddress, (new DateTime())->format(DATE_ATOM));
+        return new self($notificationAddress, (new DateTime())->format(DATE_ATOM));
     }
 
     /**
@@ -58,10 +57,6 @@ readonly class CookieValue
             throw new InvalidArgumentException('Invalid serialized data');
         }
 
-        if (!is_string($data['userId'])) {
-            throw new InvalidArgumentException('userId is not a valid string');
-        }
-
         if (!is_string($data['notificationAddress'])) {
             throw new InvalidArgumentException('notificationAddress is not a valid string');
         }
@@ -70,7 +65,7 @@ readonly class CookieValue
             throw new InvalidArgumentException('authenticationTime is not a valid string');
         }
 
-        return new self($data['userId'], $data['notificationAddress'], $data['authenticationTime']);
+        return new self($data['notificationAddress'], $data['authenticationTime']);
     }
 
     /**
@@ -79,15 +74,9 @@ readonly class CookieValue
     public function serialize(): string
     {
         return json_encode([
-            'userId' => $this->userId,
             'notificationAddress' => $this->notificationAddress,
             'authenticationTime' => $this->authenticationTime,
         ], JSON_THROW_ON_ERROR);
-    }
-
-    public function getUserId(): string
-    {
-        return $this->userId;
     }
 
     public function getNotificationAddress(): string

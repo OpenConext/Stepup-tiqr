@@ -25,7 +25,7 @@ class CookieValueTest extends TestCase
 {
     public function test_serialize(): void
     {
-        $cookie = CookieValue::from('1', '2');
+        $cookie = CookieValue::from('2');
         $serialized = $cookie->serialize();
         self::assertNotEmpty($serialized);
         self::assertIsString($serialized);
@@ -33,7 +33,7 @@ class CookieValueTest extends TestCase
 
     public function test_deserialization(): void
     {
-        $cookie = CookieValue::from('1', '2');
+        $cookie = CookieValue::from( '2');
         $serialized = $cookie->serialize();
         $cookieValue = CookieValue::deserialize($serialized);
         self::assertInstanceOf(CookieValue::class, $cookieValue);

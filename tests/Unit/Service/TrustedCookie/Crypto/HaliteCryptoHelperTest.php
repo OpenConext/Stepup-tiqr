@@ -67,6 +67,6 @@ class HaliteCryptoHelperTest extends TestCase
 
     private function createCookieValue(): CookieValue
     {
-        return CookieValue::from('userId#1', 'abc12345');
+        return CookieValue::from('abc12345');
     }
 }

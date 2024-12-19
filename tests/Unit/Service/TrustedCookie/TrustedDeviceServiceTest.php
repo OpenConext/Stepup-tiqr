@@ -73,7 +73,7 @@ class TrustedDeviceServiceTest extends TestCase
         );
         $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
 
-        $this->service->registerTrustedDevice($response, 'userId#1', '01011001');
+        $this->service->registerTrustedDevice($response, '01011001');
 
         $cookieJar = $response->headers->getCookies();
         self::assertCount(1, $cookieJar);
@@ -85,10 +85,7 @@ class TrustedDeviceServiceTest extends TestCase
         self::assertEquals(Cookie::SAMESITE_STRICT, $cookie->getSameSite());
     }
 
-    /**
-     * @dataProvider identityMismatchProvider
-     */
-    public function test_untrusted_when_id_doesnt_match(string $userId, string $notificationAddress): void
+    public function test_untrusted_when_id_doesnt_match(): void
     {
         $this->buildService(
             new Configuration(
@@ -99,23 +96,13 @@ class TrustedDeviceServiceTest extends TestCase
             )
         );
 
-        $cookieValue = CookieValue::from('userId#123', 'notAddr#321');
+        $cookieValue = CookieValue::from('notAddr#321');
         self::assertFalse(
             $this->service->isTrustedDevice(
                 $cookieValue,
-                $userId,
-                $notificationAddress
+                'notAddr#322'
             )
         );
-    }
-
-    public function identityMismatchProvider(): array
-    {
-        return [
-            'userId wrong' => ['userId#124', 'notAddr#321'],
-            'notAdr wrong' => ['userId#123', 'notAddr#322'],
-            'both wrong' => ['userId#124', 'notAddr#322'],
-        ];
     }
 
     public function test_is_trusted_when_identity_matches(): void
@@ -130,11 +117,10 @@ class TrustedDeviceServiceTest extends TestCase
             new DateTime('+2592000 seconds')
         );
 
-        $cookieValue = CookieValue::from('userId#123', 'notAddr#321');
+        $cookieValue = CookieValue::from( 'notAddr#321');
         self::assertTrue(
             $this->service->isTrustedDevice(
                 $cookieValue,
-                'userId#123',
                 'notAddr#321',
             )
         );
@@ -151,11 +137,10 @@ class TrustedDeviceServiceTest extends TestCase
             ), new DateTime('+2592001 seconds') // lifetime + 1 second
         );
 
-        $cookieValue = CookieValue::from('userId#123', 'notAddr#321');
+        $cookieValue = CookieValue::from('notAddr#321');
         self::assertFalse(
             $this->service->isTrustedDevice(
                 $cookieValue,
-                'userId#123',
                 'notAddr#321',
             )
         );
@@ -173,10 +158,9 @@ class TrustedDeviceServiceTest extends TestCase
         );
         $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
 
-        $userId = 'userId#1';
         $notificationAddress = '01011001';
 
-        $this->service->registerTrustedDevice($response, $userId, $notificationAddress);
+        $this->service->registerTrustedDevice($response, $notificationAddress);
 
         $cookieJar = $response->headers->getCookies();
         self::assertCount(1, $cookieJar);
@@ -187,7 +171,7 @@ class TrustedDeviceServiceTest extends TestCase
         }
 
         $readCookie = $this->service->read($request);
-        $this->assertTrue($this->service->isTrustedDevice($readCookie, $userId, $notificationAddress));
+        $this->assertTrue($this->service->isTrustedDevice($readCookie, $notificationAddress));
     }
 
     public function test_does_not_read_tampered_cookie(): void
@@ -202,18 +186,15 @@ class TrustedDeviceServiceTest extends TestCase
         );
         $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
 
-        $userId = 'userId#1';
         $notificationAddress = '01011001';
 
-        $this->service->registerTrustedDevice($response, $userId, $notificationAddress);
+        $this->service->registerTrustedDevice($response, $notificationAddress);
 
         $cookieJar = $response->headers->getCookies();
         self::assertCount(1, $cookieJar);
 
         $request = new Request();
-        foreach ($cookieJar as $cookie) {
-            $request->cookies->set($cookie->getName(), $cookie->getValue() . '1');
-        }
+        $request->cookies->set($cookieJar[0]->getName(), '1' . $cookieJar[0]->getValue());
 
         $readCookie = $this->service->read($request);
         $this->assertNull($readCookie);
@@ -233,33 +214,18 @@ class TrustedDeviceServiceTest extends TestCase
 
         $store = [
             [
-                'userId' => 'userId#1',
                 'notificationAddress' => '1',
             ],
             [
-                'userId' => 'userId#1',
-                'notificationAddress' => '2',
-            ],
-            [
-                'userId' => 'userId#2',
-                'notificationAddress' => '1',
-            ],
-            [
-                'userId' => 'userId#3',
-                'notificationAddress' => '1',
-            ],
-            [
-                'userId' => 'userId#1',
                 'notificationAddress' => '3',
             ],
             [
-                'userId' => 'userId#1',
                 'notificationAddress' => '1',
             ],
         ];
 
         foreach ($store as $storedDevice) {
-            $this->service->registerTrustedDevice($response, $storedDevice['userId'], $storedDevice['notificationAddress']);
+            $this->service->registerTrustedDevice($response, $storedDevice['notificationAddress']);
         }
 
         $cookieJar = $response->headers->getCookies();
@@ -273,7 +239,34 @@ class TrustedDeviceServiceTest extends TestCase
         shuffle($store);
 
         $readCookie = $this->service->read($request);
-        $this->assertTrue($this->service->isTrustedDevice($readCookie, 'userId#1', '1'));
+        $this->assertTrue($this->service->isTrustedDevice($readCookie, '1'));
+    }
+
+    public function test_userId_is_irrelevant_for_cookie_validity(): void
+    {
+        $this->buildService(
+            new Configuration(
+                'tiqr-trusted-device-cookie',
+                60,
+                '0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f',
+                CookieSameSite::SAMESITE_STRICT->value,
+            )
+        );
+
+        $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
+        $notificationAddress = '01011001';
+        $this->service->registerTrustedDevice($response, $notificationAddress);
+
+        $cookieJar = $response->headers->getCookies();
+        self::assertCount(1, $cookieJar);
+
+        $request = new Request();
+        foreach ($cookieJar as $cookie) {
+            $request->cookies->set($cookie->getName(), $cookie->getValue());
+        }
+
+        $readCookie = $this->service->read($request);
+        $this->assertTrue($this->service->isTrustedDevice($readCookie, $notificationAddress));
     }
 
 

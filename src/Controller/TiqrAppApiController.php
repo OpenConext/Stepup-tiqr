@@ -252,7 +252,7 @@ class TiqrAppApiController extends AbstractController
         $okResponse = new Response('OK', Response::HTTP_OK);
 
         try {
-            $this->registerTrustedDevice($notificationAddress, $userId, $okResponse);
+            $this->registerTrustedDevice($notificationAddress, $okResponse);
         } catch (Throwable $e) {
             $logger->warning('Could not register trusted device on registration', ['exception' => $e]);
         }
@@ -326,7 +326,7 @@ class TiqrAppApiController extends AbstractController
                 }
 
                 try {
-                    $this->registerTrustedDevice($notificationAddress, $user->getId(), $responseObject);
+                    $this->registerTrustedDevice($notificationAddress, $responseObject);
                 } catch (Throwable $e) {
                     $this->logger->warning('Could not create trusted device cookie.', ['exception' => $e]);
                 }
@@ -345,13 +345,11 @@ class TiqrAppApiController extends AbstractController
 
     private function registerTrustedDevice(
         string $notificationAddress,
-        string $userId,
         Response $responseObject
     ): void {
         if (trim($notificationAddress) !== '') {
             $this->cookieService->registerTrustedDevice(
                 $responseObject,
-                $userId,
                 $notificationAddress
             );
         }

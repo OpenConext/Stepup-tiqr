@@ -50,6 +50,6 @@ Feature: When an user needs to authenticate
     Then I should see "Log in with tiqr"
     And I should be on "/authentication"
 
-    When push notification is sent with a trusted-device cookie with address "0000000000111111111122222222223333333333" and cookie userId "abc-1234"
-    Then the logs should mention a signature mismatch for address "0000000000111111111122222222223333333333"
+    When push notification is sent with a trusted-device cookie with address "0000000000111111111122222222223333333333" and cookie value "1000000000111111111122222222223333333333"
+    Then the logs should mention: Trusted device cookie "0000000000111111111122222222223333333333" does not match: "1000000000111111111122222222223333333333"
     And it should fail with "no-trusted-device"

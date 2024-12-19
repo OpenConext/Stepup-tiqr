@@ -24,6 +24,7 @@ use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
@@ -349,8 +350,6 @@ class TiqrContext implements Context
      */
     public function weHaveATrustedDevice(string $notificationAddress): void
     {
-        $userId = $this->metadata->identity->identifier;
-
         $cookieJar = $this->authenticatioResponse->headers->getCookies();
 
         $request = new Request();
@@ -359,7 +358,7 @@ class TiqrContext implements Context
         }
         $cookieValue = $this->trustedDeviceService->read($request);
         Assertion::isInstanceOf($cookieValue, CookieValue::class);
-        Assertion::true($this->trustedDeviceService->isTrustedDevice($cookieValue, $userId, $notificationAddress));
+        Assertion::true($this->trustedDeviceService->isTrustedDevice($cookieValue, $notificationAddress));
     }
 
     /**
@@ -589,17 +588,18 @@ class TiqrContext implements Context
 
     /**
      * @When /^push notification is sent with a trusted\-device cookie with address "([^"]*)"$/
-     * @When /^push notification is sent with a trusted\-device cookie with address "([^"]*)" and cookie userId "([^"]*)"$/
+     * @When /^push notification is sent with a trusted\-device cookie with address "([^"]*)" and cookie value "([^"]*)"$/
      */
-    public function aPushNotificationIsSentWithATrustedDevice(string $notificationAddress, string $cookieUserId = null): void
+    public function aPushNotificationIsSentWithATrustedDevice(string $notificationAddress, string $overwriteCookieValue = null): void
     {
-        $userId = $this->metadata->identity->identifier;
-        $cookieUserId = $cookieUserId ?? $userId;
-
         $config = new Configuration('tiqr-trusted-device', 3600, '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f', 'none');
         $cryptoHelper = new HaliteCryptoHelper($config);
 
-        $cookieValue = CookieValue::from($cookieUserId, $notificationAddress);
+        if ($overwriteCookieValue !== null) {
+            $cookieValue = CookieValue::from($overwriteCookieValue);
+        } else {
+            $cookieValue = CookieValue::from($notificationAddress);
+        }
         $cookieName = 'tiqr-trusted-device';
 
         $encryptedValue = $cryptoHelper->encrypt($cookieValue);
@@ -695,10 +695,17 @@ class TiqrContext implements Context
      */
     public function theLogsShouldMentionSignatureMismatch(string $address): void
     {
-        $userId = $this->metadata->identity->identifier;
         $this->logsContain(
-            'A trusted device cookie is found for notification address "'.$address.'" and user "'.$userId.'", but has signature mismatch'
+            'Trusted device cookie "$address" does not match: "%s"'
         );
+    }
+
+    /**
+     * @Then /^the logs should mention: Trusted device cookie "([^"]*)" does not match: "([^"]*)"$/
+     */
+    public function theLogsShouldMentionTrustedDeviceCookieDoesNotMatch(string $address1, string $address2): void
+    {
+        $this->logsContain('Trusted device cookie "' . $address1 . '" does not match: "' . $address2 . '"');
     }
 
     /**
