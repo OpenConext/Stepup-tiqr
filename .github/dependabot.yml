@@ -1,13 +1,15 @@
 version: 2
 updates:
   - package-ecosystem: "composer"
+    open-pull-requests-limit: 0
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     ignore:
       - dependency-name: "symfony/*"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "npm"
+    open-pull-requests-limit: 0
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
