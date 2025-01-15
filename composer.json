@@ -17,14 +17,14 @@
     "ext-zlib": "*",
     "incenteev/composer-parameter-handler": "^2.2",
     "openconext/monitor-bundle": "^4.3.1",
-    "paragonie/halite": "^5.1",
+    "paragonie/halite": "^5.1.2",
     "surfnet/stepup-bundle": "^6.0.17",
     "surfnet/stepup-gssp-bundle": "^5.1",
     "surfnet/stepup-saml-bundle": "^6.1",
     "symfony/asset": "^6.4.13",
     "symfony/config": "^6.4.14",
     "symfony/console": "^6.4.15",
-    "symfony/dependency-injection": "^6.4.15",
+    "symfony/dependency-injection": "^6.4.16",
     "symfony/flex": "^2.4.7",
     "symfony/form": "^6.4.13",
     "symfony/monolog-bundle": "^3.10",
@@ -33,12 +33,12 @@
     "symfony/templating": "^6.4.13",
     "symfony/translation": "^6.4.13",
     "symfony/twig-bundle": "^6.4.13",
-    "symfony/validator": "^6.4.15",
+    "symfony/validator": "^6.4.16",
     "symfony/webpack-encore-bundle": "^2.2",
     "symfony/yaml": "^6.4.13",
     "tiqr/tiqr-server-libphp": "^4.3.1",
-    "twig/extra-bundle": "^3.15",
-    "twig/twig": "^3.15"
+    "twig/extra-bundle": "^3.16",
+    "twig/twig": "^3.18"
   },
   "require-dev": {
     "behat/mink": "^1.12",
@@ -51,7 +51,7 @@
     "malukenho/docheader": "^1.1",
     "overtrue/phplint": ">=9.4.2",
     "phpmd/phpmd": "^2.15",
-    "phpstan/phpstan": "^1.12.11",
+    "phpstan/phpstan": "^1.12.12",
     "phpstan/phpstan-symfony": "^1.4.12",
     "phpunit/phpunit": "^9.6.21",
     "sebastian/phpcpd": "^6.0.3",
@@ -60,9 +60,9 @@
     "squizlabs/php_codesniffer": "^3.11.1",
     "symfony/browser-kit": "6.4.*",
     "symfony/css-selector": "^6.4.13",
-    "symfony/phpunit-bridge": "^6.4.13",
+    "symfony/phpunit-bridge": "^6.4.16",
     "symfony/stopwatch": "^6.4.13",
-    "symfony/web-profiler-bundle": "^6.4.14"
+    "symfony/web-profiler-bundle": "^6.4.17"
   },
   "scripts": {
     "check": [
