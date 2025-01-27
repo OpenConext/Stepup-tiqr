@@ -4,7 +4,7 @@ Feature: When an user needs to authenticate
 
   Background:
     Given the registration QR code is scanned
-    When the user registers the service
+    When the user registers the service with notification type "APNS" address: "0000000000111111111122222222223333333333"
     Then we have a registered user
     And I clear the logs
 
@@ -32,6 +32,7 @@ Feature: When an user needs to authenticate
 
     # Service provider AuthNRequest response page
     Then I should see "urn:oasis:names:tc:SAML:2.0:status:Success"
+    And I should see the trusted device cookie for address "0000000000111111111122222222223333333333"
 
     And the logs are:
       | level  | message                                                                                                                                   | sari    |
@@ -91,6 +92,7 @@ Feature: When an user needs to authenticate
       | info   | Authentication is finalized, returning to SP                                                                                              | present |
       | notice | Application authenticates the user                                                                                                        | present |
       | notice | Created redirect response for sso return endpoint "/saml/sso_return"                                                                      | present |
+      | notice | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
       | info   | User made a request with a session cookie.                                                                                                | present |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User has a session.                                                                                                                       | present |
@@ -105,7 +107,7 @@ Feature: When an user needs to authenticate
       | info   | User session matches the session cookie.                                                                                                  |         |
       | info   | /SAMLResponse with id ".*" was not signed at root level, not attempting to verify the signature of the reponse itself/                    |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                           |         |
-
+      | notice | /Reading a trusted-device cookie with fingerprint .*/                                                                                     |         |
 
   Scenario: When an user cancels it's authentication
     # Service provider demo page
@@ -200,6 +202,7 @@ Feature: When an user needs to authenticate
 
     # Service provider AuthNRequest response page
     Then I should see "urn:oasis:names:tc:SAML:2.0:status:Success"
+    And I should see the trusted device cookie
 
     And the logs are:
       | level  | message                                                                                                                                   | sari    |
@@ -256,6 +259,7 @@ Feature: When an user needs to authenticate
       | info   | Authentication is finalized, returning to SP                                                                                              | present |
       | notice | Application authenticates the user                                                                                                        | present |
       | notice | Created redirect response for sso return endpoint "/saml/sso_return"                                                                      | present |
+      | notice | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
       | info   | User made a request with a session cookie.                                                                                                | present |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User has a session.                                                                                                                       | present |
@@ -270,4 +274,5 @@ Feature: When an user needs to authenticate
       | info   | User session matches the session cookie.                                                                                                  |         |
       | info   | /SAMLResponse with id ".*" was not signed at root level, not attempting to verify the signature of the reponse itself/                    |         |
       | info   | /Verifying signature of Assertion with id ".*"/                                                                                           |         |
+
 

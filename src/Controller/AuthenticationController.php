@@ -30,6 +30,7 @@ use Surfnet\Tiqr\Exception\UserNotFoundException;
 use Surfnet\Tiqr\Exception\UserPermanentlyBlockedException;
 use Surfnet\Tiqr\Exception\UserTemporarilyBlockedException;
 use Surfnet\Tiqr\Service\SessionCorrelationIdService;
+use Surfnet\Tiqr\Service\TrustedDeviceHelper;
 use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
@@ -42,6 +43,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -55,6 +57,7 @@ class AuthenticationController extends AbstractController
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         private readonly SessionCorrelationIdService $correlationIdService,
+        private readonly TrustedDeviceHelper $trustedDeviceHelper,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -122,7 +125,10 @@ class AuthenticationController extends AbstractController
             $logger->info('Authentication is finalized, returning to SP');
             $this->authenticationService->authenticate();
 
-            return $this->authenticationService->replyToServiceProvider();
+            $response = $this->authenticationService->replyToServiceProvider();
+            $this->trustedDeviceHelper->handleRegisterTrustedDevice($user->getNotificationAddress(), $response);
+
+            return $response;
         }
 
         // Start authentication process.

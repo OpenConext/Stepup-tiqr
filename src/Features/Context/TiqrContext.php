@@ -24,7 +24,6 @@ use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
@@ -33,6 +32,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use OCRA;
 use RuntimeException;
 use stdClass;
+use Surfnet\GsspBundle\Service\ValueStore;
 use Surfnet\SamlBundle\Exception\NotFound;
 use Surfnet\Tiqr\Dev\FileLogger;
 use Surfnet\Tiqr\Service\TrustedDevice\Crypto\HaliteCryptoHelper;
@@ -86,6 +86,7 @@ class TiqrContext implements Context
         private readonly FileLogger $fileLogger,
         private readonly KernelInterface $kernel,
         private readonly TrustedDeviceService $trustedDeviceService,
+        private readonly ValueStore $store,
     ) {
     }
 
@@ -99,6 +100,7 @@ class TiqrContext implements Context
         $environment = $scope->getEnvironment();
         $this->minkContext = $environment->getContext(MinkContext::class);
         $this->minkContext->getSession()->setCookie('stepup_locale', 'en');
+        $this->store->clear();
     }
 
     /**
@@ -744,5 +746,27 @@ class TiqrContext implements Context
     public function theTrustedDeviceCookieIsCleared(): void
     {
         $this->minkContext->getSession()->getDriver()->getClient()->getCookieJar()->expire('tiqr-trusted-device');
+    }
+
+    /**
+     * @Then /^I should see the trusted device cookie$/
+     * @Then /^I should see the trusted device cookie for address "([^"]*)"$/
+     */
+    public function iShouldSeeTheCookie(?string $notificationAddress = null): void
+    {
+        $session = $this->minkContext->getMink()->getSession();
+        $trustedDeviceCookie = $session->getCookie('tiqr-trusted-device');
+
+        if (!is_string($trustedDeviceCookie) || trim($trustedDeviceCookie) === '') {
+            throw new RuntimeException('The expected trusted device cookie is not present');
+        }
+
+        if ($notificationAddress !== null) {
+            $request = new Request();
+            $request->cookies->set('tiqr-trusted-device', $trustedDeviceCookie);
+            $cookieValue = $this->trustedDeviceService->read($request);
+            Assertion::isInstanceOf($cookieValue, CookieValue::class);
+            Assertion::true($this->trustedDeviceService->isTrustedDevice($cookieValue, $notificationAddress));
+        }
     }
 }

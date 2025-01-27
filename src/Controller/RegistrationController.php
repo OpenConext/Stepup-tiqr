@@ -26,20 +26,28 @@ use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Surfnet\Tiqr\Service\SessionCorrelationIdService;
+use Surfnet\Tiqr\Service\TrustedDeviceHelper;
 use Surfnet\Tiqr\Tiqr\Legacy\TiqrService;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
+use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RegistrationController extends AbstractController
 {
     public function __construct(
         private readonly RegistrationService $registrationService,
+        private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly StateHandlerInterface $stateHandler,
         private readonly TiqrServiceInterface $tiqrService,
         private readonly SessionCorrelationIdService $correlationIdService,
+        private readonly TrustedDeviceHelper $trustedDeviceHelper,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -66,8 +74,19 @@ class RegistrationController extends AbstractController
 
         if ($this->tiqrService->enrollmentFinalized()) {
             $this->logger->info('Registration is finalized returning to service provider');
-            $this->registrationService->register($this->tiqrService->getUserId());
-            return $this->registrationService->replyToServiceProvider();
+            $userId = $this->tiqrService->getUserId();
+            $this->registrationService->register($userId);
+
+            $response = $this->registrationService->replyToServiceProvider();
+
+            try {
+                $user = $this->userRepository->getUser($userId);
+                $this->trustedDeviceHelper->handleRegisterTrustedDevice($user->getNotificationAddress(), $response);
+            } catch (Throwable $e) {
+                $this->logger->warning(sprintf('Could not fetch registered user "%s"', $userId), ['exception' => $e]);
+            }
+
+            return $response;
         }
 
         $this->logger->info('Registration is not finalized return QR code');
