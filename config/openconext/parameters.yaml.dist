@@ -55,6 +55,11 @@ parameters:
     # Should be one of the strings in: \Surfnet\Tiqr\Service\TrustedDevice\Http\CookieSameSite: 'none', 'lax', 'strict'
     trusted_device_cookie_same_site: 'none'
 
+    # Enable/Disable enforcement of MFA fatigue prevention
+    # The trusted device cookie ensures no push notifications are sent when logging in on devices
+    # To prevent everyone having to scan qr codes all of a sudden, enforcement can be temporarily disabled so trusted devices can build up
+    trusted_device_enforcement_enabled: true
+
     # The secret key is used for the authenticated encryption (AE) of the trusted-device cookies, it is stored in the
     # parameters.yaml of Stepup-Tiqr. This secret may only be used for the AE of the trusted device cookies.
     #   The secret key size is fixed, it must be 256 bits (32 bytes (64 hex digits))

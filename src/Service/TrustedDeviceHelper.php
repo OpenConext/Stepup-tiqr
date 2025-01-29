@@ -31,6 +31,7 @@ readonly class TrustedDeviceHelper
     public function __construct(
         private TrustedDeviceService $cookieService,
         private LoggerInterface $logger,
+        private bool $trustedDeviceCookieEnforcementEnabled,
     ) {
     }
 
@@ -50,5 +51,10 @@ readonly class TrustedDeviceHelper
         } catch (Throwable $e) {
             $this->logger->warning('Could not register trusted device on registration', ['exception' => $e]);
         }
+    }
+
+    public function trustedDeviceCookieEnforcementEnabled(): bool
+    {
+        return $this->trustedDeviceCookieEnforcementEnabled === true;
     }
 }
