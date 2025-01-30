@@ -6,21 +6,8 @@ Feature: When an user needs to authenticate
     Given the registration QR code is scanned
     And the user registers the service with notification type "APNS" address: "0000000000111111111122222222223333333333"
     Then we have a registered user
-    And the logs should mention: Writing a trusted-device cookie with fingerprint
     And I clear the logs
     And the trusted device cookie is cleared
-
-  Scenario: When a user authenticates using a qr code it should set a trusted cookie
-    Given I am on "/demo/sp"
-    And I fill in "NameID" with my identifier
-    When I press "authenticate"
-    Then I should see "Log in with tiqr"
-    And I should be on "/authentication"
-
-    Then I scan the tiqr authentication qrcode
-    And the app authenticates to the service with notification type "APNS" address: "0000000000111111111122222222223333333333"
-    Then we have a authenticated app
-    And we have a trusted cookie for address: "0000000000111111111122222222223333333333"
 
   Scenario: When a user authenticates without a trusted cookie, a push notification should not be sent
     Given I am on "/demo/sp"

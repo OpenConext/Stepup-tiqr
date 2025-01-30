@@ -22,12 +22,10 @@ namespace Surfnet\Tiqr\Controller;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Surfnet\Tiqr\Service\TrustedDevice\TrustedDeviceService;
 use Surfnet\Tiqr\Service\UserAgentMatcherInterface;
 use Surfnet\Tiqr\Tiqr\AuthenticationRateLimitServiceInterface;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
-use Surfnet\Tiqr\Tiqr\TiqrUserInterface;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
 use Surfnet\Tiqr\WithContextLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,7 +33,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Throwable;
 
 /**
  * The api that connects to the Tiqr app.
@@ -52,7 +49,6 @@ class TiqrAppApiController extends AbstractController
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         private readonly LoggerInterface $logger,
-        private readonly TrustedDeviceService $cookieService,
     ) {
     }
 
@@ -249,15 +245,7 @@ class TiqrAppApiController extends AbstractController
             $logger->warning('Error finalizing enrollment', ['exception' => $e]);
         }
 
-        $okResponse = new Response('OK', Response::HTTP_OK);
-
-        try {
-            $this->registerTrustedDevice($notificationAddress, $okResponse);
-        } catch (Throwable $e) {
-            $logger->warning('Could not register trusted device on registration', ['exception' => $e]);
-        }
-
-        return $okResponse;
+        return new Response('OK', Response::HTTP_OK);
     }
 
     /** Handle login operation from the app, returns response for the app
@@ -325,12 +313,6 @@ class TiqrAppApiController extends AbstractController
                     // Continue
                 }
 
-                try {
-                    $this->registerTrustedDevice($notificationAddress, $responseObject);
-                } catch (Throwable $e) {
-                    $this->logger->warning('Could not create trusted device cookie.', ['exception' => $e]);
-                }
-
                 return $responseObject;
             }
 
@@ -341,17 +323,5 @@ class TiqrAppApiController extends AbstractController
         }
 
         return new Response('AUTHENTICATION_FAILED', Response::HTTP_FORBIDDEN);
-    }
-
-    private function registerTrustedDevice(
-        string $notificationAddress,
-        Response $responseObject
-    ): void {
-        if (trim($notificationAddress) !== '') {
-            $this->cookieService->registerTrustedDevice(
-                $responseObject,
-                $notificationAddress
-            );
-        }
     }
 }

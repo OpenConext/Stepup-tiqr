@@ -21,85 +21,91 @@ Feature: When an user needs to register for a new token
     Then I press "Submit"
 
     Then I should see "urn:oasis:names:tc:SAML:2.0:status:Success"
+    And I should see the trusted device cookie for address "0000000000111111111122222222223333333333"
 
     And the logs are:
-      | level   | message                                                                                                                                   | sari    |
+      | level  | message                                                                                                                                   | sari    |
 
-      | info    | User made a request without a session cookie.                                                                                             | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User made a request without a session cookie.                                                                                             | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User made a request without a session cookie.                                                                                             | present |
-      | notice  | Received sso request                                                                                                                      |         |
-      | warning | There is already state present, clear previous state                                                                                      |         |
-      | info    | Processing AuthnRequest                                                                                                                   |         |
-      | notice  | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
-      | info    | AuthnRequest stored in state                                                                                                              |         |
-      | notice  | Redirect user to the application registration route /registration                                                                         |         |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User made a request without a session cookie.                                                                                             | present |
-      | info    | Verifying if there is a pending registration from SP                                                                                      | present |
-      | info    | There is a pending registration                                                                                                           | present |
-      | info    | Verifying if registration is finalized                                                                                                    | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | notice  | Unable to retrieve the state storage value, file not found                                                                                | present |
-      | info    | Registration is not finalized return QR code                                                                                              | present |
-      | info    | Generating enrollment key                                                                                                                 | present |
-      | notice  | /Starting new enrollment session with sessionId .* and userId .*/                                                                         | present |
-      | info    | /Setting SARI '.*' for identifier '.*'/                                                                                                   | present |
-      | info    | User made a request with a session cookie.                                                                                                | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User has a session.                                                                                                                       | present |
-      | info    | User session matches the session cookie.                                                                                                  | present |
-      | info    | Request for registration QR img                                                                                                           | present |
-      | info    | Returning registration QR response                                                                                                        | present |
-      | info    | User made a request with a session cookie.                                                                                                | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User has a session.                                                                                                                       | present |
-      | info    | User session matches the session cookie.                                                                                                  | present |
-      | info    | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
-      | info    | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
-      | notice  | Got GET request to metadata endpoint with enrollment key                                                                                  | present |
-      | info    | /Setting SARI '.*' for identifier '.*'/                                                                                                   | present |
-      | notice  | Returned metadata response                                                                                                                | present |
-      | info    | User made a request with a session cookie.                                                                                                | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User has a session.                                                                                                                       | present |
-      | info    | User session matches the session cookie.                                                                                                  | present |
-      | info    | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
-      | info    | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
-      | notice  | Got POST with registration response                                                                                                       | present |
-      | notice  | Received register action from client with User-Agent "Behat UA" and version ""                                                            | present |
-      | info    | Start validating enrollment secret                                                                                                        | present |
-      | info    | Setting user secret and notification type and address                                                                                     | present |
-      | info    | Finalizing enrollment                                                                                                                     | present |
-      | notice  | Enrollment finalized                                                                                                                      | present |
-      | notice  | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
-      | info    | User made a request with a session cookie.                                                                                                | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User has a session.                                                                                                                       | present |
-      | info    | User session matches the session cookie.                                                                                                  | present |
-      | info    | Verifying if there is a pending registration from SP                                                                                      | present |
-      | info    | There is a pending registration                                                                                                           | present |
-      | info    | Verifying if registration is finalized                                                                                                    | present |
-      | info    | Registration is finalized returning to service provider                                                                                   | present |
-      | notice  | /Application sets the subject nameID to .*/                                                                                               | present |
-      | notice  | Created redirect response for sso return endpoint "/saml/sso_return"                                                                      | present |
-      | info    | User made a request with a session cookie.                                                                                                | present |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User has a session.                                                                                                                       | present |
-      | info    | User session matches the session cookie.                                                                                                  | present |
-      | notice  | Received sso return request                                                                                                               |         |
-      | info    | Create sso response                                                                                                                       |         |
-      | notice  | /Saml response created with id ".*", request ID: ".*"/                                                                                    |         |
-      | notice  | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"     |         |
-      | info    | User made a request with a session cookie.                                                                                                |         |
-      | info    | Created new session.                                                                                                                      |         |
-      | info    | User has a session.                                                                                                                       |         |
-      | info    | User session matches the session cookie.                                                                                                  |         |
-      | info    | /SAMLResponse with id ".*?" was not signed at root level, not attempting to verify the signature of the reponse itself/                   |         |
-      | info    | /Verifying signature of Assertion with id ".*"/                                                                                           |         |
-
+      | info   | User made a request without a session cookie.                                                                                             |         |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User made a request without a session cookie.                                                                                             |         |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User made a request without a session cookie.                                                                                             |         |
+      | notice | Received sso request                                                                                                                      |         |
+      | info   | Processing AuthnRequest                                                                                                                   |         |
+      | notice | /AuthnRequest processing complete, received AuthnRequest from "https:\/\/tiqr\.dev\.openconext\.local\/saml\/metadata", request ID: ".*"/ |         |
+      | info   | AuthnRequest stored in state                                                                                                              |         |
+      | notice | Redirect user to the application registration route /registration                                                                         |         |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User made a request without a session cookie.                                                                                             | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Verifying if there is a pending registration from SP                                                                                      | present |
+      | info   | There is a pending registration                                                                                                           | present |
+      | info   | Verifying if registration is finalized                                                                                                    | present |
+      | info   | Created new session.                                                                                                                      |         |
+      | notice | Unable to retrieve the state storage value, file not found                                                                                | present |
+      | info   | Registration is not finalized return QR code                                                                                              | present |
+      | info   | Generating enrollment key                                                                                                                 | present |
+      | notice | /Starting new enrollment session with sessionId .* and userId .*/                                                                         | present |
+      | info   | /Setting SARI '.*' for identifier '.*'/                                                                                                   | present |
+      | info   | User made a request with a session cookie.                                                                                                | present |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User has a session.                                                                                                                       | present |
+      | info   | User session matches the session cookie.                                                                                                  | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Request for registration QR img                                                                                                           | present |
+      | info   | Returning registration QR response                                                                                                        | present |
+      | info   | User made a request with a session cookie.                                                                                                | present |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User has a session.                                                                                                                       | present |
+      | info   | User session matches the session cookie.                                                                                                  | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | notice | Got GET request to metadata endpoint with enrollment key                                                                                  | present |
+      | info   | /Setting SARI '.*' for identifier '.*'/                                                                                                   | present |
+      | notice | Returned metadata response                                                                                                                | present |
+      | info   | User made a request with a session cookie.                                                                                                | present |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User has a session.                                                                                                                       | present |
+      | info   | User session matches the session cookie.                                                                                                  | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | notice | Got POST with registration response                                                                                                       | present |
+      | notice | Received register action from client with User-Agent "Behat UA" and version ""                                                            | present |
+      | info   | Start validating enrollment secret                                                                                                        | present |
+      | info   | Setting user secret and notification type and address                                                                                     | present |
+      | info   | Finalizing enrollment                                                                                                                     | present |
+      | notice | Enrollment finalized                                                                                                                      | present |
+      | info   | User made a request with a session cookie.                                                                                                | present |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User has a session.                                                                                                                       | present |
+      | info   | User session matches the session cookie.                                                                                                  | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Verifying if there is a pending registration from SP                                                                                      | present |
+      | info   | There is a pending registration                                                                                                           | present |
+      | info   | Verifying if registration is finalized                                                                                                    | present |
+      | info   | Registration is finalized returning to service provider                                                                                   | present |
+      | notice | /Application sets the subject nameID to .*/                                                                                               | present |
+      | notice | Created redirect response for sso return endpoint "/saml/sso_return"                                                                      | present |
+      | notice | /Writing a trusted-device cookie with fingerprint .*/                                                                                       | present |
+      | info   | User made a request with a session cookie.                                                                                                | present |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User has a session.                                                                                                                       | present |
+      | info   | User session matches the session cookie.                                                                                                  | present |
+      | notice | Received sso return request                                                                                                               |         |
+      | info   | Create sso response                                                                                                                       |         |
+      | notice | /Saml response created with id ".*", request ID: ".*"/                                                                                    |         |
+      | notice | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"     |         |
+      | info   | User made a request with a session cookie.                                                                                                |         |
+      | info   | Created new session.                                                                                                                      |         |
+      | info   | User has a session.                                                                                                                       |         |
+      | info   | User session matches the session cookie.                                                                                                  |         |
+      | info   | /SAMLResponse with id ".*" was not signed at root level, not attempting to verify the signature of the reponse itself/                    |         |
+      | info   | /Verifying signature of Assertion with id ".*"/                                                                                           |         |
+      | notice | /Reading a trusted-device cookie with fingerprint .*/                                                                                     |         |
 
   Scenario: When an user needs to register for a new token but is unable to scan the QR code
     Given I am on "/demo/sp"
@@ -132,6 +138,8 @@ Feature: When an user needs to register for a new token
       | notice | Redirect user to the application registration route /registration                                                                         |         |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User made a request without a session cookie.                                                                                             | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
       | info   | Verifying if there is a pending registration from SP                                                                                      | present |
       | info   | There is a pending registration                                                                                                           | present |
       | info   | Verifying if registration is finalized                                                                                                    | present |
@@ -162,17 +170,19 @@ Feature: When an user needs to register for a new token
       | info   | Setting user secret and notification type and address                                                                                     | present |
       | info   | Finalizing enrollment                                                                                                                     | present |
       | notice | Enrollment finalized                                                                                                                      | present |
-      | notice | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
       | info   | User made a request with a session cookie.                                                                                                | present |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User has a session.                                                                                                                       | present |
       | info   | User session matches the session cookie.                                                                                                  | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info   | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
       | info   | Verifying if there is a pending registration from SP                                                                                      | present |
       | info   | There is a pending registration                                                                                                           | present |
       | info   | Verifying if registration is finalized                                                                                                    | present |
       | info   | Registration is finalized returning to service provider                                                                                   | present |
       | notice | /Application sets the subject nameID to .*/                                                                                               | present |
       | notice | Created redirect response for sso return endpoint "/saml/sso_return"                                                                      | present |
+      | notice | /Writing a trusted-device cookie with fingerprint .*/                                                                                     | present |
       | info   | User made a request with a session cookie.                                                                                                | present |
       | info   | Created new session.                                                                                                                      |         |
       | info   | User has a session.                                                                                                                       | present |
@@ -220,6 +230,8 @@ Feature: When an user needs to register for a new token
       | notice   | Redirect user to the application registration route /registration                                                                         |         |
       | info     | Created new session.                                                                                                                      |         |
       | info     | User made a request without a session cookie.                                                                                             | present |
+      | info     | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
+      | info     | Using "plain" as UserSecretStorage encryption type                                                                                        | present |
       | info     | Verifying if there is a pending registration from SP                                                                                      | present |
       | info     | There is a pending registration                                                                                                           | present |
       | info     | Verifying if registration is finalized                                                                                                    | present |
@@ -243,7 +255,7 @@ Feature: When an user needs to register for a new token
       | info     | User session matches the session cookie.                                                                                                  | present |
       | notice   | Received sso return request                                                                                                               |         |
       | info     | Create sso response                                                                                                                       |         |
-      | notice   | /Saml response created with id ".*?", request ID: ".*?"/                                                                                  |         |
+      | notice   | /Saml response created with id ".*", request ID: ".*"/                                                                                    |         |
       | notice   | Invalidate current state and redirect user to service provider assertion consumer url "https://tiqr.dev.openconext.local/demo/sp/acs"     |         |
       | info     | User made a request with a session cookie.                                                                                                |         |
       | info     | Created new session.                                                                                                                      |         |

@@ -21,3 +21,9 @@ services:
         public: true
         arguments:
             $filePath: '/var/www/html/var/gssp_store.json'
+
+    Surfnet\Tiqr\Features\Context\TiqrContext:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $store: '@surfnet_gssp.value_store.service'

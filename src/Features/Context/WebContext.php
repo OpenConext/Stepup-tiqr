@@ -22,6 +22,7 @@ namespace Surfnet\Tiqr\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
