@@ -27,6 +27,7 @@ use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Service\TrustedDevice\TrustedDeviceService;
+use Surfnet\Tiqr\Service\TrustedDeviceHelper;
 use Surfnet\Tiqr\Tiqr\Exception\UserNotExistsException;
 use Surfnet\Tiqr\Tiqr\TiqrServiceInterface;
 use Surfnet\Tiqr\Tiqr\TiqrUserRepositoryInterface;
@@ -49,6 +50,7 @@ class AuthenticationNotificationController extends AbstractController
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly LoggerInterface $logger,
         private readonly TrustedDeviceService $trustedDeviceService,
+        private readonly TrustedDeviceHelper $trustedDeviceHelper,
     ) {
     }
 
@@ -96,30 +98,10 @@ class AuthenticationNotificationController extends AbstractController
             return $this->generateNotificationResponse('no-device');
         }
 
-        $cookie = $this->trustedDeviceService->read($request);
-        if ($cookie === null) {
-            $this->logger->notice(
-                sprintf(
-                    'No trusted device cookie stored for notification address "%s" and user "%s". No notification was sent',
-                    $notificationAddress,
-                    $nameId
-                )
-            );
+        if ($this->trustedDeviceHelper->trustedDeviceCookieEnforcementEnabled()
+            && !$this->isTrustedDevice($request, $notificationAddress, $nameId)) {
             return $this->generateNotificationResponse('no-trusted-device');
         }
-
-        if ($this->trustedDeviceService->isTrustedDevice($cookie, $notificationAddress) === false) {
-            $this->logger->notice(
-                sprintf(
-                    'A trusted device cookie is found for notification address "%s" and user "%s", but has signature mismatch',
-                    $notificationAddress,
-                    $nameId
-                )
-            );
-
-            return $this->generateNotificationResponse('no-trusted-device');
-        }
-
 
         $this->logger->notice(sprintf(
             'Sending push notification for user "%s" with type "%s" and (untranslated) address "%s"',
@@ -181,5 +163,34 @@ class AuthenticationNotificationController extends AbstractController
     private function generateNotificationResponse(string $status): JsonResponse
     {
         return new JsonResponse($status);
+    }
+
+    private function isTrustedDevice(Request $request, string $notificationAddress, string $nameId): bool
+    {
+        $cookie = $this->trustedDeviceService->read($request);
+        if ($cookie === null) {
+            $this->logger->notice(
+                sprintf(
+                    'No trusted device cookie stored for notification address "%s" and user "%s". No notification was sent',
+                    $notificationAddress,
+                    $nameId
+                )
+            );
+            return false;
+        }
+
+        if ($this->trustedDeviceService->isTrustedDevice($cookie, $notificationAddress) === false) {
+            $this->logger->notice(
+                sprintf(
+                    'A trusted device cookie is found for notification address "%s" and user "%s", but has signature mismatch',
+                    $notificationAddress,
+                    $nameId
+                )
+            );
+
+            return false;
+        }
+
+        return true;
     }
 }
