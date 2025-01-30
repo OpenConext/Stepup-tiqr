@@ -55,6 +55,13 @@
         <a href="{{ metadataUrl }}">
             <img src="{{ url('app_identity_registration_qr', {'enrollmentKey': enrollmentKey}) }}">
         </a>
+
+        <div id="open-in-app" style="display: none;">
+            <a class="btn btn-primary" href="{{ metadataUrl }}">
+                {{ 'open_tiqr_app' | trans }}
+            </a>
+        </div>
+
         {{ 'enrol.download' | trans | raw }}
     </div>
 {% endblock %}

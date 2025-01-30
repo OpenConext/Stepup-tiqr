@@ -1,5 +1,6 @@
 en: Engels
 nl: Nederlands
+open_tiqr_app: Open de app op dit apparaat
 login:
     title: Log in met tiqr
     challenge_expired: Login timeout. Ververs de pagina om het nogmaals te proberen.
