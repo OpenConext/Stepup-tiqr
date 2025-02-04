@@ -3,6 +3,7 @@ import { StatusClient } from './Client/StatusClient';
 import { StatusPollService } from './StatusPollService';
 import { RegistrationStatusComponent } from './Component/RegistrationStatusComponent';
 import { SlideableComponent } from './Component/SlideableComponent';
+import { MobileOnlyComponent } from "./Component/MobileOnlyComponent";
 import jQuery from 'jquery';
 
 declare global {
@@ -25,5 +26,8 @@ window.bootstrapRegistration = (statusApiUrl: string, finalizedUrl: string, corr
     finalizedUrl,
   );
   machine.start();
+
+  new MobileOnlyComponent(jQuery('#open-in-app'));
+
   return machine;
 };

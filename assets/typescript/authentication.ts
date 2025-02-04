@@ -4,6 +4,7 @@ import { AuthenticationPageService } from './AuthenticationPageService';
 import { NotificationClient } from './Client/NotificationClient';
 import { SlideableComponent } from './Component/SlideableComponent';
 import { HideableComponent } from './Component/HideableComponent';
+import { MobileOnlyComponent } from "./Component/MobileOnlyComponent";
 import jQuery from 'jquery';
 
 declare global {
@@ -23,6 +24,7 @@ window.bootstrapAuthentication = (statusApiUrl: string, notificationApiUrl: stri
   const challengeExpiredComponent = new HideableComponent(jQuery('#challengeExpired'));
   const statusErrorComponent = new HideableComponent(jQuery('#status-request-error'));
   const notificationErrorComponent = new HideableComponent(jQuery('#notificationError'));
+  new MobileOnlyComponent(jQuery('#open-in-app'));
 
   const authenticationPageService = new AuthenticationPageService(
     pollingService,

@@ -59,6 +59,12 @@
             <img src="{{ url('app_identity_authentication_qr') }}">
         </a>
 
+        <div id="open-in-app" style="display: none;">
+            <a class="btn btn-primary" href="{{ authenticateUrl }}">
+                {{ 'open_tiqr_app' | trans }}
+            </a>
+        </div>
+
         {{ 'login.qr.manual.message' | trans }} <a
                 onClick="authenticationPageService.switchToOtp()">{{ 'login.qr.manual.here' | trans }}</a>.
     </div>

@@ -1,3 +1,4 @@
+open_tiqr_app: Open the app on this device
 login:
     title: Log in with tiqr
     challenge_expired: Login timeout. Try again or refresh this page.
