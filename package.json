@@ -33,7 +33,7 @@
   "dependencies": {
     "bootstrap": "^3",
     "jquery": "^3.5.0",
-    "postcss": ">=8.4.31",
+    "postcss": ">=8.5.2",
     "select2": "^4.0.3"
   }
 }
