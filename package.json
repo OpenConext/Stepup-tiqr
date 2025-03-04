@@ -23,7 +23,7 @@
     "sass-loader": "^13",
     "ts-jest": "^29",
     "ts-loader": "^9.0",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "webpack": "^5.98.0",
     "webpack-cli": "^5.0.0",
     "webpack-import-glob-loader": "^1.6.3"
