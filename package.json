@@ -1,7 +1,7 @@
 {
   "browserslist": ["last 2 versions",  "ie 11",  "> 1%"],
   "devDependencies": {
-    "@babel/core": "^7.26.9",
+    "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
     "@symfony/webpack-encore": "^4",
     "@types/jest": "^29",
@@ -19,7 +19,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jscpd": "^3.4.5",
-    "sass": "^1.85.1",
+    "sass": "^1.86.0",
     "sass-loader": "^13",
     "ts-jest": "^29",
     "ts-loader": "^9.0",
