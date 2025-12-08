@@ -1,5 +1,11 @@
 # Stepup-tiqr
 
+## 4.0.8
+* Update xmlseclibs to 3.1.4 to fix canonicalization bypass error (security)
+
+## 4.0.7
+* Update saml2 to 4.6.13
+
 ## 4.0.6
 * Set session.cookie_samesite to none
 
