@@ -18,6 +18,7 @@
 
 namespace Unit\Service\TrustedDevice\DateTime;
 
+use DateTime;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Surfnet\Tiqr\Service\TrustedDevice\DateTime\ExpirationHelper;
@@ -108,7 +109,7 @@ class ExpirationHelperTest extends TestCase
 
     private function makeExpirationHelper(int $expirationTime, int $now) : ExpirationHelper
     {
-        $time = new \DateTime();
+        $time = new DateTime();
         $time->setTimestamp($now);
 
         $config = new Configuration(
@@ -123,7 +124,7 @@ class ExpirationHelperTest extends TestCase
 
     private function makeCookieValue(int $authenticationTime) : CookieValue
     {
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
         $dateTime->setTimestamp($authenticationTime);
         $data = [
             'userId' => 'userId',

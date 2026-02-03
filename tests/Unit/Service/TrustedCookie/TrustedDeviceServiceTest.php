@@ -71,7 +71,7 @@ class TrustedDeviceServiceTest extends TestCase
                 CookieSameSite::SAMESITE_STRICT->value,
             )
         );
-        $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
+        $response = new Response('<html><body><h1>hi</h1></body></html>', Response::HTTP_OK);
 
         $this->service->registerTrustedDevice($response, '01011001');
 
@@ -156,7 +156,7 @@ class TrustedDeviceServiceTest extends TestCase
                 CookieSameSite::SAMESITE_STRICT->value,
             )
         );
-        $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
+        $response = new Response('<html><body><h1>hi</h1></body></html>', Response::HTTP_OK);
 
         $notificationAddress = '01011001';
 
@@ -184,7 +184,7 @@ class TrustedDeviceServiceTest extends TestCase
                 CookieSameSite::SAMESITE_STRICT->value,
             )
         );
-        $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
+        $response = new Response('<html><body><h1>hi</h1></body></html>', Response::HTTP_OK);
 
         $notificationAddress = '01011001';
 
@@ -210,7 +210,7 @@ class TrustedDeviceServiceTest extends TestCase
                 CookieSameSite::SAMESITE_STRICT->value,
             )
         );
-        $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
+        $response = new Response('<html><body><h1>hi</h1></body></html>', Response::HTTP_OK);
 
         $store = [
             [
@@ -253,7 +253,7 @@ class TrustedDeviceServiceTest extends TestCase
             )
         );
 
-        $response = new Response('<html><body><h1>hi</h1></body></html>', 200);
+        $response = new Response('<html><body><h1>hi</h1></body></html>', Response::HTTP_OK);
         $notificationAddress = '01011001';
         $this->service->registerTrustedDevice($response, $notificationAddress);
 

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Controller;
 
+use InvalidArgumentException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Service\UserAgentMatcherInterface;
@@ -49,6 +50,7 @@ class TiqrAppApiController extends AbstractController
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         private readonly LoggerInterface $logger,
+        private readonly UserAgentMatcherInterface $userAgentMatcher,
     ) {
     }
 
@@ -109,7 +111,7 @@ class TiqrAppApiController extends AbstractController
      */
     #[Route(path: '/tiqr.php', name: 'app_identity_registration_authentication', methods: ['POST'])]
     #[Route(path: '/tiqr/tiqr.php', methods: ['POST'])]
-    public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request): Response
+    public function tiqr(Request $request): Response
     {
         $operation = $request->get('operation');
         if (empty($operation)) {
@@ -131,7 +133,7 @@ class TiqrAppApiController extends AbstractController
                 'Got POST with registration response',
                 ['notificationType' => $notificationType, 'notificationAddress' => $notificationAddress]
             );
-            return $this->registerAction($userAgentMatcher, $request, $notificationType, $notificationAddress);
+            return $this->registerAction($this->userAgentMatcher, $request, $notificationType, $notificationAddress);
         }
         if ($operation === 'login') {
             $this->logger->notice(
@@ -150,7 +152,7 @@ class TiqrAppApiController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function registerAction(
         UserAgentMatcherInterface $userAgentMatcher,

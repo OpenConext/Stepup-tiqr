@@ -1,16 +1,29 @@
 <?php
 
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
+use Surfnet\SamlBundle\SurfnetSamlBundle;
+use Surfnet\GsspBundle\SurfnetGsspBundle;
+use Surfnet\StepupBundle\SurfnetStepupBundle;
+use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
+use OpenConext\MonitorBundle\OpenConextMonitorBundle;
+use FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle;
+use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
+
 return [
-    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
-    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
-    Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
-    Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
-    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
-    Surfnet\SamlBundle\SurfnetSamlBundle::class => ['all' => true],
-    Surfnet\GsspBundle\SurfnetGsspBundle::class => ['all' => true],
-    Surfnet\StepupBundle\SurfnetStepupBundle::class => ['all' => true],
-    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
-    OpenConext\MonitorBundle\OpenConextMonitorBundle::class => ['all' => true],
-    FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true],
-    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    FrameworkBundle::class => ['all' => true],
+    MonologBundle::class => ['all' => true],
+    TwigBundle::class => ['all' => true],
+    SecurityBundle::class => ['all' => true],
+    WebProfilerBundle::class => ['dev' => true, 'test' => true],
+    SurfnetSamlBundle::class => ['all' => true],
+    SurfnetGsspBundle::class => ['all' => true],
+    SurfnetStepupBundle::class => ['all' => true],
+    WebpackEncoreBundle::class => ['all' => true],
+    OpenConextMonitorBundle::class => ['all' => true],
+    FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true],
+    TwigExtraBundle::class => ['all' => true],
 ];

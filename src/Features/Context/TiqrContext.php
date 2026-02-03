@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Features\Context;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Behat\Behat\Context\Context;
@@ -650,7 +651,7 @@ class TiqrContext implements Context
         $driver = $session->getDriver();
         $client = $driver->getClient();
         $response = $client->getResponse();
-        /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
+        /** @var JsonResponse $response */
         Assertion::eq($response->getStatusCode(), 200);
 
         $this->logsContain('Sending push notification for user "' . $id . '" with type "' . $type . '" and (untranslated) address "' . $address .'"');

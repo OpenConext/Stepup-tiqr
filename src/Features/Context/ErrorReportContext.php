@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Features\Context;
 
+use Behat\Gherkin\Node\NodeInterface;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -94,7 +95,7 @@ final class ErrorReportContext implements Context
      *
      * @param string $fileName
      *
-     * @throws \Behat\Mink\Exception\DriverException
+     * @throws DriverException
      */
     private function takeScreenShotAfterFailedStep(string $fileName): void
     {
@@ -131,7 +132,7 @@ TEXT;
     /**
      * Check if test is successful.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
+     * @param AfterStepScope $scope
      *   The test scope.
      *
      * @return bool
@@ -165,7 +166,7 @@ TEXT;
      * Returns the scenario for a given step.
      *
      *
-     * @return \Behat\Gherkin\Node\NodeInterface|null
+     * @return NodeInterface|null
      */
     private function getBackGroundStep(StepScope $scope)
     {

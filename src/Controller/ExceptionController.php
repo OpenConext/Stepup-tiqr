@@ -45,14 +45,15 @@ final class ExceptionController extends BaseExceptionController
     public function __construct(
         private readonly ErrorPageHelper $errorPageHelper,
         TranslatorInterface $translator,
-        RequestId $requestId
+        RequestId $requestId,
+        private readonly ExceptionEvent $event
     ) {
         parent::__construct($translator, $requestId);
     }
 
-    public function onKernelException(ExceptionEvent $event): void
+    public function onKernelException(): void
     {
-        $event->setResponse($this->show($event->getRequest(), $event->getThrowable()));
+        $this->event->setResponse($this->show($this->event->getRequest(), $this->event->getThrowable()));
     }
 
     public function show(Request $request, Throwable $exception): Response

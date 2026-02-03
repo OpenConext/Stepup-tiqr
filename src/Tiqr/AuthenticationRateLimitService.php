@@ -20,6 +20,8 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Tiqr;
 
+use Exception;
+use InvalidArgumentException;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
@@ -37,7 +39,7 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
 {
     /**
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(
         private TiqrServiceInterface $tiqrService,
@@ -71,9 +73,9 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws Exception\ConfigurationException
-     * @throws \Exception
+     * @throws Exception
      */
     public function authenticate(string $sessionKey, TiqrUserInterface $user, string $response): AuthenticationResponse
     {

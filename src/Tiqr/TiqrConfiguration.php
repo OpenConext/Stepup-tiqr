@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Tiqr;
 
+use Assert\AssertionFailedException;
 use Assert\Assertion;
 use Surfnet\Tiqr\Tiqr\Exception\ConfigurationException;
 
@@ -35,7 +36,7 @@ class TiqrConfiguration implements TiqrConfigurationInterface
     /**
      * @param array<string, array<string, mixed>> $tiqrConfiguration
      *
-     * @throws \Assert\AssertionFailedException
+     * @throws AssertionFailedException
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function __construct(array $tiqrConfiguration)
