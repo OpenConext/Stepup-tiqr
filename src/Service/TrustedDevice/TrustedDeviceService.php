@@ -59,10 +59,10 @@ class TrustedDeviceService
     {
         try {
             return $this->cookieHelper->read($request);
-        } catch (CookieNotFoundException $e) {
+        } catch (CookieNotFoundException) {
             $this->logger->notice('A trusted-device cookie is not found');
             return null;
-        } catch (DecryptionFailedException $e) {
+        } catch (DecryptionFailedException) {
             $this->logger->notice('Decryption of the trusted-device cookie failed');
             return null;
         } catch (Exception $e) {

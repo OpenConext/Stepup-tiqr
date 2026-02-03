@@ -33,7 +33,6 @@ use Surfnet\Tiqr\Exception\UserTemporarilyBlockedException;
 use Surfnet\Tiqr\Service\ErrorPageHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -45,15 +44,9 @@ final class ExceptionController extends BaseExceptionController
     public function __construct(
         private readonly ErrorPageHelper $errorPageHelper,
         TranslatorInterface $translator,
-        RequestId $requestId,
-        private readonly ExceptionEvent $event
+        RequestId $requestId
     ) {
         parent::__construct($translator, $requestId);
-    }
-
-    public function onKernelException(): void
-    {
-        $this->event->setResponse($this->show($this->event->getRequest(), $this->event->getThrowable()));
     }
 
     public function show(Request $request, Throwable $exception): Response

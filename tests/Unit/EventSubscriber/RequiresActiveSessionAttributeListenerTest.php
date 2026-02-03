@@ -72,7 +72,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelControllerArguments(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -112,7 +112,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelControllerArguments(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -157,7 +157,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelControllerArguments(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -202,7 +202,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelControllerArguments(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -238,7 +238,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelControllerArguments']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelControllerArguments(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 }

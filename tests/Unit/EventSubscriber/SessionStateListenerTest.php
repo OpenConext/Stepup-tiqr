@@ -62,7 +62,7 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSIONID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -111,7 +111,7 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -162,7 +162,7 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
@@ -214,7 +214,7 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 }

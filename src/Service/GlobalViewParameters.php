@@ -22,14 +22,14 @@ namespace Surfnet\Tiqr\Service;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class GlobalViewParameters
+final readonly class GlobalViewParameters
 {
     /**
      * @param array<string, string> $supportUrl
      */
     public function __construct(
-        private readonly TranslatorInterface $translator,
-        private readonly array $supportUrl
+        private TranslatorInterface $translator,
+        private array $supportUrl
     ) {
     }
 

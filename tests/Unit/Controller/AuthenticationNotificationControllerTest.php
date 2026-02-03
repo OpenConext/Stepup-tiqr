@@ -31,11 +31,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticationNotificationControllerTest extends TestCase
 {
-    private AuthenticationService $authService;
-    private StateHandlerInterface $stateHandler;
-    private TiqrServiceInterface $tiqrService;
-    private TiqrUserRepositoryInterface $userRepository;
-    private TrustedDeviceService $trustedDeviceService;
+    private readonly AuthenticationService $authService;
+    private readonly StateHandlerInterface $stateHandler;
+    private readonly TiqrServiceInterface $tiqrService;
+    private readonly TiqrUserRepositoryInterface $userRepository;
+    private readonly TrustedDeviceService $trustedDeviceService;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {

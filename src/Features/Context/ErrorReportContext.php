@@ -29,7 +29,6 @@ use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -79,7 +78,7 @@ final class ErrorReportContext implements Context
                 $step = $this->getBackGroundStep($scope);
                 $title = $step->getNodeType().'-'.$step->getText();
             }
-            $filename = preg_replace('/[^a-zA-Z0-9]/', '-', $title);
+            $filename = preg_replace('/[^a-zA-Z0-9]/', '-', (string) $title);
             if (!is_string($filename)) {
                 throw new Exception('Unable to parse the file name');
             }
