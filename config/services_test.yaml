@@ -3,6 +3,10 @@ imports:
     - { resource: 'services_dev.yaml' }
 
 services:
+    test.service_container:
+        public: true
+        synthetic: true
+        
     Surfnet\Tiqr\Dev\FileLogger:
         public: true
         decorates: 'logger'

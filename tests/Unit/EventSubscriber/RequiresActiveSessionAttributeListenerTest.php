@@ -39,10 +39,13 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
 {
     private const SESSION_ID = 'session-id';
 
+    private function getMockKernel(): HttpKernelInterface
+    {
+        return $this->createMock(HttpKernelInterface::class);
+    }
+
     public function testControllersWithoutTheRequiresActiveSessionAttributeAreIgnored(): void
     {
-        self::bootKernel();
-
         $request = new Request(server: ['REQUEST_URI' => '/route']);
 
         $requestStack = new RequestStack();
@@ -52,7 +55,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         };
 
         $event = new ControllerArgumentsEvent(
-            self::$kernel,
+            $this->getMockKernel(),
             $stubControllerFactory,
             [], $request,
             HttpKernelInterface::MAIN_REQUEST
@@ -81,7 +84,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage('Access Denied.');
 
-        self::bootKernel();
+        
 
         $request = new Request(server: ['REQUEST_URI' => '/route']);
 
@@ -92,9 +95,9 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         };
 
         $requestType = HttpKernelInterface::MAIN_REQUEST;
-        $controllerEvent = new ControllerEvent(self::$kernel, $stubControllerFactory, $request, $requestType);
+        $controllerEvent = new ControllerEvent($this->getMockKernel(), $stubControllerFactory, $request, $requestType);
         $controllerEvent->setController($stubControllerFactory, [RequiresActiveSession::class => [null]]);
-        $event = new ControllerArgumentsEvent(self::$kernel, $controllerEvent, [], $request, $requestType);
+        $event = new ControllerArgumentsEvent($this->getMockKernel(), $controllerEvent, [], $request, $requestType);
 
         $dispatcher = new EventDispatcher();
 
@@ -121,7 +124,7 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage('Access Denied.');
 
-        self::bootKernel();
+        
 
         $session = new Session(new MockArraySessionStorage());
         $session->setId(self::SESSION_ID);
@@ -136,9 +139,9 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         };
 
         $requestType = HttpKernelInterface::MAIN_REQUEST;
-        $controllerEvent = new ControllerEvent(self::$kernel, $stubControllerFactory, $request, $requestType);
+        $controllerEvent = new ControllerEvent($this->getMockKernel(), $stubControllerFactory, $request, $requestType);
         $controllerEvent->setController($stubControllerFactory, [RequiresActiveSession::class => [null]]);
-        $event = new ControllerArgumentsEvent(self::$kernel, $controllerEvent, [], $request, $requestType);
+        $event = new ControllerArgumentsEvent($this->getMockKernel(), $controllerEvent, [], $request, $requestType);
 
         $dispatcher = new EventDispatcher();
 
@@ -166,8 +169,6 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage('Access Denied.');
 
-        self::bootKernel();
-
         $session = new Session(new MockArraySessionStorage());
         $session->setId('erroneous-session-id');
 
@@ -181,9 +182,9 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         };
 
         $requestType = HttpKernelInterface::MAIN_REQUEST;
-        $controllerEvent = new ControllerEvent(self::$kernel, $stubControllerFactory, $request, $requestType);
+        $controllerEvent = new ControllerEvent($this->getMockKernel(), $stubControllerFactory, $request, $requestType);
         $controllerEvent->setController($stubControllerFactory, [RequiresActiveSession::class => [null]]);
-        $event = new ControllerArgumentsEvent(self::$kernel, $controllerEvent, [], $request, $requestType);
+        $event = new ControllerArgumentsEvent($this->getMockKernel(), $controllerEvent, [], $request, $requestType);
 
         $dispatcher = new EventDispatcher();
 
@@ -208,8 +209,6 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
 
     public function testItDoesNotThrowWhenTheActiveSessionMatchesTheSessionCookie(): void
     {
-        self::bootKernel();
-
         $session = new Session(new MockArraySessionStorage());
         $session->setId(self::SESSION_ID);
 
@@ -223,9 +222,9 @@ final class RequiresActiveSessionAttributeListenerTest extends KernelTestCase
         };
 
         $requestType = HttpKernelInterface::MAIN_REQUEST;
-        $controllerEvent = new ControllerEvent(self::$kernel, $stubControllerFactory, $request, $requestType);
+        $controllerEvent = new ControllerEvent($this->getMockKernel(), $stubControllerFactory, $request, $requestType);
         $controllerEvent->setController($stubControllerFactory, [RequiresActiveSession::class => [null]]);
-        $event = new ControllerArgumentsEvent(self::$kernel, $controllerEvent, [], $request, $requestType);
+        $event = new ControllerArgumentsEvent($this->getMockKernel(), $controllerEvent, [], $request, $requestType);
 
         $dispatcher = new EventDispatcher();
 
