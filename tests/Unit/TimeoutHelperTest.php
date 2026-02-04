@@ -17,14 +17,13 @@
 
 namespace Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\Tiqr\Service\TimeoutHelper;
 
 class TimeoutHelperTest extends TestCase
 {
-    /**
-     * @dataProvider provideTimeoutExpectations
-     */
+    #[DataProvider('provideTimeoutExpectations')]
     public function test_timeout_reached(
         bool $expectation,
         int $currentTime,
@@ -41,7 +40,7 @@ class TimeoutHelperTest extends TestCase
         self::assertEquals($expectation, $isTimedOut);
     }
 
-    public function provideTimeoutExpectations(): array
+    public static function provideTimeoutExpectations(): array
     {
         return [
             // Timed out expectations

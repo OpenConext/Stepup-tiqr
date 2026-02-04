@@ -17,6 +17,7 @@
 
 namespace Unit\Service;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Surfnet\Tiqr\Service\SessionCorrelationIdService;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,9 +49,7 @@ final class SessionCorrelationIdServiceTest extends TestCase
     }
 
 
-    /**
-     * @dataProvider saltProvider
-     */
+    #[DataProvider('saltProvider')]
     public function testItWillNotGenerateACorrelationIdWithoutAdequateSalt(?string $salt): void
     {
         $request = new Request(cookies: ['PHPSESSID' => 'session-id']);
@@ -62,7 +61,7 @@ final class SessionCorrelationIdServiceTest extends TestCase
         $this->assertNull($service->generateCorrelationId());
     }
 
-    public function saltProvider(): array
+    public static function saltProvider(): array
     {
         return [
             'empty salt' => [''],

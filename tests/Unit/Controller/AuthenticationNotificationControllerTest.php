@@ -17,6 +17,7 @@
 
 namespace Unit\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Surfnet\GsspBundle\Service\AuthenticationService;
@@ -48,7 +49,7 @@ class AuthenticationNotificationControllerTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function provideTrustedDeviceCookieEnforcementEnabledScenarios(): array
+    public static function provideTrustedDeviceCookieEnforcementEnabledScenarios(): array
     {
         return [
           [false, '"success"'],
@@ -56,9 +57,7 @@ class AuthenticationNotificationControllerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTrustedDeviceCookieEnforcementEnabledScenarios
-     */
+    #[DataProvider('provideTrustedDeviceCookieEnforcementEnabledScenarios')]
     public function testTrustedDeviceCookieEnforcement(bool $trustedDeviceCookieEnforcementEnabled, string $expectedResponse): void
     {
         $controller = $this->makeController($trustedDeviceCookieEnforcementEnabled);
