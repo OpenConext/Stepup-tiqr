@@ -1,5 +1,31 @@
 # Stepup-tiqr
 
+## Unreleased
+**Package Updates & Deprecation Enforcement**
+* Enable strict deprecation mode - deprecations now fail tests (#SYMFONY_DEPRECATIONS_HELPER=max[total]=0)
+* Fix PHP 8.4 deprecations: explicit nullable type hints for exception and test parameters
+* Update frontend packages: TypeScript 5.8→5.9, Webpack, Babel, Sass, and others
+* Remove abandoned packages: guzzle/guzzle, sebastian/phpcpd (no longer used)
+
+**Major Upgrades**
+* Upgrade PHPUnit 9.6 → 11.5 - convert data providers to static methods, update phpunit.xml schema
+* Upgrade symfony/phpunit-bridge 7.4 → 8.0 for PHPUnit 11 compatibility
+* Upgrade PHP_CodeSniffer 3.13 → 4.0
+* Upgrade slevomat/coding-standard 8.22 → 8.27
+* Upgrade ESLint 8.57 → 9.39 - migrate to flat config format (eslint.config.js)
+* Upgrade @typescript-eslint/eslint-plugin 6.21 → 8.54 for TypeScript 5.9 compatibility
+* Upgrade @typescript-eslint/parser 6.21 → 8.54
+* Add @stylistic/eslint-plugin-ts to restore formatting rules (member-delimiter-style, semi)
+* Remove deprecated ESLint rules: ban-types (split into no-unsafe-function-type, no-wrapper-object-types, no-empty-object-type)
+* Update PHPStan baseline for PHPStan 2.x compatibility
+
+**Testing & Quality**
+* All 62 PHPUnit tests passing with PHPUnit 11
+* All 21 Behat scenarios passing (199 steps)
+* All 62 Jest/frontend tests passing
+* Zero deprecation warnings
+* All code quality checks passing
+
 ## 4.2.0
 * Require a user to authenticate using the QR code instead of sending a push notification when the webbrowser
   has not been used recently to authenticate (#316)

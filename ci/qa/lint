@@ -7,5 +7,5 @@ printf "\nStart application Linting\n"
 ./vendor/bin/phplint --no-ansi -n --no-progress --configuration=ci/qa/phplint.yaml $1
 
 bin/console lint:yaml config
-yarn eslint -c ./.eslintrc.js
+yarn eslint -c ./eslint.config.js assets/typescript/
 yarn tsc --noEmit

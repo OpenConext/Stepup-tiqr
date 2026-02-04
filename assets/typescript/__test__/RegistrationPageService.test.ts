@@ -4,9 +4,63 @@
 import 'jest';
 import { RegistrationStateMachine } from '../RegistrationStateMachine';
 
+const createMockComponent = () => {
+  let visible = false;
+  return {
+    isVisible: () => visible,
+    show: () => {
+      visible = true;
+    },
+    hide: () => {
+      visible = false;
+    },
+  };
+};
+
 describe('RegistrationPageService', () => {
   let statusCallback: ((status: string) => void) | undefined;
   let errorCallback: ((error: unknown) => void) | undefined;
+
+  const createTestContext = () => {
+    const pollingService = {
+      enabled: false,
+      waitAndRequestStatus: jest.fn(((success: any, error: any) => {
+        statusCallback = success;
+        errorCallback = error;
+        (pollingService as any).enabled = true;
+      })),
+      stop: jest.fn(() => {
+        (pollingService as any).enabled = false;
+      }),
+    };
+
+    const registrationStatusComponent = {
+      showExpiredSessionStatus: jest.fn(),
+      showOpenTiqrApp: jest.fn(),
+      showAccountActivationHelp:jest.fn(),
+      showOneMomentPlease: jest.fn(),
+      showFinalized: jest.fn(),
+      showTimeoutHappened: jest.fn(),
+      showUnknownErrorHappened: jest.fn(),
+    };
+
+    const qrComponent = createMockComponent();
+
+    const authenticationPageService = new RegistrationStateMachine(
+      pollingService as any,
+      registrationStatusComponent as any,
+      qrComponent,
+      'http://fake-finalized-url.com',
+    );
+
+    return {
+      pollingService,
+      authenticationPageService,
+      statusUi: registrationStatusComponent,
+      qrComponent,
+    };
+  };
+
   let context = createTestContext();
 
   beforeEach(() => {
@@ -229,56 +283,4 @@ describe('RegistrationPageService', () => {
       expect(context.statusUi.showExpiredSessionStatus).toBeCalled();
     });
   });
-
-  function createTestContext() {
-    const pollingService = {
-      enabled: false,
-      waitAndRequestStatus: jest.fn(((success: any, error: any) => {
-        statusCallback = success;
-        errorCallback = error;
-        (pollingService as any).enabled = true;
-      })),
-      stop: jest.fn(() => {
-        (pollingService as any).enabled = false;
-      }),
-    };
-
-    const registrationStatusComponent = {
-      showExpiredSessionStatus: jest.fn(),
-      showOpenTiqrApp: jest.fn(),
-      showAccountActivationHelp:jest.fn(),
-      showOneMomentPlease: jest.fn(),
-      showFinalized: jest.fn(),
-      showTimeoutHappened: jest.fn(),
-      showUnknownErrorHappened: jest.fn(),
-    };
-
-    function createMockComponent() {
-      let visible = false;
-      return {
-        isVisible: () => visible,
-        show: () => {
-          visible = true;
-        },
-        hide: () => {
-          visible = false;
-        },
-      };
-    }
-
-    const qrComponent = createMockComponent();
-
-    const authenticationPageService = new RegistrationStateMachine(
-      pollingService as any,
-      registrationStatusComponent as any,
-      qrComponent,
-      'http://fake-finalized-url.com',
-    );
-    return {
-      pollingService,
-      authenticationPageService,
-      statusUi: registrationStatusComponent,
-      qrComponent,
-    };
-  }
 });

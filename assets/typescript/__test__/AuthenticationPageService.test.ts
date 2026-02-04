@@ -4,6 +4,58 @@
 import 'jest';
 import { AuthenticationPageService } from '../AuthenticationPageService';
 
+const createMockComponent = () => {
+  let visible = false;
+  return {
+    isVisible: () => visible,
+    show: () => {
+      visible = true;
+    },
+    hide: () => {
+      visible = false;
+    },
+  };
+};
+
+const createTestContext = () => {
+  const notificationClient = {
+    send: jest.fn(),
+  };
+  const pollingService = {
+    waitAndRequestStatus: jest.fn(),
+    stop: jest.fn(),
+  };
+
+  const spinnerComponent = createMockComponent();
+  const qrComponent = createMockComponent();
+  const otpFormComponent = createMockComponent();
+  const challengeExpiredComponent = createMockComponent();
+  const statusErrorComponent = createMockComponent();
+  const notificationErrorComponent = createMockComponent();
+
+  const authenticationPageService = new AuthenticationPageService(
+    pollingService as any,
+    notificationClient as any,
+    spinnerComponent,
+    qrComponent,
+    otpFormComponent,
+    challengeExpiredComponent,
+    statusErrorComponent,
+    notificationErrorComponent,
+  );
+  return {
+    pollingService,
+    authenticationPageService,
+    notificationClient,
+    spinnerComponent,
+    qrComponent,
+    otpFormComponent,
+    challengeExpiredComponent,
+    statusErrorComponent,
+    notificationErrorComponent,
+  };
+};
+
 describe('AuthenticationPageService', () => {
   let context = createTestContext();
 
@@ -249,56 +301,4 @@ describe('AuthenticationPageService', () => {
       expect(spy).toBeCalled();
     });
   });
-
-  function createTestContext() {
-    const notificationClient = {
-      send: jest.fn(),
-    };
-    const pollingService = {
-      waitAndRequestStatus: jest.fn(),
-      stop: jest.fn(),
-    };
-
-    function createMockComponent() {
-      let visible = false;
-      return {
-        isVisible: () => visible,
-        show: () => {
-          visible = true;
-        },
-        hide: () => {
-          visible = false;
-        },
-      };
-    }
-
-    const spinnerComponent = createMockComponent();
-    const qrComponent = createMockComponent();
-    const otpFormComponent = createMockComponent();
-    const challengeExpiredComponent = createMockComponent();
-    const statusErrorComponent = createMockComponent();
-    const notificationErrorComponent = createMockComponent();
-
-    const authenticationPageService = new AuthenticationPageService(
-      pollingService as any,
-      notificationClient as any,
-      spinnerComponent,
-      qrComponent,
-      otpFormComponent,
-      challengeExpiredComponent,
-      statusErrorComponent,
-      notificationErrorComponent,
-    );
-    return {
-      pollingService,
-      authenticationPageService,
-      notificationClient,
-      spinnerComponent,
-      qrComponent,
-      otpFormComponent,
-      challengeExpiredComponent,
-      statusErrorComponent,
-      notificationErrorComponent,
-    };
-  }
 });
