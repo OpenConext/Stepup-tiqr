@@ -92,8 +92,8 @@
     "behat": "./ci/qa/behat",
     "jest": "./ci/qa/jest",
     "jscpd": "./ci/qa/jscpd",
-    "rector": "vendor/bin/rector process",
-    "rector-dry": "vendor/bin/rector process --dry-run",
+    "rector": "./ci/qa/rector.sh",
+    "rector-dry": "./ci/qa/rector.sh --dry-run",
     "encore": [
       "yarn encore production"
     ],
