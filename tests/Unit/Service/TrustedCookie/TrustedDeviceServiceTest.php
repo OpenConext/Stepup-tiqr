@@ -48,7 +48,7 @@ class TrustedDeviceServiceTest extends TestCase
         parent::setUp();
     }
 
-    protected function buildService(Configuration $configuration, DateTime $now = null): void
+    protected function buildService(Configuration $configuration, ?DateTime $now = null): void
     {
         $this->configuration = $configuration;
         $encryptionHelper = new HaliteCryptoHelper($configuration);
@@ -268,6 +268,4 @@ class TrustedDeviceServiceTest extends TestCase
         $readCookie = $this->service->read($request);
         $this->assertTrue($this->service->isTrustedDevice($readCookie, $notificationAddress));
     }
-
-
 }
