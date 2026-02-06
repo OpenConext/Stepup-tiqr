@@ -163,12 +163,6 @@ parameters:
 			path: ../../dev/Controller/SPController.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$securityKey\)\: Unexpected token "\$securityKey", expected type at offset 10 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../dev/Controller/SPController.php
-
-		-
 			message: '#^Parameter \#1 \$key of method SAML2\\Certificate\\PrivateKeyLoader\:\:loadPrivateKey\(\) expects SAML2\\Configuration\\PrivateKey, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -223,62 +217,14 @@ parameters:
 			path: ../../dev/FileLogger.php
 
 		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/AuthenticationController.php
-
-		-
 			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/AuthenticationController.php
 
 		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/AuthenticationNotificationController.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/ExceptionController.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/RegistrationController.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 189 on line 7$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CyclomaticComplexity\)\)\: Unexpected token "\.CyclomaticComplexity\)", expected ''\)'' at offset 82 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.ExcessiveMethodLength\)\)\: Unexpected token "\.ExcessiveMethodLength\)", expected ''\)'' at offset 135 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.NPathComplexity\)\)\: Unexpected token "\.NPathComplexity\)", expected ''\)'' at offset 34 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
@@ -409,24 +355,6 @@ parameters:
 			path: ../../src/Features/Context/ErrorReportContext.php
 
 		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.ElseExpression\)\)\: Unexpected token "\.ElseExpression\)", expected ''\)'' at offset 81 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Features/Context/ErrorReportContext.php
-
-		-
-			message: '#^Binary operation "\." between ''\| '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
 			message: '#^Call to an undefined method Behat\\Mink\\Driver\\DriverInterface\:\:getClient\(\)\.$#'
 			identifier: method.notFound
 			count: 6
@@ -439,19 +367,7 @@ parameters:
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: '#^Cannot access offset ''sari'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
@@ -465,18 +381,6 @@ parameters:
 		-
 			message: '#^Cannot call method getAttribute\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
-			count: 3
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 1
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$driver contains generic class Behat\\Mink\\Driver\\BrowserKitDriver but does not specify its types\: TRequest, TResponse$#'
-			identifier: missingType.generics
 			count: 2
 			path: ../../src/Features/Context/TiqrContext.php
 
@@ -493,26 +397,26 @@ parameters:
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../../src/Features/Context/TiqrContext.php
-
-		-
 			message: '#^Property Surfnet\\Tiqr\\Features\\Context\\TiqrContext\:\:\$metadata \(stdClass\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: '#^Call to an undefined method Behat\\Testwork\\Environment\\Environment\:\:getContext\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../../src/Features/Context/WebContext.php
+			message: '#^Type mixed in generic type Behat\\Mink\\Driver\\BrowserKitDriver\<mixed, mixed\> in PHPDoc tag @var for variable \$driver is not subtype of template type TRequest of object of class Behat\\Mink\\Driver\\BrowserKitDriver\.$#'
+			identifier: generics.notSubtype
+			count: 2
+			path: ../../src/Features/Context/TiqrContext.php
 
 		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Type mixed in generic type Behat\\Mink\\Driver\\BrowserKitDriver\<mixed, mixed\> in PHPDoc tag @var for variable \$driver is not subtype of template type TResponse of object of class Behat\\Mink\\Driver\\BrowserKitDriver\.$#'
+			identifier: generics.notSubtype
+			count: 2
+			path: ../../src/Features/Context/TiqrContext.php
+
+		-
+			message: '#^Call to an undefined method Behat\\Testwork\\Environment\\Environment\:\:getContext\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
 
@@ -529,43 +433,19 @@ parameters:
 			path: ../../src/Features/Context/WebContext.php
 
 		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.ShortMethodName\)\)\: Unexpected token "\.ShortMethodName\)", expected ''\)'' at offset 34 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Features/Framework/FileValueStore.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\) \| Coupling is high as we are integrating logic into the infrastructure\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Service/TrustedDevice/TrustedDeviceService.php
-
-		-
-			message: '#^Method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitService\:\:__construct\(\) has Exception in PHPDoc @throws tag but it''s not thrown\.$#'
-			identifier: throws.unusedType
-			count: 1
-			path: ../../src/Tiqr/AuthenticationRateLimitService.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)\)\: Unexpected token "\.CouplingBetweenObjects\)", expected ''\)'' at offset 30 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Tiqr/AuthenticationRateLimitService.php
-
-		-
-			message: '#^PHPDoc tag @throws with type Exception\\ConfigurationException is not subtype of Throwable$#'
+			message: '#^PHPDoc tag @throws with type Exception\|Surfnet\\Tiqr\\Exception\\ConfigurationException is not subtype of Throwable$#'
 			identifier: throws.notThrowable
 			count: 1
 			path: ../../src/Tiqr/AuthenticationRateLimitService.php
 
 		-
-			message: '#^PHPDoc tag @throws with type Exception\\ConfigurationException\|Surfnet\\Tiqr\\Exception\\TiqrServerRuntimeException is not subtype of Throwable$#'
+			message: '#^PHPDoc tag @throws with type Surfnet\\Tiqr\\Exception\\ConfigurationException is not subtype of Throwable$#'
 			identifier: throws.notThrowable
 			count: 1
 			path: ../../src/Tiqr/AuthenticationRateLimitService.php
 
 		-
-			message: '#^PHPDoc tag @throws with type Exception\|Exception\\ConfigurationException is not subtype of Throwable$#'
+			message: '#^PHPDoc tag @throws with type Surfnet\\Tiqr\\Exception\\ConfigurationException\|Surfnet\\Tiqr\\Exception\\TiqrServerRuntimeException is not subtype of Throwable$#'
 			identifier: throws.notThrowable
 			count: 1
 			path: ../../src/Tiqr/AuthenticationRateLimitService.php
@@ -601,27 +481,6 @@ parameters:
 			path: ../../src/Tiqr/Legacy/TiqrService.php
 
 		-
-			message: '''
-				#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CouplingBetweenObjects\)
-				It's Legacy\.\)\: Unexpected token "\.CouplingBetweenObjects\)", expected '\)' at offset 178 on line 6$#
-			'''
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Tiqr/Legacy/TiqrService.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.ExcessiveClassComplexity\)\)\: Unexpected token "\.ExcessiveClassComplexity\)", expected ''\)'' at offset 76 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Tiqr/Legacy/TiqrService.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.TooManyPublicMethods\)\)\: Unexpected token "\.TooManyPublicMethods\)", expected ''\)'' at offset 129 on line 5$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../src/Tiqr/Legacy/TiqrService.php
-
-		-
 			message: '#^Parameter \#1 \$enrollmentKey of method Tiqr_Service\:\:clearEnrollmentState\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -632,12 +491,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: ../../src/Tiqr/Legacy/TiqrService.php
-
-		-
-			message: '#^Binary operation "\+\=" between mixed and array results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 4
-			path: ../../src/Tiqr/TiqrConfiguration.php
 
 		-
 			message: '#^Cannot access offset ''arguments'' on mixed\.$#'
@@ -684,12 +537,6 @@ parameters:
 		-
 			message: '#^Method Surfnet\\Tiqr\\Tiqr\\TiqrConfiguration\:\:getTiqrOptions\(\) should return array\<string, array\<string, mixed\>\> but returns array\<string, mixed\>\.$#'
 			identifier: return.type
-			count: 1
-			path: ../../src/Tiqr/TiqrConfiguration.php
-
-		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.ExcessiveMethodLength\)\)\: Unexpected token "\.ExcessiveMethodLength\)", expected ''\)'' at offset 150 on line 5$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: ../../src/Tiqr/TiqrConfiguration.php
 

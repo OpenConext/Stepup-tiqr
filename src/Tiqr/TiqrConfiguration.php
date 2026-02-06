@@ -164,21 +164,27 @@ class TiqrConfiguration implements TiqrConfigurationInterface
             $tiqrConfiguration['storage']['statestorage']['arguments'],
             'TiqrConfiguration: storage -> statestorage -> arguments must be of type array'
         );
-        $this->options['statestorage'] += $tiqrConfiguration['storage']['statestorage']['arguments'];
+        /** @var array<string, mixed> $stateStorage */
+        $stateStorage = $this->options['statestorage'];
+        $this->options['statestorage'] = $stateStorage + $tiqrConfiguration['storage']['statestorage']['arguments'];
 
         $this->options['userstorage']['type'] = $tiqrConfiguration['storage']['userstorage']['type'];
         Assertion::isArray(
             $tiqrConfiguration['storage']['userstorage']['arguments'],
             'TiqrConfiguration: storage -> userstorage -> arguments must be of type array'
         );
-        $this->options['userstorage'] += $tiqrConfiguration['storage']['userstorage']['arguments'];
+        /** @var array<string, mixed> $userStorage */
+        $userStorage = $this->options['userstorage'];
+        $this->options['userstorage'] = $userStorage + $tiqrConfiguration['storage']['userstorage']['arguments'];
 
         $this->options['devicestorage']['type'] = $tiqrConfiguration['storage']['devicestorage']['type'];
         Assertion::isArray(
             $tiqrConfiguration['storage']['devicestorage']['arguments'],
             'TiqrConfiguration: storage -> devicestorage -> arguments must be of type array'
         );
-        $this->options['devicestorage'] += $tiqrConfiguration['storage']['devicestorage']['arguments'];
+        /** @var array<string, mixed> $deviceStorage */
+        $deviceStorage = $this->options['devicestorage'];
+        $this->options['devicestorage'] = $deviceStorage + $tiqrConfiguration['storage']['devicestorage']['arguments'];
 
         if (isset($tiqrConfiguration['storage']['usersecretstorage'])) {
             $this->options['usersecretstorage']['type'] = $tiqrConfiguration['storage']['usersecretstorage']['type'];
@@ -186,7 +192,9 @@ class TiqrConfiguration implements TiqrConfigurationInterface
                 $tiqrConfiguration['storage']['usersecretstorage']['arguments'],
                 'TiqrConfiguration: storage -> usersecretstorage -> arguments must be of type array'
             );
-            $this->options['usersecretstorage'] += $tiqrConfiguration['storage']['usersecretstorage']['arguments'];
+            /** @var array<string, mixed> $userSecretStorage */
+            $userSecretStorage = $this->options['usersecretstorage'];
+            $this->options['usersecretstorage'] = $userSecretStorage + $tiqrConfiguration['storage']['usersecretstorage']['arguments'];
         }
     }
 

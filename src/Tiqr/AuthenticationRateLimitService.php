@@ -20,10 +20,11 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Tiqr;
 
+use DateTimeImmutable;
 use Exception;
 use InvalidArgumentException;
-use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
+use Surfnet\Tiqr\Exception\ConfigurationException;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Surfnet\Tiqr\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
@@ -37,10 +38,6 @@ use Surfnet\Tiqr\WithContextLogger;
  */
 final readonly class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
 {
-    /**
-     *
-     * @throws Exception
-     */
     public function __construct(
         private TiqrServiceInterface $tiqrService,
         private TiqrConfigurationInterface $configuration,
@@ -63,7 +60,7 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
      * @param TiqrUserInterface $user
      *
      * @return bool
-     * @throws Exception\ConfigurationException
+     * @throws ConfigurationException
      * @throws TiqrServerRuntimeException
      */
     public function isBlockedTemporarily(TiqrUserInterface $user): bool
@@ -74,7 +71,7 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
 
     /**
      * @throws InvalidArgumentException
-     * @throws Exception\ConfigurationException
+     * @throws ConfigurationException
      * @throws Exception
      */
     public function authenticate(string $sessionKey, TiqrUserInterface $user, string $response): AuthenticationResponse
@@ -118,7 +115,7 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
     }
 
     /**
-     * @throws Exception\ConfigurationException
+     * @throws ConfigurationException
      */
     private function handleAuthenticationRejectResponse(
         LoggerInterface $logger,

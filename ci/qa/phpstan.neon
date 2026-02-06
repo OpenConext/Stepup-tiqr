@@ -6,3 +6,7 @@ parameters:
 	paths:
 		- ../../src
 		- ../../dev
+	ignoreErrors:
+		-
+			message: '#PHPDoc tag @SuppressWarnings has invalid value#'
+			reportUnmatched: false

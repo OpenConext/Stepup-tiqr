@@ -428,7 +428,8 @@ class TiqrContext implements Context
         $session = $this->minkContext->getMink()->getSession();
         $page = $session->getPage();
         $anchor = $page->find('css', 'div.qr > a');
-        $this->metadataUrl = str_replace('tiqrenroll://', '', $anchor->getAttribute('href'));
+        $href = $anchor?->getAttribute('href');
+        $this->metadataUrl = str_replace('tiqrenroll://', '', $href ?? '');
     }
 
     /**
@@ -476,6 +477,7 @@ class TiqrContext implements Context
         $rows = array_values($table->getColumnsHash());
 
         try {
+            /** @var array<string, string> $row */
             foreach ($rows as $index => $row) {
                 Assertion::true(isset($logs[$index]), sprintf('Missing message %s', $row['message']));
                 [$level, $message, $context] = $logs[$index];
@@ -532,8 +534,9 @@ class TiqrContext implements Context
         $output = '';
 
         foreach ($logs as $index => $row) {
+            /** @var array{0: string, 1: string, 2?: array<string, mixed>} $row */
             [$level, $message] = $row;
-            $sari = !empty($row[2]['sari']) ? 'present' : '     ';
+            $sari = !empty($row[2]['sari'] ?? null) ? 'present' : '     ';
             $output .= "| " . $level . " | " . $message . " | " . $sari . " |\n";
         }
 
@@ -647,7 +650,7 @@ class TiqrContext implements Context
     {
         $id = $this->metadata->identity->identifier;
         $session = $this->minkContext->getMink()->getSession();
-        /** @var BrowserKitDriver $driver */
+        /** @var BrowserKitDriver<mixed, mixed> $driver */
         $driver = $session->getDriver();
         $client = $driver->getClient();
         $response = $client->getResponse();
@@ -726,7 +729,7 @@ class TiqrContext implements Context
     {
         $session = $this->minkContext->getSession();
         $driver = $session->getDriver();
-        /** @var BrowserKitDriver $driver */
+        /** @var BrowserKitDriver<mixed, mixed> $driver */
         $client = $driver->getClient();
         $response = $client->getResponse();
 
