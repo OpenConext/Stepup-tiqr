@@ -81,7 +81,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('The tiqr app help function should be shown', () => {
-      expect(context.statusUi.showOpenTiqrApp).toBeCalled();
+      expect(context.statusUi.showOpenTiqrApp).toHaveBeenCalled();
     });
   });
 
@@ -103,7 +103,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show open tiqr app', () => {
-      expect(context.statusUi.showOpenTiqrApp).toBeCalled();
+      expect(context.statusUi.showOpenTiqrApp).toHaveBeenCalled();
     });
   });
 
@@ -125,7 +125,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show open tiqr app', () => {
-      expect(context.statusUi.showOpenTiqrApp).toBeCalled();
+      expect(context.statusUi.showOpenTiqrApp).toHaveBeenCalled();
     });
   });
 
@@ -147,7 +147,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show account activation help', () => {
-      expect(context.statusUi.showAccountActivationHelp).toBeCalled();
+      expect(context.statusUi.showAccountActivationHelp).toHaveBeenCalled();
     });
   });
 
@@ -169,7 +169,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show one moment please', () => {
-      expect(context.statusUi.showOneMomentPlease).toBeCalled();
+      expect(context.statusUi.showOneMomentPlease).toHaveBeenCalled();
     });
   });
 
@@ -191,7 +191,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show finalized', () => {
-      expect(context.statusUi.showFinalized).toBeCalled();
+      expect(context.statusUi.showFinalized).toHaveBeenCalled();
     });
   });
 
@@ -213,7 +213,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show finalized', () => {
-      expect(context.statusUi.showTimeoutHappened).toBeCalled();
+      expect(context.statusUi.showTimeoutHappened).toHaveBeenCalled();
     });
   });
 
@@ -235,7 +235,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show error page', () => {
-      expect(context.statusUi.showUnknownErrorHappened).toBeCalled();
+      expect(context.statusUi.showUnknownErrorHappened).toHaveBeenCalled();
     });
   });
 
@@ -257,7 +257,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show error page', () => {
-      expect(context.statusUi.showUnknownErrorHappened).toBeCalled();
+      expect(context.statusUi.showUnknownErrorHappened).toHaveBeenCalled();
     });
   });
 
@@ -280,7 +280,7 @@ describe('RegistrationPageService', () => {
     });
 
     it('Show error page', () => {
-      expect(context.statusUi.showExpiredSessionStatus).toBeCalled();
+      expect(context.statusUi.showExpiredSessionStatus).toHaveBeenCalled();
     });
   });
 });

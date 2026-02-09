@@ -73,7 +73,7 @@ describe('AuthenticationPageService', () => {
     });
 
     it('Polling should not be disabled', () => {
-      expect(context.pollingService.stop).not.toBeCalled();
+      expect(context.pollingService.stop).not.toHaveBeenCalled();
     });
 
     it('The spinner should be hidden', () => {
@@ -91,7 +91,7 @@ describe('AuthenticationPageService', () => {
     });
 
     it('Polling should not be disabled', () => {
-      expect(context.pollingService.stop).not.toBeCalled();
+      expect(context.pollingService.stop).not.toHaveBeenCalled();
     });
 
     it('The spinner should be hidden', () => {
@@ -117,7 +117,7 @@ describe('AuthenticationPageService', () => {
     });
 
     it('Polling should be disabled', () => {
-      expect(context.pollingService.stop).toBeCalled();
+      expect(context.pollingService.stop).toHaveBeenCalled();
     });
   });
 
@@ -133,7 +133,7 @@ describe('AuthenticationPageService', () => {
       expect(context.spinnerComponent.isVisible()).toBeFalsy();
     });
     it('Polling should not be disabled', () => {
-      expect(context.pollingService.stop).not.toBeCalled();
+      expect(context.pollingService.stop).not.toHaveBeenCalled();
     });
   });
 
@@ -149,7 +149,7 @@ describe('AuthenticationPageService', () => {
       expect(context.notificationErrorComponent.isVisible()).toBeFalsy();
     });
     it('Polling should not be disabled', () => {
-      expect(context.pollingService.stop).not.toBeCalled();
+      expect(context.pollingService.stop).not.toHaveBeenCalled();
     });
   });
 
@@ -161,8 +161,8 @@ describe('AuthenticationPageService', () => {
       expect(context.spinnerComponent.isVisible()).toBeTruthy();
     });
     it('Polling should be enabled', () => {
-      expect(context.pollingService.waitAndRequestStatus).toBeCalled();
-      expect(context.pollingService.stop).not.toBeCalled();
+      expect(context.pollingService.waitAndRequestStatus).toHaveBeenCalled();
+      expect(context.pollingService.stop).not.toHaveBeenCalled();
     });
   });
 
@@ -178,7 +178,7 @@ describe('AuthenticationPageService', () => {
       expect(context.statusErrorComponent.isVisible()).toBeTruthy();
     });
     it('Polling should be disabled', () => {
-      expect(context.pollingService.stop).toBeCalled();
+      expect(context.pollingService.stop).toHaveBeenCalled();
     });
   });
 
@@ -199,7 +199,7 @@ describe('AuthenticationPageService', () => {
       }
       context.pollingService.waitAndRequestStatus = jest.fn();
       successCallback('pending');
-      expect(context.pollingService.waitAndRequestStatus).toBeCalled();
+      expect(context.pollingService.waitAndRequestStatus).toHaveBeenCalled();
     });
     it('Should handle challenge expired', () => {
       if (!successCallback || !errorCallback) {
@@ -207,7 +207,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToChallengeHasExpired');
       successCallback('challenge-expired');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
     it('Should handle authn error (invalid request)', () => {
       if (!successCallback || !errorCallback) {
@@ -215,7 +215,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToStatusRequestError');
       successCallback('invalid-request');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('Should handle challenge expired', () => {
@@ -224,7 +224,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToChallengeHasExpired');
       successCallback('challenge-expired');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('Handles needs-refresh', () => {
@@ -233,7 +233,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = context.authenticationPageService.reloadPage = jest.fn();
       successCallback('needs-refresh');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('Handles connection errors', () => {
@@ -242,7 +242,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToStatusRequestError');
       errorCallback('Random error');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
   });
 
@@ -271,7 +271,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToNotificationFailed');
       successCallback('error');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('Should show qr when there is no device registered', () => {
@@ -280,7 +280,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToNoDevice');
       successCallback('no-device');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('Should show qr when there is no trusted-device cookie', () => {
@@ -289,7 +289,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToNoDevice');
       successCallback('no-trusted-device');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('Should handle connection errors', () => {
@@ -298,7 +298,7 @@ describe('AuthenticationPageService', () => {
       }
       const spy = jest.spyOn(context.authenticationPageService, 'switchToNotificationFailed');
       errorCallback('Some error');
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
   });
 });
