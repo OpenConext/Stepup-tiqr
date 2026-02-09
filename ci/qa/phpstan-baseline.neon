@@ -217,87 +217,57 @@ parameters:
 			path: ../../dev/FileLogger.php
 
 		-
-			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/AuthenticationController.php
 
 		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^Parameter \#1 \$enrollmentEnrollmentKey of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getEnrollmentSecret\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$enrollmentSecret of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:finalizeEnrollment\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: '#^Parameter \#1 \$enrollmentSecret of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:finalizeEnrollment\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$enrollmentSecret of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:validateEnrollmentSecret\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: '#^Parameter \#1 \$enrollmentSecret of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:validateEnrollmentSecret\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$identifier of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getSariForSessionIdentifier\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
+			identifier: argument.type
+			count: 3
+			path: ../../src/Controller/TiqrAppApiController.php
+
+		-
+			message: '#^Parameter \#1 \$sessionKey of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: '#^Parameter \#1 \$identifier of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getSariForSessionIdentifier\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^Parameter \#1 \$key of method Surfnet\\Tiqr\\Tiqr\\TiqrServiceInterface\:\:getEnrollmentMetadata\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$userId of method Surfnet\\Tiqr\\Tiqr\\TiqrUserRepositoryInterface\:\:getUser\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: '#^Parameter \#1 \$sessionKey of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$context of static method Surfnet\\Tiqr\\WithContextLogger\:\:from\(\) expects array\<string, string\>, array\<string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: '#^Parameter \#1 \$userId of method Surfnet\\Tiqr\\Tiqr\\TiqrUserRepositoryInterface\:\:getUser\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#2 \$secret of method Surfnet\\Tiqr\\Tiqr\\TiqrUserRepositoryInterface\:\:createUser\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
-			message: '#^Parameter \#2 \$context of static method Surfnet\\Tiqr\\WithContextLogger\:\:from\(\) expects array\<string, string\>, array\<string, mixed\> given\.$#'
+			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^Parameter \#2 \$secret of method Surfnet\\Tiqr\\Tiqr\\TiqrUserRepositoryInterface\:\:createUser\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../../src/Controller/TiqrAppApiController.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: ../../src/Controller/TiqrAppApiController.php
 
 		-
@@ -431,24 +401,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../../src/Features/Context/WebContext.php
-
-		-
-			message: '#^PHPDoc tag @throws with type Exception\|Surfnet\\Tiqr\\Exception\\ConfigurationException is not subtype of Throwable$#'
-			identifier: throws.notThrowable
-			count: 1
-			path: ../../src/Tiqr/AuthenticationRateLimitService.php
-
-		-
-			message: '#^PHPDoc tag @throws with type Surfnet\\Tiqr\\Exception\\ConfigurationException is not subtype of Throwable$#'
-			identifier: throws.notThrowable
-			count: 1
-			path: ../../src/Tiqr/AuthenticationRateLimitService.php
-
-		-
-			message: '#^PHPDoc tag @throws with type Surfnet\\Tiqr\\Exception\\ConfigurationException\|Surfnet\\Tiqr\\Exception\\TiqrServerRuntimeException is not subtype of Throwable$#'
-			identifier: throws.notThrowable
-			count: 1
-			path: ../../src/Tiqr/AuthenticationRateLimitService.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'

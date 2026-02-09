@@ -70,7 +70,11 @@
   },
   "scripts": {
     "check": [
-      "@validate",
+      "@check-ci",
+      "@rector"
+    ],
+    "check-ci": [
+      "@composer-validate",
       "@docheader",
       "@lint",
       "@jscpd",
@@ -92,14 +96,20 @@
     "behat": "./ci/qa/behat",
     "jest": "./ci/qa/jest",
     "jscpd": "./ci/qa/jscpd",
-    "rector": "./ci/qa/rector.sh",
-    "rector-dry": "./ci/qa/rector.sh --dry-run",
+    "rector": "./ci/qa/rector.sh --dry-run",
+    "rector-fix": "./ci/qa/rector.sh",
     "encore": [
       "yarn encore production"
     ],
     "frontend-install": [
       "yarn install --frozen-lockfile",
-      "yarn encore production"
+      "yarn encore production",
+      "./bin/console cache:clear",
+      "@fix-dev-permissions"
+    ],
+    "fix-dev-permissions": [
+      "chown -R www-data:www-data /var/www/html/var/log",
+      "chown -R www-data:www-data /var/www/html/var/cache"
     ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",

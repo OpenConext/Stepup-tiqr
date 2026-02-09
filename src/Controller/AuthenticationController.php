@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class AuthenticationController extends AbstractController
 {
@@ -106,12 +106,12 @@ class AuthenticationController extends AbstractController
         }
 
         // Handle one time password
-        if ($request->get('otp') !== null) {
+        if ($request->request->get('otp') !== null) {
             $logger->info('Handling otp');
             $response = $this->authenticationRateLimitService->authenticate(
                 $this->tiqrService->getAuthenticationSessionKey(),
                 $user,
-                $request->get('otp')
+                $request->request->get('otp')
             );
             if (!$response->isValid()) {
                 return $this->handleInvalidResponse($user, $response, $logger);

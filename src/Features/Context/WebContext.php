@@ -22,7 +22,6 @@ namespace Surfnet\Tiqr\Features\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\MinkExtension\Context\MinkContext;
 use Exception;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
@@ -39,9 +38,12 @@ use Surfnet\SamlBundle\SAML2\AuthnRequest as SamlAuthnRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Behat\Hook\BeforeScenario;
+use Behat\Hook\AfterScenario;
+use Behat\Step\Given;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class WebContext implements Context
 {
@@ -61,9 +63,8 @@ class WebContext implements Context
 
     /**
      * Fetch the required contexts.
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
@@ -71,10 +72,9 @@ class WebContext implements Context
     }
 
     /**
-     * Set mink driver to goutte
-     *
-     * @BeforeScenario @remote
+     * Set mink driver to goutte @remote
      */
+    #[BeforeScenario]
     public function setGoutteDriver(): void
     {
         $this->previousMinkSession = $this->minkContext->getMink()->getDefaultSessionName();
@@ -82,10 +82,9 @@ class WebContext implements Context
     }
 
     /**
-     * Set mink driver to goutte
-     *
-     * @AfterScenario @remote
+     * Set mink driver to goutte @remote
      */
+    #[AfterScenario]
     public function resetGoutteDriver(): void
     {
         $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
@@ -119,10 +118,9 @@ class WebContext implements Context
     }
 
     /**
-     * @Given /^a normal SAML 2.0 AuthnRequest form a unknown service provider$/
-     *
      * @throws Exception
      */
+    #[Given('/^a normal SAML 2.0 AuthnRequest form a unknown service provider$/')]
     public function aNormalSAMLAuthnRequestFormAUnknownServiceProvider(): void
     {
         $authnRequest = new AuthnRequest();
@@ -144,7 +142,6 @@ class WebContext implements Context
     }
 
     /**
-     * @return XMLSecurityKey
      * @throws Exception
      */
     private function loadPrivateKey(PrivateKey $key): XMLSecurityKey

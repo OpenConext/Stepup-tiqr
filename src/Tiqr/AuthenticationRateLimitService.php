@@ -24,8 +24,8 @@ use DateTimeImmutable;
 use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
-use Surfnet\Tiqr\Exception\ConfigurationException;
 use Surfnet\Tiqr\Exception\TiqrServerRuntimeException;
+use Surfnet\Tiqr\Tiqr\Exception\ConfigurationException;
 use Surfnet\Tiqr\Tiqr\Response\AuthenticationResponse;
 use Surfnet\Tiqr\Tiqr\Response\PermanentlyBlockedAuthenticationResponse;
 use Surfnet\Tiqr\Tiqr\Response\RateLimitedAuthenticationResponse;
@@ -34,7 +34,7 @@ use Surfnet\Tiqr\Tiqr\Response\TemporarilyBlockedAuthenticationResponse;
 use Surfnet\Tiqr\WithContextLogger;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 final readonly class AuthenticationRateLimitService implements AuthenticationRateLimitServiceInterface
 {
@@ -46,9 +46,6 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
     }
 
     /**
-     * @param TiqrUserInterface $user
-     *
-     * @return bool
      * @throws TiqrServerRuntimeException
      */
     public function isBlockedPermanently(TiqrUserInterface $user): bool
@@ -57,9 +54,6 @@ final readonly class AuthenticationRateLimitService implements AuthenticationRat
     }
 
     /**
-     * @param TiqrUserInterface $user
-     *
-     * @return bool
      * @throws ConfigurationException
      * @throws TiqrServerRuntimeException
      */

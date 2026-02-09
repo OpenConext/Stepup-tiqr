@@ -1,5 +1,9 @@
 name: Run QA tests (static analysis, lint and unit tests)
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   run-qa-tests:
@@ -23,4 +27,4 @@ jobs:
         run: yarn
 
       - name: Run QA tests
-        run: composer check
+        run: composer check-ci

@@ -28,21 +28,18 @@ interface AuthenticationRateLimitServiceInterface
     /**
      * @param string $response
      *   The one time password.
-     * @return AuthenticationResponse
      * @throws Exception
      */
     public function authenticate(string $sessionKey, TiqrUserInterface $user, string $response): AuthenticationResponse;
 
     /**
      *
-     * @return bool
      * @throws Exception
      */
     public function isBlockedPermanently(TiqrUserInterface $user): bool;
 
     /**
      *
-     * @return bool
      * @throws Exception
      */
     public function isBlockedTemporarily(TiqrUserInterface $user): bool;

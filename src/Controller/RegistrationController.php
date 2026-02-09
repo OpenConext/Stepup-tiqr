@@ -38,7 +38,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class RegistrationController extends AbstractController
 {

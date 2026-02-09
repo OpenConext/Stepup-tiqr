@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class AuthenticationNotificationController extends AbstractController
 {
@@ -157,8 +157,6 @@ class AuthenticationNotificationController extends AbstractController
      *  - success: Notification send successfully
      *  - error: Notification was not send successfully
      *  - no-device: There was no device to send the notification
-     *
-     * @return JsonResponse
      */
     private function generateNotificationResponse(string $status): JsonResponse
     {

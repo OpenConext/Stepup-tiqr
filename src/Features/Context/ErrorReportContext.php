@@ -32,6 +32,8 @@ use Behat\MinkExtension\Context\MinkContext;
 use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Behat\Hook\BeforeScenario;
+use Behat\Hook\AfterStep;
 
 /**
  * Generates a HTML/png error output report when a build fails.
@@ -50,9 +52,8 @@ final class ErrorReportContext implements Context
     /**
      * Fetch the required contexts.
      *
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
 
@@ -62,9 +63,9 @@ final class ErrorReportContext implements Context
 
     /**
      * This will print the failed html result.
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     * @AfterStep
+     * @SuppressWarnings("PHPMD.ElseExpression")
      */
+    #[AfterStep]
     public function dumpInfoAfterFailedStep(AfterStepScope $scope): void
     {
         if ($this->stepIsSuccessful($scope)) {
@@ -91,8 +92,6 @@ final class ErrorReportContext implements Context
 
     /**
      * Saves screenshot.
-     *
-     * @param string $fileName
      *
      * @throws DriverException
      */

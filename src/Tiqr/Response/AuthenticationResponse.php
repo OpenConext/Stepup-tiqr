@@ -24,8 +24,6 @@ interface AuthenticationResponse
 {
     /**
      * If the authentication is valid.
-     *
-     * @return boolean
      */
     public function isValid(): bool;
 
@@ -33,8 +31,6 @@ interface AuthenticationResponse
      * The success or error message for the client app.
      *
      * !!! keep in mind the client is depended on these response messages. (not something obvious like status codes)
-     *
-     * @return string
      */
     public function getMessage(): string;
 }

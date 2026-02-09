@@ -22,6 +22,7 @@ Encore
 
     // Convert sass files.
     .enableSassLoader(function (options) {
+        options.api = 'modern';
         options.sassOptions = {
             outputStyle: 'expanded',
             includePaths: ['public'],

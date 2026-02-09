@@ -47,8 +47,6 @@ final class WithContextLogger extends AbstractLogger
      * Logs with an arbitrary level.
      *
      * @param array<string, string> $context
-     *
-     * @return void
      */
     public function log($level, string|Stringable $message, array $context = []): void
     {
