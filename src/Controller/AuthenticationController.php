@@ -105,13 +105,14 @@ class AuthenticationController extends AbstractController
             return $this->showUserIsBlockedErrorPage($blockedPermanently);
         }
 
-        // Handle one time password
-        if ($request->request->get('otp') !== null) {
+        // Handle one time password - support both query and request parameters for SAML flow compatibility
+        $otp = $request->request->get('otp') ?? $request->query->get('otp');
+        if ($otp !== null) {
             $logger->info('Handling otp');
             $response = $this->authenticationRateLimitService->authenticate(
                 $this->tiqrService->getAuthenticationSessionKey(),
                 $user,
-                $request->request->get('otp')
+                $otp
             );
             if (!$response->isValid()) {
                 return $this->handleInvalidResponse($user, $response, $logger);

@@ -74,7 +74,7 @@ class WebContext implements Context
     /**
      * Set mink driver to goutte @remote
      */
-    #[BeforeScenario]
+    #[BeforeScenario('@remote')]
     public function setGoutteDriver(): void
     {
         $this->previousMinkSession = $this->minkContext->getMink()->getDefaultSessionName();
@@ -84,7 +84,7 @@ class WebContext implements Context
     /**
      * Set mink driver to goutte @remote
      */
-    #[AfterScenario]
+    #[AfterScenario('@remote')]
     public function resetGoutteDriver(): void
     {
         $this->minkContext->getMink()->setDefaultSessionName($this->previousMinkSession);
