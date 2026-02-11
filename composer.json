@@ -32,7 +32,6 @@
     "symfony/console": "^7.4",
     "symfony/dependency-injection": "^7.4",
     "symfony/flex": "^2.4.7",
-    "symfony/form": "^7.4",
     "symfony/monolog-bundle": "^4.0",
     "symfony/runtime": "^7.4",
     "symfony/security-bundle": "^7.4",
@@ -192,7 +191,8 @@
       ".gitignore",
       ".travis.*",
       "ci/qa/behat.yml",
-      "/vendor/google/apiclient-services/src/*"
+      "/vendor/google/apiclient-services/src/*",
+      "/bin/dev"
     ]
   }
 }
