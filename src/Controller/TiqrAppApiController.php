@@ -260,17 +260,19 @@ class TiqrAppApiController extends AbstractController
      */
     private function loginAction(Request $request, string $notificationType, string $notificationAddress): Response
     {
-        $userId = $request->request->get('userId');
+        $userId = $request->request->get('userId') ?? $request->query->get('userId');
         if (empty($userId)) {
             $this->logger->error('Missing "userId" parameter');
             return new Response('Missing "userId" parameter', Response::HTTP_BAD_REQUEST);
         }
-        $sessionKey = $request->request->get('sessionKey');
+
+        $sessionKey = $request->request->get('sessionKey') ?? $request->query->get('sessionKey');
         if (empty($sessionKey)) {
             $this->logger->error('Missing "sessionKey" parameter');
             return new Response('Missing "sessionKey" parameter', Response::HTTP_BAD_REQUEST);
         }
-        $response = $request->request->get('response');
+
+        $response = $request->request->get('response') ?? $request->query->get('response');
         if (empty($response)) {
             $this->logger->error('Missing "response" parameter');
             return new Response('Missing "response" parameter', Response::HTTP_BAD_REQUEST);
