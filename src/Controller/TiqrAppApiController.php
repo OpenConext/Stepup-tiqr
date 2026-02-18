@@ -114,17 +114,17 @@ class TiqrAppApiController extends AbstractController
     public function tiqr(Request $request): Response
     {
         // Support parameters in both query string and POST body for SAML flow compatibility
-        $operation = $request->request->get('operation') ?? $request->query->get('operation');
+        $operation = $request->query->get('operation') ?? $request->request->get('operation');
         if (empty($operation)) {
             $this->logger->error('Missing "operation" parameter in POST request to the authentication/enrollment endpoint');
             return new Response('Missing "operation" parameter in POST', Response::HTTP_BAD_REQUEST);
         }
 
-        $notificationType = $request->request->get('notificationType') ?? $request->query->get('notificationType') ?? '';
+        $notificationType = $request->query->get('notificationType') ?? $request->request->get('notificationType') ?? '';
         if (!is_string($notificationType)) {
             $notificationType = '';
         }
-        $notificationAddress = $request->request->get('notificationAddress') ?? $request->query->get('notificationAddress') ?? '';
+        $notificationAddress = $request->query->get('notificationAddress') ?? $request->request->get('notificationAddress') ?? '';
         if (!is_string($notificationAddress)) {
             $notificationAddress = '';
         }
@@ -162,12 +162,12 @@ class TiqrAppApiController extends AbstractController
         string $notificationAddress
     ): Response {
         // enrollment secret relayed by tiqr app - can be in query string or POST body
-        $enrollmentSecret = $request->request->get('otp') ?? $request->query->get('otp');
+        $enrollmentSecret = $request->query->get('otp') ?? $request->request->get('otp');
         if (empty($enrollmentSecret)) {
             $this->logger->error('Missing "otp" parameter');
             return new Response('Missing "otp" parameter', Response::HTTP_BAD_REQUEST);
         }
-        $secret = $request->request->get('secret') ?? $request->query->get('secret');
+        $secret = $request->query->get('secret') ?? $request->request->get('secret');
         if (empty($secret)) {
             $this->logger->error('Missing "secret" parameter');
             return new Response('Missing "secret" parameter', Response::HTTP_BAD_REQUEST);
@@ -178,7 +178,7 @@ class TiqrAppApiController extends AbstractController
             'sari' => $this->tiqrService->getSariForSessionIdentifier($enrollmentSecret),
         ]);
 
-        $version = $request->request->get('version') ?? $request->query->get('version');
+        $version = $request->query->get('version') ?? $request->request->get('version');
         $userAgent = $request->headers->get('User-Agent');
         $logger->notice(
             sprintf(
@@ -260,19 +260,19 @@ class TiqrAppApiController extends AbstractController
      */
     private function loginAction(Request $request, string $notificationType, string $notificationAddress): Response
     {
-        $userId = $request->request->get('userId') ?? $request->query->get('userId');
+        $userId = $request->query->get('userId') ?? $request->request->get('userId');
         if (empty($userId)) {
             $this->logger->error('Missing "userId" parameter');
             return new Response('Missing "userId" parameter', Response::HTTP_BAD_REQUEST);
         }
 
-        $sessionKey = $request->request->get('sessionKey') ?? $request->query->get('sessionKey');
+        $sessionKey = $request->query->get('sessionKey') ?? $request->request->get('sessionKey');
         if (empty($sessionKey)) {
             $this->logger->error('Missing "sessionKey" parameter');
             return new Response('Missing "sessionKey" parameter', Response::HTTP_BAD_REQUEST);
         }
 
-        $response = $request->request->get('response') ?? $request->query->get('response');
+        $response = $request->query->get('response') ?? $request->request->get('response');
         if (empty($response)) {
             $this->logger->error('Missing "response" parameter');
             return new Response('Missing "response" parameter', Response::HTTP_BAD_REQUEST);
@@ -284,7 +284,7 @@ class TiqrAppApiController extends AbstractController
             'sari' => $this->tiqrService->getSariForSessionIdentifier($sessionKey),
         ]);
 
-        $version = $request->request->get('version') ?? $request->query->get('version');
+        $version = $request->query->get('version') ?? $request->request->get('version');
         $userAgent = $request->headers->get('User-Agent');
         $logger->notice(
             sprintf(

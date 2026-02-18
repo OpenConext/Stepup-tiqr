@@ -106,7 +106,7 @@ class AuthenticationController extends AbstractController
         }
 
         // Handle one time password - support both query and request parameters for SAML flow compatibility
-        $otp = $request->request->get('otp') ?? $request->query->get('otp');
+        $otp = $request->query->get('otp') ?? $request->request->get('otp');
         if ($otp !== null) {
             $logger->info('Handling otp');
             $response = $this->authenticationRateLimitService->authenticate(
