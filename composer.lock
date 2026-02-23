@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81d3962294912869114e48aa22ab7326",
+    "content-hash": "61fb9b095114c429375a03680b9aad67",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -7239,16 +7239,16 @@
         },
         {
             "name": "tiqr/tiqr-server-libphp",
-            "version": "dev-develop",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ibuildingsnl/tiqr-server-libphp.git",
-                "reference": "72077e770ff9898c2254a133eaa40f04b69f6bae"
+                "url": "https://github.com/Tiqr/tiqr-server-libphp.git",
+                "reference": "d39bd8c18095046186002a01217891645d888ac9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ibuildingsnl/tiqr-server-libphp/zipball/72077e770ff9898c2254a133eaa40f04b69f6bae",
-                "reference": "72077e770ff9898c2254a133eaa40f04b69f6bae",
+                "url": "https://api.github.com/repos/Tiqr/tiqr-server-libphp/zipball/d39bd8c18095046186002a01217891645d888ac9",
+                "reference": "d39bd8c18095046186002a01217891645d888ac9",
                 "shasum": ""
             },
             "require": {
@@ -7271,7 +7271,6 @@
                 "phpunit/phpunit": "^9.6",
                 "squizlabs/php_codesniffer": "^3.7"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "google/apiclient-services": [
@@ -7283,33 +7282,16 @@
                     "library/tiqr/Tiqr"
                 ]
             },
-            "scripts": {
-                "test": [
-                    "@static-analysis",
-                    "@phpunit",
-                    "@security-tests"
-                ],
-                "static-analysis": [
-                    "./ci/qa/static-analysis"
-                ],
-                "phpunit": [
-                    "./ci/qa/phpunit"
-                ],
-                "security-tests": [
-                    "./ci/qa/security-tests"
-                ],
-                "pre-autoload-dump": [
-                    "Google\\Task\\Composer::cleanup"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
             "description": "php library for tiqr authentication.",
             "support": {
-                "source": "https://github.com/ibuildingsnl/tiqr-server-libphp/tree/develop"
+                "issues": "https://github.com/Tiqr/tiqr-server-libphp/issues",
+                "source": "https://github.com/Tiqr/tiqr-server-libphp/tree/4.4.0"
             },
-            "time": "2026-02-03T16:04:46+00:00"
+            "time": "2026-02-23T10:40:24+00:00"
         },
         {
             "name": "twig/extra-bundle",
@@ -11845,18 +11827,9 @@
             "time": "2025-11-17T20:03:58+00:00"
         }
     ],
-    "aliases": [
-        {
-            "package": "tiqr/tiqr-server-libphp",
-            "version": "dev-develop",
-            "alias": "5.0.0",
-            "alias_normalized": "5.0.0.0"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tiqr/tiqr-server-libphp": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -11868,5 +11841,5 @@
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

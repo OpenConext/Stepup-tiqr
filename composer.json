@@ -5,12 +5,6 @@
   "type": "project",
   "minimum-stability": "stable",
   "prefer-stable": true,
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/ibuildingsnl/tiqr-server-libphp"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "Surfnet\\Tiqr\\": "src",
@@ -40,7 +34,7 @@
     "symfony/validator": "^7.4",
     "symfony/webpack-encore-bundle": "^2.2",
     "symfony/yaml": "^7.4",
-    "tiqr/tiqr-server-libphp": "dev-develop as 5.0.0",
+    "tiqr/tiqr-server-libphp": "^4.4",
     "twig/extra-bundle": "^3.18",
     "twig/twig": "^3.18"
   },
