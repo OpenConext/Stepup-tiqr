@@ -29,7 +29,7 @@ use TypeError;
 
 class ExpirationHelper implements ExpirationHelperInterface
 {
-    private CoreDateTime $now;
+    private readonly CoreDateTime $now;
 
     public function __construct(
         private readonly Configuration $configuration,

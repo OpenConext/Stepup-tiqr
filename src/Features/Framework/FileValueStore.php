@@ -24,13 +24,10 @@ use InvalidArgumentException;
 use Surfnet\GsspBundle\Exception\NotFound;
 use Surfnet\GsspBundle\Service\ValueStore;
 
-final class FileValueStore implements ValueStore
+final readonly class FileValueStore implements ValueStore
 {
-    private string $filePath;
-
-    public function __construct(string $filePath)
+    public function __construct(private string $filePath)
     {
-        $this->filePath = $filePath;
         if (!file_exists($this->filePath)) {
             file_put_contents($this->filePath, json_encode([], JSON_THROW_ON_ERROR));
             chmod($this->filePath, 0666);
@@ -78,7 +75,7 @@ final class FileValueStore implements ValueStore
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ShortMethodName)
+     * @SuppressWarnings("PHPMD.ShortMethodName")
     */
     public function is(string $key, mixed $value): bool
     {

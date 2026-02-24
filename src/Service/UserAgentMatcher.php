@@ -22,9 +22,9 @@ namespace Surfnet\Tiqr\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 
-final class UserAgentMatcher implements UserAgentMatcherInterface
+final readonly class UserAgentMatcher implements UserAgentMatcherInterface
 {
-    public function __construct(private readonly string $pattern)
+    public function __construct(private string $pattern)
     {
     }
 

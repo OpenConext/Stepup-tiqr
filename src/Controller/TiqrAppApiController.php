@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Controller;
 
+use InvalidArgumentException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\Tiqr\Service\UserAgentMatcherInterface;
@@ -40,7 +41,7 @@ use Symfony\Component\Routing\Attribute\Route;
  * Keep in mind that the endpoint routers cannot change because of the 'old'
  * clients are depending on this.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class TiqrAppApiController extends AbstractController
 {
@@ -49,6 +50,7 @@ class TiqrAppApiController extends AbstractController
         private readonly TiqrUserRepositoryInterface $userRepository,
         private readonly AuthenticationRateLimitServiceInterface $authenticationRateLimitService,
         private readonly LoggerInterface $logger,
+        private readonly UserAgentMatcherInterface $userAgentMatcher,
     ) {
     }
 
@@ -61,7 +63,7 @@ class TiqrAppApiController extends AbstractController
     #[Route(path: '/tiqr/tiqr.php', methods: ['GET'])]
     public function metadata(Request $request): Response
     {
-        $enrollmentKey = $request->get('key');
+        $enrollmentKey = $request->query->get('key');
         if (empty($enrollmentKey)) {
             $this->logger->error('Missing "key" parameter in GET request to metadata endpoint');
 
@@ -109,19 +111,20 @@ class TiqrAppApiController extends AbstractController
      */
     #[Route(path: '/tiqr.php', name: 'app_identity_registration_authentication', methods: ['POST'])]
     #[Route(path: '/tiqr/tiqr.php', methods: ['POST'])]
-    public function tiqr(UserAgentMatcherInterface $userAgentMatcher, Request $request): Response
+    public function tiqr(Request $request): Response
     {
-        $operation = $request->get('operation');
+        // Support parameters in both query string and POST body for SAML flow compatibility
+        $operation = $request->query->get('operation') ?? $request->request->get('operation');
         if (empty($operation)) {
             $this->logger->error('Missing "operation" parameter in POST request to the authentication/enrollment endpoint');
             return new Response('Missing "operation" parameter in POST', Response::HTTP_BAD_REQUEST);
         }
 
-        $notificationType = $request->get('notificationType', '');
+        $notificationType = $request->query->get('notificationType') ?? $request->request->get('notificationType') ?? '';
         if (!is_string($notificationType)) {
             $notificationType = '';
         }
-        $notificationAddress = $request->get('notificationAddress', '');
+        $notificationAddress = $request->query->get('notificationAddress') ?? $request->request->get('notificationAddress') ?? '';
         if (!is_string($notificationAddress)) {
             $notificationAddress = '';
         }
@@ -131,7 +134,7 @@ class TiqrAppApiController extends AbstractController
                 'Got POST with registration response',
                 ['notificationType' => $notificationType, 'notificationAddress' => $notificationAddress]
             );
-            return $this->registerAction($userAgentMatcher, $request, $notificationType, $notificationAddress);
+            return $this->registerAction($this->userAgentMatcher, $request, $notificationType, $notificationAddress);
         }
         if ($operation === 'login') {
             $this->logger->notice(
@@ -146,11 +149,11 @@ class TiqrAppApiController extends AbstractController
     }
 
     /**
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function registerAction(
         UserAgentMatcherInterface $userAgentMatcher,
@@ -158,12 +161,13 @@ class TiqrAppApiController extends AbstractController
         string $notificationType,
         string $notificationAddress
     ): Response {
-        $enrollmentSecret = $request->get('otp'); // enrollment secret relayed by tiqr app
+        // enrollment secret relayed by tiqr app - can be in query string or POST body
+        $enrollmentSecret = $request->query->get('otp') ?? $request->request->get('otp');
         if (empty($enrollmentSecret)) {
             $this->logger->error('Missing "otp" parameter');
             return new Response('Missing "otp" parameter', Response::HTTP_BAD_REQUEST);
         }
-        $secret = $request->get('secret');
+        $secret = $request->query->get('secret') ?? $request->request->get('secret');
         if (empty($secret)) {
             $this->logger->error('Missing "secret" parameter');
             return new Response('Missing "secret" parameter', Response::HTTP_BAD_REQUEST);
@@ -174,7 +178,7 @@ class TiqrAppApiController extends AbstractController
             'sari' => $this->tiqrService->getSariForSessionIdentifier($enrollmentSecret),
         ]);
 
-        $version = $request->get('version');
+        $version = $request->query->get('version') ?? $request->request->get('version');
         $userAgent = $request->headers->get('User-Agent');
         $logger->notice(
             sprintf(
@@ -256,17 +260,19 @@ class TiqrAppApiController extends AbstractController
      */
     private function loginAction(Request $request, string $notificationType, string $notificationAddress): Response
     {
-        $userId = $request->get('userId');
+        $userId = $request->query->get('userId') ?? $request->request->get('userId');
         if (empty($userId)) {
             $this->logger->error('Missing "userId" parameter');
             return new Response('Missing "userId" parameter', Response::HTTP_BAD_REQUEST);
         }
-        $sessionKey = $request->get('sessionKey');
+
+        $sessionKey = $request->query->get('sessionKey') ?? $request->request->get('sessionKey');
         if (empty($sessionKey)) {
             $this->logger->error('Missing "sessionKey" parameter');
             return new Response('Missing "sessionKey" parameter', Response::HTTP_BAD_REQUEST);
         }
-        $response = $request->get('response');
+
+        $response = $request->query->get('response') ?? $request->request->get('response');
         if (empty($response)) {
             $this->logger->error('Missing "response" parameter');
             return new Response('Missing "response" parameter', Response::HTTP_BAD_REQUEST);
@@ -278,7 +284,7 @@ class TiqrAppApiController extends AbstractController
             'sari' => $this->tiqrService->getSariForSessionIdentifier($sessionKey),
         ]);
 
-        $version = $request->get('version');
+        $version = $request->query->get('version') ?? $request->request->get('version');
         $userAgent = $request->headers->get('User-Agent');
         $logger->notice(
             sprintf(

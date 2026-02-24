@@ -33,7 +33,7 @@ use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
 
 class HaliteCryptoHelper implements CryptoHelperInterface
 {
-    private EncryptionKey $encryptionKey;
+    private readonly EncryptionKey $encryptionKey;
 
     /**
      * @throws InvalidKey

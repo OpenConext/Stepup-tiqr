@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class AuthenticationController extends AbstractController
 {
@@ -105,13 +105,14 @@ class AuthenticationController extends AbstractController
             return $this->showUserIsBlockedErrorPage($blockedPermanently);
         }
 
-        // Handle one time password
-        if ($request->get('otp') !== null) {
+        // Handle one time password - support both query and request parameters for SAML flow compatibility
+        $otp = $request->query->get('otp') ?? $request->request->get('otp');
+        if ($otp !== null) {
             $logger->info('Handling otp');
             $response = $this->authenticationRateLimitService->authenticate(
                 $this->tiqrService->getAuthenticationSessionKey(),
                 $user,
-                $request->get('otp')
+                $otp
             );
             if (!$response->isValid()) {
                 return $this->handleInvalidResponse($user, $response, $logger);

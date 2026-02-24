@@ -22,15 +22,12 @@ namespace Surfnet\Tiqr\Tiqr\Response;
 
 class ValidAuthenticationResponse implements AuthenticationResponse
 {
-    
     public function __construct(private readonly string $message)
     {
     }
 
     /**
      * If the authentication is valid.
-     *
-     * @return boolean
      */
     public function isValid(): bool
     {
@@ -39,8 +36,6 @@ class ValidAuthenticationResponse implements AuthenticationResponse
 
     /**
      * The success or error message for the client app.
-     *
-     * @return string
      */
     public function getMessage(): string
     {

@@ -43,15 +43,15 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageFactoryInterf
 #[AsDecorator('session.factory')]
 final class LoggingSessionFactory extends SessionFactory
 {
-    private LoggerInterface $logger;
+    private readonly LoggerInterface $logger;
 
     public function __construct(
-        RequestStack                   $requestStack,
+        RequestStack $requestStack,
         #[Autowire(service: 'session.storage.factory')]
         SessionStorageFactoryInterface $storageFactory,
-        LoggerInterface                $monologLogger,
-        SessionCorrelationIdService    $sessionCorrelationIdService,
-        ?callable                      $usageReporter = null,
+        LoggerInterface $monologLogger,
+        SessionCorrelationIdService $sessionCorrelationIdService,
+        ?callable $usageReporter = null,
     ) {
         $this->logger = WithContextLogger::from(
             $monologLogger,

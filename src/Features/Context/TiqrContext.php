@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Features\Context;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Behat\Behat\Context\Context;
@@ -47,6 +48,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Zxing\QrReader;
 use Symfony\Component\BrowserKit\Cookie;
+use Behat\Hook\BeforeScenario;
+use Behat\Step\Given;
+use Behat\Step\When;
+use Behat\Step\Then;
 
 /**
  * With this context Tiqr can be tested without an active Saml AuthnNRequest.
@@ -92,9 +97,8 @@ class TiqrContext implements Context
 
     /**
      * Fetch the required contexts.
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
@@ -105,9 +109,8 @@ class TiqrContext implements Context
 
     /**
      * Configure the tiqr mobile app user agent.
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function restore(BeforeScenarioScope $scope): void
     {
         $this->userAgent = 'Behat UA';
@@ -119,10 +122,8 @@ class TiqrContext implements Context
      * @throws NotFound
      * @throws AssertionFailedException
      * @see QrLinkController::qrRegistrationAction
-     *
-     * @Given the registration QR code is scanned
-     *
      */
+    #[Given('the registration QR code is scanned')]
     public function theRegistrationQrCodeIsScanned(): void
     {
         $this->minkContext->visitPath('/registration/qr/link');
@@ -143,10 +144,8 @@ class TiqrContext implements Context
      * @throws NotFound
      * @throws AssertionFailedException
      *@see QrLinkController::qrRegistrationAction
-     *
-     * @Given the authentication QR code is scanned
-     *
      */
+    #[Given('the authentication QR code is scanned')]
     public function theAuthenticationQrCodeIsScanned(): void
     {
         $this->minkContext->visitPath('/authentication/qr/' . urlencode((string) $this->metadata->identity->identifier) . '/link');
@@ -164,10 +163,10 @@ class TiqrContext implements Context
     /**
      * This does the app registration logic.
      *
-     * @When the user registers the service with notification type :notificationType address: :notificationAddress
-     * @When the user registers the service
      * @throws AssertionFailedException
      */
+    #[When('the user registers the service with notification type :notificationType address: :notificationAddress')]
+    #[When('the user registers the service')]
     public function userRegisterTheService(
         string $notificationType = '',
         string $notificationAddress = ''
@@ -209,9 +208,7 @@ class TiqrContext implements Context
         );
     }
 
-    /**
-     * @Given the mobile tiqr app identifies itself with the user agent :userAgent
-     */
+    #[Given('the mobile tiqr app identifies itself with the user agent :userAgent')]
     public function mobileAppUsesUserAgent(string $userAgent): void
     {
         $this->userAgent = $userAgent;
@@ -220,10 +217,10 @@ class TiqrContext implements Context
     /**
      * This does the app authentication logic.
      *
-     * @When the app authenticates to the service with notification type :notificationType address: :notificationAddress
-     * @When the app authenticates to the service
      * @throws Exception
      */
+    #[When('the app authenticates to the service with notification type :notificationType address: :notificationAddress')]
+    #[When('the app authenticates to the service')]
     public function appAuthenticates(
         string $notificationType = '',
         string $notificationAddress = ''
@@ -261,9 +258,9 @@ class TiqrContext implements Context
     /**
      * This does the app authentication logic.
      *
-     * @When the app authenticates to the service with wrong password
      * @throws Exception
      */
+    #[When('the app authenticates to the service with wrong password')]
     public function appAuthenticatesWithWrongPassword(
         string $notificationType = '',
         string $notificationAddress = ''
@@ -276,11 +273,10 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Then tiqr errors with a message telling the user agent was wrong
-     *
      * @throws AssertionFailedException
      * @throws Exception
      */
+    #[Then('tiqr errors with a message telling the user agent was wrong')]
     public function userRegisteredWithWrongUserAgent(): void
     {
         $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
@@ -295,11 +291,10 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Then we register with the same QR code it should not work anymore.
-     *
      * @throws AssertionFailedException
      * @throws Exception
      */
+    #[Then('we register with the same QR code it should not work anymore.')]
     public function userRegisterTheServiceWithSameQr(): void
     {
         // The first registration attempt should succeed.
@@ -318,11 +313,10 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Then we have a registered user
-     *
      * @throws UserNotExistsException
      * @throws AssertionFailedException
      */
+    #[Then('we have a registered user')]
     public function weHaveARegisteredUser(): void
     {
         $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
@@ -336,20 +330,17 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Then we have a authenticated user
-     * @Then we have a authenticated app
-     *
      * @throws AssertionFailedException
      */
+    #[Then('we have a authenticated user')]
+    #[Then('we have a authenticated app')]
     public function weHaveAAuthenticatedUser(): void
     {
         Assertion::eq("OK", $this->authenticatioResponse->getContent());
         Assertion::eq($this->authenticatioResponse->getStatusCode(), 200);
     }
 
-    /**
-     * @Given we have a trusted cookie for address: :arg1
-     */
+    #[Given('we have a trusted cookie for address: :arg1')]
     public function weHaveATrustedDevice(string $notificationAddress): void
     {
         $cookieJar = $this->authenticatioResponse->headers->getCookies();
@@ -364,10 +355,9 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Then we have the authentication error :error
-     *
      * @throws AssertionFailedException
      */
+    #[Then('we have the authentication error :error')]
     public function weHaveTheAuthenticationError(string $error): void
     {
         Assertion::eq($error, $this->authenticatioResponse->getContent());
@@ -375,9 +365,9 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Given tiqr users is permanently blocked after :attempts attempts
      * @throws AssertionFailedException
      */
+    #[Given('tiqr users is permanently blocked after :attempts attempts')]
     public function tiqrUserIsPermentlyBlockedConfiguration(int $attempts): void
     {
         $this->configuration->setMaxLoginAttempts($attempts);
@@ -391,11 +381,10 @@ class TiqrContext implements Context
     /**
      * Read image and set to this context.
      *
-     * @Then I scan the tiqr registration qrcode
-     *
      * @throws AssertionFailedException
      * @throws GuzzleException
      */
+    #[Then('I scan the tiqr registration qrcode')]
     public function iScanTheTiqrRegistrationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
@@ -417,27 +406,27 @@ class TiqrContext implements Context
     /**
      * Click the enrollment Url instead of scanning the QR code
      *
-     * @Then I click the tiqr registration qrcode
-     *
      * @throws AssertionFailedException
      * @throws GuzzleException
      */
+    #[Then('I click the tiqr registration qrcode')]
     public function iClickTheTiqrRegistrationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
         $page = $session->getPage();
         $anchor = $page->find('css', 'div.qr > a');
-        $this->metadataUrl = str_replace('tiqrenroll://', '', $anchor->getAttribute('href'));
+        $href = $anchor?->getAttribute('href');
+        $this->metadataUrl = str_replace('tiqrenroll://', '', $href ?? '');
     }
 
     /**
      * Read image and set to this context.
      *
-     * @Then I scan the tiqr authentication qrcode
      *
      * @throws AssertionFailedException
      * @throws GuzzleException
      */
+    #[Then('I scan the tiqr authentication qrcode')]
     public function iScanTheTiqrAuthenticationQrcode(): void
     {
         $session = $this->minkContext->getMink()->getSession();
@@ -455,26 +444,25 @@ class TiqrContext implements Context
         }
     }
 
-    /**
-     * @When /^I clear the logs$/
-     */
+    #[When('/^I clear the logs$/')]
     public function clearTheLogs(): void
     {
         $this->fileLogger->cleanLogs();
     }
 
     /**
-     * @Given /^the logs are:$/
      *
      * @throws AssertionFailedException
      * @throws Exception
      */
+    #[Given('/^the logs are:$/')]
     public function theLogsAre(TableNode $table): void
     {
         $logs = $this->fileLogger->cleanLogs();
         $rows = array_values($table->getColumnsHash());
 
         try {
+            /** @var array<string, string> $row */
             foreach ($rows as $index => $row) {
                 Assertion::true(isset($logs[$index]), sprintf('Missing message %s', $row['message']));
                 [$level, $message, $context] = $logs[$index];
@@ -520,19 +508,20 @@ class TiqrContext implements Context
     }
 
     /**
-     * @Given /^the logs are dumped:$/
      *
      * @throws AssertionFailedException
      * @throws Exception
      */
+    #[Given('/^the logs are dumped:$/')]
     public function theLogsAreDumped(TableNode $table): void
     {
         $logs = $this->fileLogger->cleanLogs();
         $output = '';
 
-        foreach ($logs as $index => $row) {
+        foreach ($logs as $row) {
+            /** @var array{0: string, 1: string, 2?: array<string, mixed>} $row */
             [$level, $message] = $row;
-            $sari = !empty($row[2]['sari']) ? 'present' : '     ';
+            $sari = !empty($row[2]['sari'] ?? null) ? 'present' : '     ';
             $output .= "| " . $level . " | " . $message . " | " . $sari . " |\n";
         }
 
@@ -557,17 +546,13 @@ class TiqrContext implements Context
         return $client->getInternalResponse()->getContent();
     }
 
-    /**
-     * @Given I fill in :field with my identifier
-     */
+    #[Given('I fill in :field with my identifier')]
     public function iFillInWithMyIdentifier(string $field): void
     {
         $this->minkContext->fillField($field, $this->metadata->identity->identifier);
     }
 
-    /**
-     * @Given I fill in :field with my one time password and press ok
-     */
+    #[Given('I fill in :field with my one time password and press ok')]
     public function iFillInWithMyOTP(string $field): void
     {
         [$serviceId, $session, $challenge] = explode('/', $this->authenticationUrl);
@@ -577,9 +562,7 @@ class TiqrContext implements Context
         $this->minkContext->visit('/authentication?otp=' . urlencode($response));
     }
 
-    /**
-     * @When /^a push notification is sent$/
-     */
+    #[When('/^a push notification is sent$/')]
     public function aPushNotificationIsSent(): void
     {
         $session = $this->minkContext->getMink()->getSession();
@@ -589,9 +572,10 @@ class TiqrContext implements Context
     }
 
     /**
-     * @When /^push notification is sent with a trusted\-device cookie with address "([^"]*)"$/
-     * @When /^push notification is sent with a trusted\-device cookie with address "([^"]*)" and cookie value "([^"]*)"$/
+     *      * @When /^push notification is sent with a trusted\-device cookie with address "([^"]*)" and cookie value "([^"]*)"$/
      */
+    #[When('/^push notification is sent with a trusted\-device cookie with address "([^"]*)"$/')]
+    #[When('/^push notification is sent with a trusted\-device cookie with address "([^"]*)" and cookie value "([^"]*)"$/')]
     public function aPushNotificationIsSentWithATrustedDevice(string $notificationAddress, string $overwriteCookieValue = null): void
     {
         $config = new Configuration('tiqr-trusted-device', 3600, '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f', 'none');
@@ -626,9 +610,7 @@ class TiqrContext implements Context
     }
 
 
-    /**
-     * @Then /^it should fail with "([^"]*)"$/
-     */
+    #[Then('/^it should fail with "([^"]*)"$/')]
     public function itShouldFailWith(string $errorCode): void
     {
         $session = $this->minkContext->getMink()->getSession();
@@ -639,18 +621,16 @@ class TiqrContext implements Context
         Assertion::eq($response->getContent(), '"' . $errorCode . '"');
     }
 
-    /**
-     * @Then /^it should send a notification for the user with type "([^"]*)" and address "([^"]*)"$/
-     */
+    #[Then('/^it should send a notification for the user with type "([^"]*)" and address "([^"]*)"$/')]
     public function itShouldSendANotification(string $type, string $address): void
     {
         $id = $this->metadata->identity->identifier;
         $session = $this->minkContext->getMink()->getSession();
-        /** @var BrowserKitDriver $driver */
+        /** @var BrowserKitDriver<mixed, mixed> $driver */
         $driver = $session->getDriver();
         $client = $driver->getClient();
         $response = $client->getResponse();
-        /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
+        /** @var JsonResponse $response */
         Assertion::eq($response->getStatusCode(), 200);
 
         $this->logsContain('Sending push notification for user "' . $id . '" with type "' . $type . '" and (untranslated) address "' . $address .'"');
@@ -681,9 +661,7 @@ class TiqrContext implements Context
         Assertion::eq($string, '', sprintf('The logs do not contain a line starting with "%s"', $string));
     }
 
-    /**
-     * @Then /^the logs should say: no trusted cookie for address "([^"]*)"$/
-     */
+    #[Then('/^the logs should say: no trusted cookie for address "([^"]*)"$/')]
     public function theLogsShouldSayNoTrustedDevice(string $address): void
     {
         $userId = $this->metadata->identity->identifier;
@@ -692,9 +670,7 @@ class TiqrContext implements Context
         );
     }
 
-    /**
-     * @Then /^the logs should mention a signature mismatch for address "([^"]*)"$/
-     */
+    #[Then('/^the logs should mention a signature mismatch for address "([^"]*)"$/')]
     public function theLogsShouldMentionSignatureMismatch(string $address): void
     {
         $this->logsContain(
@@ -702,56 +678,44 @@ class TiqrContext implements Context
         );
     }
 
-    /**
-     * @Then /^the logs should mention: Trusted device cookie "([^"]*)" does not match: "([^"]*)"$/
-     */
+    #[Then('/^the logs should mention: Trusted device cookie "([^"]*)" does not match: "([^"]*)"$/')]
     public function theLogsShouldMentionTrustedDeviceCookieDoesNotMatch(string $address1, string $address2): void
     {
         $this->logsContain('Trusted device cookie "' . $address1 . '" does not match: "' . $address2 . '"');
     }
 
-    /**
-     * @Given /^the logs should mention: Writing a trusted\-device cookie with fingerprint$/
-     */
+    #[Given('/^the logs should mention: Writing a trusted\-device cookie with fingerprint$/')]
     public function theLogsShouldMentionWritingATrustedDeviceCookieWithFingerprint(): void
     {
         $this->logsContainLineStartingWith('Writing a trusted-device cookie with fingerprint ');
     }
 
-    /**
-     * @Then /^I dump the page$/
-     */
+    #[Then('/^I dump the page$/')]
     public function iDumpThePage(): void
     {
         $session = $this->minkContext->getSession();
         $driver = $session->getDriver();
-        /** @var BrowserKitDriver $driver */
+        /** @var BrowserKitDriver<mixed, mixed> $driver */
         $client = $driver->getClient();
         $response = $client->getResponse();
 
         dump($response);
     }
 
-    /**
-     * @Then /^I dump the auth response$/
-     */
+    #[Then('/^I dump the auth response$/')]
     public function iDumpTheAuthResponse(): void
     {
         dump($this->authenticatioResponse);
     }
 
-    /**
-     * @When /^the trusted device cookie is cleared$/
-     */
+    #[When('/^the trusted device cookie is cleared$/')]
     public function theTrustedDeviceCookieIsCleared(): void
     {
         $this->minkContext->getSession()->getDriver()->getClient()->getCookieJar()->expire('tiqr-trusted-device');
     }
 
-    /**
-     * @Then /^I should see the trusted device cookie$/
-     * @Then /^I should see the trusted device cookie for address "([^"]*)"$/
-     */
+    #[Then('/^I should see the trusted device cookie$/')]
+    #[Then('/^I should see the trusted device cookie for address "([^"]*)"$/')]
     public function iShouldSeeTheCookie(?string $notificationAddress = null): void
     {
         $session = $this->minkContext->getMink()->getSession();

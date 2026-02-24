@@ -152,7 +152,6 @@ final class SPController extends AbstractController
      */
     private function signRequestQuery(array $queryParams): string
     {
-        /** @var  $securityKey */
         $securityKey = $this->loadServiceProviderPrivateKey();
         $queryParams[AuthnRequest::PARAMETER_SIGNATURE_ALGORITHM] = $securityKey->type;
         $toSign = http_build_query($queryParams);

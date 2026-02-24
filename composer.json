@@ -18,25 +18,23 @@
     "incenteev/composer-parameter-handler": "^2.2",
     "openconext/monitor-bundle": "^4.3.1",
     "paragonie/halite": "^5.1.2",
-    "surfnet/stepup-bundle": "^6.0.17",
-    "surfnet/stepup-gssp-bundle": "^5.1",
-    "surfnet/stepup-saml-bundle": "^6.1",
-    "symfony/asset": "^6.4.13",
-    "symfony/config": "^6.4.14",
-    "symfony/console": "^6.4.17",
-    "symfony/dependency-injection": "^6.4.16",
+    "surfnet/stepup-bundle": "^7.0",
+    "surfnet/stepup-gssp-bundle": "^6.0",
+    "surfnet/stepup-saml-bundle": "^7.0",
+    "symfony/asset": "^7.4",
+    "symfony/config": "^7.4",
+    "symfony/console": "^7.4",
+    "symfony/dependency-injection": "^7.4",
     "symfony/flex": "^2.4.7",
-    "symfony/form": "^6.4.13",
-    "symfony/monolog-bundle": "^3.10",
-    "symfony/runtime": "^6.4.14",
-    "symfony/security-bundle": "^6.4.13",
-    "symfony/templating": "^6.4.13",
-    "symfony/translation": "^6.4.13",
-    "symfony/twig-bundle": "^6.4.13",
-    "symfony/validator": "^6.4.17",
+    "symfony/monolog-bundle": "^4.0",
+    "symfony/runtime": "^7.4",
+    "symfony/security-bundle": "^7.4",
+    "symfony/translation": "^7.4",
+    "symfony/twig-bundle": "^7.4",
+    "symfony/validator": "^7.4",
     "symfony/webpack-encore-bundle": "^2.2",
-    "symfony/yaml": "^6.4.13",
-    "tiqr/tiqr-server-libphp": "^4.3.1",
+    "symfony/yaml": "^7.4",
+    "tiqr/tiqr-server-libphp": "^4.4",
     "twig/extra-bundle": "^3.18",
     "twig/twig": "^3.18"
   },
@@ -45,28 +43,31 @@
     "behat/mink-browserkit-driver": "^2.2",
     "behat/mink-selenium2-driver": "^1.7",
     "friends-of-behat/symfony-extension": "^2.6",
-    "guzzle/guzzle": "^3.8.1",
     "khanamiryan/qrcode-detector-decoder": "^2.0.2",
     "league/csv": "^9.21",
     "malukenho/docheader": "^1.1",
     "overtrue/phplint": ">=9.5.6",
     "phpmd/phpmd": "^2.15",
-    "phpstan/phpstan": "^1.12.15",
-    "phpstan/phpstan-symfony": "^1.4.13",
-    "phpunit/phpunit": "^9.6.22",
-    "sebastian/phpcpd": "^6.0.3",
-    "slevomat/coding-standard": "^8.15",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-symfony": "^2.0",
+    "phpunit/phpunit": "^11.0",
+    "rector/rector": "^2.2",
+    "slevomat/coding-standard": "^8.27",
     "soyuka/contexts": "^3.3.13",
-    "squizlabs/php_codesniffer": "^3.11.2",
-    "symfony/browser-kit": "6.4.*",
-    "symfony/css-selector": "^6.4.13",
-    "symfony/phpunit-bridge": "^6.4.16",
-    "symfony/stopwatch": "^6.4.13",
-    "symfony/web-profiler-bundle": "^6.4.17"
+    "squizlabs/php_codesniffer": "^4.0",
+    "symfony/browser-kit": "7.4.*",
+    "symfony/css-selector": "^7.4",
+    "symfony/phpunit-bridge": "^8.0",
+    "symfony/stopwatch": "^7.4",
+    "symfony/web-profiler-bundle": "^7.4"
   },
   "scripts": {
     "check": [
-      "@validate",
+      "@check-ci",
+      "@rector"
+    ],
+    "check-ci": [
+      "@composer-validate",
       "@docheader",
       "@lint",
       "@jscpd",
@@ -88,12 +89,20 @@
     "behat": "./ci/qa/behat",
     "jest": "./ci/qa/jest",
     "jscpd": "./ci/qa/jscpd",
+    "rector": "./ci/qa/rector.sh --dry-run",
+    "rector-fix": "./ci/qa/rector.sh",
     "encore": [
       "yarn encore production"
     ],
     "frontend-install": [
       "yarn install --frozen-lockfile",
-      "yarn encore production"
+      "yarn encore production",
+      "./bin/console cache:clear",
+      "@fix-dev-permissions"
+    ],
+    "fix-dev-permissions": [
+      "chown -R www-data:www-data /var/www/html/var/log",
+      "chown -R www-data:www-data /var/www/html/var/cache"
     ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
@@ -127,7 +136,7 @@
     },
     "symfony": {
       "allow-contrib": false,
-      "require": "6.4.*"
+      "require": "^7.4"
     },
     "incenteev-parameters": [
       {
@@ -176,7 +185,8 @@
       ".gitignore",
       ".travis.*",
       "ci/qa/behat.yml",
-      "/vendor/google/apiclient-services/src/*"
+      "/vendor/google/apiclient-services/src/*",
+      "/bin/dev"
     ]
   }
 }

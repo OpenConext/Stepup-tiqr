@@ -18,6 +18,8 @@
 
 namespace Unit\Service\TrustedDevice\DateTime;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use DateTime;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Surfnet\Tiqr\Service\TrustedDevice\DateTime\ExpirationHelper;
@@ -27,88 +29,80 @@ use Surfnet\Tiqr\Service\TrustedDevice\ValueObject\CookieValue;
 
 class ExpirationHelperTest extends TestCase
 {
-    /**
-     * @dataProvider expirationExpectations
-     */
+    #[DataProvider('expirationExpectations')]
     public function test_is_expired(bool $isExpired, ExpirationHelper $helper, CookieValue $cookieValue): void
     {
         self::assertEquals($isExpired, $helper->isExpired($cookieValue));
     }
 
-    /**
-     * @dataProvider expirationValues
-     */
+    #[DataProvider('expirationValues')]
     public function test_expiration_period(bool $isExpired, ExpirationHelper $helper, CookieValue $cookieValue): void
     {
         self::assertEquals($isExpired, $helper->isExpired($cookieValue));
     }
 
-    public function expirationValues(): array
+    public static function expirationValues(): array
     {
         // Cookie lifetime 3600
-        $helper = $this->makeExpirationHelper(3600, time());
+        $helper = self::makeExpirationHelper(3600, time());
         return [
-            'within period' => [false, $helper, $this->makeCookieValue(time() - 3600)],
-            'outside period' => [true, $helper, $this->makeCookieValue(time() - 3601)],
+            'within period' => [false, $helper, self::makeCookieValue(time() - 3600)],
+            'outside period' => [true, $helper, self::makeCookieValue(time() - 3601)],
         ];
     }
 
-    public function invalidTimeExpectations(): array
+    public static function invalidTimeExpectations(): array
     {
-        $goodOldHelper = $this->makeExpirationHelper(3600, time());
+        $goodOldHelper = self::makeExpirationHelper(3600, time());
         return [
-            'from the future' => [$goodOldHelper, $this->makeCookieValue(time() + 42)],
+            'from the future' => [$goodOldHelper, self::makeCookieValue(time() + 42)],
         ];
     }
 
-    public function invalidTimeArgumentExpectations(): array
+    public static function invalidTimeArgumentExpectations(): array
     {
-        $goodOldHelper = $this->makeExpirationHelper(3600, time());
+        $goodOldHelper = self::makeExpirationHelper(3600, time());
         return [
-            'before epoch' => [$goodOldHelper, fn() => $this->makeCookieValue(-1)],
-            'invalid time input 1' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime('aint-no-time')],
-            'invalid time input 2' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime('9999-01-01')],
-            'invalid time input 3' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime('0001-01-01')],
-            'invalid time input 4' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(-1.0)],
-            'invalid time input 5' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(2.999)],
-            'invalid time input 6' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(42)],
-            'invalid time input 7' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(true)],
-            'invalid time input 8' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(false)],
-            'invalid time input 9' => [$goodOldHelper, fn() => $this->makeCookieValueUnrestrictedAuthTime(null)],
+            'before epoch' => [$goodOldHelper, fn() => self::makeCookieValue(-1)],
+            'invalid time input 1' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime('aint-no-time')],
+            'invalid time input 2' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime('9999-01-01')],
+            'invalid time input 3' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime('0001-01-01')],
+            'invalid time input 4' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime(-1.0)],
+            'invalid time input 5' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime(2.999)],
+            'invalid time input 6' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime(42)],
+            'invalid time input 7' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime(true)],
+            'invalid time input 8' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime(false)],
+            'invalid time input 9' => [$goodOldHelper, fn() => self::makeCookieValueUnrestrictedAuthTime(null)],
         ];
     }
 
-    /**
-     * @dataProvider invalidTimeExpectations
-     */
+    #[DataProvider('invalidTimeExpectations')]
     public function test_strange_authentication_time_values(ExpirationHelper $helper, CookieValue $cookieValue): void
     {
         $this->expectException(InvalidAuthenticationTimeException::class);
         $helper->isExpired($cookieValue);
     }
 
-    /**
-     * @dataProvider invalidTimeArgumentExpectations
-     */
+    #[DataProvider('invalidTimeArgumentExpectations')]
     public function test_strange_authentication_time_arguments(ExpirationHelper $helper, callable $callback): void
     {
         $this->expectException(InvalidArgumentException::class);
         $helper->isExpired($callback());
     }
 
-    public function expirationExpectations(): array
+    public static function expirationExpectations(): array
     {
         return [
-            'not expired' => [false, $this->makeExpirationHelper(3600, time()), $this->makeCookieValue(time())],
-            'not expired but about to be' => [false, $this->makeExpirationHelper(3600, time() + 3600), $this->makeCookieValue(time())],
-            'expired' => [true, $this->makeExpirationHelper(3600, time() + 3601), $this->makeCookieValue(time())],
-            'expired more' => [true, $this->makeExpirationHelper(3600, time() + 36000), $this->makeCookieValue(time())],
+            'not expired' => [false, self::makeExpirationHelper(3600, time()), self::makeCookieValue(time())],
+            'not expired but about to be' => [false, self::makeExpirationHelper(3600, time() + 3600), self::makeCookieValue(time())],
+            'expired' => [true, self::makeExpirationHelper(3600, time() + 3601), self::makeCookieValue(time())],
+            'expired more' => [true, self::makeExpirationHelper(3600, time() + 36000), self::makeCookieValue(time())],
         ];
     }
 
-    private function makeExpirationHelper(int $expirationTime, int $now) : ExpirationHelper
+    private static function makeExpirationHelper(int $expirationTime, int $now) : ExpirationHelper
     {
-        $time = new \DateTime();
+        $time = new DateTime();
         $time->setTimestamp($now);
 
         $config = new Configuration(
@@ -121,9 +115,9 @@ class ExpirationHelperTest extends TestCase
         return new ExpirationHelper($config, $time);
     }
 
-    private function makeCookieValue(int $authenticationTime) : CookieValue
+    private static function makeCookieValue(int $authenticationTime) : CookieValue
     {
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
         $dateTime->setTimestamp($authenticationTime);
         $data = [
             'userId' => 'userId',
@@ -133,7 +127,7 @@ class ExpirationHelperTest extends TestCase
         return CookieValue::deserialize(json_encode($data));
     }
 
-    private function makeCookieValueUnrestrictedAuthTime($authenticationTime) : CookieValue
+    private static function makeCookieValueUnrestrictedAuthTime($authenticationTime) : CookieValue
     {
         $data = [
             'userId' => 'userId',

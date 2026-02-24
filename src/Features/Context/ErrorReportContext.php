@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Features\Context;
 
+use Behat\Gherkin\Node\NodeInterface;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -28,10 +29,11 @@ use Behat\Gherkin\Node\ScenarioInterface;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Behat\Hook\BeforeScenario;
+use Behat\Hook\AfterStep;
 
 /**
  * Generates a HTML/png error output report when a build fails.
@@ -50,9 +52,8 @@ final class ErrorReportContext implements Context
     /**
      * Fetch the required contexts.
      *
-     *
-     * @BeforeScenario
      */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
 
@@ -62,9 +63,9 @@ final class ErrorReportContext implements Context
 
     /**
      * This will print the failed html result.
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     * @AfterStep
+     * @SuppressWarnings("PHPMD.ElseExpression")
      */
+    #[AfterStep]
     public function dumpInfoAfterFailedStep(AfterStepScope $scope): void
     {
         if ($this->stepIsSuccessful($scope)) {
@@ -78,7 +79,7 @@ final class ErrorReportContext implements Context
                 $step = $this->getBackGroundStep($scope);
                 $title = $step->getNodeType().'-'.$step->getText();
             }
-            $filename = preg_replace('/[^a-zA-Z0-9]/', '-', $title);
+            $filename = preg_replace('/[^a-zA-Z0-9]/', '-', (string) $title);
             if (!is_string($filename)) {
                 throw new Exception('Unable to parse the file name');
             }
@@ -92,9 +93,7 @@ final class ErrorReportContext implements Context
     /**
      * Saves screenshot.
      *
-     * @param string $fileName
-     *
-     * @throws \Behat\Mink\Exception\DriverException
+     * @throws DriverException
      */
     private function takeScreenShotAfterFailedStep(string $fileName): void
     {
@@ -131,7 +130,7 @@ TEXT;
     /**
      * Check if test is successful.
      *
-     * @param \Behat\Behat\Hook\Scope\AfterStepScope $scope
+     * @param AfterStepScope $scope
      *   The test scope.
      *
      * @return bool
@@ -165,7 +164,7 @@ TEXT;
      * Returns the scenario for a given step.
      *
      *
-     * @return \Behat\Gherkin\Node\NodeInterface|null
+     * @return NodeInterface|null
      */
     private function getBackGroundStep(StepScope $scope)
     {

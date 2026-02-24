@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Controller;
 
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\RegistrationService;
@@ -38,7 +39,7 @@ class CancelController extends AbstractController
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     #[Route(path: '/cancel', name: 'app_cancel', methods: ['GET'])]
     public function cancel(): Response

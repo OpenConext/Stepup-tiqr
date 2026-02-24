@@ -96,8 +96,6 @@ class AuthenticationStatusController
      *  - needs-refresh: refresh the page (the /authentication page will handle the success or error)
      *  - challenge-expired: Message user challenge is expired, let the user give the option to retry.
      *  - invalid-request: There was a state issue, or another reason why authentication failed
-     *
-     * @return JsonResponse
      */
     private function generateAuthenticationStatusResponse(string $status): JsonResponse
     {
@@ -106,8 +104,6 @@ class AuthenticationStatusController
 
     /**
      * Generate a response for authentication.html: refresh the page.
-     *
-     * @return JsonResponse
      */
     private function refreshAuthenticationPage(): JsonResponse
     {
@@ -116,8 +112,6 @@ class AuthenticationStatusController
 
     /**
      * Generate a response for authentication.html: Ask the user to retry.
-     *
-     * @return JsonResponse
      */
     private function timeoutNeedsManualRetry(): JsonResponse
     {
@@ -126,8 +120,6 @@ class AuthenticationStatusController
 
     /**
      * Authentication is pending, schedule a new poll action.
-     *
-     * @return JsonResponse
      */
     private function scheduleNextPollOnAuthenticationPage(): JsonResponse
     {

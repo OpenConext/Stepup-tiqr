@@ -41,9 +41,9 @@ use Tiqr_StateStorage_StateStorageInterface;
 /**
  * Wrapper around the legacy Tiqr service.
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  * It's Legacy.
  */
 final class TiqrService implements TiqrServiceInterface
@@ -357,8 +357,6 @@ final class TiqrService implements TiqrServiceInterface
      *
      * TODO:maybe use something like UUID?
      *
-     *
-     * @return string
      */
     private function generateId(int $length = 4): string
     {

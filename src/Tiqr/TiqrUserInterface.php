@@ -58,8 +58,6 @@ interface TiqrUserInterface
      * Get the user's number unsuccessful login attempts
      *
      * @throws TiqrServerRuntimeException
-     *
-     * @return int
      */
     public function getLoginAttempts(): int;
 
@@ -129,15 +127,11 @@ interface TiqrUserInterface
 
     /**
      * Return push notification type previously set with updateNotification()
-     *
-     * @return string
      */
     public function getNotificationType(): string;
 
     /**
      * Return push notification address previously set with updateNotification()
-     *
-     * @return string
      */
     public function getNotificationAddress(): string;
 }

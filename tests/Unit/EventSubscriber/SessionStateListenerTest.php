@@ -37,14 +37,12 @@ final class SessionStateListenerTest extends KernelTestCase
 
     public function testItLogsWhenUserHasNoSessionCookie(): void
     {
-        self::bootKernel();
-
         $request = new Request(server: ['REQUEST_URI' => '/route']);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new RequestEvent(self::$kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->getMockKernel(), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $dispatcher = new EventDispatcher();
 
@@ -62,20 +60,20 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSIONID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
     public function testItLogsWhenUserHasNoSession(): void
     {
-        self::bootKernel();
+        
 
         $request = new Request(server: ['REQUEST_URI' => '/route'], cookies: ['PHPSESSID' => self::SESSION_ID]);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new RequestEvent(self::$kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->getMockKernel(), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $dispatcher = new EventDispatcher();
 
@@ -111,13 +109,13 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
     public function testItLogsAnErrorWhenTheSessionIdDoesNotMatchTheSessionCookie(): void
     {
-        self::bootKernel();
+        
 
         $session = new Session(new MockArraySessionStorage());
         $session->setId('erroneous-session-id');
@@ -128,7 +126,7 @@ final class SessionStateListenerTest extends KernelTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new RequestEvent(self::$kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->getMockKernel(), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $dispatcher = new EventDispatcher();
 
@@ -162,14 +160,12 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
     }
 
     public function testTheUserSessionMatchesTheSessionCookie(): void
     {
-        self::bootKernel();
-
         $session = new Session(new MockArraySessionStorage());
         $session->setId(self::SESSION_ID);
 
@@ -179,8 +175,7 @@ final class SessionStateListenerTest extends KernelTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-
-        $event = new RequestEvent(self::$kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->getMockKernel(), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $dispatcher = new EventDispatcher();
 
@@ -214,7 +209,12 @@ final class SessionStateListenerTest extends KernelTestCase
             ['name' => 'PHPSESSID'],
         );
 
-        $dispatcher->addListener(KernelEvents::REQUEST, [$listener, 'onKernelRequest']);
+        $dispatcher->addListener(KernelEvents::REQUEST, $listener->onKernelRequest(...));
         $dispatcher->dispatch($event, KernelEvents::REQUEST);
+    }
+
+    private function getMockKernel(): HttpKernelInterface
+    {
+        return $this->createMock(HttpKernelInterface::class);
     }
 }

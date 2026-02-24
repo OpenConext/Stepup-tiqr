@@ -27,8 +27,6 @@ final class PermanentlyBlockedAuthenticationResponse implements AuthenticationRe
 {
     /**
      * If the authentication is valid.
-     *
-     * @return boolean
      */
     public function isValid(): bool
     {
@@ -37,8 +35,6 @@ final class PermanentlyBlockedAuthenticationResponse implements AuthenticationRe
 
     /**
      * The success or error message for the client app.
-     *
-     * @return string
      */
     public function getMessage(): string
     {

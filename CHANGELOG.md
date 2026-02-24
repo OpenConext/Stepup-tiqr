@@ -1,5 +1,8 @@
 # Stepup-tiqr
 
+## 5.0.0
+* Upgrade Symfony to 7.4
+
 ## 4.2.0
 * Require a user to authenticate using the QR code instead of sending a push notification when the webbrowser
   has not been used recently to authenticate (#316)
@@ -9,7 +12,6 @@
 * Fail early when session (cookie) is missing (#226)
 * Show error in the webbrowser when the enrollment or authentication session is expired (#210)
 * Add a "correlation ID" to the polling requests from the webbrowser (#227)
-* 
 
 ## 4.0.6
 * Set session.cookie_samesite to none

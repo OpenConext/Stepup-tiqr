@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\Tiqr\Controller;
 
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
@@ -37,7 +38,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class RegistrationController extends AbstractController
 {
@@ -55,7 +56,7 @@ class RegistrationController extends AbstractController
     /**
      * Returns the registration page with QR code that is generated in 'qrRegistrationAction'.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     #[Route(path: '/registration', name: 'app_identity_registration', methods: ['GET', 'POST'])]
     public function registration(Request $request): Response
@@ -112,7 +113,7 @@ class RegistrationController extends AbstractController
      * For client-side polling retrieving the status.
      *
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     #[RequiresActiveSession]
     #[Route(path: '/registration/status', name: 'app_identity_registration_status', methods: ['GET'])]
@@ -143,7 +144,7 @@ class RegistrationController extends AbstractController
      * @see /registration/qr/link
      *
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     #[RequiresActiveSession]
     #[Route(path: '/registration/qr/{enrollmentKey}', name: 'app_identity_registration_qr', methods: ['GET'])]

@@ -31,8 +31,6 @@ final readonly class RateLimitedAuthenticationResponse implements Authentication
 
     /**
      * If the authentication is valid.
-     *
-     * @return boolean
      */
     public function isValid(): bool
     {
@@ -41,8 +39,6 @@ final readonly class RateLimitedAuthenticationResponse implements Authentication
 
     /**
      * Return attempts left.
-     *
-     * @return int
      */
     public function getAttemptsLeft(): int
     {
@@ -51,8 +47,6 @@ final readonly class RateLimitedAuthenticationResponse implements Authentication
 
     /**
      * The success or error message for the client app.
-     *
-     * @return string
      */
     public function getMessage(): string
     {
