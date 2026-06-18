@@ -211,12 +211,6 @@ parameters:
 			path: ../../dev/FileLogger.php
 
 		-
-			message: '#^Parameter \#1 \$stream of static method League\\Csv\\AbstractCsv\:\:createFromStream\(\) expects resource, resource\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../../dev/FileLogger.php
-
-		-
 			message: '#^Parameter \#3 \$response of method Surfnet\\Tiqr\\Tiqr\\AuthenticationRateLimitServiceInterface\:\:authenticate\(\) expects string, bool\|float\|int\|string given\.$#'
 			identifier: argument.type
 			count: 1

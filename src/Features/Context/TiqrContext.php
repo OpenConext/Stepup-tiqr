@@ -576,7 +576,7 @@ class TiqrContext implements Context
      */
     #[When('/^push notification is sent with a trusted\-device cookie with address "([^"]*)"$/')]
     #[When('/^push notification is sent with a trusted\-device cookie with address "([^"]*)" and cookie value "([^"]*)"$/')]
-    public function aPushNotificationIsSentWithATrustedDevice(string $notificationAddress, string $overwriteCookieValue = null): void
+    public function aPushNotificationIsSentWithATrustedDevice(string $notificationAddress, ?string $overwriteCookieValue = null): void
     {
         $config = new Configuration('tiqr-trusted-device', 3600, '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f', 'none');
         $cryptoHelper = new HaliteCryptoHelper($config);

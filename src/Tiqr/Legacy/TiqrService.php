@@ -48,26 +48,26 @@ use Tiqr_StateStorage_StateStorageInterface;
  */
 final class TiqrService implements TiqrServiceInterface
 {
-    public const ENROLL_KEYS_SESSION_NAME = 'enrollment-session-keys';
+    public const string ENROLL_KEYS_SESSION_NAME = 'enrollment-session-keys';
 
-    public const ENROLLMENT_TIMEOUT_STATUS = 'TIMEOUT';
+    public const string ENROLLMENT_TIMEOUT_STATUS = 'TIMEOUT';
 
     /**
      * Unix timestamp when the enrollment started
      */
-    private const ENROLLMENT_STARTED_AT = 'enrollment-started-at';
+    private const string ENROLLMENT_STARTED_AT = 'enrollment-started-at';
 
     /**
      * Unix timestamp when the authentication started
      */
-    private const AUTHENTICATION_STARTED_AT = 'authentication-started-at';
+    private const string AUTHENTICATION_STARTED_AT = 'authentication-started-at';
 
     /**
      * The time (in seconds) that is extracted from the timeout
      * to prevent timeout issues right before the hard timeout
      * time is reached.
      */
-    private const TIMEOUT_OFFSET = 2;
+    private const int TIMEOUT_OFFSET = 2;
 
     private SessionInterface $session;
 

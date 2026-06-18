@@ -30,7 +30,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final readonly class LocaleResponseListener implements EventSubscriberInterface
 {
-    public const STEPUP_LOCALE_COOKIE = 'stepup_locale';
+    public const string STEPUP_LOCALE_COOKIE = 'stepup_locale';
 
     public function __construct(private TranslatorInterface $translator)
     {
