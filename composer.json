@@ -34,7 +34,7 @@
     "symfony/validator": "^7.4",
     "symfony/webpack-encore-bundle": "^2.2",
     "symfony/yaml": "^7.4",
-    "tiqr/tiqr-server-libphp": "^4.4",
+    "tiqr/tiqr-server-libphp": "^4.4.2",
     "twig/extra-bundle": "^3.18",
     "twig/twig": "^3.18"
   },
@@ -121,7 +121,7 @@
   "config": {
     "sort-packages": true,
     "platform": {
-      "php": "8.2"
+      "php": "8.5"
     },
     "allow-plugins": {
       "symfony/flex": true,

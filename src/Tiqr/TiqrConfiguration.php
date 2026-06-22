@@ -29,9 +29,9 @@ class TiqrConfiguration implements TiqrConfigurationInterface
 
     /** @var array<string, mixed> */
     private $options = [];
-    final public const TEMPORARILY_BLOCK_DURATION = 'temporarilyBlockDuration';
-    final public const MAX_ATTEMPTS = 'maxAttempts';
-    final public const MAX_TEMPORARILY_BLOCKS = 'maxTemporarilyBlocks';
+    final public const string TEMPORARILY_BLOCK_DURATION = 'temporarilyBlockDuration';
+    final public const string MAX_ATTEMPTS = 'maxAttempts';
+    final public const string MAX_TEMPORARILY_BLOCKS = 'maxTemporarilyBlocks';
 
     /**
      * @param array<string, array<string, mixed>> $tiqrConfiguration

@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionFactory;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageFactoryInterface;
+use Override;
 
 /**
  * This class serves as a decorated version of Symfony's SessionFactory class.
@@ -61,6 +62,7 @@ final class LoggingSessionFactory extends SessionFactory
         parent::__construct($requestStack, $storageFactory, $usageReporter);
     }
 
+    #[Override]
     public function createSession(): SessionInterface
     {
         $this->logger->info('Created new session.');

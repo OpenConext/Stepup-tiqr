@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
+use Override;
 
 /**
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
@@ -49,6 +50,7 @@ final class ExceptionController extends BaseExceptionController
         parent::__construct($translator, $requestId);
     }
 
+    #[Override]
     public function show(Request $request, Throwable $exception): Response
     {
         $statusCode = 500;
@@ -79,6 +81,7 @@ final class ExceptionController extends BaseExceptionController
     /**
      * @return array<string, string> View parameters 'title' and 'description'
      */
+    #[Override]
     protected function getPageTitleAndDescription(Throwable $exception): array
     {
         $translator = $this->getTranslator();
@@ -112,6 +115,7 @@ final class ExceptionController extends BaseExceptionController
     /**
      * @return int HTTP status code
      */
+    #[Override]
     protected function getStatusCode(Exception|Throwable $exception): int
     {
         if ($exception instanceof UnrecoverableErrorException) {

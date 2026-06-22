@@ -47,7 +47,7 @@ final class FileLogger extends AbstractLogger
             return;
         }
 
-        $csv = Writer::createFromStream($file);
+        $csv = Writer::from($file);
         $csv->setDelimiter(';');
         $csv->insertOne([$level, $message, json_encode($context)]);
         fclose($file);
@@ -72,7 +72,7 @@ final class FileLogger extends AbstractLogger
         if (!is_file($filename)) {
             return [];
         }
-        $csv = Reader::createFromStream(fopen($this->getCSVFile(), 'rb'));
+        $csv = Reader::from($this->getCSVFile());
         $csv->setDelimiter(';');
 
         return array_map(function (array $line): array {
