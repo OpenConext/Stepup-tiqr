@@ -1,72 +1,33 @@
----
 version: 2
 updates:
-  # Enable version updates for Docker
+  # Docker (security updates only)
   - package-ecosystem: "docker"
-    # Look for a `Dockerfile` in the `root` directory
-    directories:
-      - "/docker/"
+    directory: "/docker/"
     schedule:
       interval: "daily"
-    groups:
-      docker:
-        applies-to: version-updates
-        patterns:
-          - "*"
-  # Maintain dependencies for GitHub Actions
+    security-updates: true
+    open-pull-requests-limit: 0
+
+  # GitHub Actions (security updates only)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-    groups:
-      github-actions:
-        applies-to: version-updates
-        patterns:
-          - "*"
-  # Maintain dependencies for npm
+    security-updates: true
+    open-pull-requests-limit: 0
+
+  # npm (security updates only)
   - package-ecosystem: "npm"
-    directories:
-      - "/"
+    directory: "/"
     schedule:
       interval: "daily"
+    security-updates: true
     open-pull-requests-limit: 0
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-    groups:
-      javascript-prod:
-        applies-to: version-updates
-        dependency-type: production
-        update-types:
-          - "minor"
-          - "patch"
-      javascript-dev:
-        applies-to: version-updates
-        dependency-type: development
-        update-types:
-          - "minor"
-          - "patch"
-  # Maintain dependencies for npm
+
+  # Composer (security updates only)
   - package-ecosystem: "composer"
-    directories:
-      - "/"
+    directory: "/"
     schedule:
       interval: "daily"
+    security-updates: true
     open-pull-requests-limit: 0
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "symfony/*"
-    groups:
-      php-prod:
-        applies-to: version-updates
-        dependency-type: production
-        update-types:
-          - "minor"
-          - "patch"
-      php-dev:
-        applies-to: version-updates
-        dependency-type: development
-        update-types:
-          - "minor"
-          - "patch"
