@@ -3,8 +3,18 @@
   "license": "Apache-2.0",
   "description": "Tiqr implemented with GSSP bundle.",
   "type": "project",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/OpenConext/Stepup-gssp-bundle"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/OpenConext/Stepup-saml-bundle"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Surfnet\\Tiqr\\": "src",
@@ -19,8 +29,8 @@
     "openconext/monitor-bundle": "^4.3.1",
     "paragonie/halite": "^5.1.2",
     "surfnet/stepup-bundle": "^7.0",
-    "surfnet/stepup-gssp-bundle": "^6.0",
-    "surfnet/stepup-saml-bundle": "^7.0",
+    "surfnet/stepup-gssp-bundle": "dev-feature/issue-48-preserve-mdui-uiinfo as 6.0.99",
+    "surfnet/stepup-saml-bundle": "dev-feature/issue-48-mdui-chunk as 7.0.99",
     "symfony/asset": "^7.4",
     "symfony/config": "^7.4",
     "symfony/console": "^7.4",
@@ -128,6 +138,12 @@
       "symfony/runtime": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "endroid/installer": false
+    },
+    "audit": {
+      "ignore": {
+        "PKSA-1fc7-xrz7-vw78": "GHSA-5cjr-mxj5-wmrx: DoS via XPath Transform in ds:Signature processing (transitive via surfnet/stepup-saml-bundle -> simplesamlphp/saml2). No patched simplesamlphp/saml2 4.x release exists or is planned. Mitigated in surfnet/stepup-saml-bundle by Surfnet\\SamlBundle\\Signing\\SignatureTransformGuard, called from PostBinding::processResponse() before every signature verification. See Stepup-saml-bundle PR #137.",
+        "PKSA-yk3g-3g3t-ts6q": "GHSA-6929-8p9f-26jx: TLS validator confusion in HTTP-Artifact binding resolution (transitive via surfnet/stepup-saml-bundle -> simplesamlphp/saml2). Neither this application nor surfnet/stepup-saml-bundle implement HTTP-Artifact binding; the affected code path is unreachable."
+      }
     }
   },
   "extra": {

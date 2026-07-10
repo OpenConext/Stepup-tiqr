@@ -3,6 +3,7 @@ nl: Nederlands
 open_tiqr_app: Open de app op dit apparaat
 login:
     title: Log in met tiqr
+    service_name: Inloggen bij %serviceName%
     challenge_expired: Login timeout. Ververs de pagina om het nogmaals te proberen.
     retry: Probeer opnieuw.
     status_request_error: Er is een fout opgetreden bij het ophalen van de status. Ververs de pagina om het nogmaals te proberen.

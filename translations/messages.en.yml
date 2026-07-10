@@ -1,6 +1,7 @@
 open_tiqr_app: Open the app on this device
 login:
     title: Log in with tiqr
+    service_name: Signing in to %serviceName%
     challenge_expired: Login timeout. Try again or refresh this page.
     retry: Try again.
     status_request_error: An error occurred retrieving the status. Try again or refresh this page.
