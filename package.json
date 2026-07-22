@@ -44,7 +44,7 @@
   "dependencies": {
     "bootstrap": "^3",
     "jquery": "^3.5.0",
-    "postcss": ">=8.5.3",
-    "select2": "^4.0.3"
+    "postcss": ">=8.5.21",
+    "select2": "^4.1.0"
   }
 }
