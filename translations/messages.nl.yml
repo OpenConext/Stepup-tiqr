@@ -43,6 +43,7 @@ login:
 
 enrol:
     title: Registreer nieuw tiqr account
+    service_name: Token registreren voor %serviceName%
     retry: Probeer opnieuw.
     status:
         idle.1: Je sessie is verlopen.

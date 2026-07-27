@@ -39,6 +39,7 @@ login:
 
 enrol:
     title: Register new tiqr account
+    service_name: Registering a token for %serviceName%
     retry: Try again.
     status:
         idle.1: Your session has expired.
