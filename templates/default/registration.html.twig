@@ -55,7 +55,7 @@
             <a href="{{ path('app_identity_registration') }}">{{ 'enrol.retry' | trans }}</a>.
         </div>
     </div>
-    <div class="content-container qr">
+    <div class="content-container qr" style="display: none;">
         <a href="{{ metadataUrl }}">
             <img src="{{ url('app_identity_registration_qr', {'enrollmentKey': enrollmentKey}) }}">
         </a>
