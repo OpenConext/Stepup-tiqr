@@ -29,20 +29,23 @@ use TypeError;
 
 class ExpirationHelper implements ExpirationHelperInterface
 {
-    private readonly CoreDateTime $now;
-
+    /**
+     * When null, 'now' is resolved on every isExpired() call. A fixed value is only
+     * used for deterministic tests: capturing it in the constructor made the helper
+     * (a container singleton) compare cookies against a stale timestamp, which
+     * intermittently tripped the "authentication time is from the future" guard when
+     * the cookie was written after the helper was instantiated.
+     */
     public function __construct(
         private readonly Configuration $configuration,
-        ?CoreDateTime $now = null
+        private readonly ?CoreDateTime $now = null
     ) {
-        if ($now === null) {
-            $now = DateTime::now();
-        }
-        $this->now = $now;
     }
 
     public function isExpired(CookieValue $cookieValue): bool
     {
+        $now = $this->now ?? DateTime::now();
+
         try {
             $authenticationTimestamp = $cookieValue->authenticationTime();
         } catch (TypeError $error) {
@@ -59,7 +62,7 @@ class ExpirationHelper implements ExpirationHelperInterface
             );
         }
 
-        if ($authenticationTimestamp > $this->now->getTimestamp()) {
+        if ($authenticationTimestamp > $now->getTimestamp()) {
             throw new InvalidAuthenticationTimeException(
                 'The authentication time is from the future, which indicates the clock settings ' .
                 'are incorrect, or the time in the cookie value was tampered with.'
@@ -67,7 +70,7 @@ class ExpirationHelper implements ExpirationHelperInterface
         }
 
         $expirationTimestamp = $authenticationTimestamp + $this->configuration->lifetimeInSeconds;
-        $currentTimestamp = $this->now->getTimestamp();
+        $currentTimestamp = $now->getTimestamp();
 
         // Is the current time greater than the expiration time?
         return $currentTimestamp > $expirationTimestamp;

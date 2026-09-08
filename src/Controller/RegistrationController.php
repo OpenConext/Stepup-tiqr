@@ -23,6 +23,7 @@ namespace Surfnet\Tiqr\Controller;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\RegistrationService;
+use Surfnet\GsspBundle\Service\ServiceName\ServiceNameResolver;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
@@ -104,7 +105,8 @@ class RegistrationController extends AbstractController
             [
                 'metadataUrl' => sprintf("tiqrenroll://%s", $metadataUrl),
                 'correlationLoggingId' => $this->correlationIdService->generateCorrelationId(),
-                'enrollmentKey' => $key
+                'enrollmentKey' => $key,
+                'serviceName' => ServiceNameResolver::resolve($this->registrationService->getMdui(), $request->getLocale()),
             ]
         );
     }
