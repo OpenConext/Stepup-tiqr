@@ -322,7 +322,6 @@ class TiqrContext implements Context
         $resultBody = $this->minkContext->getMink()->getSession()->getPage()->getContent();
         Assertion::eq($resultBody, 'OK', 'Enrollment failed');
 
-        /** @var TiqrUserRepositoryInterface $userRepository */
         $userRepository = $this->tiqrUserRepository;
         // we have a registered user
         $user = $userRepository->getUser($this->metadata->identity->identifier);
@@ -458,6 +457,7 @@ class TiqrContext implements Context
     #[Given('/^the logs are:$/')]
     public function theLogsAre(TableNode $table): void
     {
+        /** @var list<array{0: string, 1: string, 2: array<string, mixed>}> $logs */
         $logs = $this->fileLogger->cleanLogs();
         $rows = array_values($table->getColumnsHash());
 
@@ -638,6 +638,7 @@ class TiqrContext implements Context
 
     private function logsContain(string $string): void
     {
+        /** @var list<array{0: string, 1: string, 2: array<string, mixed>}> $logs */
         $logs = $this->fileLogger->cleanLogs();
         foreach ($logs as $log) {
             if ($log[1] === $string) {

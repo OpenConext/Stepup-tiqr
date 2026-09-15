@@ -55,6 +55,6 @@ readonly class TrustedDeviceHelper
 
     public function trustedDeviceCookieEnforcementEnabled(): bool
     {
-        return $this->trustedDeviceCookieEnforcementEnabled === true;
+        return $this->trustedDeviceCookieEnforcementEnabled;
     }
 }

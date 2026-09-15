@@ -35,9 +35,7 @@ class ExpirationHelper implements ExpirationHelperInterface
         private readonly Configuration $configuration,
         ?CoreDateTime $now = null
     ) {
-        if ($now === null) {
-            $now = DateTime::now();
-        }
+        $now ??= DateTime::now();
         $this->now = $now;
     }
 
