@@ -20,6 +20,10 @@
 {% endblock %}
 
 {% block body %}
+    {% if serviceName %}
+        <p class="service-name">{{ 'enrol.service_name'|trans({'%serviceName%': serviceName}) }}</p>
+    {% endif %}
+
     <div class="content-container status-container">
         <ul class="status expired">
             <li>{{ 'enrol.status.idle.1' | trans }}</li>

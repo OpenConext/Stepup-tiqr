@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Surfnet\GsspBundle\Service\AuthenticationService;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
+use Surfnet\SamlBundle\SAML2\Extensions\MduiChunk;
 use Surfnet\Tiqr\Controller\AuthenticationNotificationController;
 use Surfnet\Tiqr\Service\TrustedDevice\TrustedDeviceService;
 use Surfnet\Tiqr\Service\TrustedDeviceHelper;
@@ -62,6 +63,7 @@ class AuthenticationNotificationControllerTest extends TestCase
     {
         $controller = $this->makeController($trustedDeviceCookieEnforcementEnabled);
         $this->authService->method('authenticationRequired')->willReturn(true);
+        $this->authService->method('getMdui')->willReturn(null);
 
         $user = $this->mockUser('ACN', '01011001');
 
@@ -69,10 +71,37 @@ class AuthenticationNotificationControllerTest extends TestCase
         $this->trustedDeviceService->method('read')->willReturn(null);
 
         $request = $this->createMock(Request::class);
+        $request->method('getLocale')->willReturn('en');
 
         $response = $controller->__invoke($request);
 
         $this->assertSame($expectedResponse, $response->getContent());
+    }
+
+    public function testResolvedServiceNameIsForwardedToTheNotification(): void
+    {
+        $controller = $this->makeController(false);
+        $this->authService->method('authenticationRequired')->willReturn(true);
+
+        $mdui = MduiChunk::fromXML(
+            '<mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui">'
+            . '<mdui:DisplayName xml:lang="en">My Test Service</mdui:DisplayName>'
+            . '</mdui:UIInfo>'
+        );
+        $this->authService->method('getMdui')->willReturn($mdui);
+
+        $user = $this->mockUser('ACN', '01011001');
+        $this->userRepository->method('getUser')->willReturn($user);
+        $this->trustedDeviceService->method('read')->willReturn(null);
+
+        $this->tiqrService->expects($this->once())
+            ->method('sendNotification')
+            ->with('ACN', '01011001', 'My Test Service');
+
+        $request = $this->createMock(Request::class);
+        $request->method('getLocale')->willReturn('en');
+
+        $controller->__invoke($request);
     }
 
     private function makeController(bool $trustedDeviceCookieEnforcementEnabled): AuthenticationNotificationController

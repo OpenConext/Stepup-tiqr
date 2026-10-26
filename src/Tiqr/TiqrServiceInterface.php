@@ -229,7 +229,7 @@ interface TiqrServiceInterface
      * @throws TiqrServerRuntimeException
      *
      */
-    public function sendNotification(string $notificationType, string $notificationAddress): void;
+    public function sendNotification(string $notificationType, string $notificationAddress, ?string $serviceName = null): void;
 
     /**
      * @param string $identifier Enrollment key or session key

@@ -336,14 +336,19 @@ final class TiqrService implements TiqrServiceInterface
     /**
      * @see TiqrServiceInterface::sendNotification()
      */
-    public function sendNotification(string $notificationType, string $notificationAddress): void
+    public function sendNotification(string $notificationType, string $notificationAddress, ?string $serviceName = null): void
     {
         try {
             $translatedAddress = $this->tiqrService->translateNotificationAddress($notificationType, $notificationAddress);
             if (false === $translatedAddress) {
                 throw new TiqrServerRuntimeException(sprintf('Error translating address for "%s"', $notificationAddress));
             }
-            $this->tiqrService->sendAuthNotification($this->getAuthenticationSessionKey(), $notificationType, (string) $translatedAddress);
+            $this->tiqrService->sendAuthNotification(
+                $this->getAuthenticationSessionKey(),
+                $notificationType,
+                (string) $translatedAddress,
+                $serviceName
+            );
         } catch (Exception $e) {
             throw TiqrServerRuntimeException::fromOriginalException($e);
         }

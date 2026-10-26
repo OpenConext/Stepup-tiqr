@@ -23,6 +23,10 @@
 {% endblock %}
 
 {% block body %}
+    {% if serviceName is defined and serviceName %}
+        <p class="service-name">{{ 'login.service_name' | trans({ '%serviceName%': serviceName }) }}</p>
+    {% endif %}
+
     <div class="spinner-container">
         {{ 'login.qr.message' | trans }}
 

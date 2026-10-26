@@ -24,6 +24,7 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
+use Surfnet\GsspBundle\Service\ServiceName\ServiceNameResolver;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Exception\NoActiveAuthenrequestException;
 use Surfnet\Tiqr\Exception\UserNotFoundException;
@@ -115,7 +116,7 @@ class AuthenticationController extends AbstractController
                 $otp
             );
             if (!$response->isValid()) {
-                return $this->handleInvalidResponse($user, $response, $logger);
+                return $this->handleInvalidResponse($user, $response, $logger, $request);
             }
         }
 
@@ -155,11 +156,16 @@ class AuthenticationController extends AbstractController
         return $this->render('default/authentication.html.twig', [
             'authenticateUrl' => $this->tiqrService->authenticationUrl(),
             'correlationLoggingId' => $this->correlationIdService->generateCorrelationId(),
+            'serviceName' => ServiceNameResolver::resolve($this->authenticationService->getMdui(), $request->getLocale()),
         ]);
     }
 
-    private function handleInvalidResponse(TiqrUserInterface $user, AuthenticationResponse $response, LoggerInterface $logger): Response
-    {
+    private function handleInvalidResponse(
+        TiqrUserInterface $user,
+        AuthenticationResponse $response,
+        LoggerInterface $logger,
+        Request $request
+    ): Response {
         try {
             $blockedTemporarily = $this->authenticationRateLimitService->isBlockedTemporarily($user);
             $blockedPermanently = $this->authenticationRateLimitService->isBlockedPermanently($user);
@@ -175,6 +181,7 @@ class AuthenticationController extends AbstractController
         return $this->render('default/authentication.html.twig', [
             'otpError' => true,
             'attemptsLeft' => $response instanceof RateLimitedAuthenticationResponse ? $response->getAttemptsLeft() : null,
+            'serviceName' => ServiceNameResolver::resolve($this->authenticationService->getMdui(), $request->getLocale()),
         ]);
     }
 

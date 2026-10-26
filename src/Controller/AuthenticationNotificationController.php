@@ -24,6 +24,7 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Surfnet\GsspBundle\Service\AuthenticationService;
+use Surfnet\GsspBundle\Service\ServiceName\ServiceNameResolver;
 use Surfnet\GsspBundle\Service\StateHandlerInterface;
 use Surfnet\Tiqr\Attribute\RequiresActiveSession;
 use Surfnet\Tiqr\Service\TrustedDevice\TrustedDeviceService;
@@ -110,7 +111,9 @@ class AuthenticationNotificationController extends AbstractController
             $notificationAddress
         ));
 
-        $result = $this->sendNotification($notificationType, $notificationAddress);
+        $serviceName = ServiceNameResolver::resolve($this->authenticationService->getMdui(), $request->getLocale());
+
+        $result = $this->sendNotification($notificationType, $notificationAddress, $serviceName);
         if ($result) {
             return $this->generateNotificationResponse('success');
         }
@@ -120,10 +123,10 @@ class AuthenticationNotificationController extends AbstractController
     /**
      * @return bool True when the notification was successfully sent, false otherwise
      */
-    private function sendNotification(string $notificationType, string $notificationAddress): bool
+    private function sendNotification(string $notificationType, string $notificationAddress, ?string $serviceName): bool
     {
         try {
-            $this->tiqrService->sendNotification($notificationType, $notificationAddress);
+            $this->tiqrService->sendNotification($notificationType, $notificationAddress, $serviceName);
         } catch (Exception $e) {
             $this->logger->warning(
                 sprintf(
